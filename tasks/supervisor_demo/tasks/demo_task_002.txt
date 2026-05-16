@@ -1,19 +1,54 @@
 RUN_ID: supervisor_demo
 TASK_ID: demo_task_002
-PROMPT_VERSION: v1
+PROMPT_VERSION: v2_company_website_lookup_10
 
 GLOBAL TASK:
-Demo task. Find official company websites for the companies in this chunk.
+You are doing B2B company website lookup.
+
+Your task is to find the official website for each company in the current chunk.
+Use web research. Do not guess domains without evidence.
+Prefer official company websites, official imprint/legal notice pages, official career pages, or official corporate group pages.
 
 CURRENT CHUNK INPUT:
-1. Beta AG
-2. Gamma GmbH
+1. Hilti Austria Gesellschaft m.b.H.
+2. HORNBACH Baumarkt GmbH Österreich
+3. Hotel Sacher Wien
+4. ÖBB-Personenverkehr AG
+5. SPAR Österreichische Warenhandels-AG
+6. Red Bull GmbH
+7. voestalpine AG
+8. AVL List GmbH
+9. Erste Group Bank AG
+10. Wiener Linien GmbH & Co KG
 
-EXPECTED OUTPUT:
-CSV columns: company_name, official_website, confidence, source_note. Use NOT_FOUND if unknown.
+EXPECTED OUTPUT FORMAT:
+Return plain CSV only after the RESULT_ID line.
+
+CSV columns must be exactly:
+company_name,official_website,confidence,source_note
+
+Rules:
+- company_name: use the exact input company name.
+- official_website: use the official homepage or best official country/company page.
+- confidence: use one of confirmed, likely, not_found.
+- source_note: short explanation with evidence. Include the evidence URL if possible.
+- Use NOT_FOUND if you cannot identify the official website confidently.
+- Do not return JSON.
+- Do not return a Markdown table.
+- Do not add extra commentary before or after the CSV.
+- Keep all 10 companies in the output, one row per company.
+- Quote CSV fields if they contain commas.
+
+QUALITY REQUIREMENTS:
+For each company, verify that the website is official by checking at least one of:
+- imprint / Impressum / legal notice
+- official contact page
+- official career page
+- official corporate page
+- official group location page
 
 CRITICAL ROUTER OUTPUT REQUIREMENT:
 Start your final answer with exactly this line:
 RESULT_ID: demo_task_002
 
-Then provide the requested result.
+Then provide the requested CSV.
