@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_027
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: flexa | first_name: Cem | last_name: Basar | full_name: Cem Basar | role: Head of BizDev | source_url: https://www.flexa.energy/team | city: Munich | country: DE
+2. company_name: flexa | first_name: Fabian | last_name: Fürst | full_name: Fabian Fürst | role: Founder & Co-CEO | linkedin_profile_url: https://ch.linkedin.com/in/fabian-fuerst | source_url: https://www.flexa.energy/team | city: Munich | country: DE
+3. company_name: flexa | first_name: Vjekoslav | last_name: Salapic | full_name: Vjekoslav Salapic | role: Founder & Co-CEO | linkedin_profile_url: https://de.linkedin.com/in/vjekoslav-salapic | source_url: https://www.flexa.energy/team | city: Munich | country: DE
+4. company_name: Fluido | first_name: Thomas | last_name: Johanson | full_name: Thomas Johanson | role: CEO / Board Member | linkedin_profile_url: https://fi.linkedin.com/in/thomas-johanson-b8b1642 | source_url: https://fi.linkedin.com/in/thomas-johanson-b8b1642 | city: Munich | country: DE
+5. company_name: Fluido | first_name: Patrick | last_name: Graab | full_name: Patrick Graab | role: Head of Programs & Projects / Go-to-Market Lead DACH | linkedin_profile_url: https://de.linkedin.com/in/patrick-graab-04259691 | source_url: https://de.linkedin.com/in/patrick-graab-04259691 | city: Munich | country: DE
+6. company_name: FNZ (formerly ebase) | first_name: Manuel | last_name: Loos | full_name: Manuel Loos | role: CEO / Vorstandsvorsitzender | source_url: https://www.fondsprofessionell.de/news/finanzprofis/headline/fnz-bank-ernennt-neuen-chef-247347/ | city: Munich | country: DE
+7. company_name: FNZ (formerly ebase) | first_name: Jürgen-Hendrik | last_name: Kuhn | full_name: Jürgen-Hendrik Kuhn | role: Generalbevollmächtigter | source_url: https://fnz.de/ueber-uns/unternehmen/management/ | city: Munich | country: DE
+8. company_name: Fonn Group | first_name: Daniel | last_name: Url | full_name: Daniel Url | role: CEO Fonn Group Europe | linkedin_profile_url: https://de.linkedin.com/in/danielurl | source_url: https://de.linkedin.com/in/danielurl | city: Munich | country: DE
+9. company_name: Fonn Group | first_name: Knut Alfred | last_name: Andersen | full_name: Knut Alfred Andersen | role: Chief Commercial Officer | source_url: https://fonngroup.com/press/fonn-group-has-appointed-knut-alfred-andersen-as-chief-commercial-officer | city: Munich | country: DE
+10. company_name: Fonn Group | first_name: Eduardo | last_name: Mancz | full_name: Eduardo Mancz | role: CEO Fonn Group Americas | source_url: https://career.fonngroup.com/people/2190919-eduardo-mancz | city: Munich | country: DE
+11. company_name: Foodji | first_name: Felix | last_name: Munte | full_name: Felix Munte | role: Co-founder and CEO | linkedin_profile_url: https://de.linkedin.com/in/felix-m-768b5a52 | source_url: https://www.foodji.com/en/press/foodji-und-dean-david-die-ultrafrische-kooperation | city: Munich | country: DE
+12. company_name: Foodji | first_name: Thorsten | last_name: Schaar | full_name: Thorsten Schaar | role: VP Sales | source_url: https://www.hogapage.de/nachrichten/arbeitswelt/personal/mitarbeiterverpflegung-zur-chefsache-machen-foodji-hat-einen-neuen-vp-sales/ | city: Munich | country: DE
+13. company_name: Foodji | first_name: Josephine | last_name: Theis | full_name: Josephine Theis | role: Head of Sales | linkedin_profile_url: https://de.linkedin.com/in/josephine-wichmann | source_url: https://de.linkedin.com/in/josephine-wichmann | city: Munich | country: DE
+14. company_name: Franklin Institute | first_name: Johannes Vincent | last_name: Burzin | full_name: Johannes Vincent Burzin | role: Co-Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/johannes-vincent-burzin-0b6593155 | source_url: https://de.linkedin.com/in/johannes-vincent-burzin-0b6593155 | city: Munich | country: DE
+15. company_name: Freenow | first_name: Daniel | last_name: Barthuly | full_name: Daniel Barthuly | role: Head of B2B & Revenue Operations | linkedin_profile_url: https://de.linkedin.com/in/daniel-barthuly | source_url: https://de.linkedin.com/in/daniel-barthuly | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_027
+- Return only the requested result.
+- Use public information only.

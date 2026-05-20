@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_068
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: UniteLabs | first_name: Bernd | last_name: Martensen | full_name: Bernd Martensen | role: Business Development | linkedin_profile_url: https://de.linkedin.com/in/bernd-martensen-6734216b | source_url: https://de.linkedin.com/in/bernd-martensen-6734216b | city: Munich | country: DE
+2. company_name: UnternehmerTUM | first_name: Helmut | last_name: Schoenenberger | full_name: Helmut Schoenenberger | role: Co-Founder and CEO | linkedin_profile_url: https://de.linkedin.com/in/helmut-schoenenberger | source_url: https://de.linkedin.com/in/helmut-schoenenberger | city: Munich | country: DE
+3. company_name: UnternehmerTUM | first_name: Inga vom | last_name: Holtz | full_name: Inga vom Holtz | role: Director Startups & Investments | linkedin_profile_url: https://de.linkedin.com/in/inga-vom-holtz-940497a1 | source_url: https://de.linkedin.com/in/inga-vom-holtz-940497a1 | city: Munich | country: DE
+4. company_name: UnternehmerTUM | first_name: Christian | last_name: Margolus | full_name: Christian Margolus | role: UnternehmerTUM | linkedin_profile_url: https://de.linkedin.com/in/christian-margolus/en | source_url: https://de.linkedin.com/in/christian-margolus/en | city: Munich | country: DE
+5. company_name: Upway | first_name: Felix | last_name: Fahr | full_name: Felix Fahr | role: Partnerships | linkedin_profile_url: https://de.linkedin.com/in/felix-fahr-90a716103 | source_url: https://de.linkedin.com/in/felix-fahr-90a716103 | city: Munich | country: DE
+6. company_name: Upway | first_name: Felix | last_name: Malldorf | full_name: Felix Malldorf | role: Building @Upway | linkedin_profile_url: https://de.linkedin.com/in/felix-malldorf-b63087154 | source_url: https://de.linkedin.com/in/felix-malldorf-b63087154 | city: Munich | country: DE
+7. company_name: Upway | first_name: Torben | last_name: Goslar | full_name: Torben Goslar | role: Upway | linkedin_profile_url: https://de.linkedin.com/in/torben-goslar-180553aa | source_url: https://de.linkedin.com/in/torben-goslar-180553aa | city: Munich | country: DE
+8. company_name: Utopia GmbH | first_name: Tessa | last_name: Nievel-Rothe | full_name: Tessa Nievel-Rothe | role: Head of Marketing / B2B-Marketing | linkedin_profile_url: https://de.linkedin.com/in/tessa-rothe | source_url: https://de.linkedin.com/in/tessa-rothe | city: Munich | country: DE
+9. company_name: Utopia GmbH | first_name: Christian | last_name: Riedel | full_name: Christian Riedel | role: Utopia GmbH | linkedin_profile_url: https://de.linkedin.com/in/christian-riedel-media089/en | source_url: https://de.linkedin.com/in/christian-riedel-media089/en | city: Munich | country: DE
+10. company_name: Utopia GmbH | first_name: Saskia | last_name: Schaller | full_name: Saskia Schaller | role: Client Success Managerin | linkedin_profile_url: https://de.linkedin.com/in/saskia-schaller-959b6517a | source_url: https://de.linkedin.com/in/saskia-schaller-959b6517a | city: Munich | country: DE
+11. company_name: Vaventus AG | first_name: Gunther | last_name: Gamst | full_name: Gunther Gamst | role: CEO / Vorstand | linkedin_profile_url: https://de.linkedin.com/in/gunther-gamst-8007a412a | source_url: https://www.vaventus.de/ueber-uns | city: Munich | country: DE
+12. company_name: Venta AI (YC S23) | first_name: Lucas | last_name: Spreiter | full_name: Lucas Spreiter | role: Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/lucas-spreiter | source_url: https://de.linkedin.com/company/ventaai | city: Munich | country: DE
+13. company_name: Venta AI (YC S23) | first_name: Stefan | last_name: Reuther | full_name: Stefan Reuther | role: Founder | linkedin_profile_url: https://nl.linkedin.com/in/stefan-reuther | source_url: https://www.ycombinator.com/companies/venta-ai | city: Munich | country: DE
+14. company_name: Vesterling AG | first_name: Martin | last_name: Vesterling | full_name: Martin Vesterling | role: Founder / Vorstand | linkedin_profile_url: https://de.linkedin.com/in/martinvesterling | source_url: https://www.vesterling.com/ueber-uns/wer-wir-sind/consultants/ | city: Munich | country: DE
+15. company_name: Vesterling AG | first_name: Eva | last_name: Vesterling | full_name: Eva Vesterling | role: Vorstand | linkedin_profile_url: https://de.linkedin.com/in/eva-vesterling | source_url: https://de.linkedin.com/in/eva-vesterling | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_068
+- Return only the requested result.
+- Use public information only.

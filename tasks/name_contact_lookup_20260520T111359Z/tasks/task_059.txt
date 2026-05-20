@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_059
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Skailark | first_name: David | last_name: Hoar | full_name: David Hoar | role: VP Sales & Customer Success | source_url: https://skailark.com/about-us-2/ | city: Munich | country: DE
+2. company_name: Skailark | first_name: Nicolas | last_name: Bunin | full_name: Nicolas Bunin | role: Head of Commercial | linkedin_profile_url: https://de.linkedin.com/in/nicolas-bunin | source_url: https://de.linkedin.com/in/nicolas-bunin | city: Munich | country: DE
+3. company_name: Skailark | first_name: Guy | last_name: Maclean | full_name: Guy Maclean | role: Regional Vice President APAC | source_url: https://www.linkedin.com/posts/skailark-aviation-intelligence_aviation-data-activity-7245363066089914370-Rs2w | city: Munich | country: DE
+4. company_name: Skalar | first_name: Niklas | last_name: Wagener | full_name: Niklas Wagener | role: Commercial / B2B tax advisory | linkedin_profile_url: https://de.linkedin.com/in/niklas-wagener | source_url: https://de.linkedin.com/in/niklas-wagener | city: Munich | country: DE
+5. company_name: Smartsheet | first_name: David | last_name: von Rothenburg | full_name: David von Rothenburg | role: Sales & Commercial Leader | linkedin_profile_url: https://de.linkedin.com/in/davidvonrothenburg | source_url: https://de.linkedin.com/in/davidvonrothenburg | city: Munich | country: DE
+6. company_name: Smartsheet | first_name: Daniel | last_name: Trummer | full_name: Daniel Trummer | role: Smartsheet sales/commercial employee | linkedin_profile_url: https://de.linkedin.com/in/daniel-trummer-1801a6186 | source_url: https://de.linkedin.com/in/daniel-trummer-1801a6186/en | city: Munich | country: DE
+7. company_name: Snowflake | first_name: Irina | last_name: Schau | full_name: Irina Schau | role: Sales Director | linkedin_profile_url: https://de.linkedin.com/in/irinaschau | source_url: https://de.linkedin.com/in/irinaschau | city: Munich | country: DE
+8. company_name: Snowflake | first_name: Antonia | last_name: Rohde | full_name: Antonia Rohde | role: Enterprise Account Executive | linkedin_profile_url: https://de.linkedin.com/in/a-rohde | source_url: https://de.linkedin.com/in/a-rohde | city: Munich | country: DE
+9. company_name: Snowflake | first_name: Kai | last_name: Schmid | full_name: Kai Schmid | role: Account Executive | linkedin_profile_url: https://de.linkedin.com/in/kaischmid | source_url: https://de.linkedin.com/in/kaischmid | city: Munich | country: DE
+10. company_name: Soley | first_name: Alexander | last_name: Springer | full_name: Alexander Springer | role: CEO | linkedin_profile_url: https://de.linkedin.com/in/alexander-springer-193b507/en | source_url: https://www.soley.io/en/imprint | city: Munich | country: DE
+11. company_name: Solvares Group | first_name: Hannes | last_name: Heckner | full_name: Hannes Heckner | role: Vertriebsleiter Field Service / Managing Director mobileX | linkedin_profile_url: https://de.linkedin.com/in/hannes-heckner | source_url: https://solvares.com/presse/solvares-group-mit-neuer-vertriebsstruktur/ | city: Munich | country: DE
+12. company_name: Solvares Group | first_name: Ivan | last_name: Bagaric | full_name: Ivan Bagaric | role: CEO | linkedin_profile_url: https://de.linkedin.com/in/ivan-bagaric-93008097 | source_url: https://solvares.com/presse/ivan-bagaric-ist-neuer-ceo-der-solvares-group/ | city: Munich | country: DE
+13. company_name: Solvares Group | first_name: James | last_name: De Roo | full_name: James De Roo | role: Vertriebsleiter Logistik / Director Sales Logistics | linkedin_profile_url: https://de.linkedin.com/in/james-de-roo/de | source_url: https://solvares.com/presse/solvares-group-mit-neuer-vertriebsstruktur/ | city: Munich | country: DE
+14. company_name: Spacelabs Healthcare | first_name: Matthias | last_name: Finsterer | full_name: Matthias Finsterer | role: Managing Director / Finance Manager Spacelabs Healthcare GmbH | linkedin_profile_url: https://de.linkedin.com/in/matthias-finsterer-34a352b2/en | source_url: https://de.linkedin.com/in/matthias-finsterer-34a352b2/en | city: Munich | country: DE
+15. company_name: Spira Labs | first_name: Martin | last_name: Ettling | full_name: Martin Ettling | role: Operating Partner | linkedin_profile_url: https://de.linkedin.com/in/martin-ettling | source_url: https://de.linkedin.com/in/martin-ettling | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_059
+- Return only the requested result.
+- Use public information only.

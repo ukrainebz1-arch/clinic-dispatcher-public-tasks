@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_016
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Constaff GmbH | first_name: Timo | last_name: Schmidtchen | full_name: Timo Schmidtchen | role: Geschäftsführer / Managing Director | linkedin_profile_url: https://de.linkedin.com/in/timo-schmidtchen-919167109 | source_url: https://de.linkedin.com/in/timo-schmidtchen-919167109 | city: Munich | country: DE
+2. company_name: Constaff GmbH | first_name: Kai | last_name: Zauner | full_name: Kai Zauner | role: Senior Key Account Manager | linkedin_profile_url: https://de.linkedin.com/in/kai-zauner-1a15051a3 | source_url: https://de.linkedin.com/in/kai-zauner-1a15051a3 | city: Munich | country: DE
+3. company_name: Constaff GmbH | first_name: Torben | last_name: Müller | full_name: Torben Müller | role: Key Account Manager | linkedin_profile_url: https://de.linkedin.com/in/torben-m%C3%BCller-31b630182 | source_url: https://de.linkedin.com/in/torben-m%C3%BCller-31b630182 | city: Munich | country: DE
+4. company_name: crossvertise GmbH | first_name: Benjamin | last_name: Wahler | full_name: Benjamin Wahler | role: Chief Sales Officer | source_url: https://www.crossvertise.com/ueber-uns/team | city: Munich | country: DE
+5. company_name: crossvertise GmbH | first_name: Ina | last_name: Wagner | full_name: Ina Wagner | role: Head of Sales Outbound and Deputy CSO | linkedin_profile_url: https://de.linkedin.com/in/ina-wagner-media | source_url: https://invidis.de/2026/04/crossvertise-benjamin-wahler-und-ina-wagner-uebernehmen-vertrieb/ | city: Munich | country: DE
+6. company_name: crossvertise GmbH | first_name: Maximilian | last_name: Balbach | full_name: Maximilian Balbach | role: Founder and Co-CEO | source_url: https://www.crossvertise.com/ueber-uns/team | city: Munich | country: DE
+7. company_name: CRX Markets AG | first_name: Sebastian | last_name: Hofmann-Werther | full_name: Sebastian Hofmann-Werther | role: CEO | source_url: https://www.crxmarkets.com/wp-content/uploads/260115_Press-Statement_CEO-Announcement_en.pdf | city: Munich | country: DE
+8. company_name: CRX Markets AG | first_name: Tim | last_name: Kallenborn | full_name: Tim Kallenborn | role: Vice President and Head of Sales and Account Management | source_url: https://www.linkedin.com/posts/-crx-markets-s-a-_sf2024-activity-7267500643357978624--E1t | city: Munich | country: DE
+9. company_name: CRX Markets AG | first_name: Sébastien | last_name: Kuhn | full_name: Sébastien Kuhn | role: Senior Sales Manager | source_url: https://ua.linkedin.com/company/-crx-markets-s-a-?trk=ppro_cprof | city: Munich | country: DE
+10. company_name: cubemos | first_name: Christopher | last_name: Scheubel | full_name: Dr. Christopher Scheubel | role: Co-Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/christopher-scheubel-esg | source_url: https://en.cubemos.com/aboutcubemos | city: Munich | country: DE
+11. company_name: cubemos | first_name: Tobias | last_name: Thiermann | full_name: Tobias Thiermann | role: Sales Lead / Head of Sales | linkedin_profile_url: https://de.linkedin.com/in/tobiasthiermann/en | source_url: https://de.linkedin.com/in/tobiasthiermann/en | city: Munich | country: DE
+12. company_name: cubemos | first_name: Patrick | last_name: Bilic | full_name: Patrick Bilic | role: Co-Founder & CTO | linkedin_profile_url: https://de.linkedin.com/in/patrick-bilic-71674b53 | source_url: https://en.cubemos.com/aboutcubemos | city: Munich | country: DE
+13. company_name: CWS Cleanrooms | first_name: Andreas | last_name: Wenzel | full_name: Andreas Wenzel | role: CEO | linkedin_profile_url: https://de.linkedin.com/in/andreas-wenzel-81469269 | source_url: https://www.linkedin.com/posts/cws-cleanrooms_cwscleanrooms-cleanroom-leadershipupdate-activity-7284601690224287744-XbAb | city: Munich | country: DE
+14. company_name: CWS Cleanrooms | first_name: Axel | last_name: Freund | full_name: Axel Freund | role: Head of International Sales and Account Management | linkedin_profile_url: https://de.linkedin.com/in/axel-freund-fra | source_url: https://de.linkedin.com/in/axel-freund-fra | city: Munich | country: DE
+15. company_name: CWS Cleanrooms | first_name: Frank | last_name: Braun | full_name: Frank Braun | role: Managing Director | linkedin_profile_url: https://de.linkedin.com/in/frank-braun/en | source_url: https://de.linkedin.com/in/frank-braun/en | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_016
+- Return only the requested result.
+- Use public information only.

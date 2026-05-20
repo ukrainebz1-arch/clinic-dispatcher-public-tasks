@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_047
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Noteless | first_name: Linn Hege | last_name: Bergheim | full_name: Linn Hege Bergheim | role: Chief Business Officer | source_url: https://jobs.noteless.com/people/3437277-linn-hege-bergheim | city: Munich | country: DE
+2. company_name: Noyes Technologies | first_name: Sabine | last_name: De Voogt | full_name: Sabine De Voogt | role: Head of Sales & HR | source_url: https://de.linkedin.com/posts/noyestech_prdesireewalter-activity-7275404508384366593-ffBp | city: Munich | country: DE
+3. company_name: Noyes Technologies | first_name: Tobias | last_name: Dassinger | full_name: Tobias Dassinger | role: Senior Sales Manager | source_url: https://www.linkedin.com/posts/tobias-dassinger-07725171_im-excited-to-share-with-you-that-im-taking-activity-6818475634528-aGMF | city: Munich | country: DE
+4. company_name: Nuitée | first_name: Irine | last_name: Bochorishvili | full_name: Irine Bochorishvili | role: Senior Account Manager EMEA | source_url: https://www.linkedin.com/posts/nuitee_newhire-emea-senioraccountmanager-activity-7196406452821884928-j6ub | city: Munich | country: DE
+5. company_name: OC&C Strategy Consultants | first_name: Jan | last_name: Bergmann | full_name: Jan Bergmann | role: Partner | linkedin_profile_url: https://de.linkedin.com/in/janbergmann | source_url: https://de.linkedin.com/in/janbergmann | city: Munich | country: DE
+6. company_name: OC&C Strategy Consultants | first_name: Lars | last_name: Luck | full_name: Lars Luck | role: Partner | linkedin_profile_url: https://de.linkedin.com/in/larsluck | source_url: https://de.linkedin.com/in/larsluck | city: Munich | country: DE
+7. company_name: OC&C Strategy Consultants | first_name: Martin | last_name: Schwarzmann | full_name: Martin Schwarzmann | role: Partner | linkedin_profile_url: https://uk.linkedin.com/in/martinschwarzmann | source_url: https://uk.linkedin.com/in/martinschwarzmann | city: Munich | country: DE
+8. company_name: Octopus Electric Vehicles | first_name: Bastian | last_name: Lünsmann | full_name: Bastian Lünsmann | role: Founding Sales Lead Germany | linkedin_profile_url: https://de.linkedin.com/in/bastian-luensmann | source_url: https://de.linkedin.com/in/bastian-luensmann | city: Munich | country: DE
+9. company_name: Octopus Electric Vehicles | first_name: James | last_name: Nettleton | full_name: James Nettleton | role: Strategy Director | linkedin_profile_url: https://uk.linkedin.com/in/james-nettleton | source_url: https://uk.linkedin.com/in/james-nettleton | city: Munich | country: DE
+10. company_name: Octopus Electric Vehicles | first_name: Oliver | last_name: Kingston | full_name: Oliver Kingston | role: Sales leader | linkedin_profile_url: https://uk.linkedin.com/in/olikingston | source_url: https://uk.linkedin.com/in/olikingston | city: Munich | country: DE
+11. company_name: Octopus Energy | first_name: Peter | last_name: Maischak | full_name: Peter Maischak | role: Head of Sales (Field) | linkedin_profile_url: https://de.linkedin.com/in/mit-peter-maischak-schneller-entscheiden | source_url: https://de.linkedin.com/in/mit-peter-maischak-schneller-entscheiden | city: Munich | country: DE
+12. company_name: Octopus Energy | first_name: Karolina | last_name: Kambouris | full_name: Karolina Kambouris | role: Operations Director | linkedin_profile_url: https://de.linkedin.com/in/karolina-kambouris | source_url: https://de.linkedin.com/in/karolina-kambouris | city: Munich | country: DE
+13. company_name: Octopus Energy | first_name: Andrew | last_name: Mack | full_name: Andrew Mack | role: Former CEO / Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/andrewhmack | source_url: https://de.linkedin.com/in/andrewhmack | city: Munich | country: DE
+14. company_name: oculai | first_name: Yannik | last_name: Mack | full_name: Yannik Mack | role: Co-Founder | linkedin_profile_url: https://de.linkedin.com/in/yannik-mack-a18147186 | source_url: https://de.linkedin.com/in/yannik-mack-a18147186 | city: Munich | country: DE
+15. company_name: oculai | first_name: Lasse | last_name: Lagerpusch | full_name: Lasse Lagerpusch | role: Business Development / oculai | linkedin_profile_url: https://de.linkedin.com/in/lasse-lagerpusch | source_url: https://de.linkedin.com/in/lasse-lagerpusch | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_047
+- Return only the requested result.
+- Use public information only.

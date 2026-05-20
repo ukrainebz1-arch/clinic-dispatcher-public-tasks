@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_050
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Pavelka-Denk Personalberatung | first_name: Sarah | last_name: Lahner | full_name: Sarah Lahner | role: Pavelka-Denk Personalberatung | linkedin_profile_url: https://at.linkedin.com/in/sarah-lahner-1884b1262 | source_url: https://at.linkedin.com/in/sarah-lahner-1884b1262 | city: Munich | country: DE
+2. company_name: Payhawk | first_name: Daniel | last_name: Lawler | full_name: Daniel Lawler | role: Account Executive | linkedin_profile_url: https://de.linkedin.com/in/danielslawler | source_url: https://de.linkedin.com/in/danielslawler | city: Munich | country: DE
+3. company_name: Payhawk | first_name: Prelate | last_name: Romanus | full_name: Prelate Romanus | role: Business Development Representative - DACH | linkedin_profile_url: https://de.linkedin.com/in/prelate-romanus | source_url: https://de.linkedin.com/in/prelate-romanus | city: Munich | country: DE
+4. company_name: Payhawk | first_name: Maria | last_name: Wendler | full_name: Maria Wendler | role: GTM Recruiter DACH | linkedin_profile_url: https://de.linkedin.com/in/maria-wendler-40903617b | source_url: https://de.linkedin.com/in/maria-wendler-40903617b | city: Munich | country: DE
+5. company_name: Peak Performance | first_name: Alexander | last_name: Staufer | full_name: Alexander Staufer | role: Sales Manager Germany & Marketplace Peak Performance | linkedin_profile_url: https://de.linkedin.com/in/alexander-staufer | source_url: https://de.linkedin.com/in/alexander-staufer | city: Munich | country: DE
+6. company_name: Penzilla | first_name: Catherine | last_name: Leser | full_name: Catherine Leser | role: Penzilla GmbH | linkedin_profile_url: https://de.linkedin.com/in/catherine-leser | source_url: https://de.linkedin.com/in/catherine-leser | city: Munich | country: DE
+7. company_name: Penzilla | first_name: Claus | last_name: Gillen | full_name: Claus Gillen | role: CEO / Investor | linkedin_profile_url: https://de.linkedin.com/in/clausgillen2206 | source_url: https://de.linkedin.com/in/clausgillen2206 | city: Munich | country: DE
+8. company_name: Penzilla | first_name: Antony Ricardo | last_name: Goetzschel | full_name: Antony Ricardo Goetzschel | role: Co-Founder and CTO | linkedin_profile_url: https://de.linkedin.com/in/antony-ricardo-goetzschel-devago | source_url: https://de.linkedin.com/in/antony-ricardo-goetzschel-devago | city: Munich | country: DE
+9. company_name: Personio | first_name: Hanno | last_name: Renner | full_name: Hanno Renner | role: Co-Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/hanno-renner | source_url: https://de.linkedin.com/in/hanno-renner | city: Munich | country: DE
+10. company_name: Personio | first_name: Bernd | last_name: Oltmann | full_name: Bernd Oltmann | role: Lead, Account Executive DE | linkedin_profile_url: https://de.linkedin.com/in/berndoltmann | source_url: https://de.linkedin.com/in/berndoltmann | city: Munich | country: DE
+11. company_name: Personio | first_name: Franziska | last_name: Hahn | full_name: Franziska Hahn | role: Sales Development Leader @Personio | linkedin_profile_url: https://de.linkedin.com/in/franziska-hahn-sales | source_url: https://de.linkedin.com/in/franziska-hahn-sales/en | city: Munich | country: DE
+12. company_name: Peter Park | first_name: Maximilian | last_name: Schlereth | full_name: Maximilian Schlereth | role: Co-Founder | Chief Executive Officer | source_url: https://prospeo.io/c/peter-park | city: Munich | country: DE
+13. company_name: Peter Park | first_name: Philipp | last_name: Neuner | full_name: Philipp Neuner | role: Head Of Sales | source_url: https://prospeo.io/c/peter-park | city: Munich | country: DE
+14. company_name: Peter Park | first_name: Thomas | last_name: Pillwatsch | full_name: Thomas Pillwatsch | role: Sales & Expansion Manager Austria | source_url: https://www.handelsverband.at/mitglieder/unsere-partner/detail/peter-park-system-gmbh/ | city: Munich | country: DE
+15. company_name: PhoneKlinik | first_name: Sahin | last_name: Özerdem | full_name: Sahin Özerdem | role: Geschäftsführer / CEO | source_url: https://phoneklinik.com/impressum-phoneklinik-muenchen/ | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_050
+- Return only the requested result.
+- Use public information only.

@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_043
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Messe Muenchen | first_name: Markus | last_name: Dirr | full_name: Dr. Markus Dirr | role: Executive Director Product Marketing & Sales | source_url: https://messe-muenchen.de/de/presse/pressemitteilungen/messe-muenchen-stellt-produktmarketing-und-vertrieb-neu-auf-und-treibt-digitalisierung-weiter-voran.html | city: Munich | country: DE
+2. company_name: Messe Muenchen | first_name: Stefan | last_name: Rummel | full_name: Stefan Rummel | role: Geschäftsführer | source_url: https://www.welt.de/article6932adfe074aff6076810141 | city: Munich | country: DE
+3. company_name: microagi | first_name: Akin | last_name: Aydogan | full_name: Akin Aydogan | role: Operating @ microagi | linkedin_profile_url: https://de.linkedin.com/in/akinaydogan | source_url: https://de.linkedin.com/in/akinaydogan | city: Munich | country: DE
+4. company_name: microagi | first_name: Dogukan | last_name: Öz | full_name: Dogukan Öz | role: Team member / microagi | linkedin_profile_url: https://de.linkedin.com/in/do%C4%9Fukan-%C3%B6z | source_url: https://de.linkedin.com/in/do%C4%9Fukan-%C3%B6z | city: Munich | country: DE
+5. company_name: microCAT GmbH | first_name: Daniel | last_name: Stinner | full_name: Daniel Stinner | role: Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/daniel-stinner-5513aa153 | source_url: https://microcat.de/impressum/ | city: Munich | country: DE
+6. company_name: microCAT GmbH | first_name: Christian | last_name: Ellwanger | full_name: Christian Ellwanger | role: Geschäftsführer | source_url: https://www.linkedin.com/company/microcat-gmbh/ | city: Munich | country: DE
+7. company_name: microCAT GmbH | first_name: Christoph | last_name: Nowotny | full_name: Christoph Nowotny | role: Vertriebsleiter | source_url: https://de.linkedin.com/posts/microcat-gmbh_teamspirit-vertrieb-kickoff-activity-7427379326259458048-gMQj | city: Munich | country: DE
+8. company_name: MindDoc | first_name: Markus | last_name: Buechtmann | full_name: Markus Buechtmann | role: Chief Executive Officer / Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/markusbuechtmann | source_url: https://www.schoen-klinik.de/presse/pressemitteilung/17213 | city: Munich | country: DE
+9. company_name: MindDoc | first_name: Julia | last_name: Kenyon | full_name: Julia Kenyon | role: Chief Sales Officer | source_url: https://www.xing.com/pages/minddoc-byschonklinik/employees | city: Munich | country: DE
+10. company_name: MOBIKO | first_name: Andreas | last_name: Reichert | full_name: Andreas Reichert | role: Geschäftsführer / Co-Founder; Business Development | linkedin_profile_url: https://de.linkedin.com/in/andreas-reichert-07038785 | source_url: https://mobiko.net/blog/wandel-fuhrparkmanagement-mobilitatsmanagement/ | city: Munich | country: DE
+11. company_name: MOBIKO | first_name: Chahida | last_name: Sekkafi | full_name: Chahida Sekkafi | role: Sales Operations Manager | linkedin_profile_url: https://de.linkedin.com/in/chahida-sekkafi | source_url: https://de.linkedin.com/in/chahida-sekkafi | city: Munich | country: DE
+12. company_name: MOBIKO | first_name: Nicola | last_name: Büsse | full_name: Nicola Büsse | role: Co-Founder & Head of Sales | source_url: https://land-der-ideen.de/content/4-wettbewerbe/2-deutscher-mobilitaetspreis/2-publikationen/deutscher-mobilitatspreis-2021_publikation_digitale_version_barrierefrei.pdf | city: Munich | country: DE
+13. company_name: Mobile Locker | first_name: Bob | last_name: Lempke | full_name: Bob Lempke | role: Chief Commercial Officer | linkedin_profile_url: https://www.linkedin.com/in/bob-lempke-3a83547 | source_url: https://www.mobilelocker.com/en/company | city: Munich | country: DE
+14. company_name: Mobile Locker | first_name: Jef | last_name: Van Hyfte | full_name: Jef Van Hyfte | role: Founder & Geschäftsführer / CEO | source_url: https://cl.linkedin.com/company/mobile-locker-nv | city: Munich | country: DE
+15. company_name: Mobile Locker | first_name: Mark | last_name: Stralka | full_name: Mark Stralka | role: Founder & CEO | linkedin_profile_url: https://www.linkedin.com/in/markstralka | source_url: https://www.mobilelocker.com/en/company | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_043
+- Return only the requested result.
+- Use public information only.

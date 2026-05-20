@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_023
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: EngageTech | first_name: Georgia | last_name: Kirwan | full_name: Georgia Kirwan | role: Sales Director | linkedin_profile_url: https://uk.linkedin.com/in/georgia-kirwan-196a91121 | source_url: https://uk.linkedin.com/in/georgia-kirwan-196a91121 | city: Munich | country: DE
+2. company_name: EngageTech | first_name: Rüdiger | last_name: Behmel | full_name: Rüdiger Behmel | role: CEO EngageTech GmbH | linkedin_profile_url: https://de.linkedin.com/in/ruediger-behmel | source_url: https://de.linkedin.com/in/ruediger-behmel | city: Munich | country: DE
+3. company_name: EngageTech | first_name: Sarah | last_name: Gebert | full_name: Sarah Gebert | role: Team Leader Strategic Accounts & Business Development | linkedin_profile_url: https://de.linkedin.com/in/sarah-gebert-97b99a318 | source_url: https://de.linkedin.com/in/sarah-gebert-97b99a318 | city: Munich | country: DE
+4. company_name: enmacc | first_name: Carolin | last_name: Wolf | full_name: Carolin Wolf | role: VP Customer and Commercial Excellence | linkedin_profile_url: https://de.linkedin.com/in/carolin-wolf-3005 | source_url: https://de.linkedin.com/in/carolin-wolf-3005 | city: Munich | country: DE
+5. company_name: enmacc | first_name: Jeuel | last_name: Ventura | full_name: Jeuel Ventura | role: Chief Revenue Officer | linkedin_profile_url: https://uk.linkedin.com/in/jeuelventura | source_url: https://uk.linkedin.com/in/jeuelventura | city: Munich | country: DE
+6. company_name: enmacc | first_name: Marc Oliver | last_name: Trieschmann | full_name: Marc Oliver Trieschmann | role: Founder & Managing Director | linkedin_profile_url: https://de.linkedin.com/in/marc-oliver-trieschmann | source_url: https://de.linkedin.com/in/marc-oliver-trieschmann | city: Munich | country: DE
+7. company_name: EnopAI | first_name: Robin | last_name: Geisler | full_name: Robin Geisler | role: CEO | linkedin_profile_url: https://de.linkedin.com/in/robin-geisler-44b3b6197 | source_url: https://de.linkedin.com/in/robin-geisler-44b3b6197 | city: Munich | country: DE
+8. company_name: EPAM Systems | first_name: Prakhar | last_name: Verma | full_name: Prakhar Verma | role: Senior Alliances Manager - AWS | linkedin_profile_url: https://de.linkedin.com/in/prakharv1003 | source_url: https://de.linkedin.com/in/prakharv1003 | city: Munich | country: DE
+9. company_name: EPAM Systems | first_name: Rajesh | last_name: Bose | full_name: Rajesh Bose | role: Managing Director – Global Advisory & Business Innovation | linkedin_profile_url: https://de.linkedin.com/in/rajeshbose | source_url: https://de.linkedin.com/in/rajeshbose | city: Munich | country: DE
+10. company_name: EPAM Systems | first_name: Theodor | last_name: Kuhn | full_name: Theodor Kuhn | role: Director Account Manager | linkedin_profile_url: https://de.linkedin.com/in/theodor-kuhn-627a6b9a | source_url: https://de.linkedin.com/in/theodor-kuhn-627a6b9a | city: Munich | country: DE
+11. company_name: ESG-X | first_name: Paolo | last_name: Mazza | full_name: Paolo Mazza | role: Co-founder | source_url: https://www.linkedin.com/pulse/dcycle-acquires-german-esg-platform-esg-x-expand-presence-ktnbc | city: Munich | country: DE
+12. company_name: ESG-X | first_name: Valentin | last_name: Aman | full_name: Valentin Aman | role: Co-founder | source_url: https://www.linkedin.com/posts/eu-startups-menlo-media_uk-and-spain-based-sustainability-platform-activity-7426505275643416576-mlzy | city: Munich | country: DE
+13. company_name: ESG-X | first_name: Jean | last_name: B. | full_name: Jean B. | role: Co-founder | source_url: https://www.linkedin.com/posts/eu-startups-menlo-media_uk-and-spain-based-sustainability-platform-activity-7426505275643416576-mlzy | city: Munich | country: DE
+14. company_name: Etengo AG | first_name: Christoph | last_name: Kugelmann | full_name: Christoph Kugelmann | role: Sales Director | linkedin_profile_url: https://de.linkedin.com/in/christoph-kugelmann | source_url: https://de.linkedin.com/in/christoph-kugelmann | city: Munich | country: DE
+15. company_name: Etengo AG | first_name: Daniel | last_name: Tabbara | full_name: Daniel Tabbara | role: Account Executive | linkedin_profile_url: https://de.linkedin.com/in/daniel-tabbara-5b6182164 | source_url: https://de.linkedin.com/in/daniel-tabbara-5b6182164 | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_023
+- Return only the requested result.
+- Use public information only.

@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_022
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Effecticore Marketing GmbH | first_name: Lisa-Maria | last_name: Krämer | full_name: Lisa-Maria Krämer | role: Effecticore Marketing GmbH / partner reference | linkedin_profile_url: https://de.linkedin.com/in/lisakraemer | source_url: https://de.linkedin.com/posts/lisakraemer_7-jahre-effecticore-marketing-gmbh-vielen-activity-7115253641216708608-9i_C | city: Munich | country: DE
+2. company_name: EGYM Wellpass DE | first_name: Hannes | last_name: Goetze | full_name: Hannes Goetze | role: Head of Sales AT & Süd-DE | linkedin_profile_url: https://de.linkedin.com/in/hannes-goetze | source_url: https://de.linkedin.com/in/hannes-goetze | city: Munich | country: DE
+3. company_name: EGYM Wellpass DE | first_name: Owen | last_name: Clements | full_name: Owen Clements | role: Sales Director / Head of Sales at Hussle | EGYM Wellpass | linkedin_profile_url: https://uk.linkedin.com/in/oclements | source_url: https://uk.linkedin.com/in/oclements | city: Munich | country: DE
+4. company_name: EGYM Wellpass DE | first_name: Garry | last_name: O'Connor | full_name: Garry O'Connor | role: Sales Director / Hussle EGYM Wellpass | source_url: https://www.linkedin.com/posts/hussleofficial_people-fitness-gyms-activity-7282342712945643521-S9KB | city: Munich | country: DE
+5. company_name: EGYM | DACH | first_name: Christoph | last_name: Bischoff | full_name: Christoph Bischoff | role: Chief Customer Officer / Geschäftsführung | source_url: https://www.fitnessmanagement.de/egym-jan-scherzer-country-director-head-of-sales-d-a-ch-christoph-bischoff-chief-customer-officer/ | city: Munich | country: DE
+6. company_name: EGYM | DACH | first_name: Jan | last_name: Scherzer | full_name: Jan Scherzer | role: Country Director and Head of Sales DACH | source_url: https://www.fitnessmanagement.de/egym-jan-scherzer-country-director-head-of-sales-d-a-ch-christoph-bischoff-chief-customer-officer/ | city: Munich | country: DE
+7. company_name: elunic AG | first_name: Jonas | last_name: Schaub | full_name: Jonas Schaub | role: Vorstand der elunic AG | source_url: https://www.digital-manufacturing-magazin.de/amb/ | city: Munich | country: DE
+8. company_name: emax digital | first_name: Andreas | last_name: Kleofas | full_name: Andreas Kleofas | role: Co-founder and Geschäftsführer | source_url: https://www.munich-startup.de/75510/emax-digital-diese-gruender-optimieren-haendler-werbung-auf-amazon/ | city: Munich | country: DE
+9. company_name: emax digital | first_name: Dominik | last_name: Pietrowski | full_name: Dominik Pietrowski | role: Co-founder and Geschäftsführer / Marketing & Sales responsible | source_url: https://www.emax-digital.com/hubfs/Kurzvita%20Dominik%20Pietrowski%20DE.pdf?hsLang=en | city: Munich | country: DE
+10. company_name: emax digital | first_name: Dimitri | last_name: Dumonet | full_name: Dimitri Dumonet | role: Geschäftsführung / Chief Developer | source_url: https://www.htgf.de/htgf-investment-emax-digital/ | city: Munich | country: DE
+11. company_name: Emidat | first_name: Lisa | last_name: Oberaigner | full_name: Lisa Oberaigner | role: Co-Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/lisa-oberaigner | source_url: https://de.linkedin.com/in/lisa-oberaigner | city: Munich | country: DE
+12. company_name: Emidat | first_name: Daniel | last_name: Wingen | full_name: Daniel Wingen | role: Account Executive @ Emidat | linkedin_profile_url: https://de.linkedin.com/in/danielwingen | source_url: https://de.linkedin.com/in/danielwingen | city: Munich | country: DE
+13. company_name: Emidat | first_name: Federico | last_name: Ceci | full_name: Federico Ceci | role: Go-to-Market Executive | linkedin_profile_url: https://de.linkedin.com/in/federico-ceci | source_url: https://de.linkedin.com/in/federico-ceci | city: Munich | country: DE
+14. company_name: encosa energy | first_name: Sascha | last_name: Koberstaedt | full_name: Sascha Koberstaedt | role: Geschäftsführer | source_url: https://www.encosa.energy/en/impressum | city: Munich | country: DE
+15. company_name: encosa energy | first_name: Sebastian | last_name: Becker | full_name: Sebastian Becker | role: Geschäftsführer | source_url: https://www.encosa.energy/en/impressum | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_022
+- Return only the requested result.
+- Use public information only.

@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_058
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: SELLWERK | first_name: Sebastian | last_name: Schuckert | full_name: Sebastian Schuckert | role: Sales / SELLWERK | linkedin_profile_url: https://de.linkedin.com/in/sebastian-schuckert-2761221b3 | source_url: https://de.linkedin.com/in/sebastian-schuckert-2761221b3 | city: Munich | country: DE
+2. company_name: Siemens | first_name: Arturo Banderas | last_name: Fuhrmann | full_name: Arturo Banderas Fuhrmann | role: Head of Global Sales | linkedin_profile_url: https://de.linkedin.com/in/arturobanderas | source_url: https://de.linkedin.com/in/arturobanderas/pt | city: Munich | country: DE
+3. company_name: Siemens | first_name: Michael | last_name: Steigberger | full_name: Michael Steigberger | role: Vice President Sales & Marketing | linkedin_profile_url: https://de.linkedin.com/in/michael-steigberger | source_url: https://de.linkedin.com/in/michael-steigberger | city: Munich | country: DE
+4. company_name: Siemens | first_name: Roland | last_name: Busch | full_name: Roland Busch | role: President and CEO | linkedin_profile_url: https://de.linkedin.com/in/buschroland | source_url: https://de.linkedin.com/in/buschroland | city: Munich | country: DE
+5. company_name: Silvernova GmbH | first_name: Lukas | last_name: Ballweg | full_name: Lukas Ballweg | role: Founder | source_url: https://legalxchange.de/speaker/ | city: Munich | country: DE
+6. company_name: Silvernova GmbH | first_name: Nils | last_name: Lissner | full_name: Nils Lissner | role: Co-Founder, Geschäftsführer and CTO | linkedin_profile_url: https://de.linkedin.com/in/nils-lissner-b914841b0 | source_url: https://de.linkedin.com/in/nils-lissner-b914841b0 | city: Munich | country: DE
+7. company_name: Simovative | first_name: Torsten | last_name: Fürbringer | full_name: Torsten Fürbringer | role: CEO | source_url: https://de.linkedin.com/posts/torsten-fuerbringer_simovative-hilft-hochschuleinrichtungen-bei-activity-7178044094957449217-jT | city: Munich | country: DE
+8. company_name: simple system GmbH | first_name: Peter | last_name: Svetlik | full_name: Peter Svetlik | role: Relationship Manager / Senior Vendor Manager | linkedin_profile_url: https://de.linkedin.com/in/petersvetlik | source_url: https://simplesystem.com/lieferantenuebersicht | city: Munich | country: DE
+9. company_name: simple system GmbH | first_name: Thomas | last_name: Au | full_name: Thomas Au | role: CFO | source_url: https://de.linkedin.com/posts/simple-system-gmbh_unser-cfo-thomas-au-teilt-im-neuen-interview-activity-7434954884124229632-wdvO | city: Munich | country: DE
+10. company_name: Simpleprax | first_name: Antonia | last_name: Saleh | full_name: Antonia Saleh | role: Co-Founder and CEO | linkedin_profile_url: https://de.linkedin.com/in/antonia-saleh | source_url: https://de.linkedin.com/company/simpleprax | city: Munich | country: DE
+11. company_name: Simpleprax | first_name: Simon | last_name: Osterlehner | full_name: Simon Osterlehner | role: Co-Founder and CTO | linkedin_profile_url: https://de.linkedin.com/in/simon-osterlehner | source_url: https://de.linkedin.com/company/simpleprax | city: Munich | country: DE
+12. company_name: Sinnwell GmbH | first_name: Lisa | last_name: Gruber | full_name: Lisa Gruber | role: Prokurist / Vertriebsleiterin | linkedin_profile_url: https://de.linkedin.com/in/lisa-gruber-90ba87123 | source_url: https://de.linkedin.com/in/lisa-gruber-90ba87123 | city: Munich | country: DE
+13. company_name: Sinnwell GmbH | first_name: Konstantin | last_name: Tsaligopoulos | full_name: Konstantin Tsaligopoulos | role: Vorstand | source_url: https://www.instagram.com/p/Ci9bgZjI59c/ | city: Munich | country: DE
+14. company_name: Sinpex | first_name: Camillo | last_name: Werdich | full_name: Dr. Camillo Werdich | role: CEO and Founder | linkedin_profile_url: https://de.linkedin.com/in/camillo-werdich | source_url: https://de.linkedin.com/in/camillo-werdich | city: Munich | country: DE
+15. company_name: Sinpex | first_name: Philipp | last_name: Eska | full_name: Dr. Philipp Eska | role: Sinpex team / senior commercial-adjacent contact | source_url: https://www.linkedin.com/posts/dr-philipp-eska-10615046_join-dr-camillo-werdich-the-sinpex-team-activity-7305522727543533568-pfki | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_058
+- Return only the requested result.
+- Use public information only.

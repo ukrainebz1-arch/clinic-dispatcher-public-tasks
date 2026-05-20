@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_048
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: oculai | first_name: Martin | last_name: Henn | full_name: Martin Henn | role: Account Executive | linkedin_profile_url: https://de.linkedin.com/in/martin-henn | source_url: https://de.linkedin.com/in/martin-henn | city: Munich | country: DE
+2. company_name: Oldenburgische Landesbank AG | first_name: Frank | last_name: Krickelberg | full_name: Frank Krickelberg | role: Head of Corporate Banking Frankfurt | linkedin_profile_url: https://de.linkedin.com/in/frank-krickelberg-32a8ba | source_url: https://de.linkedin.com/in/frank-krickelberg-32a8ba | city: Munich | country: DE
+3. company_name: Oldenburgische Landesbank AG | first_name: Sinan | last_name: Ilkgün | full_name: Sinan Ilkgün | role: Executive Director / Head of Product Management & Digital Banking | linkedin_profile_url: https://de.linkedin.com/in/sinan-ilkg%C3%BCn-47159687 | source_url: https://de.linkedin.com/in/sinan-ilkg%C3%BCn-47159687 | city: Munich | country: DE
+4. company_name: Oldenburgische Landesbank AG | first_name: Thomas | last_name: Völker | full_name: Thomas Völker | role: Head of Commercial Real Estate Finance | linkedin_profile_url: https://de.linkedin.com/in/thomas-v%C3%B6lker-56094a19 | source_url: https://de.linkedin.com/in/thomas-v%C3%B6lker-56094a19 | city: Munich | country: DE
+5. company_name: OMNi-BiOTiC® by Institut AllergoSan | first_name: Egon | last_name: Fister | full_name: Egon Fister | role: Geschäftsführer Institut Allergosan Deutschland | linkedin_profile_url: https://at.linkedin.com/in/egon-fister-b58179122 | source_url: https://at.linkedin.com/in/egon-fister-b58179122 | city: Munich | country: DE
+6. company_name: OMNi-BiOTiC® by Institut AllergoSan | first_name: Richard | last_name: Grossauer | full_name: Richard Grossauer | role: Sales Business Development / Sonderprojekte | linkedin_profile_url: https://at.linkedin.com/in/richard-grossauer | source_url: https://at.linkedin.com/in/richard-grossauer | city: Munich | country: DE
+7. company_name: OMNi-BiOTiC® by Institut AllergoSan | first_name: Marcel | last_name: Lückl | full_name: Marcel Lückl | role: Leitung | linkedin_profile_url: https://at.linkedin.com/in/marcel-l%C3%BCckl-961371101 | source_url: https://at.linkedin.com/in/marcel-l%C3%BCckl-961371101 | city: Munich | country: DE
+8. company_name: OMNIVISION | first_name: Sandro | last_name: Cuomo | full_name: Sandro Cuomo | role: Business Development Manager | linkedin_profile_url: https://de.linkedin.com/in/sandrocuomo | source_url: https://de.linkedin.com/in/sandrocuomo | city: Munich | country: DE
+9. company_name: OMNIVISION | first_name: Grahame | last_name: Cooney | full_name: Grahame Cooney | role: SVP / General Manager | linkedin_profile_url: https://www.linkedin.com/in/grahame-cooney-b254114 | source_url: https://www.linkedin.com/in/grahame-cooney-b254114 | city: Munich | country: DE
+10. company_name: onyo GmbH | first_name: Jens | last_name: Wöhrle | full_name: Jens Wöhrle | role: Co-Founder | linkedin_profile_url: https://de.linkedin.com/in/jenswoehrle | source_url: https://de.linkedin.com/in/jenswoehrle | city: Munich | country: DE
+11. company_name: onyo GmbH | first_name: Niao | last_name: Wu | full_name: Niao Wu | role: Co-Founder | linkedin_profile_url: https://de.linkedin.com/in/niao-wu-38942885 | source_url: https://de.linkedin.com/in/niao-wu-38942885 | city: Munich | country: DE
+12. company_name: Open Systems | first_name: Michael | last_name: Attenberger | full_name: Michael Attenberger | role: Director Sales Engineering D/B/N/L | linkedin_profile_url: https://ch.linkedin.com/in/m-attenberger | source_url: https://ch.linkedin.com/in/m-attenberger | city: Munich | country: DE
+13. company_name: Open Systems | first_name: Roman | last_name: Jeitziner | full_name: Roman Jeitziner | role: General Manager US / former Head of Sales US | linkedin_profile_url: https://www.linkedin.com/in/rjeitziner | source_url: https://www.linkedin.com/in/rjeitziner | city: Munich | country: DE
+14. company_name: OPTARES GmbH & Co. KG | first_name: Jan | last_name: Büscher | full_name: Jan Büscher | role: Geschäftsführer / Managing Director | linkedin_profile_url: https://de.linkedin.com/in/jan-b%C3%BCscher-34b6288 | source_url: https://de.linkedin.com/in/jan-b%C3%BCscher-34b6288 | city: Munich | country: DE
+15. company_name: OPTARES GmbH & Co. KG | first_name: Marc | last_name: Stapp | full_name: Marc Stapp | role: Geschäftsführer / Partner | linkedin_profile_url: https://de.linkedin.com/in/marc-stapp-b329153b | source_url: https://de.linkedin.com/in/marc-stapp-b329153b | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_048
+- Return only the requested result.
+- Use public information only.

@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_039
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Litmus | first_name: Marc | last_name: Dekker | full_name: Marc Dekker | role: Vice President of Customer Success | linkedin_profile_url: https://ca.linkedin.com/in/marcus-dekker | source_url: https://ca.linkedin.com/in/marcus-dekker | city: Munich | country: DE
+2. company_name: LOBECO | first_name: Dirk | last_name: Huefnagels | full_name: Dirk Huefnagels | role: Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/dirk-huefnagels | source_url: https://de.linkedin.com/posts/lorenz-beringer_dirk-huefnagels-startet-als-dritter-gesch%C3%A4ftsf%C3%BChrer-activity-7358154892386910208-WTsW | city: Munich | country: DE
+3. company_name: LOBECO | first_name: Lorenz | last_name: Beringer | full_name: Lorenz Beringer | role: Founder / CEO / Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/lorenz-beringer | source_url: https://www.wirtschaftsforum.de/interviews/lobeco-gmbh/wir-machen-unsere-kunden-zu-champions-im-digitalen-marketing | city: Munich | country: DE
+4. company_name: LOBECO | first_name: Sebastian | last_name: Iffert | full_name: Sebastian Iffert | role: Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/sebastian-iffert | source_url: https://www.lobeco.de/presse/ | city: Munich | country: DE
+5. company_name: Logicalis Germany | first_name: Jürgen | last_name: Hatzipantelis | full_name: Jürgen Hatzipantelis | role: CEO Germany / Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/juergenhatzipantelis | source_url: https://www.logicalis.com/jurgen-hatzipantelis | city: Munich | country: DE
+6. company_name: Logicalis Germany | first_name: Murat | last_name: Peker | full_name: Murat Peker | role: Head of Sales - Technology | linkedin_profile_url: https://de.linkedin.com/in/murat-peker | source_url: https://de.linkedin.com/in/murat-peker | city: Munich | country: DE
+7. company_name: Logicalis Germany | first_name: Stefan | last_name: Mulder | full_name: Stefan Mulder | role: Sales Director Security | linkedin_profile_url: https://de.linkedin.com/in/stefan-mulder | source_url: https://www.de.logicalis.com/de/einblicke/news/stefan-mulder-wird-bei-der-logicalis-gmbh-sales-director-fuer-security | city: Munich | country: DE
+8. company_name: Logistica OS | first_name: Flavio | last_name: Alario | full_name: Flavio Alario | role: Co-Founder & CEO | linkedin_profile_url: https://www.linkedin.com/in/flavio-alario-bb382386 | source_url: https://www.logistica-os.com/about | city: Munich | country: DE
+9. company_name: Logistica OS | first_name: Kenan | last_name: Deniz | full_name: Kenan Deniz | role: Co-Founder & CTO | linkedin_profile_url: https://www.linkedin.com/in/kenan-deniz | source_url: https://www.linkedin.com/posts/daphni_were-thrilled-to-announce-our-investment-activity-7397166847487475712-sQcE | city: Munich | country: DE
+10. company_name: Logistica OS | first_name: Atakan | last_name: Ari | full_name: Atakan Ari | role: Logistica OS team member / Founder-related post | linkedin_profile_url: https://de.linkedin.com/in/atakan-ari | source_url: https://www.linkedin.com/posts/atakan-ari_logistica-os-bringing-ai-where-it-really-activity-7397220108915617792-zNH1 | city: Munich | country: DE
+11. company_name: Logitech | first_name: Markus | last_name: Weinberg | full_name: Markus Weinberg | role: Head of Direct Engagement B2B DACH | linkedin_profile_url: https://de.linkedin.com/in/markus-weinberg-4951a1183 | source_url: https://de.linkedin.com/in/markus-weinberg-4951a1183 | city: Munich | country: DE
+12. company_name: Logitech | first_name: Yalcin | last_name: Yilmaz | full_name: Yalcin Yilmaz | role: Chief Commercial Officer | linkedin_profile_url: https://ch.linkedin.com/in/yalcin-yilmaz-b176a279 | source_url: https://ch.linkedin.com/in/yalcin-yilmaz-b176a279/de | city: Munich | country: DE
+13. company_name: Logitech | first_name: Aleksandar | last_name: Blazevski | full_name: Aleksandar Blazevski | role: Head of Direct Engagement B2B | linkedin_profile_url: https://de.linkedin.com/in/aleksandar-blazevskidg | source_url: https://de.linkedin.com/in/aleksandar-blazevskidg | city: Munich | country: DE
+14. company_name: Logivations | first_name: Andrea | last_name: Plapp | full_name: Andrea Plapp | role: Geschäftsführende Gesellschafterin | linkedin_profile_url: https://www.linkedin.com/in/andrea-plapp | source_url: https://logivations.com/de/impressum/ | city: Munich | country: DE
+15. company_name: Logivations | first_name: Christoph | last_name: Plapp | full_name: Dr. Christoph Plapp | role: Managing Partner / Geschäftsführender Gesellschafter | linkedin_profile_url: https://www.linkedin.com/in/christoph-plapp | source_url: https://logivations.com/de/impressum/ | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_039
+- Return only the requested result.
+- Use public information only.

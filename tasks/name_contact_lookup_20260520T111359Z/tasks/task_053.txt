@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_053
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: QCraft AI | first_name: Haoqing | last_name: Zhang | full_name: Haoqing Zhang | role: Director Business Development, European Region | linkedin_profile_url: https://de.linkedin.com/in/haoqing-zhang-77544b1b | source_url: https://de.linkedin.com/in/haoqing-zhang-77544b1b | city: Munich | country: DE
+2. company_name: QCraft AI | first_name: Liwen | last_name: Zhang | full_name: Liwen Zhang | role: Director of Business Development European Region | linkedin_profile_url: https://de.linkedin.com/in/liwen-zhang-profile | source_url: https://de.linkedin.com/in/liwen-zhang-profile/de | city: Munich | country: DE
+3. company_name: QCraft AI | first_name: Qian | last_name: Yu | full_name: Qian Yu | role: Co-Founder and CEO | linkedin_profile_url: https://www.linkedin.com/in/qian-yu-a644b94 | source_url: https://www.linkedin.com/in/qian-yu-a644b94 | city: Munich | country: DE
+4. company_name: Quadient | first_name: Rudi | last_name: Richter | full_name: Rudi Richter | role: Vice President of Digital Sales | linkedin_profile_url: https://de.linkedin.com/in/rudirichter | source_url: https://de.linkedin.com/in/rudirichter | city: Munich | country: DE
+5. company_name: Quadient | first_name: Anna | last_name: D'Alessio | full_name: Anna D'Alessio | role: Sales and Business Development | linkedin_profile_url: https://de.linkedin.com/in/anna-d-alessio-1b873827 | source_url: https://de.linkedin.com/in/anna-d-alessio-1b873827 | city: Munich | country: DE
+6. company_name: Quadient | first_name: Duncan | last_name: Groom | full_name: Duncan Groom | role: Geschäftsführer Quadient Finance Germany GmbH | source_url: https://mail.quadient.com/de/impressum | city: Munich | country: DE
+7. company_name: Quandela | first_name: Samuel | last_name: Horsch | full_name: Samuel Horsch | role: Business/technology development for quantum adoption | linkedin_profile_url: https://fr.linkedin.com/in/samuel-horsch | source_url: https://fr.linkedin.com/in/samuel-horsch | city: Munich | country: DE
+8. company_name: Quandela | first_name: Thomas | last_name: Volz | full_name: Thomas Volz | role: Chief Technology Officer, German branch | source_url: https://www.quandela.com/about-us/newsroom/quandela-welcomes-professor-thomas-volz-as-chief-technology-officer-of-the-german-branch/ | city: Munich | country: DE
+9. company_name: Ralph Lauren | first_name: Martina | last_name: Bovenkerk | full_name: Martina Bovenkerk | role: Head of Germany / Senior Vice President | linkedin_profile_url: https://de.linkedin.com/in/martinabovenkerk | source_url: https://de.fashionnetwork.com/news/Ralph-lauren-macht-martina-bovenkerk-zur-deutschland-chefin%2C1020798.html | city: Munich | country: DE
+10. company_name: Ralph Lauren | first_name: Mons | last_name: Strömsöe | full_name: Mons Strömsöe | role: Vice President/Head of Sales Operations - Germany, Austria, Switzerland, Eastern & Northern Europe | linkedin_profile_url: https://de.linkedin.com/in/monss | source_url: https://de.linkedin.com/in/monss | city: Munich | country: DE
+11. company_name: Ralph Lauren | first_name: Benjamin | last_name: Kopf | full_name: Benjamin Kopf | role: Head of HR Region Germany | linkedin_profile_url: https://de.linkedin.com/in/benjamin-kopf | source_url: https://de.linkedin.com/in/benjamin-kopf | city: Munich | country: DE
+12. company_name: Real Chemistry | first_name: Brandon | last_name: Pletsch | full_name: Brandon Pletsch | role: President, Europe | linkedin_profile_url: https://www.linkedin.com/in/brandonpletsch | source_url: https://www.realchemistry.com/real-chemistry-strengthens-global-presence-with-new-international-leadership-appointments-and-expanded-regional-hubs/ | city: Munich | country: DE
+13. company_name: Real Chemistry | first_name: Kath | last_name: Harrison | full_name: Kath Harrison | role: Group President, International Growth | linkedin_profile_url: https://ae.linkedin.com/in/kath-harrison | source_url: https://www.realchemistry.com/real-chemistry-strengthens-global-presence-with-new-international-leadership-appointments-and-expanded-regional-hubs/ | city: Munich | country: DE
+14. company_name: RECUP | first_name: Jan | last_name: Patzer | full_name: Jan Patzer | role: Head of Sales & Business Development | linkedin_profile_url: https://de.linkedin.com/in/jan-patzer-craftingfuture | source_url: https://theorg.com/org/recup/org-chart/jan-patzer | city: Munich | country: DE
+15. company_name: RECUP | first_name: Lisa | last_name: Henze | full_name: Lisa Henze | role: Teamlead Sales | linkedin_profile_url: https://de.linkedin.com/in/lisa-henze-recup | source_url: https://theorg.com/org/recup/teams/sales-team | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_053
+- Return only the requested result.
+- Use public information only.

@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_025
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: EverReal | first_name: Philipp | last_name: Fischer | full_name: Philipp Fischer | role: Head of Sales Customer Success & Service | linkedin_profile_url: https://de.linkedin.com/in/philipp-fischer-18207654 | source_url: https://de.linkedin.com/in/philipp-fischer-18207654 | city: Munich | country: DE
+2. company_name: Exotec | first_name: Andreas | last_name: Haslbeck | full_name: Andreas Haslbeck | role: Sales Engineering Manager | linkedin_profile_url: https://de.linkedin.com/in/andreas-haslbeck-21a41298 | source_url: https://de.linkedin.com/in/andreas-haslbeck-21a41298 | city: Munich | country: DE
+3. company_name: Exotec | first_name: Benjamin | last_name: Putz | full_name: Benjamin Putz | role: Senior Sales Executive DACH and Eastern Europe | linkedin_profile_url: https://at.linkedin.com/in/benjamin-putz-64230321 | source_url: https://at.linkedin.com/in/benjamin-putz-64230321 | city: Munich | country: DE
+4. company_name: Exotec | first_name: Jonas | last_name: Walz | full_name: Jonas Walz | role: Sales Executive Central Europe | linkedin_profile_url: https://de.linkedin.com/in/jonas-walz-37b760108 | source_url: https://de.linkedin.com/in/jonas-walz-37b760108 | city: Munich | country: DE
+5. company_name: Experts Group International | first_name: Frankie | last_name: Black | full_name: Frankie Black | role: Senior Principal Consultant / Global Head | linkedin_profile_url: https://uk.linkedin.com/in/frankie-black-290119234 | source_url: https://uk.linkedin.com/in/frankie-black-290119234 | city: Munich | country: DE
+6. company_name: Experts Group International | first_name: Jack | last_name: Lawson | full_name: Jack Lawson | role: Senior Sales Consultant | linkedin_profile_url: https://uk.linkedin.com/in/jack-d-lawson | source_url: https://uk.linkedin.com/in/jack-d-lawson | city: Munich | country: DE
+7. company_name: Experts Group International | first_name: Kane | last_name: Macey | full_name: Kane Macey | role: Executive Sales Consultant | linkedin_profile_url: https://ae.linkedin.com/in/kane-macey-7a09bb233 | source_url: https://ae.linkedin.com/in/kane-macey-7a09bb233 | city: Munich | country: DE
+8. company_name: F24 | first_name: Christian | last_name: Goetz | full_name: Christian Goetz | role: Founder & Co-CEO Executive Board Member | linkedin_profile_url: https://de.linkedin.com/in/christian-goetz-8b684690 | source_url: https://de.linkedin.com/in/christian-goetz-8b684690 | city: Munich | country: DE
+9. company_name: F24 | first_name: Markus | last_name: Grauvogl | full_name: Markus Grauvogl | role: VP Global Sales at F24 AG | linkedin_profile_url: https://de.linkedin.com/in/markus-grauvogl-b3669562 | source_url: https://de.linkedin.com/in/markus-grauvogl-b3669562 | city: Munich | country: DE
+10. company_name: F24 Service Notifications & Alerts | first_name: Kathrine | last_name: Raknerud | full_name: Kathrine Raknerud | role: Vice President Commercial Business Unit Service Notifications & Managing Director F24 Norway | linkedin_profile_url: https://no.linkedin.com/in/kathrine-raknerud | source_url: https://no.linkedin.com/in/kathrine-raknerud | city: Munich | country: DE
+11. company_name: Featherless AI | first_name: Eugene | last_name: Cheah | full_name: Eugene Cheah | role: CEO / Co-Founder | linkedin_profile_url: https://www.linkedin.com/in/eugene-cheah-a47791126 | source_url: https://www.linkedin.com/in/eugene-cheah-a47791126 | city: Munich | country: DE
+12. company_name: Featherless AI | first_name: Joseph | last_name: Fleming | full_name: Joseph Fleming | role: CRO | linkedin_profile_url: https://cz.linkedin.com/in/josephwfleming | source_url: https://cz.linkedin.com/in/josephwfleming | city: Munich | country: DE
+13. company_name: Featherless AI | first_name: Cristian-George | last_name: Farauanu | full_name: Cristian-George Farauanu | role: Business Development Lead | linkedin_profile_url: https://ro.linkedin.com/in/george-farauanu | source_url: https://ro.linkedin.com/in/george-farauanu | city: Munich | country: DE
+14. company_name: Feldwerke | first_name: Marco | last_name: Mielenz | full_name: Marco Mielenz | role: Mitgründer und Geschäftsführer | source_url: https://www.feldwerke.de/uber-uns | city: Munich | country: DE
+15. company_name: Feldwerke | first_name: Nils | last_name: Kuchenbuch | full_name: Nils Kuchenbuch | role: Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/nils-kuchenbuch-239345134 | source_url: https://de.linkedin.com/in/nils-kuchenbuch-239345134 | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_025
+- Return only the requested result.
+- Use public information only.

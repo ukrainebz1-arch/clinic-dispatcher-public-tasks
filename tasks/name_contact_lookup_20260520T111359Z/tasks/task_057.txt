@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_057
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Sandvik | first_name: Stefan | last_name: Widing | full_name: Stefan Widing | role: President and CEO | linkedin_profile_url: https://se.linkedin.com/in/stefanwiding | source_url: https://www.home.sandvik/en/investors/corporate-governance/group-executive-management/stefan-widing2/ | city: Munich | country: DE
+2. company_name: Sandvik | first_name: Andre | last_name: Herbertz | full_name: Andre Herbertz | role: Global Account Manager GAM DE North & Integration SANCE | linkedin_profile_url: https://de.linkedin.com/in/andre-herbertz-7b994295 | source_url: https://de.linkedin.com/in/andre-herbertz-7b994295 | city: Munich | country: DE
+3. company_name: Scalable Capital | first_name: Erik | last_name: Podzuweit | full_name: Erik Podzuweit | role: Founder and Co-CEO | linkedin_profile_url: https://linkedin.com/in/erik-podzuweit-156a4567 | source_url: https://www.clay.com/dossier/scalable-capital-ceo | city: Munich | country: DE
+4. company_name: Scalable Capital | first_name: Timo | last_name: Slametschka | full_name: Timo Slametschka | role: Head of Partnerships | linkedin_profile_url: https://de.linkedin.com/in/timo-slametschka | source_url: https://de.linkedin.com/in/timo-slametschka | city: Munich | country: DE
+5. company_name: Scalefocus | first_name: Ivan | last_name: Ivanov | full_name: Ivan Ivanov | role: Chief Executive Officer | linkedin_profile_url: https://bg.linkedin.com/in/ipivanov | source_url: https://bg.linkedin.com/in/ipivanov | city: Munich | country: DE
+6. company_name: Scelion | first_name: Alexandros | last_name: A. | full_name: Alexandros A. | role: Founder | linkedin_profile_url: https://de.linkedin.com/in/iamavalex | source_url: https://de.linkedin.com/in/iamavalex | city: Munich | country: DE
+7. company_name: Scelion | first_name: Raphael | last_name: Mielke | full_name: Raphael Mielke | role: Founder | linkedin_profile_url: https://de.linkedin.com/in/raphaelmielke | source_url: https://de.linkedin.com/posts/raphaelmielke_were-hiring-at-scelion-du-willst-sales-activity-7424428817458434048-LVf0 | city: Munich | country: DE
+8. company_name: schoene neue kinder GmbH | first_name: Michael | last_name: Kirchberger | full_name: Michael Kirchberger | role: Geschäftsführer | source_url: https://mk.linkedin.com/company/schoene-neue-kinder | city: Munich | country: DE
+9. company_name: Secfix | first_name: Fabiola | last_name: Munguia | full_name: Fabiola Munguia | role: Co-Founder and CEO | linkedin_profile_url: https://de.linkedin.com/in/fabiola-munguia | source_url: https://www.linkedin.com/posts/fabiola-munguia_my-job-at-secfix-is-not-to-grow-revenue-activity-7430204743089594368-Q9UB | city: Munich | country: DE
+10. company_name: Secfix | first_name: Mustafa | last_name: Khan | full_name: Mustafa Khan | role: Account Executive / first sales hire | source_url: https://www.linkedin.com/posts/mustafa-khan-000_im-delighted-to-share-that-secfix-has-raised-activity-7432351779574632448-3yW- | city: Munich | country: DE
+11. company_name: SECUTIX | first_name: Jochen | last_name: Opp | full_name: Jochen Opp | role: Associate VP Sales DACH | source_url: https://www.secutix.com/news/jochen-opp-brings-industry-expertise-secutix | city: Munich | country: DE
+12. company_name: SECUTIX | first_name: Lennard | last_name: Moons | full_name: Lennard Moons | role: Managing Director | linkedin_profile_url: https://nl.linkedin.com/in/lennardmoons | source_url: https://www.linkedin.com/company/secutix | city: Munich | country: DE
+13. company_name: SECUTIX | first_name: Christian | last_name: Binelli | full_name: Christian Binelli | role: Managing Director | source_url: https://www.secutix.com/legacy/legal-notice | city: Munich | country: DE
+14. company_name: SELLWERK | first_name: Artur | last_name: Totsinov | full_name: Artur Totsinov | role: Sales Manager | linkedin_profile_url: https://de.linkedin.com/in/artur-totsinov-990076202 | source_url: https://de.linkedin.com/in/artur-totsinov-990076202 | city: Munich | country: DE
+15. company_name: SELLWERK | first_name: Philipp | last_name: Lehner | full_name: Philipp Lehner | role: Sales Manager | linkedin_profile_url: https://de.linkedin.com/in/philipp-lehner-1a6540351 | source_url: https://de.linkedin.com/in/philipp-lehner-1a6540351 | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_057
+- Return only the requested result.
+- Use public information only.

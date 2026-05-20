@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_072
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Workerbase | first_name: Norman | last_name: Hartmann | full_name: Norman Hartmann | role: CEO / Founder | linkedin_profile_url: https://de.linkedin.com/in/normanhartmann | source_url: https://getlatka.com/companies/workerbase | city: Munich | country: DE
+2. company_name: Workerbase | first_name: Christine | last_name: Wei | full_name: Christine Wei | role: B2B Growth and Marketing Professional | linkedin_profile_url: https://de.linkedin.com/in/tingan-christine | source_url: https://de.linkedin.com/in/tingan-christine | city: Munich | country: DE
+3. company_name: Workpath | first_name: Johannes | last_name: Müller | full_name: Johannes Müller | role: CEO | source_url: https://www.workpath.com/en/magazine/new-members-leadership | city: Munich | country: DE
+4. company_name: WorkSmart | first_name: Markus | last_name: Köhler | full_name: Markus Köhler | role: Branch Manager | source_url: https://www.linkedin.com/pub/dir/Markus/Kohler/de-0-Deutschland | city: Munich | country: DE
+5. company_name: WorkSmart | first_name: Petra | last_name: Piry | full_name: Petra Piry | role: Employee at WorkSmart | source_url: https://de.linkedin.com/company/worksmart-de | city: Munich | country: DE
+6. company_name: Workwise | first_name: Matthias | last_name: Klauser | full_name: Matthias Klauser | role: Chief Commercial Officer (CCO) | linkedin_profile_url: https://de.linkedin.com/in/matthias-klauser-a9570b4b | source_url: https://de.linkedin.com/in/matthias-klauser-a9570b4b | city: Nuremberg | country: DE
+7. company_name: Workwise | first_name: Jannik | last_name: Keller | full_name: Jannik Keller | role: CEO & Co-Founder | linkedin_profile_url: https://de.linkedin.com/in/jannik-keller-74b50250 | source_url: https://de.linkedin.com/in/jannik-keller-74b50250 | city: Nuremberg | country: DE
+8. company_name: Workwise | first_name: Lukas | last_name: Kretzinger | full_name: Lukas Kretzinger | role: Geschäftsführer / CFO | source_url: https://www.the-playbook.de/de/firmen/workwise/ | city: Nuremberg | country: DE
+9. company_name: Wunschgutschein GmbH | first_name: Marco | last_name: Jormann | full_name: Marco Jormann | role: Senior Vice President Vertrieb | linkedin_profile_url: https://de.linkedin.com/in/marco-jormann-90492a234 | source_url: https://de.linkedin.com/in/marco-jormann-90492a234 | city: Munich | country: DE
+10. company_name: Wunschgutschein GmbH | first_name: Andreas | last_name: Betzer | full_name: Andreas Betzer | role: CEO | source_url: https://www.leadersnet.de/news/63540%2Cwunschgutschein-verstaerkt-geschaeftsfuehrung-mit-andreas-betzer.html | city: Munich | country: DE
+11. company_name: Wunschgutschein GmbH | first_name: Verena | last_name: Argauer | full_name: Verena Argauer | role: COO | source_url: https://www.leadersnet.de/news/63540%2Cwunschgutschein-verstaerkt-geschaeftsfuehrung-mit-andreas-betzer.html | city: Munich | country: DE
+12. company_name: Xiaomi Technology | first_name: QX (Quanxin) | last_name: Wang | full_name: QX (Quanxin) Wang | role: Head of Western Europe at Xiaomi Technology | linkedin_profile_url: https://de.linkedin.com/in/qx-quanxin-wang-6485b310 | source_url: https://de.linkedin.com/in/qx-quanxin-wang-6485b310 | city: Munich | country: DE
+13. company_name: Xiaomi Technology | first_name: Sanju | last_name: Pariyarath | full_name: Sanju Pariyarath | role: Head of Sales AioT bei Xiaomi Technology | source_url: https://de.linkedin.com/company/xiaomi-deutschland | city: Munich | country: DE
+14. company_name: Xiaomi Technology | first_name: Florian | last_name: Paulus | full_name: Florian Paulus | role: B2B and B2B2C Channels | linkedin_profile_url: https://de.linkedin.com/in/florian-paulus | source_url: https://de.linkedin.com/in/florian-paulus | city: Munich | country: DE
+15. company_name: Xometry | first_name: Dmitry | last_name: Kafidov | full_name: Dmitry Kafidov | role: Managing Director at Xometry Europe | linkedin_profile_url: https://de.linkedin.com/in/dmitry-kafidov-77566922 | source_url: https://xometry.eu/de/xometry-team/ | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_072
+- Return only the requested result.
+- Use public information only.

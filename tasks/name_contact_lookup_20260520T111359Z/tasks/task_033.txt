@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_033
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: InfluenceME - Influencer und Creator Marketing mit System | first_name: Philipp | last_name: Hagl | full_name: Philipp Hagl | role: InfluenceME GmbH / Influencer Marketing | linkedin_profile_url: https://de.linkedin.com/in/philipp-hagl-1a4914117 | source_url: https://de.linkedin.com/in/philipp-hagl-1a4914117 | city: Munich | country: DE
+2. company_name: Infoblox | first_name: Thomas | last_name: Gerch | full_name: Thomas Gerch | role: Sales Director Central Europe | linkedin_profile_url: https://de.linkedin.com/in/thomas-gerch-188b6428 | source_url: https://de.linkedin.com/in/thomas-gerch-188b6428 | city: Munich | country: DE
+3. company_name: Infoblox | first_name: Martin | last_name: Kürzinger | full_name: Martin Kürzinger | role: Infoblox Germany | linkedin_profile_url: https://de.linkedin.com/in/martinkuerzinger | source_url: https://de.linkedin.com/in/martinkuerzinger | city: Munich | country: DE
+4. company_name: Infoblox | first_name: Michael | last_name: Hüfner | full_name: Michael Hüfner | role: Sales / Account Management, DACH | linkedin_profile_url: https://de.linkedin.com/in/michaelhuefner | source_url: https://de.linkedin.com/in/michaelhuefner | city: Munich | country: DE
+5. company_name: INFUSE | first_name: Jeff | last_name: Gallagher | full_name: Jeff Gallagher | role: VP, Strategic Accounts | linkedin_profile_url: https://www.linkedin.com/in/jeffg1318events | source_url: https://www.linkedin.com/in/jeffg1318events | city: Munich | country: DE
+6. company_name: INFUSE | first_name: Kareem | last_name: G. | full_name: Kareem G. | role: EMEA Expansion Manager | linkedin_profile_url: https://uk.linkedin.com/in/kareemgj | source_url: https://uk.linkedin.com/in/kareemgj | city: Munich | country: DE
+7. company_name: INFUSE | first_name: Joseph | last_name: Braue | full_name: Joseph Braue | role: Digital media business leader / INFUSE | linkedin_profile_url: https://www.linkedin.com/in/josephbraue | source_url: https://www.linkedin.com/in/josephbraue | city: Munich | country: DE
+8. company_name: INNEO Solutions GmbH | first_name: Helmut | last_name: Haas | full_name: Helmut Haas | role: CEO + Owner | linkedin_profile_url: https://www.linkedin.com/in/helmut-haas-32174a8 | source_url: https://www.linkedin.com/in/helmut-haas-32174a8 | city: Munich | country: DE
+9. company_name: INNEO Solutions GmbH | first_name: Gerhard | last_name: Rieger | full_name: Gerhard Rieger | role: Führungskreis | source_url: https://www.inneo.de/de/unternehmen.html | city: Munich | country: DE
+10. company_name: INNEO Solutions GmbH | first_name: Peter | last_name: Behnisch | full_name: Peter Behnisch | role: Führungskreis | source_url: https://www.inneo.de/de/unternehmen.html | city: Munich | country: DE
+11. company_name: innoscripta SE | first_name: Johannes | last_name: Rekowski | full_name: Johannes Rekowski | role: Head of Sales | linkedin_profile_url: https://de.linkedin.com/in/johannes-rekowski-564b43172 | source_url: https://de.linkedin.com/in/johannes-rekowski-564b43172 | city: Munich | country: DE
+12. company_name: innoscripta SE | first_name: Lukas | last_name: Hehle | full_name: Lukas Hehle | role: Geschäftsführer / Country Managing Director | linkedin_profile_url: https://at.linkedin.com/in/lukas-hehle-69b87012b | source_url: https://at.linkedin.com/in/lukas-hehle-69b87012b | city: Munich | country: DE
+13. company_name: innoscripta SE | first_name: Sebastian | last_name: Schwertlein | full_name: Sebastian Schwertlein | role: COO / Partner Teamlead B2B Sales & Innovation Consulting | linkedin_profile_url: https://de.linkedin.com/in/sebastian-schwertlein-424970215 | source_url: https://de.linkedin.com/in/sebastian-schwertlein-424970215 | city: Munich | country: DE
+14. company_name: Instaffo | first_name: Christoph | last_name: Zoeller | full_name: Christoph Zoeller | role: CEO | linkedin_profile_url: https://de.linkedin.com/in/christoph-zoeller | source_url: https://de.linkedin.com/in/christoph-zoeller | city: Munich | country: DE
+15. company_name: Instaffo | first_name: Daniel | last_name: Schaefer | full_name: Daniel Schaefer | role: Leadership / marketplace growth | linkedin_profile_url: https://de.linkedin.com/in/daniel-schaefer-88654297 | source_url: https://de.linkedin.com/in/daniel-schaefer-88654297 | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_033
+- Return only the requested result.
+- Use public information only.

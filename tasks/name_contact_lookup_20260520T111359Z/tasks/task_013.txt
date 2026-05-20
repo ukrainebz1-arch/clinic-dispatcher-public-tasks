@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_013
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: ChargeGuru | first_name: Verena | last_name: Pretzsch | full_name: Verena Pretzsch | role: Marketing Manager at ChargeGuru | linkedin_profile_url: https://de.linkedin.com/in/verenapretzsch/en | source_url: https://de.linkedin.com/in/verenapretzsch/en | city: Munich | country: DE
+2. company_name: ChargeX | first_name: Michael | last_name: Masnitza | full_name: Michael Masnitza | role: CEO / Co-founder / COO | source_url: https://www.linkedin.com/posts/tobias-scharfen-07633283_why-electrification-emobility-activity-7459945689868038144-dzgD | city: Munich | country: DE
+3. company_name: ChargeX | first_name: Tobias | last_name: Scharfen | full_name: Tobias Scharfen | role: Former CEO | source_url: https://www.linkedin.com/posts/tobias-scharfen-07633283_why-electrification-emobility-activity-7459945689868038144-dzgD | city: Munich | country: DE
+4. company_name: Check Point Software | first_name: Martin | last_name: Schuller | full_name: Martin Schuller | role: Executive-Level Sales and Business Development Leader | linkedin_profile_url: https://de.linkedin.com/in/mschuller | source_url: https://de.linkedin.com/in/mschuller | city: Munich | country: DE
+5. company_name: Check Point Software | first_name: Georg | last_name: Stanzel | full_name: Georg Stanzel | role: Customer success & sales results leader | linkedin_profile_url: https://de.linkedin.com/in/georgstanzel | source_url: https://de.linkedin.com/in/georgstanzel | city: Munich | country: DE
+6. company_name: Check Point Software | first_name: Ilijana | last_name: Vavan | full_name: Ilijana Vavan | role: General management / Check Point Software Technologies Ltd | linkedin_profile_url: https://de.linkedin.com/in/ilijanavavan | source_url: https://de.linkedin.com/in/ilijanavavan | city: Munich | country: DE
+7. company_name: CHECK24 Vergleichsportal GmbH | first_name: Billy | last_name: Scheufler | full_name: Billy Scheufler | role: Geschäftsführer CHECK24 Mietwagen | linkedin_profile_url: https://de.linkedin.com/in/billy-scheufler-68819683 | source_url: https://de.linkedin.com/in/billy-scheufler-68819683 | city: Augsburg | country: DE
+8. company_name: CHECK24 Vergleichsportal GmbH | first_name: Andreas | last_name: Schiffelholz | full_name: Dr. Andreas Schiffelholz | role: Geschäftsführer Kredite / CEO Consumer Loans | linkedin_profile_url: https://de.linkedin.com/in/dr-andreas-schiffelholz-78b572114 | source_url: https://de.linkedin.com/in/dr-andreas-schiffelholz-78b572114 | city: Augsburg | country: DE
+9. company_name: CHECK24 Vergleichsportal GmbH | first_name: Ludwig | last_name: Pradel | full_name: Ludwig Pradel | role: Managing Director | linkedin_profile_url: https://de.linkedin.com/in/ludwig-pradel-08b3803a/en | source_url: https://de.linkedin.com/in/ludwig-pradel-08b3803a/en | city: Augsburg | country: DE
+10. company_name: Checkmk | first_name: Rocco | last_name: Koll | full_name: Rocco Koll | role: Sales Director | linkedin_profile_url: https://de.linkedin.com/in/roccokoll | source_url: https://de.linkedin.com/in/roccokoll | city: Munich | country: DE
+11. company_name: Checkmk | first_name: David | last_name: Niessen | full_name: David Niessen | role: CFO | linkedin_profile_url: https://de.linkedin.com/in/david-niessen | source_url: https://de.linkedin.com/in/david-niessen | city: Munich | country: DE
+12. company_name: Checkmk | first_name: Quentin Irving | last_name: Kubler | full_name: Quentin Irving Kubler | role: Sales Development EMEA | linkedin_profile_url: https://de.linkedin.com/in/quentin-irving-kubler | source_url: https://de.linkedin.com/in/quentin-irving-kubler | city: Munich | country: DE
+13. company_name: Christian Louboutin | first_name: Alexis | last_name: Mourot | full_name: Alexis Mourot | role: CEO | linkedin_profile_url: https://fr.linkedin.com/in/alexis-mourot-b2ba391b0 | source_url: https://fr.linkedin.com/in/alexis-mourot-b2ba391b0 | city: Munich | country: DE
+14. company_name: Cipla | first_name: Achin | last_name: Gupta | full_name: Achin Gupta | role: Managing Director and Global CEO | source_url: https://www.cipla.com/about-us/management-council | city: Munich | country: DE
+15. company_name: Cipla | first_name: Jortin | last_name: George | full_name: Jortin George | role: Pan-European pharmaceutical leader | linkedin_profile_url: https://uk.linkedin.com/in/jortin-george | source_url: https://uk.linkedin.com/in/jortin-george | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_013
+- Return only the requested result.
+- Use public information only.

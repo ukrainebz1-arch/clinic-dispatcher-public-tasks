@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_061
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Straumann Group | first_name: Roger | last_name: Svensson | full_name: Roger Svensson | role: Head of Sales Labore / Member of Management | linkedin_profile_url: https://de.linkedin.com/in/roger-svensson-4b5597177 | source_url: https://de.linkedin.com/in/roger-svensson-4b5597177 | city: Munich | country: DE
+2. company_name: Ströer SE & Co. KGaA | first_name: Bernd | last_name: Prade | full_name: Bernd Prade | role: Managing Director | linkedin_profile_url: https://de.linkedin.com/in/bernd-prade/en | source_url: https://de.linkedin.com/in/bernd-prade/en | city: Munich | country: DE
+3. company_name: Ströer SE & Co. KGaA | first_name: Sebastian | last_name: Deppe | full_name: Sebastian Deppe | role: Head of Sales | linkedin_profile_url: https://de.linkedin.com/in/sebastian-deppe-37466892 | source_url: https://de.linkedin.com/in/sebastian-deppe-37466892 | city: Munich | country: DE
+4. company_name: StudySmarter | Vaia | first_name: Adrian | last_name: Dalldorf | full_name: Adrian Dalldorf | role: Head of Sales | linkedin_profile_url: https://de.linkedin.com/in/adrian-dalldorf-215519159 | source_url: https://de.linkedin.com/in/adrian-dalldorf-215519159 | city: Munich | country: DE
+5. company_name: StudySmarter | Vaia | first_name: Christian | last_name: Felgenhauer | full_name: Christian Felgenhauer | role: Co-Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/christian-felgenhauer | source_url: https://de.linkedin.com/in/christian-felgenhauer | city: Munich | country: DE
+6. company_name: StudySmarter | Vaia | first_name: Philipp | last_name: Mattner | full_name: Philipp Mattner | role: Job poster for Senior Sales Manager roles | source_url: https://www.linkedin.com/jobs/view/senior-sales-manager-media-agency-sales-m-f-d-at-studysmarter-vaia-4227289085 | city: Munich | country: DE
+7. company_name: summ ai | first_name: Flora | last_name: Geske | full_name: Flora Geske | role: Founder & CEO | source_url: https://de.linkedin.com/posts/summ-ai_emotionaward2024-emotionaward2024-femalefounders-activity-7261777341264117762-eh4Y | city: Munich | country: DE
+8. company_name: summ ai | first_name: Vanessa | last_name: König | full_name: Vanessa König | role: Co-Founder & CRO of SUMM AI | linkedin_profile_url: https://de.linkedin.com/in/vanessa-k%C3%B6nig-624b54122 | source_url: https://de.linkedin.com/posts/vanessa-k%C3%B6nig-624b54122_lifebeginsattheendofyourcomfortzone-activity-7345490556598300673-aPds | city: Munich | country: DE
+9. company_name: supermodular.ai | first_name: Francisco Carvalho | last_name: Araújo | full_name: Francisco Carvalho Araújo | role: Founder / enterprise GTM lead | linkedin_profile_url: https://uk.linkedin.com/in/franciscocarvalhoaraujo | source_url: https://www.linkedin.com/posts/franciscocarvalhoaraujo_really-excited-to-officially-unveil-supermodularai-activity-7350524824198287360-i_7a | city: Munich | country: DE
+10. company_name: supermodular.ai | first_name: Lara | last_name: Silva | full_name: Lara Silva | role: COO | source_url: https://www.linkedin.com/posts/lara-silva-b4465b29_after-an-intense-and-rewarding-ride-at-bounce-activity-7441822038249324545-SvD6 | city: Munich | country: DE
+11. company_name: SUSHI BIKES | first_name: Andy | last_name: Weinzierl | full_name: Andy Weinzierl | role: Founder & Geschäftsführer / CEO | linkedin_profile_url: https://de.linkedin.com/in/weinzierl | source_url: https://de.linkedin.com/in/weinzierl | city: Munich | country: DE
+12. company_name: Syndigo | first_name: Manuel | last_name: Dirnhofer | full_name: Manuel Dirnhofer | role: Sales Director DACH Region | linkedin_profile_url: https://www.linkedin.com/in/manueldirnhofer/ | source_url: https://www.linkedin.com/in/manueldirnhofer/ | city: Munich | country: DE
+13. company_name: Syndigo | first_name: Sabine | last_name: Starkloff | full_name: Sabine Starkloff | role: Regional Sales Director D/A/CH | linkedin_profile_url: https://de.linkedin.com/in/sabine-starkloff-502199 | source_url: https://de.linkedin.com/in/sabine-starkloff-502199 | city: Munich | country: DE
+14. company_name: Synspective Inc. | first_name: Iain | last_name: MacInnes | full_name: Iain MacInnes | role: Managing Director & CEO Synspective Europe GmbH / Senior Director EMEA | linkedin_profile_url: https://uk.linkedin.com/in/iain-macinnes-b6b5786 | source_url: https://synspective.com/press-release/2026/synspective_europe_gmbh/ | city: Munich | country: DE
+15. company_name: Synspective Inc. | first_name: Pia | last_name: Feurstein | full_name: Pia Feurstein | role: Technical Sales Manager Satellite / Business Development B2G EO data | linkedin_profile_url: https://de.linkedin.com/in/pia-feurstein | source_url: https://de.linkedin.com/in/pia-feurstein | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_061
+- Return only the requested result.
+- Use public information only.

@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_008
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: BioTalent | first_name: Jay | last_name: Webster | full_name: Jay Webster | role: Senior Partner - BioX / Vice President | source_url: https://www.biotalent.com/consultants | city: Munich | country: DE
+2. company_name: BioTalent | first_name: Manpreet | last_name: Bhullar | full_name: Manpreet Bhullar | role: Senior Consultant - Key Account Management | source_url: https://www.biotalent.com/consultants | city: Munich | country: DE
+3. company_name: BioTalent | first_name: Natasha | last_name: Veale | full_name: Natasha Veale | role: Partner - BioX | source_url: https://www.biotalent.com/consultants | city: Munich | country: DE
+4. company_name: BIT-TS | first_name: Cornelia | last_name: Denk | full_name: Cornelia Denk | role: CEO / Geschäftsführerin | linkedin_profile_url: https://de.linkedin.com/in/cornelia-denk-803a37a | source_url: https://www.avl.com/de-at/press/press-release/ai-innovations-safe-autonomous-driving | city: Munich | country: DE
+5. company_name: BIT-TS | first_name: Johannes | last_name: Seitz | full_name: Johannes Seitz | role: Technischer Vertrieb | linkedin_profile_url: https://de.linkedin.com/in/johannes-seitz-bb54ab212 | source_url: https://de.linkedin.com/in/johannes-seitz-bb54ab212 | city: Munich | country: DE
+6. company_name: BIT-TS | first_name: Peter Werner Maria Prof. Dr. Dr. | last_name: Löw | full_name: Peter Werner Maria Prof. Dr. Dr. Löw | role: Geschäftsführer | source_url: https://handelsregister.ai/de/organizations/muenchen/forschung-und-entwicklung-im-bereich-biotechnologie/bit-technology-solutions-gmbh-a1b19135931a12956d63c525bab1a392 | city: Munich | country: DE
+7. company_name: Bizagi | first_name: Jürgen | last_name: Neubauer | full_name: Jürgen Neubauer | role: VP EMEA / Chief Revenue Officer background | source_url: https://www.bizagi.com/en/about/the-team | city: Bavaria | country: DE
+8. company_name: Bizagi | first_name: Christopher | last_name: Sullivan | full_name: Christopher Sullivan | role: CEO | linkedin_profile_url: https://www.linkedin.com/in/christopher-sullivan-718a97b | source_url: https://www.linkedin.com/in/christopher-sullivan-718a97b | city: Bavaria | country: DE
+9. company_name: Bizagi | first_name: Samir | last_name: Gulati | full_name: Samir Gulati | role: Chief Marketing Officer | linkedin_profile_url: https://www.linkedin.com/in/samirgulati | source_url: https://www.linkedin.com/in/samirgulati | city: Bavaria | country: DE
+10. company_name: BKW Engineering | first_name: Martin | last_name: Fecke | full_name: Martin Fecke | role: CEO / Overall responsibility for BKW Engineering | source_url: https://www.linkedin.com/posts/bkwag_martin-fecke-appointed-ceo-of-bkw-engineering-activity-6977935679594876928-H5UY | city: Munich | country: DE
+11. company_name: BKW Engineering | first_name: Andreas | last_name: Gallus | full_name: Andreas Gallus | role: Kaufmännischer Spartenleiter / Kaufmännischer Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/gallus-andreas-muenchen | source_url: https://de.linkedin.com/in/gallus-andreas-muenchen | city: Munich | country: DE
+12. company_name: BKW Engineering | first_name: Andreas | last_name: Perchinig | full_name: Andreas Perchinig | role: Geschäftsführer IKK Group / BKW Engineering company | linkedin_profile_url: https://at.linkedin.com/in/andreas-perchinig-a8a415110 | source_url: https://at.linkedin.com/in/andreas-perchinig-a8a415110 | city: Munich | country: DE
+13. company_name: Bliro | first_name: Maurice | last_name: Schweitzer | full_name: Maurice Schweitzer | role: Co-Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/maurice-schweitzer | source_url: https://de.linkedin.com/in/maurice-schweitzer | city: Munich | country: DE
+14. company_name: Bliro | first_name: Martin | last_name: Thoma | full_name: Martin Thoma | role: Co-Founder | source_url: https://www.eu-startups.com/2025/02/bliro-secures-e2-8-million-to-innovate-conversation-intelligence-for-customer-facing-teams/ | city: Munich | country: DE
+15. company_name: Bliro | first_name: Jakob | last_name: de Bondt | full_name: Jakob de Bondt | role: Bliro | linkedin_profile_url: https://de.linkedin.com/in/jakobdebondt | source_url: https://de.linkedin.com/in/jakobdebondt | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_008
+- Return only the requested result.
+- Use public information only.

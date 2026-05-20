@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_017
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: CWS Hygiene Deutschland | first_name: Hanno | last_name: Kussmann | full_name: Hanno Kussmann | role: Chief Commercial Officer CWS Hygiene International | source_url: https://www.linkedin.com/posts/cwsbusinesses_welcome-to-cws-hanno-kussmann-he-is-the-activity-6915553428731539456-m5vS | city: Munich | country: DE
+2. company_name: CWS Hygiene Deutschland | first_name: Jan-Peter | last_name: Ellerbrock | full_name: Jan-Peter Ellerbrock | role: Managing Director CWS Hygiene Germany | source_url: https://www.linkedin.com/posts/cws-boco-deutschland-gmbh_cwshygiene-teamwork-serviceexcellence-activity-7199662154705235968-KmmR | city: Munich | country: DE
+3. company_name: CWS Hygiene Deutschland | first_name: Patrick | last_name: Jauch | full_name: Patrick Jauch | role: Director Trade & Facility Management | linkedin_profile_url: https://de.linkedin.com/in/patrick-jauch-7a1456131 | source_url: https://de.linkedin.com/in/patrick-jauch-7a1456131 | city: Munich | country: DE
+4. company_name: Daniels Mode | first_name: Christian | last_name: Gärtner | full_name: Christian Gärtner | role: Geschäftsführer | source_url: https://daniels-shop.de/rechtlich/impressum/ | city: Munich | country: DE
+5. company_name: Daniels Mode | first_name: Markus | last_name: Daniels | full_name: Markus Daniels | role: Geschäftsführender Gesellschafter | source_url: https://daniels-shop.de/rechtlich/impressum/ | city: Munich | country: DE
+6. company_name: Dassault Systèmes | first_name: Jonas | last_name: Ittel | full_name: Jonas Ittel | role: Senior Sales Director | linkedin_profile_url: https://de.linkedin.com/in/jonas-ittel-90477bba | source_url: https://de.linkedin.com/in/jonas-ittel-90477bba | city: Munich | country: DE
+7. company_name: Dassault Systèmes | first_name: Sabine | last_name: Scheunert | full_name: Sabine Scheunert | role: Vorsitzende der Geschäftsführung EUROCENTRAL | linkedin_profile_url: https://de.linkedin.com/in/sabinescheunert/de | source_url: https://de.linkedin.com/in/sabinescheunert/de | city: Munich | country: DE
+8. company_name: Dassault Systèmes | first_name: Tobias | last_name: Wagner | full_name: Tobias Wagner | role: Sales Director | linkedin_profile_url: https://de.linkedin.com/in/tobias-wagner-b496a0101 | source_url: https://de.linkedin.com/in/tobias-wagner-b496a0101 | city: Munich | country: DE
+9. company_name: DataGuard | first_name: Thomas | last_name: Regier | full_name: Thomas Regier | role: Co-Founder & Co-CEO | linkedin_profile_url: https://de.linkedin.com/in/thomas-regier | source_url: https://de.linkedin.com/in/thomas-regier | city: Munich | country: DE
+10. company_name: DataGuard | first_name: Nina | last_name: Grandin | full_name: Nina Grandin | role: CEO | source_url: https://getlatka.com/companies/dataguard | city: Munich | country: DE
+11. company_name: DAZN | first_name: Haruka | last_name: Gruber | full_name: Haruka Gruber | role: SVP Media & Head of Central Europe | source_url: https://www.linkedin.com/posts/haruka-gruber-aa0391a7_dazn-daznmedia-advertising-sales-activity-7065363172680970241-dj2E | city: Munich | country: DE
+12. company_name: DAZN | first_name: Rebecca | last_name: McCloy | full_name: Rebecca McCloy | role: Group Chief Commercial Officer | source_url: https://dazngroup.com/the-team/ | city: Munich | country: DE
+13. company_name: DAZN | first_name: Walker | last_name: Jacobs | full_name: Walker Jacobs | role: Global Chief Revenue Officer | source_url: https://dazngroup.com/the-team/ | city: Munich | country: DE
+14. company_name: DeepImmo | first_name: Anna | last_name: Grünberg | full_name: Anna Grünberg | role: Sales Managerin B2B | linkedin_profile_url: https://de.linkedin.com/in/anna-gruenberg-marketing-management-and-sales | source_url: https://de.linkedin.com/in/anna-gruenberg-marketing-management-and-sales | city: Munich | country: DE
+15. company_name: DeepImmo | first_name: Lars | last_name: Eickhoff | full_name: Lars Eickhoff | role: Founder & CEO | source_url: https://olymp-consulting.de/en/deepimmo/ | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_017
+- Return only the requested result.
+- Use public information only.

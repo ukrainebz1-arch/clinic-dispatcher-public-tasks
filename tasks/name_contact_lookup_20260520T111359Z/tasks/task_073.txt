@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_073
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Xometry | first_name: Michael | last_name: Ender | full_name: Michael Ender | role: Head of Sales DACH / Sales Leader | linkedin_profile_url: https://de.linkedin.com/in/michael-ender-b6876587 | source_url: https://xometry.eu/de/xometry-team/ | city: Munich | country: DE
+2. company_name: Xometry | first_name: Ole | last_name: Marx | full_name: Ole Marx | role: Regional Sales Director at Xometry Europe | linkedin_profile_url: https://de.linkedin.com/in/ole-marx-berlin | source_url: https://xometry.eu/de/xometry-team/ | city: Munich | country: DE
+3. company_name: yoummday | first_name: Pablo | last_name: Harisch | full_name: Pablo Harisch | role: Co-CEO | linkedin_profile_url: https://de.linkedin.com/in/pablo-harisch-98124b138 | source_url: https://de.linkedin.com/in/pablo-harisch-98124b138 | city: Munich | country: DE
+4. company_name: yoummday | first_name: Claas | last_name: van Delden | full_name: Claas van Delden | role: CGO / Management | linkedin_profile_url: https://de.linkedin.com/in/claas-van-delden-b7b3b2 | source_url: https://de.wikipedia.org/wiki/Yoummday | city: Munich | country: DE
+5. company_name: yoummday | first_name: Klaus | last_name: Harisch | full_name: Klaus Harisch | role: CEO / Founder | linkedin_profile_url: https://de.linkedin.com/in/klaus-harisch-40a1a8aa | source_url: https://de.wikipedia.org/wiki/Yoummday | city: Munich | country: DE
+6. company_name: YUVENDA | first_name: Saner | last_name: Topuz | full_name: Saner Topuz | role: Chief Revenue Officer (CRO) | linkedin_profile_url: https://de.linkedin.com/in/saner-topuz-19559ab0 | source_url: https://de.linkedin.com/in/saner-topuz-19559ab0 | city: Munich | country: DE
+7. company_name: YUVENDA | first_name: Sebastian | last_name: Ahrens | full_name: Sebastian Ahrens | role: CEO / Business Leader | linkedin_profile_url: https://de.linkedin.com/in/sebastian-ahrens-0a471a21 | source_url: https://de.linkedin.com/in/sebastian-ahrens-0a471a21 | city: Munich | country: DE
+8. company_name: YUVENDA | first_name: Tobias | last_name: Leitz | full_name: Tobias Leitz | role: Head of Marketing / GTM | linkedin_profile_url: https://de.linkedin.com/in/tobiasleitz | source_url: https://www.linkedin.com/company/yuvenda/ | city: Munich | country: DE
+9. company_name: Zeit AI (YC S24) | first_name: Leopold | last_name: von Waldthausen | full_name: Leopold von Waldthausen | role: Co-Founder / CEO | linkedin_profile_url: https://de.linkedin.com/in/v-waldthausen | source_url: https://de.linkedin.com/in/v-waldthausen | city: Munich | country: DE
+10. company_name: Zeit AI (YC S24) | first_name: Marvin | last_name: Bornstein | full_name: Marvin Bornstein | role: Co-Founder | linkedin_profile_url: https://uk.linkedin.com/in/mcbornstein | source_url: https://uk.linkedin.com/in/mcbornstein | city: Munich | country: DE
+11. company_name: Zeit AI (YC S24) | first_name: Angelika | last_name: Wieck | full_name: Angelika Wieck | role: Commercial / Customer-facing team member | linkedin_profile_url: https://de.linkedin.com/in/angelika-wieck-2831b9195 | source_url: https://de.linkedin.com/company/zeit-ai | city: Munich | country: DE
+12. company_name: ZEIT FÜR BROT | first_name: Christopher | last_name: Heinemann | full_name: Dr. Christopher Heinemann | role: Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/cbhinhh | source_url: https://de.linkedin.com/in/cbhinhh | city: Munich | country: DE
+13. company_name: ZEIT FÜR BROT | first_name: Stephan K. | last_name: Heinrich | full_name: Stephan K. Heinrich | role: Managing Director / Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/sheinrich1 | source_url: https://www.linkedin.com/posts/activity-7258837111909355520-2Ynh | city: Munich | country: DE
+14. company_name: ZeKju | first_name: Jakob | last_name: Schottenheim | full_name: Jakob Schottenheim | role: Sales Manager | source_url: https://www.linkedin.com/posts/hyrise_congratulations-to-jakob-schottenheim-activity-7425086087846608897-03rk | city: Munich | country: DE
+15. company_name: ZeKju | first_name: Hendrik | last_name: Rosenboom | full_name: Dr. Hendrik Rosenboom | role: Commercial / customer-facing leader | source_url: https://www.linkedin.com/posts/dr-hendrik-rosenboom-577a9a35_welcome-berger-logistik-gmbh-to-the-zekju-activity-7159167255795187712-gQDN | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_073
+- Return only the requested result.
+- Use public information only.

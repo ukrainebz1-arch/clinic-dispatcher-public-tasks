@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_040
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Logivations | first_name: Dominik | last_name: Eberlein | full_name: Dominik Eberlein | role: Former Geschäftsführer | linkedin_profile_url: https://www.linkedin.com/in/dominik-eberlein | source_url: https://www.openpr.de/news/486325/LogiMAT-Messehighlight-der-Logivations-GmbH-W2MO-Lageroptimierung-im-Web-revolutioniert-die-Logistik.html | city: Munich | country: DE
+2. company_name: LRE Medical | first_name: Florian | last_name: Binder | full_name: Florian Binder | role: Former sole Geschäftsführer LRE Medical / TT medic executive | linkedin_profile_url: https://www.linkedin.com/in/florian-binder | source_url: https://tt-medic.com/category/tt-medic/ | city: Munich | country: DE
+3. company_name: LRE Medical | first_name: Jürgen | last_name: Neumann | full_name: Jürgen Neumann | role: CEO / Geschäftsführer (2019-2024) | linkedin_profile_url: https://de.linkedin.com/in/neumannjuergen | source_url: https://de.linkedin.com/in/neumannjuergen | city: Munich | country: DE
+4. company_name: Ludwig Kameraverleih GmbH | first_name: Stefan | last_name: Laucher | full_name: Stefan Laucher | role: Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/stefan-laucher-404224 | source_url: https://ludwigkamera.de/impressum/ | city: Munich | country: DE
+5. company_name: Ludwig Kameraverleih GmbH | first_name: Jan-Patrick | last_name: Wulf | full_name: Jan-Patrick Wulf | role: General Manager | linkedin_profile_url: https://www.linkedin.com/in/jan-patrick-wulf | source_url: https://www.crew-united.com/en/Ludwig-Kameraverleih-GmbH_4066.html | city: Munich | country: DE
+6. company_name: Ludwig Kameraverleih GmbH | first_name: Martin | last_name: Ludwig | full_name: Martin Ludwig | role: Former Inhaber und Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/martin-ludwig | source_url: https://www.film-tv-video.de/business/2017/10/09/117359/ | city: Munich | country: DE
+7. company_name: Luma | first_name: Amit | last_name: Jain | full_name: Amit Jain | role: Co-Founder and CEO | linkedin_profile_url: https://www.linkedin.com/in/gravicle | source_url: https://www.linkedin.com/in/gravicle | city: Munich | country: DE
+8. company_name: Luma | first_name: CJ | last_name: Fernandes | full_name: CJ Fernandes | role: Strategic Partnerships / Enterprise Adoption | linkedin_profile_url: https://www.linkedin.com/in/clineujunior | source_url: https://www.linkedin.com/in/clineujunior | city: Munich | country: DE
+9. company_name: Luma | first_name: Jason | last_name: Levin | full_name: Jason Levin | role: Founder / CEO - Engineering Product Development and Partnerships Lead | linkedin_profile_url: https://www.linkedin.com/in/jasonrlevin | source_url: https://www.linkedin.com/in/jasonrlevin | city: Munich | country: DE
+10. company_name: Luminovo | first_name: Sebastian | last_name: Schaal | full_name: Sebastian Schaal | role: Founder & Managing Director | linkedin_profile_url: https://de.linkedin.com/in/sebastian-schaal | source_url: https://luminovo.com/resources/blog/from-ai-to-electronics | city: Munich | country: DE
+11. company_name: Luminovo | first_name: Patrick | last_name: Perner | full_name: Patrick Perner | role: Former Head of Sales | linkedin_profile_url: https://www.linkedin.com/in/patrick-perner | source_url: https://www.linkedin.com/posts/patrick-perner_yesterday-was-my-last-day-at-luminovo-but-activity-7368156915077398528-Hu3i | city: Munich | country: DE
+12. company_name: Luminovo | first_name: Timon | last_name: Ruban | full_name: Timon Ruban | role: Founder | linkedin_profile_url: https://de.linkedin.com/in/timon-ruban | source_url: https://de.linkedin.com/in/timon-ruban | city: Munich | country: DE
+13. company_name: lytra | first_name: Benedikt S. | last_name: Vogler | full_name: Benedikt S. Vogler | role: Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/benedikt-s-vogler | source_url: https://www.online-handelsregister.de/handelsregisterauszug/by/Muenchen/HRB/300010/lytra-GmbH | city: Munich | country: DE
+14. company_name: lytra | first_name: Etienne | last_name: Fieg | full_name: Etienne Fieg | role: Co-Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/etienne-fieg | source_url: https://www.htgf.de/en/lytra-pre-seed-financing/ | city: Munich | country: DE
+15. company_name: Malt | first_name: Vincent | last_name: Huguet | full_name: Vincent Huguet | role: CEO & Co-founder | linkedin_profile_url: https://fr.linkedin.com/in/vincenthuguet | source_url: https://fr.linkedin.com/in/vincenthuguet | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_040
+- Return only the requested result.
+- Use public information only.

@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_062
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Süddeutsche Zeitung – Jobs & Karriere | first_name: Nina-Katrin | last_name: Fobo-Rapp | full_name: Nina-Katrin Fobo-Rapp | role: Head of Sales TRAVEL & TASTE Süddeutsche Zeitung / SZ Media Bayern | linkedin_profile_url: https://de.linkedin.com/in/ninakatrinfoborapp | source_url: https://de.linkedin.com/in/ninakatrinfoborapp | city: Munich | country: DE
+2. company_name: Süddeutsche Zeitung – Jobs & Karriere | first_name: Tanja | last_name: Scheuer | full_name: Tanja Scheuer | role: Sales Managerin Regionale Werbevermarktung | linkedin_profile_url: https://de.linkedin.com/in/tanja-scheuer | source_url: https://de.linkedin.com/in/tanja-scheuer | city: Munich | country: DE
+3. company_name: Süddeutsche Zeitung – Jobs & Karriere | first_name: Vanessa | last_name: Cescatti | full_name: Vanessa Cescatti | role: Anzeigenverkaufsleiterin Marke / Senior Inside Sales Manager | linkedin_profile_url: https://de.linkedin.com/in/vanessa-cescatti-775a95151 | source_url: https://de.linkedin.com/in/vanessa-cescatti-775a95151 | city: Munich | country: DE
+4. company_name: TA Triumph-Adler GmbH | first_name: Christian | last_name: Otto | full_name: Christian Otto | role: Vertriebsleiter | linkedin_profile_url: https://de.linkedin.com/in/christian-otto-24a75a94 | source_url: https://de.linkedin.com/in/christian-otto-24a75a94 | city: Munich | country: DE
+5. company_name: TA Triumph-Adler GmbH | first_name: Gerhard | last_name: Schwarz | full_name: Gerhard Schwarz | role: Vertriebsleiter | linkedin_profile_url: https://de.linkedin.com/in/gerhard-schwarz-ta-memmingen-572b6699 | source_url: https://de.linkedin.com/in/gerhard-schwarz-ta-memmingen-572b6699 | city: Munich | country: DE
+6. company_name: TA Triumph-Adler GmbH | first_name: Philipp | last_name: Brusendorff | full_name: Philipp Brusendorff | role: Regionaldirektor Mitte / Vertriebsleiter | linkedin_profile_url: https://de.linkedin.com/in/philipp-brusendorff-4b8460184 | source_url: https://de.linkedin.com/in/philipp-brusendorff-4b8460184 | city: Munich | country: DE
+7. company_name: Tacto | first_name: Franz | last_name: Schubart | full_name: Franz Schubart | role: Head of Business Development | linkedin_profile_url: https://de.linkedin.com/in/franz-schubart-ba2511183 | source_url: https://de.linkedin.com/in/franz-schubart-ba2511183 | city: Munich | country: DE
+8. company_name: Tacto | first_name: Johannes | last_name: Groll | full_name: Johannes Groll | role: Co-Founder & Managing Director | linkedin_profile_url: https://www.linkedin.com/in/johannes-groll/en | source_url: https://www.linkedin.com/in/johannes-groll/en | city: Munich | country: DE
+9. company_name: Tacto | first_name: Marco | last_name: Gossenreiter | full_name: Marco Gossenreiter | role: Sales Leader / B2B SaaS | linkedin_profile_url: https://at.linkedin.com/in/marco-gossenreiter-217a40128 | source_url: https://at.linkedin.com/in/marco-gossenreiter-217a40128 | city: Munich | country: DE
+10. company_name: Talent Tree | first_name: Julian | last_name: von Blücher | full_name: Julian von Blücher | role: Founder | linkedin_profile_url: https://de.linkedin.com/in/bluecher | source_url: https://de.linkedin.com/in/bluecher | city: Munich | country: DE
+11. company_name: Talent Tree | first_name: Mathias | last_name: Gerhardt | full_name: Mathias Gerhardt | role: COO | linkedin_profile_url: https://de.linkedin.com/in/mathiasgerhardt | source_url: https://de.linkedin.com/in/mathiasgerhardt | city: Munich | country: DE
+12. company_name: Talent Tree | first_name: Christiane | last_name: Schweda | full_name: Christiane Schweda | role: Team / impact recruitment consultant | linkedin_profile_url: https://de.linkedin.com/in/christianeschweda | source_url: https://de.linkedin.com/in/christianeschweda | city: Munich | country: DE
+13. company_name: Talkdesk | first_name: Marco | last_name: Meier | full_name: Marco Meier | role: Channel Manager DACH | linkedin_profile_url: https://de.linkedin.com/in/marco-meier-96b3a52b | source_url: https://de.linkedin.com/in/marco-meier-96b3a52b | city: Munich | country: DE
+14. company_name: Talkdesk | first_name: Sabine | last_name: Sarma | full_name: Sabine Sarma | role: Enterprise Account Executive | linkedin_profile_url: https://de.linkedin.com/in/sabine-sarma-29aa814b | source_url: https://de.linkedin.com/in/sabine-sarma-29aa814b | city: Munich | country: DE
+15. company_name: Talkdesk | first_name: Mike | last_name: Odekerken | full_name: Mike Odekerken | role: Sales Director DACH UK/I & Nordics | linkedin_profile_url: https://de.linkedin.com/in/mike-odekerken-46319414a | source_url: https://de.linkedin.com/in/mike-odekerken-46319414a | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_062
+- Return only the requested result.
+- Use public information only.

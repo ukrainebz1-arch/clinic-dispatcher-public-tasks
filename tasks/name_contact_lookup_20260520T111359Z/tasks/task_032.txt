@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_032
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Hugendubel | first_name: Michael | last_name: Hahn | full_name: Michael Hahn | role: Geschäftsleitung Kooperationen | linkedin_profile_url: https://de.linkedin.com/in/michael-hahn-18b00388 | source_url: https://de.linkedin.com/in/michael-hahn-18b00388 | city: Munich | country: DE
+2. company_name: HW Gründerkapital | first_name: Matthias | full_name: Matthias | role: Gründer und Geschäftsführer | source_url: https://www.instagram.com/hw_gruenderkapital/ | city: Munich | country: DE
+3. company_name: hyrise | first_name: Dominic | last_name: Blank | full_name: Dominic Blank | role: Co-founder and Managing Director | linkedin_profile_url: https://de.linkedin.com/in/dominicblank | source_url: https://berufspodcast.com/452-dominic-blank-co-founder-und-managing-director-bei-hyrise-academy/ | city: Munich | country: DE
+4. company_name: hyrise | first_name: Yury | last_name: Hannaleck | full_name: Yury Hannaleck | role: hyrise Trainer / B2B SaaS Sales & Training | source_url: https://www.instagram.com/hyriseofficial/ | city: Munich | country: DE
+5. company_name: ICAPE Group | first_name: Klaus | last_name: Moucha | full_name: Klaus Moucha | role: Managing Director | linkedin_profile_url: https://de.linkedin.com/in/klaus-moucha-53b546a3 | source_url: https://www.icape-group.com/icape-deutschland-contact-page/ | city: Munich | country: DE
+6. company_name: ICAPE Group | first_name: Sebastian | last_name: Behr | full_name: Sebastian Behr | role: Managing Director | source_url: https://www.icape-group.com/icape-deutschland-contact-page/ | city: Munich | country: DE
+7. company_name: ICAPE Group | first_name: Ralf | last_name: Heissenberger | full_name: Ralf Heissenberger | role: Business Development | source_url: https://www.icape-group.com/icape-deutschland-contact-page/ | city: Munich | country: DE
+8. company_name: IFCO SYSTEMS | first_name: Michael | last_name: Pooley | full_name: Michael Pooley | role: Group Chief Executive Officer | linkedin_profile_url: https://de.linkedin.com/in/mike-pooley-581b6ba | source_url: https://de.linkedin.com/in/mike-pooley-581b6ba | city: Munich | country: DE
+9. company_name: IFCO SYSTEMS | first_name: Christoph | last_name: Trixl | full_name: Christoph Trixl | role: Management | source_url: https://www.ifco.com/legal-notice/ | city: Munich | country: DE
+10. company_name: IFCO SYSTEMS | first_name: Julian | last_name: zu Putlitz | full_name: Dr. Julian zu Putlitz | role: Management | source_url: https://www.ifco.com/legal-notice/ | city: Munich | country: DE
+11. company_name: Immoheld | first_name: Carolin | last_name: Senge | full_name: Carolin Senge | role: Sales & Operations Manager | source_url: https://de.linkedin.com/company/immoheld | city: Munich | country: DE
+12. company_name: Immoheld | first_name: Thomas | last_name: Wegener | full_name: Thomas Wegener | role: Geschäftsführer | source_url: https://de.linkedin.com/company/immoheld | city: Munich | country: DE
+13. company_name: Impower GmbH | first_name: Matthias | last_name: Zinke | full_name: Matthias Zinke | role: Sales Executive | linkedin_profile_url: https://de.linkedin.com/in/matthias-zinke-951a32274 | source_url: https://de.linkedin.com/in/matthias-zinke-951a32274 | city: Munich | country: DE
+14. company_name: Impower GmbH | first_name: Julian | last_name: Beyerlein | full_name: Julian Beyerlein | role: Head of Customer Success | linkedin_profile_url: https://de.linkedin.com/in/julian-beyerlein-421a741a3 | source_url: https://de.linkedin.com/in/julian-beyerlein-421a741a3 | city: Munich | country: DE
+15. company_name: Impower GmbH | first_name: Jürgen | last_name: Forscht | full_name: Jürgen Forscht | role: Founder / Proptech Entrepreneur | linkedin_profile_url: https://de.linkedin.com/in/jforscht | source_url: https://de.linkedin.com/in/jforscht | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_032
+- Return only the requested result.
+- Use public information only.

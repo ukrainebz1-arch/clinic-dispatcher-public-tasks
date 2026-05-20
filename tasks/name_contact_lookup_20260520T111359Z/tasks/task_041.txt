@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_041
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Malt | first_name: Amandine | last_name: Neff | full_name: Amandine Neff | role: Sales team leader | linkedin_profile_url: https://uk.linkedin.com/in/amandineneff | source_url: https://uk.linkedin.com/in/amandineneff | city: Munich | country: DE
+2. company_name: Malt | first_name: Monika | last_name: Lippert | full_name: Monika Lippert | role: Strategic Enterprise Account Manager | linkedin_profile_url: https://de.linkedin.com/in/monika-lippert-819a8b7b | source_url: https://de.linkedin.com/in/monika-lippert-819a8b7b | city: Munich | country: DE
+3. company_name: Maltego | first_name: David | last_name: Downing | full_name: David Downing | role: VP Global Sales | linkedin_profile_url: https://uk.linkedin.com/in/david-downing-510aa42 | source_url: https://uk.linkedin.com/in/david-downing-510aa42 | city: Munich | country: DE
+4. company_name: Maltego | first_name: Philip | last_name: Mayrhofer | full_name: Philip Mayrhofer | role: CEO | linkedin_profile_url: https://www.linkedin.com/in/pmayrhofer | source_url: https://www.linkedin.com/posts/maltego_maltego-msc2026-mcsc-activity-7439644365515403264-LnCS | city: Munich | country: DE
+5. company_name: Maltego | first_name: Rik | last_name: Esselink | full_name: Rik Esselink | role: Chief Revenue Officer | linkedin_profile_url: https://nl.linkedin.com/in/rikesselink | source_url: https://www.linkedin.com/posts/maltego_employee-spotlight-rik-esselink-activity-7343604712484581377-5vbI | city: Munich | country: DE
+6. company_name: Mastercard | first_name: Nikolaus | last_name: Trzeschan | full_name: Nikolaus Trzeschan | role: General Manager / Country Manager Germany | linkedin_profile_url: https://de.linkedin.com/in/nikolaus-trzeschan-11740795 | source_url: https://www.bitkom.org/Bitkom/Organisation/Hauptvorstand | city: Munich | country: DE
+7. company_name: Mastercard | first_name: Peter M. | last_name: W. | full_name: Peter M. W. | role: Director Sales Specialist Cybersecurity & GRC | linkedin_profile_url: https://www.linkedin.com/in/pwieschollek | source_url: https://www.linkedin.com/in/pwieschollek | city: Munich | country: DE
+8. company_name: Mastercard | first_name: Shameer Nawaz | last_name: Khan | full_name: Shameer Nawaz Khan | role: Director Sales & Partnerships | linkedin_profile_url: https://de.linkedin.com/in/shameer-nawaz-khan-171157124 | source_url: https://de.linkedin.com/in/shameer-nawaz-khan-171157124 | city: Munich | country: DE
+9. company_name: Matchory | first_name: Aiko | last_name: Wiegand | full_name: Aiko Wiegand | role: CEO | linkedin_profile_url: https://de.linkedin.com/in/aiko-wiegand | source_url: https://de.linkedin.com/in/aiko-wiegand | city: Munich | country: DE
+10. company_name: Matchory | first_name: Shannon | last_name: Schöttle | full_name: Shannon Schöttle | role: Head of Commercial / DACH Sales | linkedin_profile_url: https://de.linkedin.com/in/shannon-sch%C3%B6ttle | source_url: https://de.linkedin.com/in/shannon-sch%C3%B6ttle | city: Munich | country: DE
+11. company_name: Matchory | first_name: Felix | last_name: Hoppe | full_name: Felix Hoppe | role: Matchory commercial/team profile | linkedin_profile_url: https://de.linkedin.com/in/felixhpe | source_url: https://de.linkedin.com/in/felixhpe | city: Munich | country: DE
+12. company_name: MAURER SE | first_name: Holger | last_name: Redecker | full_name: Holger Redecker | role: Managing Director; responsible for design and sales departments | source_url: https://www.maurer.eu/en/company/management/ | city: Munich | country: DE
+13. company_name: MAURER SE | first_name: Ewa | last_name: Fritzler | full_name: Ewa Fritzler | role: Technical Sales Manager | linkedin_profile_url: https://de.linkedin.com/in/ewamadejowicz | source_url: https://www.xing.com/profile/Ewa_Fritzler | city: Munich | country: DE
+14. company_name: MAURER SE | first_name: Peter | last_name: Guenther | full_name: Peter Guenther | role: Technical Sales Director | source_url: https://theorg.com/org/maurer-se/org-chart/peter-guenther | city: Munich | country: DE
+15. company_name: Maven360 | first_name: Walter Andreas | last_name: Pucko | full_name: Walter Andreas Pucko | role: Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/andreaspucko | source_url: https://theorg.com/org/maven360/org-chart/walter-andreas-pucko | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_041
+- Return only the requested result.
+- Use public information only.

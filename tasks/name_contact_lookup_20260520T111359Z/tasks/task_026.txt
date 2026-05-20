@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_026
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Feldwerke | first_name: Nicolai | last_name: Reiners | full_name: Nicolai Reiners | role: Geschäftsführer | source_url: https://www.linkedin.com/posts/nils-kuchenbuch-239345134_especially-proud-of-this-achievement-activity-7328389647758200833-mLry | city: Munich | country: DE
+2. company_name: Fides by LegalOn | first_name: Lisa | last_name: Gradow | full_name: Lisa Gradow | role: Founder & CEO / Geschäftsführerin | linkedin_profile_url: https://de.linkedin.com/in/lisa-gradow | source_url: https://de.linkedin.com/in/lisa-gradow | city: Munich | country: DE
+3. company_name: Fides by LegalOn | first_name: Charlotte | last_name: Sommer | full_name: Charlotte Sommer | role: Director Growth & Market Strategy | linkedin_profile_url: https://de.linkedin.com/in/charlotte-sommer-129a7a106 | source_url: https://de.linkedin.com/in/charlotte-sommer-129a7a106/en | city: Munich | country: DE
+4. company_name: Fides by LegalOn | first_name: Vincent | last_name: Bobinski | full_name: Vincent Bobinski | role: Founder / Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/vincent-bobinski-066667109 | source_url: https://www.fides.technology/knowledge-hub/blog-article-fides-schliesst-sich-mit-legalon-zusammen | city: Munich | country: DE
+5. company_name: FINN | first_name: Julian | last_name: Weller | full_name: Julian Weller | role: VP Sales | linkedin_profile_url: https://de.linkedin.com/in/julian-weller-vp-sales-finn | source_url: https://de.linkedin.com/in/julian-weller-vp-sales-finn | city: Munich | country: DE
+6. company_name: FINN | first_name: Maximilian | last_name: Wühr | full_name: Maximilian Wühr | role: CEO | source_url: https://www.finn.com/de-DE/press | city: Munich | country: DE
+7. company_name: Fioro | first_name: Matthias | last_name: Walter | full_name: Matthias Walter | role: Co-Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/matthias-j-walter | source_url: https://de.linkedin.com/company/fioro-ai | city: Munich | country: DE
+8. company_name: Fioro | first_name: Nikolaus | last_name: Landgraf | full_name: Nikolaus Landgraf | role: Co-Founder | linkedin_profile_url: https://de.linkedin.com/in/nikolaus-landgraf | source_url: https://de.linkedin.com/company/fioro-ai | city: Munich | country: DE
+9. company_name: Fioro | first_name: Victor | last_name: Prüfer | full_name: Victor Prüfer | role: Co-Founder | source_url: https://de.linkedin.com/company/fioro-ai | city: Munich | country: DE
+10. company_name: First Momentum Ventures | first_name: Andreas | last_name: Fischer | full_name: Andreas Fischer | role: Founding Partner | linkedin_profile_url: https://de.linkedin.com/in/afischerfmv | source_url: https://www.firstmomentum.vc/team | city: Munich | country: DE
+11. company_name: First Momentum Ventures | first_name: Sebastian | last_name: Böhmer | full_name: Sebastian Böhmer | role: Founding Partner | linkedin_profile_url: https://de.linkedin.com/in/sebastianboehmer | source_url: https://www.firstmomentum.vc/team | city: Munich | country: DE
+12. company_name: First Momentum Ventures | first_name: Lena | last_name: Späth | full_name: Lena Späth | role: Head of Platform | linkedin_profile_url: https://de.linkedin.com/in/lenaspath | source_url: https://www.firstmomentum.vc/team | city: Munich | country: DE
+13. company_name: fleetster | first_name: Christian | last_name: Weisbrodt | full_name: Christian Weisbrodt | role: Head of Sales | linkedin_profile_url: https://de.linkedin.com/in/christian-weisbrodt | source_url: https://de.linkedin.com/posts/fleetster-software_welcome-fleetster-sales-activity-7427628035237068800-Z3Ge | city: Munich | country: DE
+14. company_name: fleetster | first_name: Tim | last_name: Ruhoff | full_name: Tim Ruhoff | role: Founder & CEO | source_url: https://www.fleetster.de/neuigkeiten/10-jahre-fleetster | city: Munich | country: DE
+15. company_name: fleetster | first_name: Volker | last_name: Schmidt | full_name: Volker Schmidt | role: Director Sales & Customer Success Management | source_url: https://prospeo.io/c/fleetster | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_026
+- Return only the requested result.
+- Use public information only.

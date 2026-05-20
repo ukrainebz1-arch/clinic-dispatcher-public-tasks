@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_060
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: sqior medical | first_name: Philipp | last_name: Wolf | full_name: Philipp Wolf | role: Co-Founder & CEO / Geschäftsführer | linkedin_profile_url: https://www.linkedin.com/in/wolfphilipp/ | source_url: https://sqior.com/impressum/ | city: Munich | country: DE
+2. company_name: sqior medical | first_name: Sebastian | last_name: Forster | full_name: Sebastian Forster | role: Sales Director | linkedin_profile_url: https://de.linkedin.com/in/sebastian-forster | source_url: https://de.linkedin.com/posts/sebastian-forster_neues-kapitel-beginnt-ich-freue-mich-activity-7293563311348985856-ls0D | city: Munich | country: DE
+3. company_name: Star | first_name: Keld | last_name: Olsen | full_name: Keld Olsen | role: Chief Commercial Officer | linkedin_profile_url: https://www.linkedin.com/in/keldolsen | source_url: https://wiza.co/d/starglobal/fe5f/manuel-gattinger | city: Munich | country: DE
+4. company_name: Star | first_name: Seth | last_name: Vogel | full_name: Seth Vogel | role: Global Managing Director Automotive & Mobility | source_url: https://wiza.co/d/starglobal/fe5f/manuel-gattinger | city: Munich | country: DE
+5. company_name: Stayntouch | first_name: Bill | last_name: Fanning | full_name: Bill Fanning | role: Chief Revenue Officer | source_url: https://www.linkedin.com/posts/stayntouch_big-thanks-to-the-modern-hotelier-for-sitting-activity-7343989443785093122-QbFR | city: Munich | country: DE
+6. company_name: Stayntouch | first_name: Jacob | last_name: Messina | full_name: Jacob Messina | role: CEO | linkedin_profile_url: https://www.linkedin.com/in/jacob-messina-b6361311 | source_url: https://www.stayntouch.com/news/stayntouch-appoints-jacob-messina-as-chief-executive-officer/ | city: Munich | country: DE
+7. company_name: Step Ahead GmbH | first_name: Andreas | last_name: Fresi | full_name: Andreas Fresi | role: Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/andreas-fresi | source_url: https://www.stepahead.de/unternehmen/management/ | city: Munich | country: DE
+8. company_name: Step Ahead GmbH | first_name: Robert | last_name: Quotschalla | full_name: Robert Quotschalla | role: Head of Sales | linkedin_profile_url: https://de.linkedin.com/in/robert-michael-quotschalla-7223aa153 | source_url: https://www.stepahead.de/unternehmen/management/ | city: Munich | country: DE
+9. company_name: Step Ahead GmbH | first_name: Axel | last_name: Friedrich | full_name: Axel Friedrich | role: Geschäftsführer | source_url: https://www.stepahead.de/unternehmen/impressum/ | city: Munich | country: DE
+10. company_name: STI-Consulting | first_name: Maurice | last_name: Franzl | full_name: Maurice Franzl | role: Geschäftsführer | linkedin_profile_url: https://at.linkedin.com/in/maurice-franzl-30210877 | source_url: https://www.greatplacetowork.at/blog/sti-consulting/ | city: Munich | country: DE
+11. company_name: STI-Consulting | first_name: Gregor | last_name: Warner | full_name: Gregor Warner | role: Business Unit Lead | linkedin_profile_url: https://at.linkedin.com/in/gregorwarner | source_url: https://at.linkedin.com/in/gregorwarner | city: Munich | country: DE
+12. company_name: Storage24 | first_name: Christian | last_name: Warns | full_name: Dr. Christian Warns | role: Geschäftsführer | source_url: https://www.storage24.com/de-de/impressum | city: Munich | country: DE
+13. company_name: Storage24 | first_name: Emmanuel | last_name: Tombre | full_name: Emmanuel Tombre | role: CEO / Geschäftsführer | source_url: https://www.storage24.com/de-de/impressum | city: Munich | country: DE
+14. company_name: Storage24 | first_name: Florent | last_name: Aonon | full_name: Florent Aonon | role: International Head of Sales & Marketing | source_url: https://www.peoplex.group/kandidatinnen | city: Munich | country: DE
+15. company_name: Straumann Group | first_name: Manuel | last_name: Tietze | full_name: Manuel Tietze | role: Head of Business Unit Orthodontics DACH & Poland | linkedin_profile_url: https://de.linkedin.com/in/manuel-tietze-35426770 | source_url: https://de.linkedin.com/in/manuel-tietze-35426770 | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_060
+- Return only the requested result.
+- Use public information only.

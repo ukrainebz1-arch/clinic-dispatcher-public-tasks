@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_064
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: Teltonika | first_name: Antanas | last_name: Gustaitis | full_name: Antanas Gustaitis | role: Head of Telematics Sales Teltonika Germany GmbH | linkedin_profile_url: https://de.linkedin.com/in/antanas-gustaitis | source_url: https://de.linkedin.com/in/antanas-gustaitis | city: Munich | country: DE
+2. company_name: Teltonika | first_name: Christoph | last_name: Johann | full_name: Christoph Johann | role: Chief of Sales Germany | linkedin_profile_url: https://de.linkedin.com/in/christophjohann | source_url: https://de.linkedin.com/in/christophjohann | city: Munich | country: DE
+3. company_name: Teltonika | first_name: Piotr | last_name: Skowron | full_name: Piotr Skowron | role: Sales Executive | linkedin_profile_url: https://de.linkedin.com/in/piotr-skowron-teltonika | source_url: https://de.linkedin.com/in/piotr-skowron-teltonika | city: Munich | country: DE
+4. company_name: Temedica | first_name: Marietherese | last_name: H. | full_name: Marietherese H. | role: Chief Commercial Officer | linkedin_profile_url: https://de.linkedin.com/in/marietherese-h-5505a39b | source_url: https://de.linkedin.com/in/marietherese-h-5505a39b | city: Munich | country: DE
+5. company_name: Temedica | first_name: David Rodriguez | last_name: Quinn | full_name: David Rodriguez Quinn | role: B2B SaaS / Pharma commercial lead | linkedin_profile_url: https://de.linkedin.com/in/david-rodriguez-quinn/en | source_url: https://de.linkedin.com/in/david-rodriguez-quinn/en | city: Munich | country: DE
+6. company_name: Temedica | first_name: Dennis | last_name: Kwiatkowski | full_name: Dr. Dennis Kwiatkowski | role: Life sciences digital health business role | linkedin_profile_url: https://de.linkedin.com/in/dennis-kwiatkowski | source_url: https://de.linkedin.com/in/dennis-kwiatkowski | city: Munich | country: DE
+7. company_name: Terra Robotics | first_name: René | last_name: Roese | full_name: René Roese | role: Vertriebsingenieur | linkedin_profile_url: https://de.linkedin.com/in/ren%C3%A9-roese-48250621b | source_url: https://de.linkedin.com/in/ren%C3%A9-roese-48250621b | city: Munich | country: DE
+8. company_name: Tesla | first_name: Maximilian | last_name: Stromberger | full_name: Maximilian Stromberger | role: Head of Sales & Delivery Germany | linkedin_profile_url: https://de.linkedin.com/in/maximilian-stromberger-246177222 | source_url: https://de.linkedin.com/in/maximilian-stromberger-246177222 | city: Munich | country: DE
+9. company_name: Tesla | first_name: Usuf | last_name: Schermo | full_name: Usuf Schermo | role: Head of Business Development EMEA - Tesla Semi | linkedin_profile_url: https://de.linkedin.com/in/usuf-schermo-1227415b | source_url: https://de.linkedin.com/in/usuf-schermo-1227415b | city: Munich | country: DE
+10. company_name: Tesla | first_name: David | last_name: ARNAUD | full_name: David ARNAUD | role: Head of Sales EMEA Utility and Commercial Storage / Energy Storage | linkedin_profile_url: https://nl.linkedin.com/in/davidarnaud | source_url: https://nl.linkedin.com/in/davidarnaud | city: Munich | country: DE
+11. company_name: Testbirds | first_name: Christian | last_name: Wäntig | full_name: Christian Wäntig | role: Testbirds commercial/leadership profile | linkedin_profile_url: https://de.linkedin.com/in/cwaentig | source_url: https://de.linkedin.com/in/cwaentig | city: Munich | country: DE
+12. company_name: Testbirds | first_name: Kathrin | last_name: Doering | full_name: Kathrin Doering | role: Testbirds commercial profile | linkedin_profile_url: https://www.linkedin.com/in/kathrin-doering-477b74a5/ | source_url: https://www.linkedin.com/in/kathrin-doering-477b74a5/ | city: Munich | country: DE
+13. company_name: Testbirds | first_name: Moritz | last_name: Herrmann | full_name: Moritz Herrmann | role: Business Development Manager | linkedin_profile_url: https://de.linkedin.com/in/moritz-herrmann | source_url: https://de.linkedin.com/in/moritz-herrmann | city: Munich | country: DE
+14. company_name: Tetra Pak | first_name: Zeljko | last_name: Horvat | full_name: Zeljko Horvat | role: Portfolio Director Austria Germany Switzerland & Member of Management | linkedin_profile_url: https://de.linkedin.com/in/zeljko-horvat-4b235134 | source_url: https://de.linkedin.com/in/zeljko-horvat-4b235134 | city: Munich | country: DE
+15. company_name: Tetra Pak | first_name: Melanie | last_name: Hollmann | full_name: Melanie Hollmann | role: Sales Manager | linkedin_profile_url: https://de.linkedin.com/in/melanie-hollmann/en | source_url: https://de.linkedin.com/in/melanie-hollmann/en | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_064
+- Return only the requested result.
+- Use public information only.

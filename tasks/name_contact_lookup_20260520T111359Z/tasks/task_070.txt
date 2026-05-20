@@ -1,0 +1,77 @@
+RUN_ID: name_contact_lookup_20260520T111359Z
+TASK_ID: task_070
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a B2B public contact research assistant.
+
+TASK:
+For each input person, find publicly available professional contact data.
+
+INPUT:
+Each row contains a company, person name, role/position, and sometimes LinkedIn/source URLs.
+
+GOAL:
+For every person, verify or find:
+1. LinkedIn profile URL
+2. Public professional email address
+3. Public professional phone number, if available
+
+IMPORTANT RULES:
+- Use only publicly available professional/business information.
+- Do not use leaked, private, personal, residential, or non-public sources.
+- Do not guess emails.
+- Do not create email hypotheses like firstname.lastname@domain unless the email is publicly visible on a source page.
+- If only a company central phone number is available, include it and mark phone_type as company_main.
+- If a direct personal/business phone number is publicly listed for the person, mark phone_type as direct.
+- If no email or phone is found, leave the field empty and explain in notes.
+- Be careful with people who have common names. Match by company + role + region.
+- Prefer official company pages, imprint/contact/team pages, LinkedIn, speaker profiles, event pages, press pages, PDF brochures, and public professional directories.
+- Do not return unrelated people with the same name.
+
+SEARCH STRATEGY:
+For each person, try searches like:
+- "Full Name" "Company"
+- "Full Name" "Company" email
+- "Full Name" "Company" phone
+- "Full Name" "Role"
+- "Full Name" LinkedIn
+- site:company-domain "Full Name"
+- site:company-domain email "Full Name"
+
+OUTPUT:
+Start your answer with the exact TASK_ID.
+
+Then return CSV only with this header:
+
+company_name,first_name,last_name,full_name,role,linkedin_profile_url,email,email_source_url,phone_number,phone_type,phone_source_url,confidence,notes
+
+FIELD RULES:
+- confidence: HIGH / MEDIUM / LOW
+- email_source_url must prove the email is public.
+- phone_source_url must prove the phone number is public.
+- If LinkedIn was already in input and looks correct, keep it.
+- If LinkedIn is found or corrected, include the best matching URL.
+- If nothing useful is found for a person, still return one row with notes = NOT_FOUND.
+
+CURRENT CHUNK INPUT:
+1. company_name: VoiceLine | first_name: Nicolas | last_name: Höflinger | full_name: Nicolas Höflinger | role: Co-Founder & CEO | linkedin_profile_url: https://de.linkedin.com/in/nicolashoflinger | source_url: https://voiceline.ai/about | city: Munich | country: DE
+2. company_name: VÆRIDION | first_name: Bozhena | last_name: Hryvnak | full_name: Bozhena Hryvnak | role: Head of Growth | linkedin_profile_url: https://de.linkedin.com/in/bozhena-hryvnak | source_url: https://de.linkedin.com/in/bozhena-hryvnak | city: Munich | country: DE
+3. company_name: VÆRIDION | first_name: Ivor | last_name: van Dartel | full_name: Ivor van Dartel | role: Co-Founder & CEO | source_url: https://vaeridion.com/2026/02/03/vaeridion-appoints-otto-verhoeff-as-chief-business-officer/ | city: Munich | country: DE
+4. company_name: VÆRIDION | first_name: Otto | last_name: Verhoeff | full_name: Otto Verhoeff | role: Chief Business Officer | linkedin_profile_url: https://nl.linkedin.com/in/otto-verhoeff-846a4034 | source_url: https://vaeridion.com/2026/02/03/vaeridion-appoints-otto-verhoeff-as-chief-business-officer/ | city: Munich | country: DE
+5. company_name: waterdrop® | first_name: Mark | last_name: Maislinger | full_name: Mark Maislinger | role: Country Director Germany / former Head of Sales DACH | linkedin_profile_url: https://at.linkedin.com/in/mark-maislinger-98017b157 | source_url: https://at.linkedin.com/in/mark-maislinger-98017b157 | city: Munich | country: DE
+6. company_name: waterdrop® | first_name: Martin Donald | last_name: Murray | full_name: Martin Donald Murray | role: Founder & CEO | linkedin_profile_url: https://at.linkedin.com/in/martin-donald-murray-4b758a11 | source_url: https://www.insead.edu/bio/martin-donald-murray-mba15d | city: Munich | country: DE
+7. company_name: waterdrop® | first_name: Henry | last_name: Murray | full_name: Henry Murray | role: Co-Founder | linkedin_profile_url: https://at.linkedin.com/in/henry-murray-00578a55 | source_url: https://www.ey.com/de_at/entrepreneur-of-the-year-oesterreich/hall-of-fame/2020/murray-hermann | city: Munich | country: DE
+8. company_name: We Are Social | first_name: Roberto Collazos | last_name: Garcia | full_name: Roberto Collazos Garcia | role: CEO / Geschäftsführer | linkedin_profile_url: https://de.linkedin.com/in/roberto-collazos-garcia-%F0%9F%87%A9%F0%9F%87%AA%F0%9F%87%AA%F0%9F%87%B8-660831b6 | source_url: https://wearesocial.com/de/impressum-datenschutz/ | city: Munich | country: DE
+9. company_name: We Are Social | first_name: Brett | last_name: Marchand | full_name: Brett Marchand | role: Geschäftsführer | source_url: https://wearesocial.com/de/impressum-datenschutz/ | city: Munich | country: DE
+10. company_name: We Are Social | first_name: Christopher William | last_name: Adamson | full_name: Christopher William Adamson | role: Geschäftsführer | source_url: https://wearesocial.com/de/impressum-datenschutz/ | city: Munich | country: DE
+11. company_name: welevel | first_name: Christian | last_name: Heimerl | full_name: Christian Heimerl | role: Founder | linkedin_profile_url: https://de.linkedin.com/in/heimerl | source_url: https://de.linkedin.com/company/welevel-studios | city: Munich | country: DE
+12. company_name: Wemolo | first_name: Niklas | last_name: Garrn | full_name: Niklas Garrn | role: Head of Sales | linkedin_profile_url: https://de.linkedin.com/in/niklas-garrn | source_url: https://www.wemolo.com/pressemitteilung/wemolo-gewinnt-cyrill-schoni-als-country-manager-fur-die-schweiz | city: Munich | country: DE
+13. company_name: Wemolo | first_name: Vincent | last_name: Buchholz | full_name: Vincent Buchholz | role: Head of Sales Central Europe | linkedin_profile_url: https://de.linkedin.com/in/vincent-buchholz | source_url: https://de.linkedin.com/in/vincent-buchholz | city: Munich | country: DE
+14. company_name: Wemolo | first_name: Andre | last_name: Niederfriniger | full_name: Andre Niederfriniger | role: Head of Revenue Operations | linkedin_profile_url: https://de.linkedin.com/in/andre-niederfriniger-2b0811147 | source_url: https://de.linkedin.com/in/andre-niederfriniger-2b0811147 | city: Munich | country: DE
+15. company_name: Westwing | first_name: Andreas | last_name: Hoerning | full_name: Andreas Hoerning | role: CEO | source_url: https://www.westwing.com/company/ | city: Munich | country: DE
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_070
+- Return only the requested result.
+- Use public information only.
