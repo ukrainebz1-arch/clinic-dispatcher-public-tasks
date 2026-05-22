@@ -1,0 +1,56 @@
+RUN_ID: real_chain_10_b2b_test_batch_001_stage_02_public_email_lookup
+TASK_ID: task_003
+PROMPT_VERSION: v1
+
+STRICT TRANSPORT OUTPUT GUARD:
+Your final answer is imported by an automated RUN_ID guard.
+The first two lines of your final answer MUST be exactly:
+RUN_ID: real_chain_10_b2b_test_batch_001_stage_02_public_email_lookup
+TASK_ID: task_003
+If you omit RUN_ID, start with TASK_ID only, or put the CSV header first, the answer is invalid.
+After those two lines, return the requested stage CSV output.
+Do not use markdown fences.
+The RUN_ID/TASK_ID lines are part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / For each discovered person, look for publicly visible personal or role-related email addresses and preserve the source URL.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test/batches/batch_001/stage_02_public_email_lookup/input.csv
+
+You receive people candidates. For each person, search only public sources for email addresses.
+
+Rules:
+- Use only public data.
+- Do not invent emails.
+- Do not create email hypotheses in this stage.
+- Accept only emails visible in public pages, documents, official profiles, press pages or public directories.
+- Keep email_source_url for every email.
+- If only a generic mailbox is public, include it and mark email_type as generic_or_role.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown.
+- email_publicly_confirmed: true only when the exact email appears publicly; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de | first_name: Uwe | last_name: Wermke | full_name: Uwe Wermke | role: Senior Channel Manager | Vertriebspartner | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/uwe-wermke-68318220 | confidence: high | notes: Official contact page lists channel sales role
+2. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de | first_name: Thomas | last_name: Pantazidis | full_name: Thomas Pantazidis | role: Key Account Manager | Öffentliche Einrichtungen | role_category: sales | confidence: high | notes: Official contact page lists key account role
+3. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de | first_name: Anna | last_name: Ademaj | full_name: Anna Ademaj | role: Head of PR & Marketing | role_category: marketing | confidence: medium | notes: Public newsroom lists PR and marketing head
+
+REQUIRED OUTPUT:
+Start your answer with these exact first two lines, before the CSV header:
+RUN_ID: real_chain_10_b2b_test_batch_001_stage_02_public_email_lookup
+TASK_ID: task_003
+Then return the requested CSV output.
+Do not start with TASK_ID only.
+Do not start with the CSV header.
+Do not omit RUN_ID.
+Use public information only.
