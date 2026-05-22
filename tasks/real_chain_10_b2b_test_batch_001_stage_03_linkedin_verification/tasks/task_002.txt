@@ -1,0 +1,43 @@
+RUN_ID: real_chain_10_b2b_test_batch_001_stage_03_linkedin_verification
+TASK_ID: task_002
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/real_chain_10_b2b_test/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each person.
+
+Rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- A LinkedIn match must align with first name, last name, company or very relevant role/history.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL if supported.
+- linkedin_verified: true / false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com | first_name: Magnus | last_name: Baringer | full_name: Dr. Magnus Baringer | role: Gründer & CEO von 321 MED | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-magnus-baringer-73823bb5 | confidence: high | notes: Official AGB lists company email and Magnus as representative.
+2. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de | first_name: Tobias | last_name: Hesselmann | full_name: Dr. Tobias Hesselmann | role: Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-tobias-hesselmann | confidence: high | notes: Official team page lists generic contact email.
+3. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com | first_name: Benjamin | last_name: Marchal | full_name: Benjamin Marchal | role: Chief Executive Officer | role_category: founder_ceo | linkedin_profile_url: https://fr.linkedin.com/in/benjamin-marchal-89a01180 | confidence: medium | notes: Public press release lists PR contact for 360Learning.
+4. batch_id: batch_001 | company_name: 3m5. | company_website: https://www.3m5.de | first_name: Michael | last_name: Eckstein | full_name: Michael Eckstein | role: Geschäftsführer | role_category: founder_ceo | confidence: medium | notes: Official management page lists Dresden office email.
+5. batch_id: batch_001 | company_name: 3m5. | company_website: https://www.3m5.de | first_name: Alexander | last_name: Lehn | full_name: Alexander Lehn | role: Geschäftsführer und Leiter Software Technology | role_category: other_management | confidence: high | notes: Official website displays Alexander Lehn email for DMEXCO contact.
+6. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de | first_name: Frederik | last_name: Giessing | full_name: Dr.-Ing. Frederik Giessing | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Public company PDF lists Frederik Giessing email.
+7. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de | first_name: Salvatore | last_name: De Masi | full_name: Salvatore De Masi | role: Vertriebsleiter Energie- und Wasserwirtschaft | role_category: sales | confidence: high | notes: Public newsletter lists Salvatore De Masi email.
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_002
+- Return only the requested result.
+- Use public information only.
