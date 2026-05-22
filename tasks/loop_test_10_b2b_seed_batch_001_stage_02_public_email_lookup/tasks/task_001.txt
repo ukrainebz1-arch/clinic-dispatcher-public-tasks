@@ -1,0 +1,48 @@
+RUN_ID: loop_test_10_b2b_seed_batch_001_stage_02_public_email_lookup
+TASK_ID: task_001
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / For each discovered person, look for publicly visible personal or role-related email addresses and preserve the source URL.
+
+Run context:
+- campaign_id: loop_test_10_b2b_seed
+- batch_id: batch_001
+- run_id: loop_test_10_b2b_seed_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/loop_test_10_b2b_seed/batches/batch_001/stage_02_public_email_lookup/input.csv
+
+You receive people candidates. For each person, search only public sources for email addresses.
+
+Rules:
+- Use only public data.
+- Do not invent emails.
+- Do not create email hypotheses in this stage.
+- Accept only emails visible in public pages, documents, official profiles, press pages or public directories.
+- Keep email_source_url for every email.
+- If only a generic mailbox is public, include it and mark email_type as generic_or_role.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown.
+- email_publicly_confirmed: true only when the exact email appears publicly; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: bluebird | company_website: https://nl.linkedin.com/company/bluebird-saas-recruitment | first_name: Machiel | last_name: Kunst | full_name: Machiel Kunst | role: Founder & CEO | role_category: founder_ceo | linkedin_profile_url: https://nl.linkedin.com/in/machielkunst | confidence: high | notes: Company team page lists Founder & CEO.
+2. batch_id: batch_001 | company_name: BLUVIT GmbH | company_website: https://de.linkedin.com/company/bluvit-gmbh | first_name: Timm | last_name: Vollmer | full_name: Timm Vollmer | role: Founder and Managing Director | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/timm-vollmer-9a5a0640 | confidence: high | notes: Company website lists founder and managing director.
+3. batch_id: batch_001 | company_name: Blümlein AI & Automation GmbH | company_website: https://de.linkedin.com/company/bluemlein-ai | first_name: Daniel | last_name: Blümlein | full_name: Daniel Blümlein | role: Founder and Managing Director | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/daniel-bl%C3%BCmlein-ki | confidence: high | notes: Website identifies him as founder and managing director.
+4. batch_id: batch_001 | company_name: BNP Paribas | company_website: https://fr.linkedin.com/company/bnp-paribas | first_name: Mathias | last_name: de Toldi | full_name: Mathias de Toldi | role: CEO BNP Paribas Leasing Solutions Germany | role_category: founder_ceo | confidence: high | notes: Company announcement names German leasing CEO.
+5. batch_id: batch_001 | company_name: BODE Group | company_website: https://de.linkedin.com/company/bode-accesstomobility | first_name: Jonathan | last_name: Scholz | full_name: Jonathan Scholz | role: Head of After Sales BODE Group | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/jonathan-scholz-92638914b | confidence: high | notes: Public news names Head of After Sales.
+6. batch_id: batch_001 | company_name: Bogner GmbH & Co. KG | company_website: https://de.linkedin.com/company/bogner-gmbh-&-co-kg | first_name: Alexander | last_name: Bogner | full_name: Alexander Bogner | role: Managing Director | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/alexander-bogner-59583715b | confidence: high | notes: LinkedIn profile states managing director at company.
+7. batch_id: batch_001 | company_name: Bold Academy | company_website: https://de.linkedin.com/company/bold-academy-gmbh | first_name: Julian | last_name: Scholz | full_name: Julian Scholz | role: CEO | role_category: founder_ceo | confidence: high | notes: Company LinkedIn post names CEO.
+8. batch_id: batch_001 | company_name: Bolt | company_website: https://ee.linkedin.com/company/bolt-eu | first_name: Helena | last_name: Karaplios | full_name: Helena Karaplios | role: Head of Sales CEE / Regional Manager CEE Bolt Business | role_category: sales | linkedin_profile_url: https://pl.linkedin.com/in/helena-karaplios-9473182b | confidence: medium | notes: LinkedIn profile supports Bolt Business sales leadership.
+9. batch_id: batch_001 | company_name: BONFRY | company_website: https://de.linkedin.com/company/bonfry | first_name: Nicolas | last_name: Czerlinsky | full_name: Nicolas Czerlinsky | role: Head of Commercial | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/nicolas-czerlinsky | confidence: high | notes: LinkedIn profile states Head of Commercial at Bonfry.
+10. batch_id: batch_001 | company_name: Bosch | company_website: https://de.linkedin.com/company/bosch | first_name: Jan-Philipp | last_name: Weers | full_name: Jan-Philipp Weers | role: Head of Bosch Road Services | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/weers | confidence: high | notes: LinkedIn profile states Head of Bosch Road Services.
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_001
+- Return only the requested result.
+- Use public information only.
