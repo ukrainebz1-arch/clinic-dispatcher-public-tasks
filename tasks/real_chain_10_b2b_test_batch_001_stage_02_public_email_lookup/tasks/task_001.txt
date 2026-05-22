@@ -1,0 +1,48 @@
+RUN_ID: real_chain_10_b2b_test_batch_001_stage_02_public_email_lookup
+TASK_ID: task_001
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / For each discovered person, look for publicly visible personal or role-related email addresses and preserve the source URL.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test/batches/batch_001/stage_02_public_email_lookup/input.csv
+
+You receive people candidates. For each person, search only public sources for email addresses.
+
+Rules:
+- Use only public data.
+- Do not invent emails.
+- Do not create email hypotheses in this stage.
+- Accept only emails visible in public pages, documents, official profiles, press pages or public directories.
+- Keep email_source_url for every email.
+- If only a generic mailbox is public, include it and mark email_type as generic_or_role.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown.
+- email_publicly_confirmed: true only when the exact email appears publicly; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de | first_name: Alessandro | last_name: Nava | full_name: Alessandro Nava | role: Vorstandsvorsitzender | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/alessandro-nava-842889169 | confidence: high | notes: Official management page lists board chair
+2. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de | first_name: Monika | last_name: Weninger | full_name: Monika Weninger | role: Vorstand Online-Marketing | role_category: marketing | linkedin_profile_url: https://de.linkedin.com/in/monikaweninger | confidence: high | notes: Official management page lists online marketing board role
+3. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de | first_name: Florian | last_name: Dederichs | full_name: Florian Dederichs | role: Bereichsleiter B2B-Vermarktung | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/florian-dederichs-950a50112 | confidence: high | notes: Official partner contact page lists B2B leadership
+4. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de | first_name: Anouk | last_name: Esbati | full_name: Anouk Esbati | role: Leiterin Partnership Management Hospitality & Internationalisierung | role_category: business_development | confidence: high | notes: Official partner contact page lists partnership leadership
+5. batch_id: batch_001 | company_name: 1KOMMA5° | company_website: https://1komma5.com | first_name: Philipp | last_name: Schröder | full_name: Philipp Schröder | role: Co-Founder & Chief Executive Officer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/philipp-schr%C3%B6der-b94b6576 | confidence: high | notes: Official company page lists CEO
+6. batch_id: batch_001 | company_name: 1KOMMA5° | company_website: https://1komma5.com | first_name: Micha | last_name: Grüber | full_name: Micha Grüber | role: Co-Founder & Chief Financial Officer | role_category: finance | linkedin_profile_url: https://de.linkedin.com/in/micha-grueber-10227814 | confidence: high | notes: Official team page lists CFO
+7. batch_id: batch_001 | company_name: 1Q Health Group | company_website: https://1qhealth.com | first_name: Philipp | last_name: Ziehr | full_name: Philipp Ziehr | role: CEO of 1Q Health Group | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/philipp-ziehr | confidence: high | notes: Company article names CEO
+8. batch_id: batch_001 | company_name: 1Q Health Group | company_website: https://1qhealth.com | first_name: Philipp | last_name: Ponton | full_name: Dr. Philipp Ponton | role: Chief Operating Officer | role_category: operations | confidence: medium | notes: CEO post announced COO appointment
+9. batch_id: batch_001 | company_name: 2trde | company_website: https://www.2trde.com | first_name: Johannes | last_name: Stoffel | full_name: Johannes Stoffel | role: Founder & Managing Director | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/johannes-stoffel-27389667 | confidence: high | notes: Official about page lists founder managing director
+10. batch_id: batch_001 | company_name: 2trde | company_website: https://www.2trde.com | first_name: Marcus | last_name: Lankenau | full_name: Marcus Lankenau | role: Co-Founder & CTO | role_category: other_management | confidence: high | notes: Official about page names co-founder CTO
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_001
+- Return only the requested result.
+- Use public information only.
