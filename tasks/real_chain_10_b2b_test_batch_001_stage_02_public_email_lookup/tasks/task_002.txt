@@ -1,0 +1,48 @@
+RUN_ID: real_chain_10_b2b_test_batch_001_stage_02_public_email_lookup
+TASK_ID: task_002
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / For each discovered person, look for publicly visible personal or role-related email addresses and preserve the source URL.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test/batches/batch_001/stage_02_public_email_lookup/input.csv
+
+You receive people candidates. For each person, search only public sources for email addresses.
+
+Rules:
+- Use only public data.
+- Do not invent emails.
+- Do not create email hypotheses in this stage.
+- Accept only emails visible in public pages, documents, official profiles, press pages or public directories.
+- Keep email_source_url for every email.
+- If only a generic mailbox is public, include it and mark email_type as generic_or_role.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown.
+- email_publicly_confirmed: true only when the exact email appears publicly; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com | first_name: Magnus | last_name: Baringer | full_name: Dr. Magnus Baringer | role: Gründer & CEO von 321 MED | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-magnus-baringer-73823bb5 | confidence: high | notes: Company history supports founder connection
+2. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com | first_name: Michael | last_name: Nowak | full_name: Michael Nowak | role: CTO at 321 MED | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/michi-nowak | confidence: high | notes: LinkedIn company page lists CTO employee
+3. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de | first_name: Tobias | last_name: Hesselmann | full_name: Dr. Tobias Hesselmann | role: Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-tobias-hesselmann | confidence: high | notes: Official team page lists managing director
+4. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de | first_name: Dennis | last_name: Roosmann | full_name: Dennis Roosmann | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official team page lists managing director
+5. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com | first_name: Benjamin | last_name: Marchal | full_name: Benjamin Marchal | role: Chief Executive Officer | role_category: founder_ceo | linkedin_profile_url: https://fr.linkedin.com/in/benjamin-marchal-89a01180 | confidence: high | notes: Company announcement names CEO effective 2025
+6. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com | first_name: Nick | last_name: Hernandez | full_name: Nick Hernandez | role: Founder and Chair of the Board | role_category: other_management | linkedin_profile_url: https://fr.linkedin.com/in/nicoconut | confidence: high | notes: Company announcement names founder chair
+7. batch_id: batch_001 | company_name: 3m5. | company_website: https://www.3m5.de | first_name: Michael | last_name: Eckstein | full_name: Michael Eckstein | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official management page lists managing director
+8. batch_id: batch_001 | company_name: 3m5. | company_website: https://www.3m5.de | first_name: Alexander | last_name: Lehn | full_name: Alexander Lehn | role: Geschäftsführer und Leiter Software Technology | role_category: other_management | confidence: high | notes: Official management page lists role
+9. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de | first_name: Frederik | last_name: Giessing | full_name: Dr.-Ing. Frederik Giessing | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Reference page names managing director
+10. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de | first_name: Salvatore | last_name: De Masi | full_name: Salvatore De Masi | role: Vertriebsleiter Energie- und Wasserwirtschaft | role_category: sales | confidence: medium | notes: Public employee page lists sales leadership role
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_002
+- Return only the requested result.
+- Use public information only.
