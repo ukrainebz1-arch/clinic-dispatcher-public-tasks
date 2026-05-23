@@ -1,0 +1,74 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v3_batch_001_stage_03_linkedin_verification_retry_2
+TASK_ID: task_s03_retry_001_20260523T111008Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_retry_001_20260523T111008Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v3
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v3_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v3/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com/ | first_name: Nick | last_name: Hernandez | full_name: Nick Hernandez | role: Founder and Chair of the Board | role_category: founder_ceo | linkedin_profile_url: https://fr.linkedin.com/in/nicoconut | linkedin_verified: true | linkedin_source_url: https://www.linkedin.com/posts/nicoconut_exciting-news-at-360learning-when-we-activity-7241435778801700865-s-m7 | confidence: medium | notes: LinkedIn post and release confirm exact founder; profile currently also shows Jupi. | retry_attempt: 2 | previous_bad_linkedin_url: https://fr.linkedin.com/in/nicoconut | previous_judge_decision: REVIEW | previous_judge_issues: Profile shows additional names (also shows 'Jupi'), some uncertainty in notes.
+2. batch_id: batch_001 | company_name: 3m5. | company_website: https://www.3m5.de/ | first_name: Stefan | last_name: Jahn | full_name: Stefan Jahn | role: Geschäftsführer | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/stefan-jahn-8a17a853 | linkedin_verified: true | linkedin_source_url: https://de.linkedin.com/in/stefan-jahn-8a17a853 | confidence: high | notes: LinkedIn profile shows Geschäftsführer with 3m5 Media GmbH in Dresden. | retry_attempt: 2 | previous_bad_linkedin_url: https://de.linkedin.com/in/stefan-jahn-8a17a853 | previous_judge_decision: REVIEW | previous_judge_issues: Role 'Geschäftsführer' with role_category 'other_management' vs expected founder_ceo category.
+3. batch_id: batch_001 | company_name: 3m5. | company_website: https://www.3m5.de/ | first_name: Alexander | last_name: Lehn | full_name: Alexander Lehn | role: Geschäftsführer und Leiter Software Technology | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/alexander-lehn-704b5716 | linkedin_verified: true | linkedin_source_url: https://de.linkedin.com/in/alexander-lehn-704b5716 | confidence: high | notes: LinkedIn shows CTO at 3m5; official 3m5 press confirms management role. | retry_attempt: 2 | previous_bad_linkedin_url: https://de.linkedin.com/in/alexander-lehn-704b5716 | previous_judge_decision: REVIEW | previous_judge_issues: Notes indicate CTO at 3m5 but role is 'Geschäftsführer und Leiter Software Technology', possible role mismatch.
+4. batch_id: batch_001 | company_name: 1Q Health Group | company_website: https://1qhealth.com/ | first_name: Anna-Christina | last_name: Langhof | full_name: Anna-Christina Langhof | role: Food Supplements | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/anna-langhof-72ba6827 | linkedin_verified: true | linkedin_source_url: https://de.linkedin.com/in/anna-langhof-72ba6827 | confidence: medium | notes: LinkedIn uses Anna Langhof and shows Sales Manager at 1Q Health; official page has Anna-Christina Food Supplements. | retry_attempt: 2 | previous_bad_linkedin_url: https://de.linkedin.com/in/anna-langhof-72ba6827 | previous_judge_decision: REVIEW | previous_judge_issues: LinkedIn role 'Sales Manager' vs input role 'Food Supplements', some role mismatch.
+5. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de/ | first_name: Dennis | last_name: Roosmann | full_name: Dennis Roosmann | role: Geschäftsführer | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/dennis-roosmann-17099015b | linkedin_verified: true | linkedin_source_url: https://de.linkedin.com/in/dennis-roosmann-17099015b | confidence: high | notes: LinkedIn shows exact name, CEO title and 360 PRODUCTS experience. | retry_attempt: 2 | previous_bad_linkedin_url: https://de.linkedin.com/in/dennis-roosmann-17099015b | previous_judge_decision: REVIEW | previous_judge_issues: Role category 'other_management' differs from expected founder_ceo role; possible role mismatch noted.
+6. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Henrik | last_name: Desfontaines | full_name: Henrik Desfontaines | role: Geschäftsführung | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/henrik-desfontaines | linkedin_verified: true | linkedin_source_url: https://de.linkedin.com/in/henrik-desfontaines | confidence: medium | notes: LinkedIn shows exact name and 450connect GmbH; role not visible in snippet. | retry_attempt: 2 | previous_bad_linkedin_url: https://de.linkedin.com/in/henrik-desfontaines | previous_judge_decision: REVIEW | previous_judge_issues: Role not visible in snippet; confidence medium; role mismatch uncertain.
+7. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Joachim | last_name: Groß | full_name: Dipl.-Ing. Joachim Groß | role: Geschäftsführung | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/joachim-gro%C3%9F-77508618 | linkedin_verified: true | linkedin_source_url: https://de.linkedin.com/in/joachim-gro%C3%9F-77508618 | confidence: medium | notes: Exact LinkedIn shows CTO at 450connect; title differs from Geschäftsführung. | retry_attempt: 2 | previous_bad_linkedin_url: https://de.linkedin.com/in/joachim-gro%C3%9F-77508618 | previous_judge_decision: REVIEW | previous_judge_issues: LinkedIn shows CTO role differing from input 'Geschäftsführung'; role mismatch present.
+8. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de/ | first_name: Alessandro | last_name: Nava | full_name: Alessandro Nava | role: Vorstandsvorsitzender | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/alessandro-nava-842889169 | linkedin_verified: true | linkedin_source_url: https://de.linkedin.com/in/alessandro-nava-842889169 | confidence: medium | notes: Exact LinkedIn references 1&1 but shows COO at 1&1 AG; role mismatch. | retry_attempt: 2 | previous_bad_linkedin_url: https://de.linkedin.com/in/alessandro-nava-842889169 | previous_judge_decision: REVIEW | previous_judge_issues: Role mismatch: input role 'Vorstandsvorsitzender' vs LinkedIn COO role; role discrepancy noted.
+9. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de/ | first_name: Florian | last_name: Dederichs | full_name: Florian Dederichs | role: Bereichsleiter B2B-Vermarktung | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/florian-dederichs-950a50112 | linkedin_verified: true | linkedin_source_url: https://de.linkedin.com/in/florian-dederichs-950a50112 | confidence: medium | notes: LinkedIn shows exact name and 1. FC Köln; specific B2B role not visible. | retry_attempt: 2 | previous_bad_linkedin_url: https://de.linkedin.com/in/florian-dederichs-950a50112 | previous_judge_decision: REVIEW | previous_judge_issues: Specific B2B role not visible on LinkedIn profile; role alignment uncertain.
+10. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de/ | first_name: Anouk | last_name: Esbati | full_name: Anouk Esbati | role: Leiterin Partnership Management Hospitality & Internationalisierung | role_category: business_development | linkedin_verified: false | linkedin_source_url: https://de.linkedin.com/posts/fckoeln_effzeh-activity-7403810747744534529-4w5R | confidence: low | notes: LinkedIn posts confirm name and FC role but no public personal profile found. | retry_attempt: 2 | previous_judge_decision: REVIEW | previous_judge_issues: Missing LinkedIn profile URL; only source post confirms role but no personal LinkedIn profile found.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_retry_001_20260523T111008Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
