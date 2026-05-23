@@ -1,0 +1,74 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v3_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_002_20260523T110338Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_002_20260523T110338Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v3
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v3_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v3/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com/ | first_name: Magnus | last_name: Baringer | full_name: Dr. Magnus Baringer | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official pages show generic mail and another press contact only.
+2. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de/ | first_name: Tobias | last_name: Hesselmann | full_name: Dr. Tobias Hesselmann | role: Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-tobias-hesselmann/en | confidence: high | notes: German UPA profile lists exact email with 360 Products affiliation.
+3. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de/ | first_name: Dennis | last_name: Roosmann | full_name: Dennis Roosmann | role: Geschäftsführer | role_category: other_management | confidence: medium | notes: Public directory result lists exact email for Dennis Roosmann.
+4. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com/ | first_name: Benjamin | last_name: Marchal | full_name: Benjamin Marchal | role: Chief Executive Officer | role_category: founder_ceo | confidence: high | notes: Official author and company pages show role but no personal email.
+5. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Henrik | last_name: Desfontaines | full_name: Henrik Desfontaines | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official imprint lists managing directors and generic info mailbox only.
+6. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Joachim | last_name: Groß | full_name: Dipl.-Ing. Joachim Groß | role: Geschäftsführung | role_category: operations | confidence: high | notes: Official imprint lists managing directors and generic info mailbox only.
+7. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de/ | first_name: Alessandro | last_name: Nava | full_name: Alessandro Nava | role: Vorstandsvorsitzender | role_category: founder_ceo | confidence: high | notes: Official management page confirms role; no personal public email found.
+8. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de/ | first_name: Sascha | last_name: D'Avis | full_name: Sascha D'Avis | role: Vorstand Finanzen & Personal | role_category: finance | confidence: high | notes: Official management page confirms role; no personal public email found.
+9. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de/ | first_name: Monika | last_name: Weninger | full_name: Monika Weninger | role: Vorstand Online-Marketing | role_category: marketing | confidence: high | notes: Official management page confirms role; no personal public email found.
+10. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de/ | first_name: Florian | last_name: Dederichs | full_name: Florian Dederichs | role: Bereichsleiter B2B-Vermarktung | role_category: sales | confidence: high | notes: FC Business Echo lists name role phone and personal email.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_002_20260523T110338Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
