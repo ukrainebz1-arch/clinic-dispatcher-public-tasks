@@ -1,0 +1,82 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v3_batch_001_stage_02_public_email_lookup
+TASK_ID: task_s02_001_20260523T105218Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_001_20260523T105218Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / For each discovered person, look for publicly visible personal or role-related email addresses and preserve the source URL.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v3
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v3_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v3/batches/batch_001/stage_02_public_email_lookup/input.csv
+
+You receive people candidates. For each input person, search public sources for a PERSONAL public email address that belongs to that exact person.
+
+Primary goal:
+- Find a personal public email for the exact input person.
+- A valid personal email must be visibly published in a public source and clearly connected to the same person, company, and role/context.
+- Better NOT_FOUND than a wrong, generic, inferred, or weak email.
+
+Strict rules:
+- Use only public data.
+- Do not invent emails.
+- Do not infer, guess, construct, or generate emails from name patterns.
+- Do not create email hypotheses in this stage.
+- Do not use company email patterns as confirmed personal emails.
+- Accept personal_public only when the exact email address is visible in a public page, public document, official profile, public directory, press/team page, or comparable public source.
+- email_source_url must support the exact email value, not only the company domain.
+- Verify that the source connects the exact email to the exact input person or a clearly matching person identity.
+- Verify person name + company + role/context before returning an email.
+- Search deeply enough per person: company website, team/about pages, contact/press/imprint pages, public profiles, public documents, and public directories when useful.
+- If uncertain, use NOT_FOUND / empty personal email fields instead of inventing or weakening evidence.
+
+Generic/company mailbox policy:
+- Generic/company/role mailboxes are NOT personal emails.
+- Do NOT output these as personal_public: info@, hello@, hallo@, contact@, service@, mail@, office@, presse@, press@, support@, sales@, business@, marketing@, hr@, jobs@, recruiting@, career@, careers@, team@, admin@, sekretariat@, assistenz@.
+- If only a generic/company mailbox is found, do not put it into the personal email field as a person-level result.
+- Generic/company mailbox may be mentioned only as fallback/company-level contact if the schema has a suitable field; otherwise leave personal email empty / NOT_FOUND and explain briefly in notes.
+- Duplicate generic emails for multiple people should not be treated as person-level personal emails.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown, NOT_FOUND.
+- email_publicly_confirmed: true only when the exact personal email appears publicly and is connected to the exact person; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. If no personal email is found, write NOT_FOUND and the search reason briefly.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de/ | first_name: Alessandro | last_name: Nava | full_name: Alessandro Nava | role: Vorstandsvorsitzender | role_category: founder_ceo | confidence: high | notes: Official management page lists role
+2. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de/ | first_name: Sascha | last_name: D'Avis | full_name: Sascha D'Avis | role: Vorstand Finanzen & Personal | role_category: finance | confidence: high | notes: Official management page lists finance and HR role
+3. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de/ | first_name: Monika | last_name: Weninger | full_name: Monika Weninger | role: Vorstand Online-Marketing | role_category: marketing | confidence: high | notes: Official management page lists marketing role
+4. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de/ | first_name: Florian | last_name: Dederichs | full_name: Florian Dederichs | role: Bereichsleiter B2B-Vermarktung | role_category: sales | confidence: high | notes: Official partner contact page lists B2B lead
+5. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de/ | first_name: Anouk | last_name: Esbati | full_name: Anouk Esbati | role: Leiterin Partnership Management Hospitality & Internationalisierung | role_category: business_development | confidence: high | notes: Official partner contact page lists partnership lead
+6. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de/ | first_name: Philipp | last_name: Liesenfeld | full_name: Philipp Liesenfeld | role: Geschäftsführer Marketing und Vertrieb | role_category: other_management | confidence: medium | notes: News source names him in executive marketing and sales role
+7. batch_id: batch_001 | company_name: 1KOMMA5° | company_website: https://1komma5.com/ | first_name: Philipp | last_name: Schröder | full_name: Philipp Schröder | role: Co-Founder & Chief Executive Officer | role_category: founder_ceo | confidence: high | notes: Official team page lists role
+8. batch_id: batch_001 | company_name: 1KOMMA5° | company_website: https://1komma5.com/ | first_name: Micha | last_name: Grüber | full_name: Micha Grüber | role: Co-Founder & Chief Financial Officer | role_category: finance | confidence: high | notes: Official team page lists role
+9. batch_id: batch_001 | company_name: 1KOMMA5° | company_website: https://1komma5.com/ | first_name: Philip | last_name: Liesenfeld | full_name: Philip Liesenfeld | role: Co-Founder & Chief Operating Officer | role_category: operations | confidence: high | notes: Official team page lists role
+10. batch_id: batch_001 | company_name: 1Q Health Group | company_website: https://1qhealth.com/ | first_name: Philipp | last_name: Ziehr | full_name: Philipp Ziehr | role: CEO | role_category: founder_ceo | confidence: high | notes: Interview identifies him as CEO
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_001_20260523T105218Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
