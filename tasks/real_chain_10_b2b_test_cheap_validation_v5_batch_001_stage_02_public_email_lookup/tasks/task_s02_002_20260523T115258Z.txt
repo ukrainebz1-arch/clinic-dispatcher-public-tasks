@@ -1,0 +1,82 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v5_batch_001_stage_02_public_email_lookup
+TASK_ID: task_s02_002_20260523T115258Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_002_20260523T115258Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / For each discovered person, look for publicly visible personal or role-related email addresses and preserve the source URL.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v5
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v5_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v5/batches/batch_001/stage_02_public_email_lookup/input.csv
+
+You receive people candidates. For each input person, search public sources for a PERSONAL public email address that belongs to that exact person.
+
+Primary goal:
+- Find a personal public email for the exact input person.
+- A valid personal email must be visibly published in a public source and clearly connected to the same person, company, and role/context.
+- Better NOT_FOUND than a wrong, generic, inferred, or weak email.
+
+Strict rules:
+- Use only public data.
+- Do not invent emails.
+- Do not infer, guess, construct, or generate emails from name patterns.
+- Do not create email hypotheses in this stage.
+- Do not use company email patterns as confirmed personal emails.
+- Accept personal_public only when the exact email address is visible in a public page, public document, official profile, public directory, press/team page, or comparable public source.
+- email_source_url must support the exact email value, not only the company domain.
+- Verify that the source connects the exact email to the exact input person or a clearly matching person identity.
+- Verify person name + company + role/context before returning an email.
+- Search deeply enough per person: company website, team/about pages, contact/press/imprint pages, public profiles, public documents, and public directories when useful.
+- If uncertain, use NOT_FOUND / empty personal email fields instead of inventing or weakening evidence.
+
+Generic/company mailbox policy:
+- Generic/company/role mailboxes are NOT personal emails.
+- Do NOT output these as personal_public: info@, hello@, hallo@, contact@, service@, mail@, office@, presse@, press@, support@, sales@, business@, marketing@, hr@, jobs@, recruiting@, career@, careers@, team@, admin@, sekretariat@, assistenz@.
+- If only a generic/company mailbox is found, do not put it into the personal email field as a person-level result.
+- Generic/company mailbox may be mentioned only as fallback/company-level contact if the schema has a suitable field; otherwise leave personal email empty / NOT_FOUND and explain briefly in notes.
+- Duplicate generic emails for multiple people should not be treated as person-level personal emails.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown, NOT_FOUND.
+- email_publicly_confirmed: true only when the exact personal email appears publicly and is connected to the exact person; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. If no personal email is found, write NOT_FOUND and the search reason briefly.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 2trde | company_website: https://www.2trde.com | first_name: Johannes | last_name: Stoffel | full_name: Johannes Stoffel | role: Founder & Managing Director; CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/johannes-stoffel-27389667 | confidence: high | notes: Official about page lists founder
+2. batch_id: batch_001 | company_name: 2trde | company_website: https://www.2trde.com | first_name: Marcus | last_name: Lankenau | full_name: Marcus Lankenau | role: Co-Founder & CTO | role_category: other_management | confidence: high | notes: Official about page lists founder
+3. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com | first_name: Magnus | last_name: Baringer | full_name: Dr. Magnus Baringer | role: Gründer und CEO | role_category: founder_ceo | confidence: medium | notes: Public company post identifies founder CEO
+4. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com | first_name: Benjamin | last_name: Marchal | full_name: Benjamin Marchal | role: Chief Executive Officer | role_category: founder_ceo | confidence: high | notes: Announcement confirms CEO
+5. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com | first_name: Guillaume | last_name: Alary | full_name: Guillaume Alary | role: Co-founder and CRO | role_category: sales | confidence: high | notes: Org profile confirms CRO
+6. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com | first_name: Sebastian | last_name: Dust | full_name: Sebastian Dust | role: Sales leader DACH | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/sebastian-dust-45a760110 | confidence: medium | notes: LinkedIn snippet confirms DACH sales lead
+7. batch_id: batch_001 | company_name: 3m5 | company_website: https://www.3m5.de | first_name: Michael | last_name: Eckstein | full_name: Michael Eckstein | role: Geschäftsführer und Gründer von 3m5 | role_category: founder_ceo | confidence: high | notes: Official career page identifies founder
+8. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de | first_name: Frederik | last_name: Giessing | full_name: Dr.-Ing. Frederik Giessing | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Public Handelsblatt page confirms role
+9. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de | first_name: Matthias | last_name: Lenz | full_name: Dipl.-Ing. Matthias Lenz | role: Geschäftsführer | role_category: other_management | confidence: medium | notes: XING employee listing confirms role
+10. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de | first_name: Sabine | last_name: Maiwaldt | full_name: Sabine Maiwaldt | role: Head of HR / Leitung Personal | role_category: hr_recruiting | confidence: medium | notes: XING employee listing confirms HR role
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_002_20260523T115258Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
