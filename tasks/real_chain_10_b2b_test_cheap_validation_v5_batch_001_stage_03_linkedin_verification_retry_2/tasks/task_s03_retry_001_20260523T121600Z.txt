@@ -1,0 +1,71 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v5_batch_001_stage_03_linkedin_verification_retry_2
+TASK_ID: task_s03_retry_001_20260523T121600Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_retry_001_20260523T121600Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v5
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v5_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v5/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com | first_name: Robin | last_name: Nichols | full_name: Robin Nichols | role: Chief People Officer | role_category: hr_recruiting | linkedin_profile_url: https://www.linkedin.com/in/robinlaylanichols/ | linkedin_verified: false | linkedin_source_url: https://www.linkedin.com/in/robinlaylanichols/ | confidence: medium | notes: Exact 360Learning person, but LinkedIn shows Global Head of Content, not Chief People Officer. | retry_attempt: 2 | previous_bad_linkedin_url: https://www.linkedin.com/in/robinlaylanichols/ | previous_judge_decision: REVIEW | previous_judge_issues: Role mismatch: LinkedIn shows Global Head of Content, input role Chief People Officer.
+2. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com | first_name: Joei | last_name: Chan | full_name: Joei Chan | role: VP of Marketing | role_category: marketing | linkedin_profile_url: https://fr.linkedin.com/in/joeichan | linkedin_verified: false | linkedin_source_url: https://fr.linkedin.com/in/joeichan | confidence: medium | notes: Exact marketing person; LinkedIn/public results show 360Learning history but current/title differs from input. | retry_attempt: 2 | previous_bad_linkedin_url: https://fr.linkedin.com/in/joeichan | previous_judge_decision: REVIEW | previous_judge_issues: Current LinkedIn title differs from input (VP Marketing) though marketing person at same company; role mismatch noted.
+3. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de | first_name: Dennis | last_name: Roosmann | full_name: Dennis Roosmann | role: Geschäftsführer | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/dennis-roosmann-17099015b | linkedin_verified: true | linkedin_source_url: https://de.linkedin.com/in/dennis-roosmann-17099015b | confidence: high | notes: LinkedIn shows Dennis Roosmann as CEO with experience at 360 PRODUCTS. | retry_attempt: 2 | previous_bad_linkedin_url: https://de.linkedin.com/in/dennis-roosmann-17099015b | previous_judge_decision: REVIEW | previous_judge_issues: Role category mismatch between data (management) and notes stating CEO with experience, some ambiguity.
+4. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com | first_name: Nick | last_name: Hernandez | full_name: Nick Hernandez | role: Founder & CEO | role_category: founder_ceo | linkedin_profile_url: https://fr.linkedin.com/in/nicoconut | linkedin_verified: false | linkedin_source_url: https://www.linkedin.com/posts/nicoconut_exciting-news-at-360learning-when-we-activity-7241435778801700865-s-m7 | confidence: medium | notes: Exact profile found, but LinkedIn shows Jupi; he announced Ben CEO of 360Learning from 2025. | retry_attempt: 2 | previous_bad_linkedin_url: https://fr.linkedin.com/in/nicoconut | previous_judge_decision: REJECT | previous_judge_issues: LinkedIn profile not verified; notes indicate CEO change from 2025, role mismatch detected.
+5. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com | first_name: Nicolas | last_name: De Kouchkovsky | full_name: Nicolas De Kouchkovsky | role: Chief Revenue Officer | role_category: sales | linkedin_verified: false | linkedin_source_url: https://www.linkedin.com/in/nicolask3 | confidence: low | notes: Found same-name LinkedIn profile,but it shows industry analyst; no public 360Learning CRO match. | retry_attempt: 2 | previous_judge_decision: REJECT | previous_judge_issues: Missing LinkedIn profile URL and profile shows different role (industry analyst).
+6. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de/ | first_name: Alessandro | last_name: Nava | full_name: Alessandro Nava | role: CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/alessandro-nava-842889169 | linkedin_verified: false | linkedin_source_url: https://de.linkedin.com/in/alessandro-nava-842889169 | confidence: medium | notes: LinkedIn shows COO at 1&1 AG; official site confirms CEO of 1&1 Telecommunication SE. | retry_attempt: 2 | previous_bad_linkedin_url: https://de.linkedin.com/in/alessandro-nava-842889169 | previous_judge_decision: REVIEW | previous_judge_issues: LinkedIn shows COO, but official site states CEO; role mismatch exists.
+7. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de/ | first_name: Anouk | last_name: Esbati | full_name: Anouk Esbati | role: Leiterin Partnership Management Hospitality & Internationalisierung | role_category: business_development | linkedin_verified: false | linkedin_source_url: https://fc.de/club/partner/ansprechpartner | confidence: low | notes: No exact public LinkedIn profile found; FC pages confirm person and role only. | retry_attempt: 2 | previous_judge_decision: REJECT | previous_judge_issues: Missing LinkedIn profile URL; no exact LinkedIn match found.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_retry_001_20260523T121600Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
