@@ -1,0 +1,79 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v3_batch_001_stage_02_public_email_lookup_retry_2
+TASK_ID: task_s02_retry_002_20260523T105844Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_retry_002_20260523T105844Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / For each discovered person, look for publicly visible personal or role-related email addresses and preserve the source URL.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v3
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v3_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v3/batches/batch_001/stage_02_public_email_lookup/input.csv
+
+You receive people candidates. For each input person, search public sources for a PERSONAL public email address that belongs to that exact person.
+
+Primary goal:
+- Find a personal public email for the exact input person.
+- A valid personal email must be visibly published in a public source and clearly connected to the same person, company, and role/context.
+- Better NOT_FOUND than a wrong, generic, inferred, or weak email.
+
+Strict rules:
+- Use only public data.
+- Do not invent emails.
+- Do not infer, guess, construct, or generate emails from name patterns.
+- Do not create email hypotheses in this stage.
+- Do not use company email patterns as confirmed personal emails.
+- Accept personal_public only when the exact email address is visible in a public page, public document, official profile, public directory, press/team page, or comparable public source.
+- email_source_url must support the exact email value, not only the company domain.
+- Verify that the source connects the exact email to the exact input person or a clearly matching person identity.
+- Verify person name + company + role/context before returning an email.
+- Search deeply enough per person: company website, team/about pages, contact/press/imprint pages, public profiles, public documents, and public directories when useful.
+- If uncertain, use NOT_FOUND / empty personal email fields instead of inventing or weakening evidence.
+
+Generic/company mailbox policy:
+- Generic/company/role mailboxes are NOT personal emails.
+- Do NOT output these as personal_public: info@, hello@, hallo@, contact@, service@, mail@, office@, presse@, press@, support@, sales@, business@, marketing@, hr@, jobs@, recruiting@, career@, careers@, team@, admin@, sekretariat@, assistenz@.
+- If only a generic/company mailbox is found, do not put it into the personal email field as a person-level result.
+- Generic/company mailbox may be mentioned only as fallback/company-level contact if the schema has a suitable field; otherwise leave personal email empty / NOT_FOUND and explain briefly in notes.
+- Duplicate generic emails for multiple people should not be treated as person-level personal emails.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown, NOT_FOUND.
+- email_publicly_confirmed: true only when the exact personal email appears publicly and is connected to the exact person; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. If no personal email is found, write NOT_FOUND and the search reason briefly.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 1Q Health Group | company_website: https://1qhealth.com/ | first_name: Anna-Christina | last_name: Langhof | full_name: Anna-Christina Langhof | role: Food Supplements | role_category: sales | email: 1Q-Contact@1Qhealth.com | email_type: generic_or_role | email_source_url: https://1qhealth.com/Contact | email_publicly_confirmed: false | confidence: low | notes: Generic company email; person listed but no personal email visible. | retry_attempt: 2 | previous_bad_email: 1Q-Contact@1Qhealth.com | previous_judge_decision: REJECT | previous_judge_issues: Duplicate generic email found (same_email) with validation_status=REVIEW; generic email only, no personal email.
+2. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com/ | first_name: Magnus | last_name: Baringer | full_name: Dr. Magnus Baringer | role: Geschäftsführer | role_category: founder_ceo | email: mail@321med.com | email_type: generic_or_role | email_source_url: https://321med.com/de/imprint | email_publicly_confirmed: false | confidence: medium | notes: Imprint and press contact list generic mailbox only. | retry_attempt: 2 | previous_bad_email: mail@321med.com | previous_judge_decision: REVIEW | previous_judge_issues: Generic or role-based email only; no personal email visible in source URL.
+3. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de/ | first_name: Tobias | last_name: Hesselmann | full_name: Dr. Tobias Hesselmann | role: Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-tobias-hesselmann/en | email: hallo@360products.de | email_type: generic_or_role | email_source_url: https://360products.de/team/ | email_publicly_confirmed: false | confidence: low | notes: Team page lists person and generic company email only. | retry_attempt: 2 | previous_bad_email: hallo@360products.de | previous_bad_linkedin_url: https://de.linkedin.com/in/dr-tobias-hesselmann/en | previous_judge_decision: REVIEW | previous_judge_issues: Only generic company email visible next to person listing; not a personal public email.
+4. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de/ | first_name: Dennis | last_name: Roosmann | full_name: Dennis Roosmann | role: Geschäftsführer | role_category: other_management | email: hallo@360products.de | email_type: generic_or_role | email_source_url: https://360products.de/team/ | email_publicly_confirmed: false | confidence: low | notes: Team page lists person and generic company email only. | retry_attempt: 2 | previous_bad_email: hallo@360products.de | previous_judge_decision: REJECT | previous_judge_issues: Duplicate generic email (same_email) with validation_status=REVIEW; no personal email visible.
+5. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com/ | first_name: Benjamin | last_name: Marchal | full_name: Benjamin Marchal | role: Chief Executive Officer | role_category: founder_ceo | email: NOT_FOUND | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: Official author and announcement pages found; no personal email visible. | retry_attempt: 2 | previous_bad_email: NOT_FOUND | previous_judge_decision: REJECT | previous_judge_issues: validation_status_fail
+6. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Henrik | last_name: Desfontaines | full_name: Henrik Desfontaines | role: Geschäftsführung | role_category: founder_ceo | email_source_url: NOT_FOUND | confidence: false | notes: high,Official imprint shows only generic info mailbox; no personal public email found. | retry_attempt: 2 | previous_judge_decision: REJECT | previous_judge_issues: Missing personal email and email_source_url marked NOT_FOUND; only generic contact info found.
+7. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Joachim | last_name: Groß | full_name: Dipl.-Ing. Joachim Groß | role: Geschäftsführung | role_category: operations | email_source_url: NOT_FOUND | confidence: false | notes: high,Official imprint shows only generic info mailbox; no personal public email found. | retry_attempt: 2 | previous_judge_decision: REJECT | previous_judge_issues: Missing personal email and email_source_url marked NOT_FOUND; only generic contact info found.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_retry_002_20260523T105844Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
