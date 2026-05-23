@@ -1,0 +1,101 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v8_batch_001_stage_02_public_email_lookup_retry_2
+TASK_ID: task_s02_retry_004_20260523T163029Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_retry_004_20260523T163029Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / For each discovered person, look for publicly visible personal or role-related email addresses and preserve the source URL.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v8
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v8_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v8/batches/batch_001/stage_02_public_email_lookup/input.csv
+
+You receive people candidates. For each input person, search public sources for a PERSONAL public email address that belongs to that exact person.
+
+Primary goal:
+- Find a personal public email for the exact input person.
+- A valid personal email must be visibly published in a public source and clearly connected to the same person, company, and role/context.
+- Better NOT_FOUND than a wrong, generic, inferred, or weak email.
+
+Strict rules:
+- Use only public data.
+- Do not invent emails.
+- Do not output inferred, guessed, constructed, or pattern-only emails as confirmed personal emails.
+- Do not use company email patterns as confirmed personal emails.
+- Accept personal_public only when the exact email address is visible in a public page, public document, official profile, public directory, press/team page, or comparable public source.
+- email_source_url must support the exact email value, not only the company domain.
+- Verify that the source connects the exact email to the exact input person or a clearly matching person identity.
+- Verify person name + company + role/context before returning an email.
+- Search deeply enough per person: company website, team/about pages, contact/press/imprint pages, public profiles, public documents, and public directories when useful.
+- If uncertain, use NOT_FOUND / empty personal email fields instead of inventing or weakening evidence.
+
+Retry escalation rules:
+- Some retry inputs contain retry_attempt, retry_strategy, retry_search_focus, previous_retry_reason, previous_bad_email, previous_judge_decision, and previous_judge_issues.
+- Use these fields as instructions for a stronger second/third attempt. Do not simply repeat the first search.
+- retry_attempt=2 / retry_strategy=expanded_source_search:
+  - Search alternative public sources for the same person: company team/about/press/imprint pages, public PDFs, event/speaker pages, association pages, public directories, public profile pages, and exact-name + company searches.
+  - Check company subpages and localized pages, not only the homepage.
+  - If a previous_bad_email exists, verify whether the exact email is truly visible and connected to this person; otherwise reject it.
+- retry_attempt=3 / retry_strategy=pattern_hypothesis_verification:
+  - First find public examples of the company's real email pattern from official or strong public sources.
+  - Then create likely candidate emails only as internal search queries, never as final proof.
+  - Search the exact candidate email in quotes together with the person's name and company.
+  - Check company career/jobs pages, job ads, ATS pages, press releases, public PDFs, conference pages, and contact/person pages where hiring managers or team leads may be listed.
+  - Output personal_public only if the exact candidate email is visibly confirmed in a public source and tied to the exact person.
+  - If only a pattern is found but the exact email is not publicly confirmed, leave the personal email empty / NOT_FOUND and mention pattern_unconfirmed in notes.
+
+Generic/company mailbox policy:
+- Generic/company/role mailboxes are NOT personal emails.
+- Do NOT output these as personal_public: info@, hello@, hallo@, contact@, service@, mail@, office@, presse@, press@, support@, sales@, business@, marketing@, hr@, jobs@, recruiting@, career@, careers@, team@, admin@, sekretariat@, assistenz@.
+- If only a generic/company mailbox is found, do not put it into the personal email field as a person-level result.
+- Generic/company mailbox may be mentioned only as fallback/company-level contact if the schema has a suitable field; otherwise leave personal email empty / NOT_FOUND and explain briefly in notes.
+- Duplicate generic emails for multiple people should not be treated as person-level personal emails.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve exactly one output row per input person.
+- If no personal email is found for a person, still output that person with email empty or NOT_FOUND.
+- Do not drop people.
+- Do not merge multiple people into one row.
+- Do not prefix data rows with TASK_ID or other labels.
+- Use one physical line per output row.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown, NOT_FOUND.
+- email_publicly_confirmed: true only when the exact personal email appears publicly and is connected to the exact person; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. If no personal email is found, write NOT_FOUND and the search reason briefly.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 3m5. | company_website: https://www.3m5.de/ | first_name: Stefan | last_name: Jahn | full_name: Stefan Jahn | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official management page lists managing director | retry_attempt: 2 | retry_strategy: transport_resend_missing_output | retry_search_focus: Technical resend for rows with no canonical output row. | previous_retry_reason: missing_output_row_after_transport_or_parse | previous_judge_decision: MISSING_OUTPUT | previous_judge_issues: No canonical output row exists for this input identity.
+2. batch_id: batch_001 | company_name: 3m5. | company_website: https://www.3m5.de/ | first_name: Alexander | last_name: Lehn | full_name: Alexander Lehn | role: Geschäftsführer und Leiter Software Technology | role_category: operations | confidence: high | notes: Official management page lists managing director and technology lead | retry_attempt: 2 | retry_strategy: transport_resend_missing_output | retry_search_focus: Technical resend for rows with no canonical output row. | previous_retry_reason: missing_output_row_after_transport_or_parse | previous_judge_decision: MISSING_OUTPUT | previous_judge_issues: No canonical output row exists for this input identity.
+3. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Henrik | last_name: Desfontaines | full_name: Henrik Desfontaines | role: Geschäftsführung | role_category: other_management | confidence: high | notes: Official imprint lists management | retry_attempt: 2 | retry_strategy: transport_resend_missing_output | retry_search_focus: Technical resend for rows with no canonical output row. | previous_retry_reason: missing_output_row_after_transport_or_parse | previous_judge_decision: MISSING_OUTPUT | previous_judge_issues: No canonical output row exists for this input identity.
+4. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Joachim | last_name: Groß | full_name: Dipl.-Ing. Joachim Groß | role: Geschäftsführung | role_category: other_management | confidence: high | notes: Official imprint lists management | retry_attempt: 2 | retry_strategy: transport_resend_missing_output | retry_search_focus: Technical resend for rows with no canonical output row. | previous_retry_reason: missing_output_row_after_transport_or_parse | previous_judge_decision: MISSING_OUTPUT | previous_judge_issues: No canonical output row exists for this input identity.
+5. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Matthias | last_name: Groß | full_name: Matthias Groß | role: Geschäftsführung | role_category: other_management | confidence: high | notes: Official imprint lists management | retry_attempt: 2 | retry_strategy: transport_resend_missing_output | retry_search_focus: Technical resend for rows with no canonical output row. | previous_retry_reason: missing_output_row_after_transport_or_parse | previous_judge_decision: MISSING_OUTPUT | previous_judge_issues: No canonical output row exists for this input identity.
+6. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Frederik | last_name: Giessing | full_name: Dr.-Ing. Frederik Giessing | role: Mitglied der Geschäftsleitung Geschäftsentwicklung Regulierung und Marketing | role_category: business_development | confidence: medium | notes: 2026 event page lists business development and marketing remit | retry_attempt: 2 | retry_strategy: transport_resend_missing_output | retry_search_focus: Technical resend for rows with no canonical output row. | previous_retry_reason: missing_output_row_after_transport_or_parse | previous_judge_decision: MISSING_OUTPUT | previous_judge_issues: No canonical output row exists for this input identity.
+7. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://unternehmen.1und1.de/ | first_name: Cretièn | last_name: Brandsma | full_name: Cretièn Brandsma | role: Vorstand Customer Management | role_category: other_management | confidence: high | notes: Official management page lists customer management board role. | retry_attempt: 2 | retry_strategy: transport_resend_missing_output | retry_search_focus: Technical resend for rows with no canonical output row. | previous_retry_reason: missing_output_row_after_transport_or_parse | previous_judge_decision: MISSING_OUTPUT | previous_judge_issues: No canonical output row exists for this input identity.
+8. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de/ | first_name: Jacqueline | last_name: Löhr | full_name: Jacqueline Löhr | role: Partnership Managerin | role_category: business_development | confidence: high | notes: Official partner contacts page lists partnership manager. | retry_attempt: 2 | retry_strategy: transport_resend_missing_output | retry_search_focus: Technical resend for rows with no canonical output row. | previous_retry_reason: missing_output_row_after_transport_or_parse | previous_judge_decision: MISSING_OUTPUT | previous_judge_issues: No canonical output row exists for this input identity.
+9. batch_id: batch_001 | company_name: 1Q Health Group | company_website: https://1qhealth.com/ | first_name: Philipp | last_name: Ziehr | full_name: Philipp D. E. Ziehr | role: CEO of 1Q Health Group | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/philipp-ziehr | confidence: high | notes: Official 1Q Health news page identifies him as CEO. | retry_attempt: 2 | retry_strategy: transport_resend_missing_output | retry_search_focus: Technical resend for rows with no canonical output row. | previous_retry_reason: missing_output_row_after_transport_or_parse | previous_judge_decision: MISSING_OUTPUT | previous_judge_issues: No canonical output row exists for this input identity.
+10. batch_id: batch_001 | company_name: 2trde | company_website: https://www.2trde.com/ | first_name: Stefan | last_name: Tomicic | full_name: Stefan Tomicic | role: Head of Sales | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/stefan-tomicic-mba-38886393 | confidence: medium | notes: Company article names him Head of Sales; LinkedIn suggests role ended in 2024. | retry_attempt: 2 | retry_strategy: transport_resend_missing_output | retry_search_focus: Technical resend for rows with no canonical output row. | previous_retry_reason: missing_output_row_after_transport_or_parse | previous_judge_decision: MISSING_OUTPUT | previous_judge_issues: No canonical output row exists for this input identity.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_retry_004_20260523T163029Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
