@@ -1,0 +1,64 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v13_batch_001_stage_02_public_email_lookup_quality_retry_3
+TASK_ID: task_s02_retry_003_20260524T092156Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_retry_003_20260524T092156Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / strategy-specific public email retry
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v13
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v13_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v13/batches/batch_001/stage_02_public_email_lookup/retry_input.csv
+- retry_strategy: public_documents_event_search
+- retry_search_focus: Search public PDFs, conference/event pages, speaker bios, webinar pages, association documents, press releases and reports for an exact personal email.
+
+You receive only unresolved people rows for this retry strategy. For each input person, search public sources for a PERSONAL public email address that belongs to that exact person.
+
+Universal rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve exactly one output row per input person.
+- Use only public data.
+- Do not invent emails.
+- Do not output inferred, guessed, constructed, or pattern-only emails as confirmed personal emails.
+- Accept personal_public only when the exact email address is visibly published in a public source and clearly connected to the same person, company, and role/context.
+- email_source_url must support the exact email value, not only the company domain.
+- If uncertain or no exact public personal email is found, output the person with email=NOT_FOUND, email_type=NOT_FOUND, email_publicly_confirmed=false.
+- Generic/company/role mailboxes are NOT personal emails: info@, hello@, contact@, service@, mail@, office@, presse@, press@, support@, sales@, business@, marketing@, hr@, jobs@, recruiting@, career@, careers@, team@, admin@, sekretariat@, assistenz@.
+- Use previous_bad_email only as verification context. Do not copy it unless exact public proof connects it to this person.
+
+Execute only this method for all rows:
+Search public documents and event surfaces only: PDFs, slide decks, conference agendas, speaker bios, webinar pages, association documents, brochures, public reports, press releases, and event snippets. Accept only exact visible personal email tied to the person.
+
+Output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown, NOT_FOUND.
+- email_publicly_confirmed: true only when the exact personal email appears publicly and is connected to the exact person; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. If only pattern evidence exists but exact email is unconfirmed, write pattern_unconfirmed.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com/ | first_name: Benjamin | last_name: Marchal | full_name: Benjamin Marchal | role: Chief Executive Officer | role_category: founder_ceo | email: NOT_FOUND | email_type: NOT_FOUND | email_source_url: https://360learning.com/blog/author/benjamin-marchal/ | email_publicly_confirmed: false | confidence: low | notes: Author and press pages identify CEO but no exact email | retry_attempt: 3 | retry_strategy: public_documents_event_search | retry_search_focus: Search public PDFs, conference/event pages, speaker bios, webinar pages, association documents, press releases and reports for an exact personal email. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Email NOT_FOUND; author and press pages show no exact email address visible.; deterministic_guard_missing_email
+2. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com/ | first_name: Chris | last_name: Bondarenko | full_name: Chris Bondarenko | role: Chief Revenue Officer North America | role_category: sales | linkedin_profile_url: https://www.linkedin.com/in/chrisbondarenko/?originalSubdomain=ca | email: NOT_FOUND | email_type: NOT_FOUND | email_source_url: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: No exact personal email found; official and wider sources show role/context only | retry_attempt: 3 | retry_strategy: public_documents_event_search | retry_search_focus: Search public PDFs, conference/event pages, speaker bios, webinar pages, association documents, press releases and reports for an exact personal email. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_bad_linkedin_url: https://www.linkedin.com/in/chrisbondarenko/?originalSubdomain=ca | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Email and email_source_url are NOT_FOUND; duplicate row; only role info visible publicly.; deterministic_guard_missing_email
+3. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Sebastian | last_name: Sichelschmidt | full_name: Sebastian Sichelschmidt | role: Leiter Produktmanagement | role_category: other_management | email: NOT_FOUND | email_type: NOT_FOUND | email_source_url: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: No exact personal email found; public sources show role and generic contact only | retry_attempt: 3 | retry_strategy: public_documents_event_search | retry_search_focus: Search public PDFs, conference/event pages, speaker bios, webinar pages, association documents, press releases and reports for an exact personal email. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No exact personal email found; source URL is NOT_FOUND; duplicates exist.; deterministic_guard_missing_email
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_retry_003_20260524T092156Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
