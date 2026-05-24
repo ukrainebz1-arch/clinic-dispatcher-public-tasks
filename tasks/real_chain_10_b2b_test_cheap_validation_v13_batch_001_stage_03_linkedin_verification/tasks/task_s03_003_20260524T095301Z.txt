@@ -1,0 +1,74 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v13_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_003_20260524T095301Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_003_20260524T095301Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v13
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v13_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v13/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | first_name: Dennis | last_name: Roosmann | full_name: Dennis Roosmann | role: Geschäftsführer | role_category: other_management | linkedin_profile_url: https://www.linkedin.com/in/dennis-roosmann-17099015b/ | confidence: high | notes: Official team page
+2. batch_id: batch_001 | company_name: 360Learning | first_name: Benjamin | last_name: Marchal | full_name: Benjamin Marchal | role: Chief Executive Officer | role_category: founder_ceo | confidence: high | notes: Company appointment announcement
+3. batch_id: batch_001 | company_name: 360Learning | first_name: Nick | last_name: Hernandez | full_name: Nick Hernandez | role: Founder and Chair of the Board | role_category: founder_ceo | confidence: high | notes: Company appointment announcement
+4. batch_id: batch_001 | company_name: 360Learning | first_name: Chris | last_name: Bondarenko | full_name: Chris Bondarenko | role: Chief Revenue Officer North America | role_category: sales | linkedin_profile_url: https://www.linkedin.com/in/chrisbondarenko/?originalSubdomain=ca | confidence: high | notes: Official company blog source
+5. batch_id: batch_001 | company_name: 3m5. | first_name: Michael | last_name: Eckstein | full_name: Michael Eckstein | role: Geschäftsführer for strategy and sales | role_category: founder_ceo | confidence: high | notes: Official management page
+6. batch_id: batch_001 | company_name: 3m5. | first_name: Stefan | last_name: Jahn | full_name: Stefan Jahn | role: Geschäftsführer for controlling and project management | role_category: operations | confidence: high | notes: Official management page
+7. batch_id: batch_001 | company_name: 450connect GmbH | first_name: Frederik | last_name: Giessing | full_name: Dr. Frederik Giessing | role: Geschäftsführer Vertrieb und Marketing | role_category: sales | confidence: high | notes: Official company article
+8. batch_id: batch_001 | company_name: 450connect GmbH | first_name: Salvatore | last_name: De Masi | full_name: Salvatore De Masi | role: Vertriebsleiter | role_category: sales | confidence: high | notes: Official company news source
+9. batch_id: batch_001 | company_name: 450connect GmbH | first_name: Sebastian | last_name: Sichelschmidt | full_name: Sebastian Sichelschmidt | role: Leiter Produktmanagement | role_category: other_management | confidence: high | notes: Official company news source
+10. batch_id: batch_001 | company_name: 450connect GmbH | first_name: Christian | last_name: Freudenmann | full_name: Christian Freudenmann | role: M2M-Produktmanagement | role_category: other_management | confidence: medium | notes: Official company news source
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_003_20260524T095301Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
