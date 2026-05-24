@@ -1,0 +1,66 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v13_batch_001_stage_02_public_email_lookup_quality_retry_5
+TASK_ID: task_s02_retry_003_20260524T094230Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_retry_003_20260524T094230Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / strategy-specific public email retry
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v13
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v13_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v13/batches/batch_001/stage_02_public_email_lookup/retry_input.csv
+- retry_strategy: pattern_verification_search
+- retry_search_focus: Find real public company email-pattern evidence, create candidate emails only as internal search queries, and accept only exact public confirmation tied to the person.
+
+You receive only unresolved people rows for this retry strategy. For each input person, search public sources for a PERSONAL public email address that belongs to that exact person.
+
+Universal rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve exactly one output row per input person.
+- Use only public data.
+- Do not invent emails.
+- Do not output inferred, guessed, constructed, or pattern-only emails as confirmed personal emails.
+- Accept personal_public only when the exact email address is visibly published in a public source and clearly connected to the same person, company, and role/context.
+- email_source_url must support the exact email value, not only the company domain.
+- If uncertain or no exact public personal email is found, output the person with email=NOT_FOUND, email_type=NOT_FOUND, email_publicly_confirmed=false.
+- Generic/company/role mailboxes are NOT personal emails: info@, hello@, contact@, service@, mail@, office@, presse@, press@, support@, sales@, business@, marketing@, hr@, jobs@, recruiting@, career@, careers@, team@, admin@, sekretariat@, assistenz@.
+- Use previous_bad_email only as verification context. Do not copy it unless exact public proof connects it to this person.
+
+Execute only this method for all rows:
+Find real public company email pattern examples, create candidate emails only as internal search queries, then search exact candidate emails in quotes. Accept only exact public confirmation tied to the person; pattern-only must be NOT_FOUND with pattern_unconfirmed in notes.
+
+Output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown, NOT_FOUND.
+- email_publicly_confirmed: true only when the exact personal email appears publicly and is connected to the exact person; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. If only pattern evidence exists but exact email is unconfirmed, write pattern_unconfirmed.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com/de | first_name: Andreas | last_name: Eigenberger | full_name: Andreas Eigenberger | role: Leitung Prozesse und Internes | role_category: operations | email: NOT_FOUND | email_type: NOT_FOUND | email_source_url: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: Career page lists person with email button but no exact address | retry_attempt: 5 | retry_strategy: pattern_verification_search | retry_search_focus: Find real public company email-pattern evidence, create candidate emails only as internal search queries, and accept only exact public confirmation tied to the person. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No valid email found, email=NOT_FOUND; no valid source URL, source=NOT_FOUND; duplicate email flagged; deterministic_guard_missing_email
+2. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de/ | first_name: Dennis | last_name: Roosmann | full_name: Dennis Roosmann | role: Geschäftsführer | role_category: other_management | linkedin_profile_url: https://www.linkedin.com/in/dennis-roosmann-17099015b/ | email: NOT_FOUND | email_type: NOT_FOUND | email_source_url: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: Team and JOIN pages show booking link and generic hallo only | retry_attempt: 5 | retry_strategy: pattern_verification_search | retry_search_focus: Find real public company email-pattern evidence, create candidate emails only as internal search queries, and accept only exact public confirmation tied to the person. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_bad_linkedin_url: https://www.linkedin.com/in/dennis-roosmann-17099015b/ | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No valid email found, email=NOT_FOUND; no valid source URL, source=NOT_FOUND; generic contact only; duplicate email flagged; deterministic_guard_missing_email
+3. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com/ | first_name: Benjamin | last_name: Marchal | full_name: Benjamin Marchal | role: Chief Executive Officer | role_category: founder_ceo | linkedin_profile_url: NOT_FOUND | email: NOT_FOUND | email_type: NOT_FOUND | email_source_url: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: No exact personal email on hiring/contact surfaces | retry_attempt: 5 | retry_strategy: pattern_verification_search | retry_search_focus: Find real public company email-pattern evidence, create candidate emails only as internal search queries, and accept only exact public confirmation tied to the person. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_bad_linkedin_url: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No valid email found, email=NOT_FOUND; no valid source URL, source=NOT_FOUND; duplicate email flagged; deterministic_guard_missing_email
+4. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com/ | first_name: Chris | last_name: Bondarenko | full_name: Chris Bondarenko | role: Chief Revenue Officer North America | role_category: sales | linkedin_profile_url: https://www.linkedin.com/in/chrisbondarenko/?originalSubdomain=ca | email: NOT_FOUND | email_type: NOT_FOUND | email_source_url: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: No exact personal email on hiring/contact surfaces | retry_attempt: 5 | retry_strategy: pattern_verification_search | retry_search_focus: Find real public company email-pattern evidence, create candidate emails only as internal search queries, and accept only exact public confirmation tied to the person. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_bad_linkedin_url: https://www.linkedin.com/in/chrisbondarenko/?originalSubdomain=ca | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No valid email found, email=NOT_FOUND; no valid source URL, source=NOT_FOUND; duplicate email flagged; deterministic_guard_missing_email
+5. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Sebastian | last_name: Sichelschmidt | full_name: Sebastian Sichelschmidt | role: Leiter Produktmanagement | role_category: other_management | linkedin_profile_url: NOT_FOUND | email: NOT_FOUND | email_type: NOT_FOUND | email_source_url: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: Only generic role contacts found no personal email | retry_attempt: 5 | retry_strategy: pattern_verification_search | retry_search_focus: Find real public company email-pattern evidence, create candidate emails only as internal search queries, and accept only exact public confirmation tied to the person. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_bad_linkedin_url: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No valid email found, email=NOT_FOUND; no valid source URL, source=NOT_FOUND; only generic role contacts found; duplicate email flagged; deterministic_guard_missing_email
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_retry_003_20260524T094230Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
