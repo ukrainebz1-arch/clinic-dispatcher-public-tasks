@@ -1,0 +1,71 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v13_batch_001_stage_02_public_email_lookup_quality_retry_2
+TASK_ID: task_s02_retry_002_20260524T091138Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_retry_002_20260524T091138Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / strategy-specific public email retry
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v13
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v13_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v13/batches/batch_001/stage_02_public_email_lookup/retry_input.csv
+- retry_strategy: expanded_source_search
+- retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches.
+
+You receive only unresolved people rows for this retry strategy. For each input person, search public sources for a PERSONAL public email address that belongs to that exact person.
+
+Universal rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve exactly one output row per input person.
+- Use only public data.
+- Do not invent emails.
+- Do not output inferred, guessed, constructed, or pattern-only emails as confirmed personal emails.
+- Accept personal_public only when the exact email address is visibly published in a public source and clearly connected to the same person, company, and role/context.
+- email_source_url must support the exact email value, not only the company domain.
+- If uncertain or no exact public personal email is found, output the person with email=NOT_FOUND, email_type=NOT_FOUND, email_publicly_confirmed=false.
+- Generic/company/role mailboxes are NOT personal emails: info@, hello@, contact@, service@, mail@, office@, presse@, press@, support@, sales@, business@, marketing@, hr@, jobs@, recruiting@, career@, careers@, team@, admin@, sekretariat@, assistenz@.
+- Use previous_bad_email only as verification context. Do not copy it unless exact public proof connects it to this person.
+
+Execute only this method for all rows:
+Search wider public sources only: company subpages, localized pages, team/about/press/news/imprint pages, public directories, association pages, partner pages, official profile pages, and exact-name + company searches. Verify previous_bad_email if present; reject it unless exact public proof connects it to the person.
+
+Output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown, NOT_FOUND.
+- email_publicly_confirmed: true only when the exact personal email appears publicly and is connected to the exact person; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. If only pattern evidence exists but exact email is unconfirmed, write pattern_unconfirmed.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 1Q Health Group | company_website: https://1qhealth.com | first_name: Nadja | last_name: Fischer | full_name: Nadja Fischer | role: Senior Manager Corporate Sales | role_category: sales | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; contact page lists name but no exact personal email. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No email found; no source URL; contact page lists name but no exact personal email.; deterministic_guard_missing_email
+2. batch_id: batch_001 | company_name: 1Q Health Group | company_website: https://1qhealth.com | first_name: Cornelia | last_name: Wagner | full_name: Cornelia Wagner | role: Distribution Business and Licensing | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/cornelia-wagner-16698a345 | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; contact page lists name but no exact personal email. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_bad_linkedin_url: https://de.linkedin.com/in/cornelia-wagner-16698a345 | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No email found; no source URL; contact page lists name but no exact personal email.; deterministic_guard_missing_email
+3. batch_id: batch_001 | company_name: 2trde | company_website: https://www.2trde.com | first_name: Johannes | last_name: Stoffel | full_name: Johannes Stoffel | role: Founder and Managing Director | role_category: founder_ceo | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; official pages show only generic info@2trde.com. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No email found; no source URL; official pages show only generic info@2trde.com email.; deterministic_guard_missing_email
+4. batch_id: batch_001 | company_name: 2trde | company_website: https://www.2trde.com | first_name: Marcus | last_name: Lankenau | full_name: Marcus Lankenau | role: CTO | role_category: other_management | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; official pages show only generic info@2trde.com. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No email found; no source URL; official pages show only generic info@2trde.com email.; deterministic_guard_missing_email
+5. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com/de | first_name: Magnus | last_name: Baringer | full_name: Magnus Baringer | role: Founder and CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-magnus-baringer-73823bb5 | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; public sources show generic mail@321med.com only. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_bad_linkedin_url: https://de.linkedin.com/in/dr-magnus-baringer-73823bb5 | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No email found; no source URL; public sources show only generic mail@321med.com email.; deterministic_guard_missing_email
+6. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com/de | first_name: Katharina | last_name: Mazur | full_name: Katharina Mazur | role: Leitung Sales und Service | role_category: sales | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; career page lists name but no exact personal email. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No email found; no source URL; career page lists name but no exact personal email.; deterministic_guard_missing_email
+7. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com/de | first_name: Andreas | last_name: Eigenberger | full_name: Andreas Eigenberger | role: Leitung Prozesse und Internes | role_category: operations | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; career page lists name but no exact personal email. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No email found; no source URL; career page lists name but no exact personal email.; deterministic_guard_missing_email
+8. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de | first_name: Tobias | last_name: Hesselmann | full_name: Dr. Tobias Hesselmann | role: Geschäftsführer and Founder | role_category: founder_ceo | linkedin_profile_url: https://www.linkedin.com/in/dr-tobias-hesselmann | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; official site shows generic hallo@ and booking/contact buttons only. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_bad_linkedin_url: https://www.linkedin.com/in/dr-tobias-hesselmann | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No email found; no source URL; official site shows only generic hallo@ and contact buttons.; deterministic_guard_missing_email
+9. batch_id: batch_001 | company_name: 360 PRODUCTS – Digital Growth & Experience | company_website: https://360products.de/ | first_name: Dennis | last_name: Roosmann | full_name: Dennis Roosmann | role: Geschäftsführer | role_category: other_management | linkedin_profile_url: https://www.linkedin.com/in/dennis-roosmann-17099015b/ | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND only generic hallo@360products.de visible | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_bad_linkedin_url: https://www.linkedin.com/in/dennis-roosmann-17099015b/ | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No public personal email found, only generic email 'hallo@360products.de' mentioned with no source URL.; deterministic_guard_missing_email
+10. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com/ | first_name: Benjamin | last_name: Marchal | full_name: Benjamin Marchal | role: Chief Executive Officer | role_category: founder_ceo | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND exact personal email not publicly visible | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No public personal email visible; email field empty and no source URL provided.; deterministic_guard_missing_email
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_retry_002_20260524T091138Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
