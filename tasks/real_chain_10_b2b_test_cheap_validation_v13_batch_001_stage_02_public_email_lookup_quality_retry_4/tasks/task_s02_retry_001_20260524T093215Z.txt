@@ -1,0 +1,71 @@
+RUN_ID: real_chain_10_b2b_test_cheap_validation_v13_batch_001_stage_02_public_email_lookup_quality_retry_4
+TASK_ID: task_s02_retry_001_20260524T093215Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_retry_001_20260524T093215Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / strategy-specific public email retry
+
+Run context:
+- campaign_id: real_chain_10_b2b_test_cheap_validation_v13
+- batch_id: batch_001
+- run_id: real_chain_10_b2b_test_cheap_validation_v13_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/real_chain_10_b2b_test_cheap_validation_v13/batches/batch_001/stage_02_public_email_lookup/retry_input.csv
+- retry_strategy: career_jobs_hiring_contact_search
+- retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails.
+
+You receive only unresolved people rows for this retry strategy. For each input person, search public sources for a PERSONAL public email address that belongs to that exact person.
+
+Universal rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve exactly one output row per input person.
+- Use only public data.
+- Do not invent emails.
+- Do not output inferred, guessed, constructed, or pattern-only emails as confirmed personal emails.
+- Accept personal_public only when the exact email address is visibly published in a public source and clearly connected to the same person, company, and role/context.
+- email_source_url must support the exact email value, not only the company domain.
+- If uncertain or no exact public personal email is found, output the person with email=NOT_FOUND, email_type=NOT_FOUND, email_publicly_confirmed=false.
+- Generic/company/role mailboxes are NOT personal emails: info@, hello@, contact@, service@, mail@, office@, presse@, press@, support@, sales@, business@, marketing@, hr@, jobs@, recruiting@, career@, careers@, team@, admin@, sekretariat@, assistenz@.
+- Use previous_bad_email only as verification context. Do not copy it unless exact public proof connects it to this person.
+
+Execute only this method for all rows:
+Search hiring/career/contact surfaces only: career pages, job ads, ATS pages, StepStone/Indeed copies, recruiting pages, department pages, and hiring-manager references. Generic HR/jobs/career emails are not personal emails.
+
+Output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown, NOT_FOUND.
+- email_publicly_confirmed: true only when the exact personal email appears publicly and is connected to the exact person; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. If only pattern evidence exists but exact email is unconfirmed, write pattern_unconfirmed.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: 321 MED | company_website: https://321med.com/de | first_name: Ann-Katrin | last_name: Baringer | full_name: Ann-Katrin Baringer | role: Leitung Marketing und Personal | role_category: hr_recruiting | email: abaringer@321med.com | email_type: personal_public | email_source_url: https://321med.com/de/presse | email_publicly_confirmed: true | confidence: high | notes: Press page lists Ann-Katrin Baringer and exact email | retry_attempt: 4 | retry_strategy: career_jobs_hiring_contact_search | retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails. | previous_retry_reason: retry_attempt=3 with source and email confirmation present | previous_bad_email: abaringer@321med.com | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Row has retry_attempt=3; email_source_url provided with exact email; requires retry due to system retry policy.
+2. batch_id: batch_001 | company_name: 360Learning | company_website: https://360learning.com/ | first_name: Nick | last_name: Hernandez | full_name: Nick Hernandez | role: Founder and Chair of the Board | role_category: founder_ceo | email: nicolas.hernandez@360learning.com | email_type: personal_public | email_source_url: https://mob.e-learning-letter.com/info_article/m/667/il-faut-supprimer-les-formateurs%E2%80%A6-par-nicolas-hernandez.html | email_publicly_confirmed: true | confidence: medium | notes: Public article shows exact email for Nicolas Hernandez Nick name variant | retry_attempt: 4 | retry_strategy: career_jobs_hiring_contact_search | retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails. | previous_retry_reason: retry_attempt=3 with source and email confirmation present | previous_bad_email: nicolas.hernandez@360learning.com | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Row has retry_attempt=3 with personal email and source URL provided; retry for final validation.
+3. batch_id: batch_001 | company_name: 450connect GmbH | company_website: https://www.450connect.de/ | first_name: Christian | last_name: Freudenmann | full_name: Christian Freudenmann | role: M2M-Produktmanagement | role_category: other_management | email: christian.freudenmann@450connect.de | email_type: personal_public | email_source_url: https://www.450connect.de/aktuelles-medien/news/detail/450connect-informiert-zu-blackout-resilienz-auf-dem-smartgrid-forum | email_publicly_confirmed: true | confidence: high | notes: Official event page lists Christian Freudenmann and exact email | retry_attempt: 4 | retry_strategy: career_jobs_hiring_contact_search | retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails. | previous_retry_reason: retry_attempt=3 with source and email confirmation present | previous_bad_email: christian.freudenmann@450connect.de | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Row has retry_attempt=3 and personal email plus source URL; should retry for confirmation.
+4. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de | first_name: Alessandro | last_name: Nava | full_name: Alessandro Nava | role: CEO of 1&1 Telecommunication SE | role_category: founder_ceo | email: NOT_FOUND | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: No exact public personal email found in public document or event sources | retry_attempt: 4 | retry_strategy: career_jobs_hiring_contact_search | retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Missing public email and source URL, marked as NOT_FOUND and duplicate email; invalid email data.; deterministic_guard_missing_email
+5. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de | first_name: Sascha | last_name: D'Avis | full_name: Sascha D'Avis | role: Director Finance and Human Resources | role_category: finance | email: NOT_FOUND | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: Official pages show role and generic contacts only | retry_attempt: 4 | retry_strategy: career_jobs_hiring_contact_search | retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Missing public email and source URL, marked as NOT_FOUND and duplicate email; no exact personal data.; deterministic_guard_missing_email
+6. batch_id: batch_001 | company_name: 1&1 Telecommunication SE | company_website: https://www.1und1.de | first_name: Monika | last_name: Weninger | full_name: Monika Weninger | role: Director Online Marketing | role_category: marketing | email: NOT_FOUND | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: Official pages show role and generic contacts only | retry_attempt: 4 | retry_strategy: career_jobs_hiring_contact_search | retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Email is NOT_FOUND, no email_source_url provided, marked as duplicate same_email, and validation status is REVIEW with INVALID_EMAIL and MISSING_CONDITIONAL_FIELD.; deterministic_guard_missing_email
+7. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de | first_name: Philipp | last_name: Liesenfeld | full_name: Philipp Liesenfeld | role: Geschäftsführer Marketing und Vertrieb | role_category: sales | email: NOT_FOUND | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: No exact public personal email found in public document or event sources | retry_attempt: 4 | retry_strategy: career_jobs_hiring_contact_search | retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Email is NOT_FOUND, no email_source_url provided, marked as duplicate same_email, and validation status is REVIEW with INVALID_EMAIL and MISSING_CONDITIONAL_FIELD.; deterministic_guard_missing_email
+8. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de | first_name: Philipp | last_name: Türoff | full_name: Philipp Türoff | role: Kaufmännischer Geschäftsführer und Sprecher der Geschäftsführung | role_category: finance | email: NOT_FOUND | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: Official profile and imprint show generic contacts only | retry_attempt: 4 | retry_strategy: career_jobs_hiring_contact_search | retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Email is NOT_FOUND, no email_source_url provided, marked as duplicate same_email, and validation status is REVIEW with INVALID_EMAIL and MISSING_CONDITIONAL_FIELD.; deterministic_guard_missing_email
+9. batch_id: batch_001 | company_name: 1. FC Köln | company_website: https://fc.de | first_name: Thomas | last_name: Kessler | full_name: Thomas Kessler | role: Geschäftsführer | role_category: other_management | email: NOT_FOUND | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: Official pages show role and generic contacts only | retry_attempt: 4 | retry_strategy: career_jobs_hiring_contact_search | retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Email is NOT_FOUND, no email_source_url provided, marked as duplicate same_email, and validation status is REVIEW with INVALID_EMAIL and MISSING_CONDITIONAL_FIELD.; deterministic_guard_missing_email
+10. batch_id: batch_001 | company_name: 1KOMMA5° | company_website: https://1komma5.com | first_name: Philipp | last_name: Schröder | full_name: Philipp Schröder | role: Co-Founder and Chief Executive Officer | role_category: founder_ceo | linkedin_profile_url: https://www.linkedin.com/in/philipp-schr%C3%B6der-b94b6576 | email: NOT_FOUND | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: Only generic or press contacts found no personal public email | retry_attempt: 4 | retry_strategy: career_jobs_hiring_contact_search | retry_search_focus: Search career pages, job ads, ATS pages and hiring/contact references for exact personal emails tied to the person; do not accept generic HR/jobs mailboxes as personal emails. | previous_retry_reason: missing_email | previous_bad_email: NOT_FOUND | previous_bad_linkedin_url: https://www.linkedin.com/in/philipp-schr%C3%B6der-b94b6576 | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: Email is NOT_FOUND, no public personal email found, no email_source_url, marked as duplicate same_email, status REVIEW with INVALID_EMAIL and MISSING_CONDITIONAL_FIELD.; deterministic_guard_missing_email
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_retry_001_20260524T093215Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
