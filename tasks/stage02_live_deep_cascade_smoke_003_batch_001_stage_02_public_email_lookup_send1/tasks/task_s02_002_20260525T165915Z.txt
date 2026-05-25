@@ -1,0 +1,91 @@
+RUN_ID: stage02_live_deep_cascade_smoke_003_batch_001_stage_02_public_email_lookup_send1
+TASK_ID: task_s02_002_20260525T165915Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_002_20260525T165915Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / SEND 1: deep route search for B2B email enrichment.
+
+Goal:
+For every input person, find the strongest email/contact route result that satisfies the Stage 02 contract. Preserve one output row per input person.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Core rule:
+Generated/pattern emails are NOT FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found. Strong pattern hypotheses are useful but must remain separate from confirmed emails.
+
+Search method:
+- Search company website, team/about pages, management pages, press pages, news pages, imprint/contact pages, PDFs, public documents, event pages, speaker bios, association pages, partner pages, newsletters, and visible snippets.
+- Search exact person name + company name.
+- Search exact person name + company domain.
+- Search known name variants, initials, shortened names, formal names, German character variants, and hyphen/compound surname variants.
+- Keep named route/contact pages when a person-level email is not found.
+- Keep generic company emails only as company fallback, not as person-level confirmed emails.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Allowed next_recovery_action values:
+close_as_found_person_email
+keep_named_route
+keep_generic_route
+send_to_exact_candidate_verification
+send_to_pattern_decision
+send_to_technical_source_extraction
+keep_as_unverified_candidate
+close_as_not_found_email
+
+Output CSV only. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- email_status: one allowed status.
+- email: only exact found email for FOUND_PERSON_COMPANY_EMAIL or FOUND_GENERIC_COMPANY_EMAIL. Do not put generated emails here.
+- candidate_email: generated/provider/pattern candidate only.
+- company_email_examples or pattern_examples_found: pipe-separated pattern evidence examples if used.
+- source_urls: pipe-separated source URLs when several exist.
+- email_confidence: high / medium / low / unknown.
+- cascade_pass: SEND_1_DEEP_ROUTE_SEARCH.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true for FOUND_NAMED_COMPANY_ROUTE or FOUND_GENERIC_COMPANY_EMAIL.
+- notes: short audit note, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Bold Academy | company_website: https://de.linkedin.com/company/bold-academy-gmbh | first_name: Julian | last_name: Scholz | full_name: Julian Scholz | role: Co-Founder & CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/julian-scholz-436347181 | confidence: high | notes: Official imprint lists him as company representative.
+2. batch_id: batch_001 | company_name: Bold Academy | company_website: https://de.linkedin.com/company/bold-academy-gmbh | first_name: Kilian | last_name: Kollmuß | full_name: Kilian Kollmuß | role: Co-Founder | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/kilian-kollmuss | confidence: high | notes: Official imprint lists him as company representative.
+3. batch_id: batch_001 | company_name: Bolt | company_website: https://ee.linkedin.com/company/bolt-eu | first_name: Markus | last_name: Villig | full_name: Markus Villig | role: Founder and CEO | role_category: founder_ceo | linkedin_profile_url: https://ee.linkedin.com/in/markusvillig | confidence: high | notes: Official leadership page lists Founder and CEO.
+4. batch_id: batch_001 | company_name: Bolt | company_website: https://ee.linkedin.com/company/bolt-eu | first_name: Laurent | last_name: Koerge | full_name: Laurent Koerge | role: Global Head of Expansion | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/laurentkoerge | confidence: medium | notes: Public profile connects him to Bolt expansion leadership.
+5. batch_id: batch_001 | company_name: BONFRY | company_website: https://de.linkedin.com/company/bonfry | first_name: Jakob | last_name: Cerbe | full_name: Jakob Cerbe | role: Founder & Managing Director | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/jakob-cerbe-22a758a8 | confidence: high | notes: Company about page lists founder and managing director.
+6. batch_id: batch_001 | company_name: BONFRY | company_website: https://de.linkedin.com/company/bonfry | first_name: Nicolas | last_name: Czerlinsky | full_name: Nicolas Czerlinsky | role: Head of Commercial | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/nicolas-czerlinsky | confidence: medium | notes: LinkedIn profile lists Head of Commercial at Bonfry.
+7. batch_id: batch_001 | company_name: Bosch | company_website: https://de.linkedin.com/company/bosch | first_name: Jan-Philipp | last_name: Weers | full_name: Jan-Philipp Weers | role: Head of Bosch Road Services | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/weers | confidence: high | notes: Bosch source identifies him as Head of Bosch Secure Truck Parking.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_002_20260525T165915Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
