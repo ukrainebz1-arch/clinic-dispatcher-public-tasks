@@ -1,0 +1,294 @@
+TASK_ID: stage05_task_0001
+
+You are generating outreach assets for a B2B sales-intelligence service.
+
+Service positioning:
+We help B2B companies identify relevant target accounts, decision-makers, contact channels and concrete outreach reasons/hooks.
+The goal is to help sales, partnership, marketing and management teams start more relevant B2B conversations.
+We do not sell a generic database. We provide structured outreach-ready intelligence: who to contact, through which channel, and why the outreach is relevant.
+
+German positioning:
+Wir unterstützen B2B-Unternehmen dabei, gezielt passende Zielkunden, relevante Entscheider und konkrete Anknüpfungspunkte für die Ansprache zu finden.
+Es geht nicht um eine allgemeine Datenbank, sondern um vertriebsnahe Informationen, mit denen Teams schneller relevante Gespräche mit passenden Ansprechpartnern starten können.
+
+Tone rules:
+- German language by default.
+- Direct, concrete and businesslike.
+- No marketing fluff.
+- No long pitch.
+- No exaggerated promises.
+- Do not sound like a generic database vendor.
+- Use one clear input-supported business hook per company.
+- Put one concrete business reason in the first two sentences whenever the input supports it.
+- Adapt the hook to each person's role.
+- End message bodies and follow-ups with a soft question.
+
+Stage 05 task goal:
+For each company, infer one concise business hook from the provided company context, company website/context fields, entry signals, people roles and source notes.
+For each person, adapt that hook to their role and channel.
+Generate only outreach texts for channels that already exist in the task input.
+
+Role adaptation rules:
+- Sales, business development and partnership roles: focus on target accounts, relevant decision-makers, partner/customer segments and concrete outreach reasons.
+- Public-sector, government, institutional and key-account roles: focus on relevant institutions, stakeholder mapping, account relevance and concrete contact reasons.
+- Marketing, communications and PR roles: focus on clearer audience selection, message rationale and relevant communication hooks.
+- CEO, founder, managing director and senior management roles: use cautious strategic relevance. Do not claim guaranteed leads, meetings, revenue or growth.
+- If the role is unclear, keep the message neutral and businesslike. Do not invent a role-specific need.
+
+German salutation rules for email message_body:
+- Every email message_body must start with a German salutation.
+- If the first_name/full_name is clearly male with high confidence, start with: Sehr geehrter Herr <last_name>,
+- If the first_name/full_name is clearly female with high confidence, start with: Sehr geehrte Frau <last_name>,
+- Do not use generic "Guten Tag" as the default opening.
+- If gender is unclear, ambiguous, international or not confidently inferable, use the neutral personal fallback: Hallo <first_name> <last_name>,
+- Never invent academic titles such as Dr., Prof., MBA or similar.
+- Never invent gender when the name is unclear.
+- If only a full_name is available, infer first_name and last_name conservatively from it.
+- If only one name part is available and gender is unclear, use: Hallo <full_name>,
+- LinkedIn connection notes may use a shorter natural opening and do not need formal Herr/Frau salutation.
+
+Personalization rules:
+- Prefer a concrete hook from company context, website/context fields, entry signals, source notes or role information.
+- Avoid generic "Sales Intelligence" wording when a concrete company/role hook is available.
+- Avoid generic praise such as "spannendes Unternehmen" unless the input gives a concrete reason.
+- Mention only facts that are present in the input.
+- If company context is weak, use cautious language such as "könnte relevant sein" or "möglicherweise interessant" and stay at the level of possible relevance.
+- Do not invent current initiatives, hiring, expansion, partnerships, funding, growth signals, technology stack or customer segments.
+- Do not claim that the recipient currently has a problem unless the input explicitly supports it.
+
+Channel rules:
+- If a person has a confirmed_email or hypothesis_email recipient value, generate exactly one email asset for that recipient.
+- If a person has no email recipient value, do not generate email text.
+- If a person has a LinkedIn URL, generate exactly one LinkedIn connection note and exactly one LinkedIn follow-up message.
+- If a person has no LinkedIn URL, do not generate LinkedIn texts.
+- If a person has no usable channel, do not create a row for that person.
+- Never invent recipients.
+- Never create email text if no email target exists.
+- Never create LinkedIn text if no LinkedIn target exists.
+- Never change a hypothesis email into a confirmed email.
+- Keep confirmed_email_campaign and hypothesis_email_campaign separate.
+- Never output SnowReady data.
+
+Length constraints:
+- subject: max 70 characters.
+- email message_body: 500-800 characters.
+- connection_note: max 200 characters.
+- LinkedIn follow-up message_body: 500-600 characters.
+
+Allowed output columns, exactly in this order:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+Allowed asset_type values:
+- email
+- linkedin_connection
+- linkedin_message
+
+Allowed channel values:
+- confirmed_email
+- hypothesis_email
+- linkedin
+
+Allowed outreach_bucket values:
+- confirmed_email_campaign
+- hypothesis_email_campaign
+- linkedin_outreach
+
+Output instructions:
+Return CSV only.
+No explanations.
+No markdown.
+No invented recipients.
+Only generate rows for message targets explicitly listed in ALLOWED_MESSAGE_TARGETS.
+Use the exact task_id and message_target_id from ALLOWED_MESSAGE_TARGETS.
+Set message_status to GENERATED for generated rows.
+Set is_intermediate to true.
+Set not_snowready to true.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "stage05_quality_smoke|batch_001|450connect gmbh|https://www.450connect.de||de",
+    "company_name": "450connect GmbH",
+    "full_name": "Uwe Wermke",
+    "message_target_id": "stage05_task_0001::p_001::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "p_001",
+    "recipient_value": "uwe.wermke@450connect.de",
+    "role_title": "Senior Channel Manager | Vertriebspartner",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "stage05_quality_smoke|batch_001|450connect gmbh|https://www.450connect.de||de",
+    "company_name": "450connect GmbH",
+    "full_name": "Uwe Wermke",
+    "message_target_id": "stage05_task_0001::p_001::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "p_001",
+    "recipient_value": "https://de.linkedin.com/in/uwe-wermke-68318220",
+    "role_title": "Senior Channel Manager | Vertriebspartner",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "stage05_quality_smoke|batch_001|450connect gmbh|https://www.450connect.de||de",
+    "company_name": "450connect GmbH",
+    "full_name": "Uwe Wermke",
+    "message_target_id": "stage05_task_0001::p_001::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "p_001",
+    "recipient_value": "https://de.linkedin.com/in/uwe-wermke-68318220",
+    "role_title": "Senior Channel Manager | Vertriebspartner",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "stage05_quality_smoke|batch_001|450connect gmbh|https://www.450connect.de||de",
+    "company_name": "450connect GmbH",
+    "full_name": "Thomas Pantazidis",
+    "message_target_id": "stage05_task_0001::p_002::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "p_002",
+    "recipient_value": "info@450connect.de",
+    "role_title": "Key Account Manager | Öffentliche Einrichtungen",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "stage05_quality_smoke|batch_001|450connect gmbh|https://www.450connect.de||de",
+    "company_name": "450connect GmbH",
+    "full_name": "Anna Ademaj",
+    "message_target_id": "stage05_task_0001::p_003::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "p_003",
+    "recipient_value": "Anna.Ademaj@450connect.de",
+    "role_title": "Head of PR & Marketing",
+    "task_id": "stage05_task_0001"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "",
+    "company_identity_key": "stage05_quality_smoke|batch_001|450connect gmbh|https://www.450connect.de||de",
+    "company_name": "450connect GmbH",
+    "company_website": "https://www.450connect.de",
+    "country": "DE",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Uwe Wermke",
+          "person_key": "p_001",
+          "role": "Senior Channel Manager | Vertriebspartner"
+        },
+        {
+          "full_name": "Thomas Pantazidis",
+          "person_key": "p_002",
+          "role": "Key Account Manager | Öffentliche Einrichtungen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "Curated real-data Stage 05 quality smoke from previous Stage 02 accepted output.",
+      "source": "audit_stage02_stage03_prompts_collects_20260522T113502Z",
+      "type": "previous_pipeline_result",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "confirmed_email|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "uwe.wermke@450connect.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Uwe Wermke",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/uwe-wermke-68318220",
+        "person_key": "p_001",
+        "primary_channel": "confirmed_email",
+        "role": "Senior Channel Manager | Vertriebspartner",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.450connect.de/fileadmin/Newsletter/251121_450connect_Newsletter_Insights_November.pdf",
+          "https://de.linkedin.com/in/uwe-wermke-68318220"
+        ]
+      },
+      {
+        "available_channels": "confirmed_email",
+        "candidate_email": "",
+        "confirmed_email": "info@450connect.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Pantazidis",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "p_002",
+        "primary_channel": "confirmed_email",
+        "role": "Key Account Manager | Öffentliche Einrichtungen",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.450connect.de/kontakt"
+        ]
+      },
+      {
+        "available_channels": "confirmed_email",
+        "candidate_email": "",
+        "confirmed_email": "Anna.Ademaj@450connect.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anna Ademaj",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "p_003",
+        "primary_channel": "confirmed_email",
+        "role": "Head of PR & Marketing",
+        "role_category": "marketing",
+        "source_urls": [
+          "https://www.pressebox.com/newsroom/450connect-gmbh/contacts"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "sales",
+        "marketing"
+      ],
+      "roles": [
+        "Senior Channel Manager | Vertriebspartner",
+        "Key Account Manager | Öffentliche Einrichtungen",
+        "Head of PR & Marketing"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.450connect.de/fileadmin/Newsletter/251121_450connect_Newsletter_Insights_November.pdf",
+      "https://de.linkedin.com/in/uwe-wermke-68318220",
+      "https://www.450connect.de/kontakt",
+      "https://www.pressebox.com/newsroom/450connect-gmbh/contacts"
+    ],
+    "warnings": [
+      "Missing stable company identity fields: city"
+    ]
+  }
+]
+
+Return CSV only. No markdown. No explanations.
