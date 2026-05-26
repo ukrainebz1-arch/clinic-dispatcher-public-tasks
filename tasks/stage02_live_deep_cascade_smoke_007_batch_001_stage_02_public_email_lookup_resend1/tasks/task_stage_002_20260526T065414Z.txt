@@ -1,0 +1,85 @@
+RUN_ID: stage02_live_deep_cascade_smoke_007_batch_001_stage_02_public_email_lookup_resend1
+TASK_ID: task_stage_002_20260526T065414Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_002_20260526T065414Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / RESEND 1: exact candidate verification for B2B email enrichment.
+
+Goal:
+Verify generated, provider, or candidate emails from previous Stage 02 passes. Upgrade only when the exact email itself is found and satisfies the person-company-domain criteria.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Core rule:
+A generated/provider/pattern candidate is NOT FOUND_PERSON_COMPANY_EMAIL unless the exact email appears in a source and matches the person-company-domain criteria.
+
+Workflow for each row:
+1. Start with candidate_email, alternative_emails, previous_bad_email, and source_urls.
+2. Search the exact candidate email in quotes.
+3. Search the exact candidate email without quotes.
+4. Search person name + candidate domain.
+5. Search known aliases/formal variants/initial variants + candidate domain.
+6. Search PDFs, cached snippets, event pages, directories, association pages, newsletters, and company pages.
+7. If exact email appears and criteria match, return FOUND_PERSON_COMPANY_EMAIL.
+8. If exact email does not appear, keep it as UNVERIFIED_GENERATED_EMAIL or UNVERIFIED_PROVIDER_EMAIL.
+9. If only route/generic fallback is found, return the appropriate route/generic status.
+10. If nothing useful is found, return NOT_FOUND_EMAIL.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Allowed next_recovery_action values:
+close_as_found_person_email
+keep_named_route
+keep_generic_route
+send_to_exact_candidate_verification
+send_to_pattern_decision
+send_to_technical_source_extraction
+keep_as_unverified_candidate
+close_as_not_found_email
+
+Output CSV only. No markdown. Preserve one output row per input person. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- cascade_pass: RESEND_1_EXACT_CANDIDATE_VERIFICATION.
+- email: only exact found confirmed email or generic company email.
+- candidate_email: candidate that remains unconfirmed.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true for FOUND_NAMED_COMPANY_ROUTE or FOUND_GENERIC_COMPANY_EMAIL.
+- notes: short audit note, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: BONFRY | company_website: https://de.linkedin.com/company/bonfry | first_name: Jakob | last_name: Cerbe | full_name: Jakob Cerbe | role: Founder & Managing Director | role_category: founder_ceo | email_type: named_route | notes: Official about and imprint name Jakob; generic company emails found | alt: Official about page lists founder and managing director | campaign_id: stage02_live_deep_cascade_smoke_007 | input_row_id: batch001::bonfry::delinkedincom::jakob::cerbe | person_key: batch001::bonfry::delinkedincom::jakob::cerbe | company_key: batch001::bonfry::delinkedincom | email_status: FOUND_NAMED_COMPANY_ROUTE | email_domain: bonfry.de | source_urls: https://www.bonfry.de/about|https://www.bonfry.de/imprint | route_url: https://www.bonfry.de/about | route_label: official_about_founder_profile | company_email_examples: info@bonfry.de|rechnung@bonfry.de|karriere@bonfry.de | email_confidence: high | next_recovery_action: keep_named_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_NAMED_COMPANY_ROUTE|send1_named_route_with_generic_email
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_002_20260526T065414Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
