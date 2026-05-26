@@ -1,0 +1,71 @@
+RUN_ID: gate4_medium_pilot_10_b2b_v2_batch_001_stage_02_public_email_lookup_quality_retry_2
+TASK_ID: task_s02_retry_001_20260526T181405Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_retry_001_20260526T181405Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / strategy-specific public email retry
+
+Run context:
+- campaign_id: gate4_medium_pilot_10_b2b_v2
+- batch_id: batch_001
+- run_id: gate4_medium_pilot_10_b2b_v2_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/gate4_medium_pilot_10_b2b_v2/batches/batch_001/stage_02_public_email_lookup/retry_input.csv
+- retry_strategy: expanded_source_search
+- retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches.
+
+You receive only unresolved people rows for this retry strategy. For each input person, search public sources for a PERSONAL public email address that belongs to that exact person.
+
+Universal rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve exactly one output row per input person.
+- Use only public data.
+- Do not invent emails.
+- Do not output inferred, guessed, constructed, or pattern-only emails as confirmed personal emails.
+- Accept personal_public only when the exact email address is visibly published in a public source and clearly connected to the same person, company, and role/context.
+- email_source_url must support the exact email value, not only the company domain.
+- If uncertain or no exact public personal email is found, output the person with email=NOT_FOUND, email_type=NOT_FOUND, email_publicly_confirmed=false.
+- Generic/company/role mailboxes are NOT personal emails: info@, hello@, contact@, service@, mail@, office@, presse@, press@, support@, sales@, business@, marketing@, hr@, jobs@, recruiting@, career@, careers@, team@, admin@, sekretariat@, assistenz@.
+- Use previous_bad_email only as verification context. Do not copy it unless exact public proof connects it to this person.
+
+Execute only this method for all rows:
+Search wider public sources only: company subpages, localized pages, team/about/press/news/imprint pages, public directories, association pages, partner pages, official profile pages, and exact-name + company searches. Verify previous_bad_email if present; reject it unless exact public proof connects it to the person.
+
+Output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown, NOT_FOUND.
+- email_publicly_confirmed: true only when the exact personal email appears publicly and is connected to the exact person; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. If only pattern evidence exists but exact email is unconfirmed, write pattern_unconfirmed.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: MSX International | company_website: https://www.msxi.com/ | first_name: Diego | last_name: Ronconi | full_name: Diego Ronconi | role: Global VP Sales | role_category: sales | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND exact public personal email not visible | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No public email present; validation_status is REVIEW; no source_url; no exact personal email visible.; deterministic_guard_missing_email
+2. batch_id: batch_001 | company_name: Murrelektronik | company_website: https://www.murrelektronik.com/ | first_name: Ulrich | last_name: Viethen | full_name: Dr. Ulrich Viethen | role: CEO and Managing Director | role_category: founder_ceo | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND only generic Murrelektronik contact found | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No public personal email found; only generic contact found; no source URL; validation_status REVIEW.; deterministic_guard_missing_email
+3. batch_id: batch_001 | company_name: Murrelektronik | company_website: https://www.murrelektronik.com/ | first_name: Markus | last_name: Nigg | full_name: Markus Nigg | role: Vice President Global Business Unit Automation | role_category: operations | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND no exact public personal email found | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No exact personal email found; email_type NOT_FOUND; no source URL; validation_status REVIEW.; deterministic_guard_missing_email
+4. batch_id: batch_001 | company_name: nara | company_website: https://nara.de/ | first_name: Benjamin | last_name: Eichinger | full_name: Benjamin Eichinger | role: Co-Founder and CRO | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/benjamin-eichinger-87a80436/en | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND only generic nara sales email found | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_bad_linkedin_url: https://de.linkedin.com/in/benjamin-eichinger-87a80436/en | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No personal public email found; only generic company sales email present; no source URL; validation_status REVIEW.; deterministic_guard_missing_email
+5. batch_id: batch_001 | company_name: Naturapack GmbH | company_website: https://www.naturapack.de/ | first_name: Eric | last_name: Klawohn | full_name: Eric Klawohn | role: Managing Director | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/eric-klawohn-6955691a9 | email: eric.klawohn@naturapack.de | email_type: personal_public | email_source_url: https://www.xing.com/pages/naturapackgmbh | email_publicly_confirmed: true | confidence: medium | notes: XING Naturapack page publishes exact email. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_bad_email: eric.klawohn@naturapack.de | previous_bad_linkedin_url: https://de.linkedin.com/in/eric-klawohn-6955691a9 | previous_judge_decision: REJECT | previous_judge_issues: Source URL (https://www.xing.com/pages/naturapackgmbh) does not visibly show the exact email; email source does not support exact email visibility per judge instructions.
+6. batch_id: batch_001 | company_name: Naturapack GmbH | company_website: https://www.naturapack.de/ | first_name: Oliver-Tom | last_name: Schliemann | full_name: Oliver-Tom Schliemann | role: Founder | role_category: founder_ceo | email: schliemann@naturapack.de | email_type: personal_public | email_source_url: https://www.pressebox.de/pressemitteilung/naturapack-gmbh/naturapack-zeigt-papierbasierte-luftpolstersysteme-bedruckbare-papierklebebnder-und-truepaper-bandolierung-fr-effiziente-logistikprozesse/boxid/1281556 | email_publicly_confirmed: true | confidence: high | notes: PresseBox lists Oliver Schliemann CMO and email. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_bad_email: schliemann@naturapack.de | previous_judge_decision: REJECT | previous_judge_issues: Email does not match the exact person connection in source (PresseBox shows Oliver Schliemann but role mismatch and email not clearly exact personal); questionable exact email visibility and exact person connection per notes.
+7. batch_id: batch_001 | company_name: NetAachen GmbH | company_website: https://www.netaachen.de/ | first_name: Andreas | last_name: Schneider | full_name: Dipl.-Ing. Andreas Schneider | role: Managing Director | role_category: other_management | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; only generic NetAachen mail visible. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No public email provided and source URL missing; validation issues indicate missing required fields; only generic emails visible.; deterministic_guard_missing_email
+8. batch_id: batch_001 | company_name: NetAachen GmbH | company_website: https://www.netaachen.de/ | first_name: Olaf | last_name: Lindner | full_name: Olaf Lindner | role: Head of Business Customer Sales | role_category: sales | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; no NetAachen personal email publicly visible. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No public email provided and source URL missing; validation issues indicate missing required fields; only generic emails visible.; deterministic_guard_missing_email
+9. batch_id: batch_001 | company_name: NetPlans Cloud Solutions | company_website: https://www.netplans.de/ | first_name: Daniel | last_name: Schweikle | full_name: Daniel Schweikle | role: Head of Business Cloud Solutions | role_category: operations | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; official pages show phone and generic mail only. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No public email; source URL missing; only generic email and phone info available; validation marks missing required field.; deterministic_guard_missing_email
+10. batch_id: batch_001 | company_name: Nexis | company_website: https://nexis-secure.com/ | first_name: Heiko | last_name: Klarl | full_name: Dr. Heiko Klarl | role: CEO | role_category: founder_ceo | email_type: NOT_FOUND | email_publicly_confirmed: false | confidence: low | notes: NOT_FOUND; no exact Nexis personal email visible. | retry_attempt: 2 | retry_strategy: expanded_source_search | retry_search_focus: Search wider public sources for the same person: company subpages, team/about/press pages, directories, association pages, exact-name plus company searches. | previous_retry_reason: missing_email | previous_judge_decision: RETRY_NEEDED | previous_judge_issues: No public email; source URL missing; validation issues mark missing required field; no exact personal email found.; deterministic_guard_missing_email
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_retry_001_20260526T181405Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
