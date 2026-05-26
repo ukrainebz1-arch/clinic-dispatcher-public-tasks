@@ -1,0 +1,695 @@
+TASK_ID: stage05_task_0001
+
+You generate German B2B outreach assets for a sales-intelligence service.
+
+Core offer:
+Wir helfen B2B-Unternehmen, Buying Signals zu erkennen, passende Zielkunden zu priorisieren, relevante Entscheider zu finden und mit einem konkreten Anlass anzusprechen. Es geht nicht um eine generische Datenbank, sondern um vertriebsnahe Intelligence: wen kontaktieren, über welchen Kanal und warum gerade dieser Kontakt sinnvoll ist.
+
+Business angle to use:
+- If the input contains a hiring/job/buying signal, use it as the concrete hook.
+- If the company appears to sell B2B products/services, frame the value as better account selection, decision-maker discovery and more relevant first outreach.
+- A good soft CTA is: "Wäre das eher ein Thema für Sie oder für eine andere Person bei Ihnen im Haus?"
+- Never promise leads, meetings, revenue or guaranteed results.
+
+Output contract:
+- Return CSV only, no markdown, no explanations.
+- Output exactly the rows for ALLOWED_MESSAGE_TARGETS.
+- Every listed message_target_id must appear exactly once.
+- Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+- Do not choose other people from COMPANY_CONTEXT.
+- Do not invent recipients or channels.
+- If one target cannot be written, still output its row with message_status=NEEDS_REVIEW and a short warning_code/warning_message.
+
+Allowed output columns, exactly in this order:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+German salutation rules for email message_body:
+- Start with a German salutation.
+- Use "Sehr geehrter Herr <last_name>," when the name is clearly male.
+- Use "Sehr geehrte Frau <last_name>," when the name is clearly female.
+- If gender is unclear or international, use "Hallo <first_name> <last_name>,".
+- Do not invent titles such as Dr., Prof., MBA.
+- Address the recipient as "Sie/Ihnen/Ihr".
+
+Length rules:
+- subject: max 70 characters.
+- email message_body: 500-800 characters.
+- linkedin_connection connection_note: max 200 characters.
+- linkedin_message message_body: 500-600 characters.
+
+Channel-specific content:
+- email: subject + message_body; connection_note empty.
+- linkedin_connection: connection_note only; subject and message_body empty.
+- linkedin_message: message_body only; subject and connection_note empty.
+
+Required tone:
+- German, direct, concrete, professional.
+- No generic praise like "spannendes Unternehmen" without evidence.
+- No long pitch.
+- Mention only facts present in the input.
+- Keep the first two sentences tied to a concrete company hook, role or signal.
+- Make clear the service is about finding target accounts, decision-makers and outreach reasons.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|msx international|https://www.msxi.com/|aachen|germany",
+    "company_name": "MSX International",
+    "full_name": "Diego Ronconi",
+    "message_target_id": "stage05_task_0001::unknown_person::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "",
+    "recipient_value": "dronconi@msxi.com",
+    "role_title": "Global VP Sales",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|msx international|https://www.msxi.com/|aachen|germany",
+    "company_name": "MSX International",
+    "full_name": "Diego Ronconi",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://www.linkedin.com/in/diego-andrea-ronconi-0502133",
+    "role_title": "Global VP Sales",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|msx international|https://www.msxi.com/|aachen|germany",
+    "company_name": "MSX International",
+    "full_name": "Diego Ronconi",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://www.linkedin.com/in/diego-andrea-ronconi-0502133",
+    "role_title": "Global VP Sales",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|msx international|https://www.msxi.com/|aachen|germany",
+    "company_name": "MSX International",
+    "full_name": "Dirk Bott",
+    "message_target_id": "stage05_task_0001::unknown_person::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "",
+    "recipient_value": "dbott@msxi.com",
+    "role_title": "VP Global Sales Operations and Global Account Executive",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|msx international|https://www.msxi.com/|aachen|germany",
+    "company_name": "MSX International",
+    "full_name": "Dirk Bott",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/dirk-bott-6192b515",
+    "role_title": "VP Global Sales Operations and Global Account Executive",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|msx international|https://www.msxi.com/|aachen|germany",
+    "company_name": "MSX International",
+    "full_name": "Dirk Bott",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/dirk-bott-6192b515",
+    "role_title": "VP Global Sales Operations and Global Account Executive",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|murrelektronik|https://www.murrelektronik.com/|stuttgart|germany",
+    "company_name": "Murrelektronik",
+    "full_name": "Dr. Ulrich Viethen",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/uli-viethen-bb765282",
+    "role_title": "CEO and Managing Director",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|murrelektronik|https://www.murrelektronik.com/|stuttgart|germany",
+    "company_name": "Murrelektronik",
+    "full_name": "Dr. Ulrich Viethen",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/uli-viethen-bb765282",
+    "role_title": "CEO and Managing Director",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nanuq gmbh|https://www.nanuq.tech/|bonn|germany",
+    "company_name": "nanuq GmbH",
+    "full_name": "Fabrice Kathmann",
+    "message_target_id": "stage05_task_0001::unknown_person::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "",
+    "recipient_value": "fabrice.kathmann@nanuq.tech",
+    "role_title": "CEO and Co-Founder",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nanuq gmbh|https://www.nanuq.tech/|bonn|germany",
+    "company_name": "nanuq GmbH",
+    "full_name": "Fabrice Kathmann",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/fabricekathmann/en",
+    "role_title": "CEO and Co-Founder",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nanuq gmbh|https://www.nanuq.tech/|bonn|germany",
+    "company_name": "nanuq GmbH",
+    "full_name": "Fabrice Kathmann",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/fabricekathmann/en",
+    "role_title": "CEO and Co-Founder",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nanuq gmbh|https://www.nanuq.tech/|bonn|germany",
+    "company_name": "nanuq GmbH",
+    "full_name": "Marvin Müller-Bader",
+    "message_target_id": "stage05_task_0001::unknown_person::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "",
+    "recipient_value": "marvin.muellerbader@nanuq.tech",
+    "role_title": "CTO and Co-Founder",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nanuq gmbh|https://www.nanuq.tech/|bonn|germany",
+    "company_name": "nanuq GmbH",
+    "full_name": "Marvin Müller-Bader",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/marvinmuellerbader",
+    "role_title": "CTO and Co-Founder",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nanuq gmbh|https://www.nanuq.tech/|bonn|germany",
+    "company_name": "nanuq GmbH",
+    "full_name": "Marvin Müller-Bader",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/marvinmuellerbader",
+    "role_title": "CTO and Co-Founder",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nara|https://nara.de/|kassel|germany",
+    "company_name": "nara",
+    "full_name": "Benjamin Eichinger",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/benjamin-eichinger-87a80436/en",
+    "role_title": "Co-Founder and CRO",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nara|https://nara.de/|kassel|germany",
+    "company_name": "nara",
+    "full_name": "Benjamin Eichinger",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/benjamin-eichinger-87a80436/en",
+    "role_title": "Co-Founder and CRO",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nara|https://nara.de/|kassel|germany",
+    "company_name": "nara",
+    "full_name": "Lukas Brückner",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/lukasbrueckner97",
+    "role_title": "Founder and Managing Director",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nara|https://nara.de/|kassel|germany",
+    "company_name": "nara",
+    "full_name": "Lukas Brückner",
+    "message_target_id": "stage05_task_0001::unknown_person::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "",
+    "recipient_value": "https://de.linkedin.com/in/lukasbrueckner97",
+    "role_title": "Founder and Managing Director",
+    "task_id": "stage05_task_0001"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Aachen",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|msx international|https://www.msxi.com/|aachen|germany",
+    "company_name": "MSX International",
+    "company_website": "https://www.msxi.com/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Diego Ronconi",
+          "person_key": "",
+          "role": "Global VP Sales"
+        },
+        {
+          "full_name": "Dirk Bott",
+          "person_key": "",
+          "role": "VP Global Sales Operations and Global Account Executive"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "dronconi@msxi.com",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Diego Ronconi",
+        "hypothesis_email": "dronconi@msxi.com",
+        "linkedin_profile_url": "https://www.linkedin.com/in/diego-andrea-ronconi-0502133",
+        "person_key": "",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Global VP Sales",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.msxi.com/en/our-people-leadership/",
+          "https://www.msxi.com/en/sales-and-service-transformation/",
+          "https://www.msxi.com/en/how-to-build-a-future-proof-retail-model/",
+          "https://www.msxi.com/en/benchmarker/from-challenge-to-transformation/",
+          "https://www.msxi.com/en/business-intelligence/",
+          "https://www.linkedin.com/in/diego-andrea-ronconi-0502133",
+          "https://www.msxi.com/en/imprint/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "dbott@msxi.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dirk Bott",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dirk-bott-6192b515",
+        "person_key": "",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "VP Global Sales Operations and Global Account Executive",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.msxi.com/en/how-to-build-a-future-proof-retail-model/",
+          "https://www.msxi.com/en/our-people-leadership/",
+          "https://www.msxi.com/en/c1_profiles/",
+          "https://www.msxi.com/en/vehicle-sales-the-future-of-automotive-retail/",
+          "https://www.linkedin.com/posts/dirk-bott-6192b515_it-is-truly-outstanding-and-reflects-the-activity-7330600949775773696-emCL",
+          "https://de.linkedin.com/in/dirk-bott-6192b515",
+          "https://www.msxi.com/en/new-mobility-innovators-driving-the-future-of-cx/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "sales"
+      ],
+      "roles": [
+        "Global VP Sales",
+        "VP Global Sales Operations and Global Account Executive"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.msxi.com/en/our-people-leadership/",
+      "https://www.msxi.com/en/sales-and-service-transformation/",
+      "https://www.msxi.com/en/how-to-build-a-future-proof-retail-model/",
+      "https://www.msxi.com/en/benchmarker/from-challenge-to-transformation/",
+      "https://www.msxi.com/en/business-intelligence/",
+      "https://www.linkedin.com/in/diego-andrea-ronconi-0502133",
+      "https://www.msxi.com/en/imprint/",
+      "https://www.msxi.com/en/c1_profiles/",
+      "https://www.msxi.com/en/vehicle-sales-the-future-of-automotive-retail/",
+      "https://www.linkedin.com/posts/dirk-bott-6192b515_it-is-truly-outstanding-and-reflects-the-activity-7330600949775773696-emCL",
+      "https://de.linkedin.com/in/dirk-bott-6192b515",
+      "https://www.msxi.com/en/new-mobility-innovators-driving-the-future-of-cx/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 2,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|murrelektronik|https://www.murrelektronik.com/|stuttgart|germany",
+    "company_name": "Murrelektronik",
+    "company_website": "https://www.murrelektronik.com/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Markus Nigg",
+          "person_key": "",
+          "role": "Vice President Global Business Unit Automation"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Dr. Ulrich Viethen",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/uli-viethen-bb765282",
+        "person_key": "",
+        "primary_channel": "LINKEDIN",
+        "role": "CEO and Managing Director",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://my.murrelektronik.com/home/en/meta/footer/imprint",
+          "https://my.murrelektronik.com/home/en/contact",
+          "https://shop.murrelektronik.com/en/Imprint/",
+          "https://www.murrelektronik.com/de/landingpages/karriere/stellenangebote/detail/job/leiter-m-w-d-fertigungsbereich/",
+          "https://www.murrelektronik.com/de/landingpages/karriere/praktika-werkstudententaetigkeiten/detail/job/initiativbewerbung-studenten/",
+          "https://de.linkedin.com/in/uli-viethen-bb765282"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Markus Nigg",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Vice President Global Business Unit Automation",
+        "role_category": "operations",
+        "source_urls": [
+          "https://my.murrelektronik.com/home/en/meta/footer/imprint",
+          "https://my.murrelektronik.com/home/en/contact",
+          "https://www.technik-einkauf.de/einkauf/lieferfaehig-ohne-die-lager-zu-fluten/2122222",
+          "https://www.murrelektronik.com/de/landingpages/karriere/stellenangebote/detail/job/leiter-m-w-d-fertigungsbereich/",
+          "https://www.murrelektronik.com/de/landingpages/karriere/praktika-werkstudententaetigkeiten/detail/job/initiativbewerbung-studenten/",
+          "https://de.linkedin.com/posts/murrelektronik_exklusiv-interview-murrelektronik-lieferf%C3%A4hig-activity-7379159662895718400-9b23"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "CEO and Managing Director",
+        "Vice President Global Business Unit Automation"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://my.murrelektronik.com/home/en/meta/footer/imprint",
+      "https://my.murrelektronik.com/home/en/contact",
+      "https://shop.murrelektronik.com/en/Imprint/",
+      "https://www.murrelektronik.com/de/landingpages/karriere/stellenangebote/detail/job/leiter-m-w-d-fertigungsbereich/",
+      "https://www.murrelektronik.com/de/landingpages/karriere/praktika-werkstudententaetigkeiten/detail/job/initiativbewerbung-studenten/",
+      "https://de.linkedin.com/in/uli-viethen-bb765282",
+      "https://www.technik-einkauf.de/einkauf/lieferfaehig-ohne-die-lager-zu-fluten/2122222",
+      "https://de.linkedin.com/posts/murrelektronik_exklusiv-interview-murrelektronik-lieferf%C3%A4hig-activity-7379159662895718400-9b23"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bonn",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nanuq gmbh|https://www.nanuq.tech/|bonn|germany",
+    "company_name": "nanuq GmbH",
+    "company_website": "https://www.nanuq.tech/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 0,
+      "decision_makers": []
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "fabrice.kathmann@nanuq.tech",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Fabrice Kathmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/fabricekathmann/en",
+        "person_key": "",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "CEO and Co-Founder",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.nanuq.tech/en/pages/about-us",
+          "https://de.linkedin.com/posts/fabricekathmann_wir-wachsen-bei-nanuq-gmbh-und-ich-suche-activity-7422190470472130560-mc1M",
+          "https://de.linkedin.com/in/fabricekathmann/en"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marvin.muellerbader@nanuq.tech",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marvin Müller-Bader",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marvinmuellerbader",
+        "person_key": "",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "CTO and Co-Founder",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.nanuq.tech/en/pages/about-us",
+          "https://www.logit-club.de/mitglieder/unternehmen/?profilid=883",
+          "https://de.linkedin.com/posts/marvinmuellerbader_vier-neue-ladeparks-f%C3%BCr-e-lkw-in-nrw-und-activity-7395004314273869824-qQLG",
+          "https://de.linkedin.com/in/marvinmuellerbader"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo"
+      ],
+      "roles": [
+        "CEO and Co-Founder",
+        "CTO and Co-Founder"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.nanuq.tech/en/pages/about-us",
+      "https://de.linkedin.com/posts/fabricekathmann_wir-wachsen-bei-nanuq-gmbh-und-ich-suche-activity-7422190470472130560-mc1M",
+      "https://de.linkedin.com/in/fabricekathmann/en",
+      "https://www.logit-club.de/mitglieder/unternehmen/?profilid=883",
+      "https://de.linkedin.com/posts/marvinmuellerbader_vier-neue-ladeparks-f%C3%BCr-e-lkw-in-nrw-und-activity-7395004314273869824-qQLG",
+      "https://de.linkedin.com/in/marvinmuellerbader"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 2,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Kassel",
+    "company_identity_key": "gate4_medium_pilot_10_b2b_v2|batch_001|nara|https://nara.de/|kassel|germany",
+    "company_name": "nara",
+    "company_website": "https://nara.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Benjamin Eichinger",
+          "person_key": "",
+          "role": "Co-Founder and CRO"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Benjamin Eichinger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/benjamin-eichinger-87a80436/en",
+        "person_key": "",
+        "primary_channel": "LINKEDIN",
+        "role": "Co-Founder and CRO",
+        "role_category": "sales",
+        "source_urls": [
+          "https://nara.de/imprint",
+          "https://openregister.de/company/DE-HRB-D4708-17918",
+          "https://de.linkedin.com/in/benjamin-eichinger-87a80436/en",
+          "https://www.linkedin.com/company/nara-gmbh",
+          "https://nara.de/"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Lukas Brückner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lukasbrueckner97",
+        "person_key": "",
+        "primary_channel": "LINKEDIN",
+        "role": "Founder and Managing Director",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://nara.de/imprint",
+          "https://nara.de/terms",
+          "https://de.linkedin.com/in/lukasbrueckner97",
+          "https://openregister.de/company/DE-HRB-D4708-17918",
+          "https://nara.de/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "sales",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Co-Founder and CRO",
+        "Founder and Managing Director"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://nara.de/imprint",
+      "https://openregister.de/company/DE-HRB-D4708-17918",
+      "https://de.linkedin.com/in/benjamin-eichinger-87a80436/en",
+      "https://www.linkedin.com/company/nara-gmbh",
+      "https://nara.de/",
+      "https://nara.de/terms",
+      "https://de.linkedin.com/in/lukasbrueckner97"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
