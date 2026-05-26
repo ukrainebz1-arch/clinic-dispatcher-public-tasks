@@ -1,0 +1,137 @@
+RUN_ID: gate4_medium_pilot_10_b2b_batch_001_stage_02_public_email_lookup
+TASK_ID: task_s02_001_20260526T164446Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s02_001_20260526T164446Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_02_public_email_lookup / For each discovered person, look for publicly visible personal or role-related email addresses and preserve the source URL.
+
+Run context:
+- campaign_id: gate4_medium_pilot_10_b2b
+- batch_id: batch_001
+- run_id: gate4_medium_pilot_10_b2b_batch_001_stage_02_public_email_lookup
+- input_csv: campaigns/gate4_medium_pilot_10_b2b/batches/batch_001/stage_02_public_email_lookup/input.csv
+
+You receive people candidates. For each input person, search public sources for a PERSONAL public email address that belongs to that exact person.
+
+Primary goal:
+- Find a personal public email for the exact input person.
+- A valid personal email must be visibly published in a public source and clearly connected to the same person, company, and role/context.
+- Better NOT_FOUND than a wrong, generic, inferred, or weak email.
+
+Universal strict rules:
+- Use only public data.
+- Do not invent emails.
+- Do not output inferred, guessed, constructed, or pattern-only emails as confirmed personal emails.
+- Do not use company email patterns as confirmed personal emails.
+- Accept personal_public only when the exact email address is visible in a public page, public document, official profile, public directory, press/team page, or comparable public source.
+- email_source_url must support the exact email value, not only the company domain.
+- Verify that the source connects the exact email to the exact input person or a clearly matching person identity.
+- Verify person name + company + role/context before returning an email.
+- If uncertain, use NOT_FOUND / empty personal email fields instead of inventing or weakening evidence.
+
+Retry strategy router:
+- Some retry inputs contain retry_attempt, retry_strategy, retry_search_focus, previous_retry_reason, previous_bad_email, previous_judge_decision, and previous_judge_issues.
+- If retry_strategy is present, execute only the method for that retry_strategy. Do not mix all methods in one row unless the method explicitly tells you to use prior evidence.
+- Use previous_bad_email only for verification/rejection context. Do not copy it unless it is publicly confirmed for the exact person.
+
+Method: normal_public_email_search
+Use this when retry_strategy is empty or absent.
+- Search company website, team/about/contact/press/imprint pages, public profiles, public directories, and exact name + company queries.
+- Return NOT_FOUND when no exact personal email is publicly visible.
+
+Method: transport_resend_missing_output
+Use this when retry_strategy=transport_resend_missing_output.
+- This is a technical resend because a previous transport/import/parse attempt did not produce a canonical output row.
+- Preserve exactly one output row for every input row in this retry file.
+- Use normal_public_email_search only. Do not escalate to guesses, patterns, or heavy search unless clearly necessary.
+
+Method: expanded_source_search
+Use this when retry_strategy=expanded_source_search.
+- Search wider public sources for the same person.
+- Check company subpages and localized pages, not only the homepage.
+- Search team/about/press/news/imprint pages, public directories, association pages, partner pages, speaker pages, official profile pages, and exact-name + company searches.
+- If previous_bad_email exists, verify whether the exact email is truly visible and connected to this person; otherwise reject it.
+
+Method: public_documents_event_search
+Use this when retry_strategy=public_documents_event_search.
+- Focus on public documents and event surfaces.
+- Search public PDFs, slide decks, conference agendas, speaker bios, webinar pages, association documents, brochures, public reports, press releases, and cached/snippet-visible event pages.
+- Search exact person name + company + terms like PDF, speaker, webinar, Vortrag, Präsentation, Presse, Kontakt.
+- Accept only if the exact personal email is visible and tied to the exact person.
+
+Method: career_jobs_hiring_contact_search
+Use this when retry_strategy=career_jobs_hiring_contact_search.
+- Focus on hiring/career/contact surfaces where named managers or team leads may be listed.
+- Search company career pages, job ads, ATS pages, StepStone/Indeed/job-board copies, recruiting pages, department pages, and hiring-manager contact references.
+- Generic HR/jobs/career/recruiting emails are not personal emails. They may be mentioned only in notes as fallback, not accepted as personal_public.
+- Accept only if the exact personal email is visible and tied to the exact person.
+
+Method: pattern_verification_search
+Use this when retry_strategy=pattern_verification_search.
+- First find real public examples of the company's email pattern from official or strong public sources.
+- Create likely candidate emails only as internal search queries, never as final proof.
+- Search exact candidate emails in quotes together with the person's name and company.
+- Check official pages, jobs/career pages, public PDFs, press releases, event pages, public documents, and profile pages.
+- Output personal_public only if the exact candidate email is visibly confirmed in a public source and tied to the exact person.
+- If only a pattern is found but the exact email is not publicly confirmed, leave the personal email empty / NOT_FOUND and mention pattern_unconfirmed in notes.
+
+Method: cross_domain_group_search
+Use this when retry_strategy=cross_domain_group_search.
+- Search parent company, subsidiary, old brand, acquired company, country-domain, and group-domain pages.
+- Check .de/.at/.ch/.com variants, group websites, leadership pages, press pages, and public documents.
+- Accept only if the exact personal email is visible and tied to the exact input person or clearly matching person identity.
+
+Generic/company mailbox policy:
+- Generic/company/role mailboxes are NOT personal emails.
+- Do NOT output these as personal_public: info@, hello@, hallo@, contact@, service@, mail@, office@, presse@, press@, support@, sales@, business@, marketing@, hr@, jobs@, recruiting@, career@, careers@, team@, admin@, sekretariat@, assistenz@.
+- If only a generic/company mailbox is found, do not put it into the personal email field as a person-level result.
+- Generic/company mailbox may be mentioned only as fallback/company-level contact if the schema has a suitable field; otherwise leave personal email empty / NOT_FOUND and explain briefly in notes.
+- Duplicate generic emails for multiple people should not be treated as person-level personal emails.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve exactly one output row per input person.
+- If no personal email is found for a person, still output that person with email empty or NOT_FOUND.
+- Do not drop people.
+- Do not merge multiple people into one row.
+- Do not prefix data rows with TASK_ID or other labels.
+- Use one physical line per output row.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email,email_type,email_source_url,email_publicly_confirmed,confidence,notes
+
+Column guidance:
+- email_type: personal_public, generic_or_role, assistant_or_secretariat, unknown, NOT_FOUND.
+- email_publicly_confirmed: true only when the exact personal email appears publicly and is connected to the exact person; otherwise false.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. If no personal email is found, write NOT_FOUND and the search reason briefly. If pattern evidence exists but exact email is unconfirmed, write pattern_unconfirmed.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: MSX International | first_name: Ugo | last_name: de Carolis | full_name: Ugo de Carolis | role: CEO and Executive Chairman | role_category: founder_ceo | confidence: high | notes: Official MSXI page lists CEO role
+2. batch_id: batch_001 | company_name: MSX International | first_name: Diego | last_name: Ronconi | full_name: Diego Ronconi | role: Global VP Sales | role_category: sales | confidence: high | notes: Official leadership page lists global sales VP
+3. batch_id: batch_001 | company_name: Murrelektronik | first_name: Ulrich | last_name: Viethen | full_name: Dr. Ulrich Viethen | role: CEO | role_category: founder_ceo | confidence: high | notes: Official imprint lists CEO managing director
+4. batch_id: batch_001 | company_name: Murrelektronik | first_name: Jürgen | last_name: Erkert | full_name: Jürgen Erkert | role: CFO | role_category: finance | confidence: high | notes: Official imprint lists CFO managing director
+5. batch_id: batch_001 | company_name: Murrelektronik | first_name: Keijo | last_name: Walser | full_name: Keijo Walser | role: Head of Inside Sales | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/keijo-walser-22825243 | confidence: medium | notes: LinkedIn profile lists current Murrelektronik sales role
+6. batch_id: batch_001 | company_name: nanuq GmbH | first_name: Fabrice | last_name: Kathmann | full_name: Fabrice Kathmann | role: CEO & Co-Founder | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/fabricekathmann | confidence: high | notes: LinkedIn profile lists CEO and co-founder
+7. batch_id: batch_001 | company_name: nanuq GmbH | first_name: Michael | last_name: Bories | full_name: Michael Bories | role: Director Sales & Strategy | role_category: sales | confidence: high | notes: Official nanuq article confirms sales strategy role
+8. batch_id: batch_001 | company_name: nara | first_name: Lukas | last_name: Brückner | full_name: Lukas Brückner | role: Co-Founder & CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/lukasbrueckner97 | confidence: high | notes: LinkedIn profile lists Co-Founder CEO at nara GmbH
+9. batch_id: batch_001 | company_name: Narravero | first_name: Thomas | last_name: Rödding | full_name: Thomas L. Rödding | role: Chief Executive Officer | role_category: founder_ceo | confidence: high | notes: Official company page lists executive team role
+10. batch_id: batch_001 | company_name: Narravero | first_name: Dagmar | last_name: Zoder | full_name: Dagmar Zoder | role: Chief Revenue Officer | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/dagmar-zoder | confidence: high | notes: Official article confirms CRO leads revenue functions
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s02_001_20260526T164446Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+Do not start with the CSV header.
+Do not use markdown fences.
+Use public information only.
