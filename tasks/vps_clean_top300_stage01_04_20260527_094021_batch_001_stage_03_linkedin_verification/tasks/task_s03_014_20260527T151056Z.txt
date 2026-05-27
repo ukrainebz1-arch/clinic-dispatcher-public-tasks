@@ -1,0 +1,74 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_014_20260527T151056Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_014_20260527T151056Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_001
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: JDE Peet's | company_website: https://nl.linkedin.com/company/jdepeets | first_name: Lena | last_name: Deller | full_name: Lena Deller | role: Recruiting contact for B2B Key Account Manager role | role_category: sales | confidence: low | notes: Job posting names Lena Deller as contact for B2B Key Account Manager role; sales ownership not directly stated.
+2. batch_id: batch_001 | company_name: PIRTEK Deutschland GmbH | company_website: https://de.linkedin.com/company/pirtek-deutschland-gmbh | first_name: Maximilian | last_name: Leight | full_name: Maximilian Leight | role: Head of Sales & Marketing | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/maximilian-leight-29317012a | confidence: high | notes: LinkedIn profile lists Head of Sales & Marketing at PIRTEK Deutschland GmbH.
+3. batch_id: batch_001 | company_name: PIRTEK Deutschland GmbH | company_website: https://de.linkedin.com/company/pirtek-deutschland-gmbh | first_name: Torsten | last_name: Moldenhauer | full_name: Torsten Moldenhauer | role: Geschäftsführer Deutschland und Österreich | role_category: managing_director | confidence: high | notes: Xing profile lists current managing director for Germany and Austria at Pirtek Deutschland GmbH.
+4. batch_id: batch_001 | company_name: PIRTEK Deutschland GmbH | company_website: https://de.linkedin.com/company/pirtek-deutschland-gmbh | first_name: Jamie | last_name: McDermott | full_name: Jamie McDermott | role: Key Account - Business Development | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/jamie-mcdermott-b8714b199 | confidence: medium | notes: LinkedIn profile lists Key Account and Business Development experience at PIRTEK Deutschland GmbH.
+5. batch_id: batch_001 | company_name: PIRTEK Deutschland GmbH | company_website: https://de.linkedin.com/company/pirtek-deutschland-gmbh | first_name: Mohammed | last_name: El Bojadayni | full_name: Mohammed El Bojadayni | role: Inside Sales Manager | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/mohammed-el-bojadayni-009117295 | confidence: medium | notes: LinkedIn profile lists Inside Sales Manager at PIRTEK Deutschland GmbH.
+6. batch_id: batch_001 | company_name: Upway | company_website: https://fr.linkedin.com/company/shopupway | first_name: Benjamin | last_name: Rieu | full_name: Benjamin Rieu | role: Sales Director / Head of Sales | role_category: sales | linkedin_profile_url: https://fr.linkedin.com/in/benjamin-rieu-3171364a | confidence: high | notes: LinkedIn profile lists Sales Director at Upway and Head of Sales.
+7. batch_id: batch_001 | company_name: Upway | company_website: https://fr.linkedin.com/company/shopupway | first_name: Toussaint | last_name: Wattinne | full_name: Toussaint Wattinne | role: Co-Founder & CEO | role_category: founder_ceo | confidence: high | notes: Upway press page identifies Toussaint Wattinne as co-founder.
+8. batch_id: batch_001 | company_name: Upway | company_website: https://fr.linkedin.com/company/shopupway | first_name: Stéphane | last_name: Ficaja | full_name: Stéphane Ficaja | role: Co-Founder & COO | role_category: founder_ceo | confidence: high | notes: Upway press page identifies Stéphane Ficaja as co-founder.
+9. batch_id: batch_001 | company_name: Upway | company_website: https://fr.linkedin.com/company/shopupway | first_name: Grégory | last_name: De Vroey | full_name: Grégory De Vroey | role: General Manager / Head of Sales & Strategic Partnerships | role_category: commercial | linkedin_profile_url: https://be.linkedin.com/in/gr%C3%A9gory-de-vroey-40b11263 | confidence: medium | notes: LinkedIn profile lists Upway sales and strategic partnerships leadership.
+10. batch_id: batch_001 | company_name: ainavio | company_website: https://de.linkedin.com/company/ainavio | first_name: Lorenz | last_name: Schneidmadel | full_name: Lorenz Schneidmadel | role: Co-Founder and CEO / Managing Director | role_category: founder_ceo | confidence: high | notes: Company imprint names Lorenz Heinrich Schneidmadel as managing director; public profile identifies him as co-founder CEO.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_014_20260527T151056Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
