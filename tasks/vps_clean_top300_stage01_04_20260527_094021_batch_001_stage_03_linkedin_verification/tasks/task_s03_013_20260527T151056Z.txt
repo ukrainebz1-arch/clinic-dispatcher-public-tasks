@@ -1,0 +1,74 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_013_20260527T151056Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_013_20260527T151056Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_001
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Bluebird | company_website: https://nl.linkedin.com/company/bluebird-saas-recruitment | first_name: Marc | last_name: Hellingman | full_name: Marc Hellingman | role: Senior Recruitment Consultant | role_category: commercial | confidence: medium | notes: Company team page lists Marc Hellingman as Senior Recruitment Consultant.
+2. batch_id: batch_001 | company_name: Bluebird | company_website: https://nl.linkedin.com/company/bluebird-saas-recruitment | first_name: Johan | last_name: Andersson | full_name: Johan Andersson | role: Consultative Recruiter / former SaaS Sales | role_category: commercial | confidence: medium | notes: LinkedIn job poster profile describes him as former SaaS sales and consultative recruiter for SaaS companies.
+3. batch_id: batch_001 | company_name: Doctolib | company_website: https://fr.linkedin.com/company/doctolib | first_name: Boris | last_name: Goncharov | full_name: Boris Goncharov | role: VP Sales & Partnerships | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/borisgoncharov1 | confidence: high | notes: LinkedIn profile lists VP Sales & Partnerships at Doctolib.
+4. batch_id: batch_001 | company_name: Doctolib | company_website: https://fr.linkedin.com/company/doctolib | first_name: Elise | last_name: Bert Leduc | full_name: Elise Bert Leduc | role: Chief Revenue Officer | role_category: revenue | confidence: high | notes: Public executive listing names Elise Bert Leduc as Chief Revenue Officer.
+5. batch_id: batch_001 | company_name: Doctolib | company_website: https://fr.linkedin.com/company/doctolib | first_name: Stanislas | last_name: Niox-Chateau | full_name: Stanislas Niox-Chateau | role: Co-Founder & CEO | role_category: founder_ceo | confidence: high | notes: Public executive listing names Stanislas Niox-Chateau as cofounder and CEO.
+6. batch_id: batch_001 | company_name: Doctolib | company_website: https://fr.linkedin.com/company/doctolib | first_name: Kaoutar | last_name: Braikat | full_name: Kaoutar Braikat | role: Head of Sales and Account Managerin | role_category: sales | confidence: medium | notes: Public LinkedIn post identifies Kaoutar Braikat as Head of Sales and Account Managerin at Doctolib.
+7. batch_id: batch_001 | company_name: GLORIA SAEZ | company_website: https://www.linkedin.com/company/gloria-saez | first_name: Gloria | last_name: Saez | full_name: Gloria Saez | role: Licensed Clinical Therapist / practice owner | role_category: managing_director | linkedin_profile_url: https://www.linkedin.com/in/gloria-saez-6963b173 | confidence: low | notes: Input LinkedIn page points to a small medical-practice entity; public practice site identifies Gloria Saez as the named practitioner.
+8. batch_id: batch_001 | company_name: JDE Peet's | company_website: https://nl.linkedin.com/company/jdepeets | first_name: Miriam | last_name: Günther | full_name: Miriam Günther | role: Country Director Austria | role_category: commercial | linkedin_profile_url: https://at.linkedin.com/in/miriam-g%C3%BCnther-geb-krickl-85179511 | confidence: high | notes: LinkedIn profile lists Country Director at JDE Peet's in Austria.
+9. batch_id: batch_001 | company_name: JDE Peet's | company_website: https://nl.linkedin.com/company/jdepeets | first_name: Arnd | last_name: Manau | full_name: Arnd Manau | role: Director Out-of-Home / Geschäftsführer | role_category: managing_director | linkedin_profile_url: https://de.linkedin.com/in/arnd-manau-71a3b7118 | confidence: high | notes: LinkedIn profile states Director Out-of-Home and registered managing director with P&L responsibility for JDE Professional Out-of-Home.
+10. batch_id: batch_001 | company_name: JDE Peet's | company_website: https://nl.linkedin.com/company/jdepeets | first_name: Stefan | last_name: Wiesinger | full_name: Stefan Wiesinger | role: Head of Sales - Retail Austria | role_category: sales | linkedin_profile_url: https://at.linkedin.com/in/stefan-wiesinger-099908125 | confidence: high | notes: LinkedIn profile lists Head of Sales Retail Austria at JDE Peet's.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_013_20260527T151056Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
