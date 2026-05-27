@@ -1,0 +1,74 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_008_20260527T151056Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_008_20260527T151056Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_001
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: DPS - Das Prüfunternehmen | company_website: https://de.linkedin.com/company/dps-deutsche-pr%C3%BCfservice-gmbh | first_name: Christoph Ulrich | last_name: Püttmann | full_name: Christoph Ulrich Püttmann | role: Founder & Shareholder | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/christophpuettmann | confidence: medium | notes: LinkedIn profile identifies him as founder and shareholder with sales and operations scaling experience.
+2. batch_id: batch_001 | company_name: DPS - Das Prüfunternehmen | company_website: https://de.linkedin.com/company/dps-deutsche-pr%C3%BCfservice-gmbh | first_name: Marc David | last_name: Tropper | full_name: Marc David Tropper | role: Sales Manager | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/marc-tropper | confidence: high | notes: Xing profile lists current Sales Manager at DPS Deutsche Prüfservice.
+3. batch_id: batch_001 | company_name: MSX International | company_website: https://www.linkedin.com/company/msx-international | first_name: Dirk | last_name: Bott | full_name: Dirk Bott | role: VP Global Sales Operations & Global Account Executive | role_category: sales | confidence: high | notes: MSX profile states he oversees global sales and large OEM key accounts.
+4. batch_id: batch_001 | company_name: MSX International | company_website: https://www.linkedin.com/company/msx-international | first_name: Christian | last_name: Picard | full_name: Christian Picard | role: Sales and Business Development Director D/A/CH & Benelux | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/christian-picard-a0ba3776 | confidence: high | notes: LinkedIn profile lists Sales and Business Development Director for DACH and Benelux at MSX International.
+5. batch_id: batch_001 | company_name: MSX International | company_website: https://www.linkedin.com/company/msx-international | first_name: Martin | last_name: Sölter | full_name: Martin Sölter | role: Account Executive DACH | role_category: sales | confidence: high | notes: Xing profile lists current Account Executive DACH at MSX International GmbH.
+6. batch_id: batch_001 | company_name: MSX International | company_website: https://www.linkedin.com/company/msx-international | first_name: Alexander | last_name: Kreis | full_name: Alexander Kreis | role: Strategic Account Executive Global Sales | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/alexander-kreis-5617a83 | confidence: high | notes: LinkedIn profile lists Strategic Account Executive Global Sales at MSX International.
+7. batch_id: batch_001 | company_name: PDV.group | company_website: https://de.linkedin.com/company/pdv-gruppe | first_name: Dirk | last_name: Nerling | full_name: Dirk Nerling | role: Geschäftsführer | role_category: managing_director | confidence: high | notes: Company imprint lists Dirk Nerling as managing director.
+8. batch_id: batch_001 | company_name: PDV.group | company_website: https://de.linkedin.com/company/pdv-gruppe | first_name: Frank | last_name: Schellmann | full_name: Frank Schellmann | role: Geschäftsführer / Geschäftsbereichsleiter Kommunal | role_category: managing_director | confidence: high | notes: Company imprint lists Frank Schellmann as managing director; regisafe page links him to PDV.group municipal business.
+9. batch_id: batch_001 | company_name: PDV.group | company_website: https://de.linkedin.com/company/pdv-gruppe | first_name: Heiko | last_name: Steffens | full_name: Heiko Steffens | role: Vertrieb / bridge between sales technology and management | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/heiko-steffens-249b37229 | confidence: medium | notes: LinkedIn profile describes his role as bridging sales technology and management at PDV.group.
+10. batch_id: batch_001 | company_name: PDV.group | company_website: https://de.linkedin.com/company/pdv-gruppe | first_name: Nadine | last_name: Hagenbring | full_name: Nadine Hagenbring | role: Fachleitung Vertriebsinnendienst | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/nadine-hagenbring-201217202 | confidence: medium | notes: LinkedIn profile lists head of inside sales at PDV GmbH.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_008_20260527T151056Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
