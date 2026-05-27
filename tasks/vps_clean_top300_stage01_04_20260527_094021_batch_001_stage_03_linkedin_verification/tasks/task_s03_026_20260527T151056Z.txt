@@ -1,0 +1,74 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_026_20260527T151056Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_026_20260527T151056Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_001
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Pack GTM | SaaS Sales Recruitment in Germany | company_website: https://de.linkedin.com/company/pack-gtm | first_name: Olga | last_name: Roussou | full_name: Olga Roussou | role: Recruitment Consultant | role_category: commercial | linkedin_profile_url: https://de.linkedin.com/in/olgaroussou | confidence: medium | notes: LinkedIn profile lists recruitment consultant at Pack GTM
+2. batch_id: batch_001 | company_name: PageRangers GmbH | company_website: https://de.linkedin.com/company/pagerangers-gmbh | first_name: Thomas | last_name: Ottersbach | full_name: Thomas Ottersbach | role: Founder and Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/thomas-ottersbach-10777842 | confidence: high | notes: Official sales job page lists Geschäftsführer as contact
+3. batch_id: batch_001 | company_name: Picture Tree International GmbH | company_website: https://de.linkedin.com/company/picture-tree-international-gmbh | first_name: Yuanyuan | last_name: Rothbauer | full_name: Yuanyuan Rothbauer | role: Co-Managing Director and Head of Sales | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/yuanyuansui | confidence: high | notes: Official about page lists Head of Sales and Co-Managing Director
+4. batch_id: batch_001 | company_name: Picture Tree International GmbH | company_website: https://de.linkedin.com/company/picture-tree-international-gmbh | first_name: Andreas | last_name: Rothbauer | full_name: Andreas Rothbauer | role: Founder and Co-Managing Director | role_category: founder_ceo | confidence: high | notes: Public industry profile identifies founder and co-managing director
+5. batch_id: batch_001 | company_name: Reno Energy | company_website: https://be.linkedin.com/company/myrenoenergy | first_name: Raphael | last_name: Pietteur | full_name: Raphael Pietteur | role: Co-Founder | role_category: founder_ceo | linkedin_profile_url: https://be.linkedin.com/in/raphael-pietteur | confidence: high | notes: LinkedIn profile lists Co-Founder at Reno Energy
+6. batch_id: batch_001 | company_name: Reno Energy | company_website: https://be.linkedin.com/company/myrenoenergy | first_name: Christophe | last_name: Geron | full_name: Christophe Geron | role: Responsable B2B photovoltaïque et mobilité électrique | role_category: business_development | linkedin_profile_url: https://be.linkedin.com/in/christophegeron | confidence: medium | notes: LinkedIn profile lists B2B responsibility for photovoltaic and electric mobility projects
+7. batch_id: batch_001 | company_name: Reno Energy | company_website: https://be.linkedin.com/company/myrenoenergy | first_name: Mathieu | last_name: Delmotte | full_name: Mathieu Delmotte | role: Responsable B2B Hauts de France | role_category: business_development | linkedin_profile_url: https://fr.linkedin.com/in/mathieu-delmotte-908b37205 | confidence: medium | notes: LinkedIn profile lists B2B regional responsibility for Reno Energy context
+8. batch_id: batch_001 | company_name: SalesPotentials | company_website: https://de.linkedin.com/company/salespotentials | first_name: Thomas | last_name: Marbella | full_name: Thomas Marbella | role: Geschäftsführer | role_category: managing_director | confidence: low | notes: Public social result associates him with SalesPotentials management context
+9. batch_id: batch_001 | company_name: Schröder Sales Solutions GmbH | company_website: https://de.linkedin.com/company/highqualitysales | first_name: Frederik | last_name: Schröder | full_name: Frederik Fabian Schröder | role: Founder and Managing Director | role_category: founder_ceo | confidence: high | notes: Official site and company records identify him as founder and managing director
+10. batch_id: batch_001 | company_name: TECH-MASTERS Deutschland GmbH | company_website: https://de.linkedin.com/company/tech-masters-deutschland-gmbh | first_name: Stéphane | last_name: Tarin | full_name: Stéphane Tarin | role: Leiter Regionalvertrieb | role_category: sales | confidence: high | notes: Public profile lists regional sales leadership at TECH-MASTERS Deutschland GmbH
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_026_20260527T151056Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
