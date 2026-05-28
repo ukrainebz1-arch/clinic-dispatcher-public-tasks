@@ -1,0 +1,1051 @@
+TASK_ID: stage05_task_0001
+
+You generate German B2B outreach assets for a sales-intelligence service.
+
+Core offer:
+Wir helfen B2B-Unternehmen, Buying Signals zu erkennen, passende Zielkunden zu priorisieren, relevante Entscheider zu finden und mit einem konkreten Anlass anzusprechen. Es geht nicht um eine generische Datenbank, sondern um vertriebsnahe Intelligence: wen kontaktieren, über welchen Kanal und warum gerade dieser Kontakt sinnvoll ist.
+
+Business angle to use:
+- If the input contains a hiring/job/buying signal, use it as the concrete hook.
+- If the company appears to sell B2B products/services, frame the value as better account selection, decision-maker discovery and more relevant first outreach.
+- A good soft CTA is: "Wäre das eher ein Thema für Sie oder für eine andere Person bei Ihnen im Haus?"
+- Never promise leads, meetings, revenue or guaranteed results.
+
+Output contract:
+- Return CSV only, no markdown, no explanations.
+- Output must start with the exact CSV header and nothing before it.
+- Output exactly the rows for ALLOWED_MESSAGE_TARGETS.
+- Every listed message_target_id must appear exactly once.
+- Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+- Do not choose other people from COMPANY_CONTEXT.
+- Do not invent recipients or channels.
+- If one target cannot be written, still output its row with message_status=NEEDS_REVIEW and a short warning_code/warning_message.
+
+Hard CSV formatting rules:
+- Every CSV field must be double-quoted, including header cells.
+- Escape internal quotes by doubling them.
+- Do not use real line breaks inside any CSV field.
+- For paragraph breaks inside message_body or LinkedIn follow-up, use the literal text \n\n.
+- Do not use Markdown.
+- Do not use Markdown links.
+- Do not use mailto links.
+- Do not output values like [email](mailto:email) or [url](url).
+- Emails must be plain text only, for example name@company.com.
+- URLs must be plain text only, for example https://www.linkedin.com/in/example.
+- Do not wrap emails or URLs in brackets, parentheses, HTML tags, code ticks or quotes beyond the CSV field quotes.
+
+Allowed output columns, exactly in this order:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+German salutation rules for email message_body:
+- Start with a German salutation.
+- Use "Sehr geehrter Herr <last_name>," when the name is clearly male.
+- Use "Sehr geehrte Frau <last_name>," when the name is clearly female.
+- If gender is unclear or international, use "Hallo <first_name> <last_name>,".
+- Do not invent titles such as Dr., Prof., MBA.
+- Address the recipient as "Sie/Ihnen/Ihr".
+
+Length rules:
+- subject: max 70 characters.
+- email message_body: 500-800 characters.
+- linkedin_connection connection_note: max 200 characters.
+- linkedin_message message_body: 500-600 characters.
+
+Channel-specific content:
+- email: subject + message_body; connection_note empty.
+- linkedin_connection: connection_note only; subject and message_body empty.
+- linkedin_message: message_body only; subject and connection_note empty.
+
+Required tone:
+- German, direct, concrete, professional.
+- No generic praise like "spannendes Unternehmen" without evidence.
+- No long pitch.
+- Mention only facts present in the input.
+- Keep the first two sentences tied to a concrete company hook, role or signal.
+- Make clear the service is about finding target accounts, decision-makers and outreach reasons.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|arrow components|https://www.linkedin.com/company/arrow-components|kempten|germany",
+    "company_name": "Arrow Components",
+    "full_name": "Claude Schnoz",
+    "message_target_id": "stage05_task_0001::person_claude_schnoz_066f418d96::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_claude_schnoz_066f418d96",
+    "recipient_value": "claude.schnoz@arrow.com",
+    "role_title": "Sales Director Central Europe South",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|arrow components|https://www.linkedin.com/company/arrow-components|kempten|germany",
+    "company_name": "Arrow Components",
+    "full_name": "Claude Schnoz",
+    "message_target_id": "stage05_task_0001::person_claude_schnoz_066f418d96::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_claude_schnoz_066f418d96",
+    "recipient_value": "https://ch.linkedin.com/in/claude-schnoz-02a383119",
+    "role_title": "Sales Director Central Europe South",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|arrow components|https://www.linkedin.com/company/arrow-components|kempten|germany",
+    "company_name": "Arrow Components",
+    "full_name": "Claude Schnoz",
+    "message_target_id": "stage05_task_0001::person_claude_schnoz_066f418d96::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_claude_schnoz_066f418d96",
+    "recipient_value": "https://ch.linkedin.com/in/claude-schnoz-02a383119",
+    "role_title": "Sales Director Central Europe South",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|beunity|https://ch.linkedin.com/company/beunity|basel|switzerland",
+    "company_name": "beUnity",
+    "full_name": "Alberto Toledo",
+    "message_target_id": "stage05_task_0001::person_alberto_toledo_7f788c8cc9::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_alberto_toledo_7f788c8cc9",
+    "recipient_value": "alberto.toledo@beunity.io",
+    "role_title": "CEO and Geschäftsführer",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|beunity|https://ch.linkedin.com/company/beunity|basel|switzerland",
+    "company_name": "beUnity",
+    "full_name": "Dominik Heusser",
+    "message_target_id": "stage05_task_0001::person_dominik_heusser_c135776917::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_dominik_heusser_c135776917",
+    "recipient_value": "dominik.heusser@beunity.io",
+    "role_title": "Head of Sales and Chief Revenue Officer",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|beunity|https://ch.linkedin.com/company/beunity|basel|switzerland",
+    "company_name": "beUnity",
+    "full_name": "Patrik Elsa",
+    "message_target_id": "stage05_task_0001::person_patrik_elsa_df05a9fcda::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_patrik_elsa_df05a9fcda",
+    "recipient_value": "patrik.elsa@beunity.io",
+    "role_title": "Co-Founder and Executive Chairman",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|beunity|https://ch.linkedin.com/company/beunity|basel|switzerland",
+    "company_name": "beUnity",
+    "full_name": "Patrik Elsa",
+    "message_target_id": "stage05_task_0001::person_patrik_elsa_df05a9fcda::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_patrik_elsa_df05a9fcda",
+    "recipient_value": "https://ch.linkedin.com/in/patrikelsa",
+    "role_title": "Co-Founder and Executive Chairman",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|beunity|https://ch.linkedin.com/company/beunity|basel|switzerland",
+    "company_name": "beUnity",
+    "full_name": "Patrik Elsa",
+    "message_target_id": "stage05_task_0001::person_patrik_elsa_df05a9fcda::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_patrik_elsa_df05a9fcda",
+    "recipient_value": "https://ch.linkedin.com/in/patrikelsa",
+    "role_title": "Co-Founder and Executive Chairman",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|centre people appointments|https://uk.linkedin.com/company/centre-people-appointments|bochum|germany",
+    "company_name": "Centre People Appointments",
+    "full_name": "Kota Matsuoka",
+    "message_target_id": "stage05_task_0001::person_kota_matsuoka_e4bb93f7e5::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_kota_matsuoka_e4bb93f7e5",
+    "recipient_value": "kota@centrepeople.com",
+    "role_title": "Recruitment Consultant and Business Development Manager",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|centre people appointments|https://uk.linkedin.com/company/centre-people-appointments|bochum|germany",
+    "company_name": "Centre People Appointments",
+    "full_name": "Laura Soriano",
+    "message_target_id": "stage05_task_0001::person_laura_soriano_ae7f8ce0df::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_laura_soriano_ae7f8ce0df",
+    "recipient_value": "laura@centrepeople.com",
+    "role_title": "Country Manager France",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|centre people appointments|https://uk.linkedin.com/company/centre-people-appointments|bochum|germany",
+    "company_name": "Centre People Appointments",
+    "full_name": "Shinya Fukumoto",
+    "message_target_id": "stage05_task_0001::person_shinya_fukumoto_263c729022::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_shinya_fukumoto_263c729022",
+    "recipient_value": "shinya@centrepeople.com",
+    "role_title": "Senior Recruitment Consultant",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|erwin hymer group|https://de.linkedin.com/company/erwin-hymer-group|dornbirn|austria",
+    "company_name": "ERWIN HYMER GROUP",
+    "full_name": "Bernhard Kibler",
+    "message_target_id": "stage05_task_0001::person_bernhard_kibler_50456a8eb1::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_bernhard_kibler_50456a8eb1",
+    "recipient_value": "https://de.linkedin.com/in/bernhard-kibler-2a113a122/en",
+    "role_title": "Head of Sales Operations International",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|erwin hymer group|https://de.linkedin.com/company/erwin-hymer-group|dornbirn|austria",
+    "company_name": "ERWIN HYMER GROUP",
+    "full_name": "Bernhard Kibler",
+    "message_target_id": "stage05_task_0001::person_bernhard_kibler_50456a8eb1::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_bernhard_kibler_50456a8eb1",
+    "recipient_value": "https://de.linkedin.com/in/bernhard-kibler-2a113a122/en",
+    "role_title": "Head of Sales Operations International",
+    "task_id": "stage05_task_0001"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Kempten",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|arrow components|https://www.linkedin.com/company/arrow-components|kempten|germany",
+    "company_name": "Arrow Components",
+    "company_website": "https://www.linkedin.com/company/arrow-components",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Claude Schnoz",
+          "person_key": "",
+          "role": "Sales Director Central Europe South"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "claude.schnoz@arrow.com",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Claude Schnoz",
+        "hypothesis_email": "claude.schnoz@arrow.com",
+        "linkedin_profile_url": "https://ch.linkedin.com/in/claude-schnoz-02a383119",
+        "person_key": "person_claude_schnoz_066f418d96",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Sales Director Central Europe South",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.fbdi.de/arrow-electronics.html",
+          "https://news.arrow.com/news-releases/news-details/2026/Arrow-Electronics-Launches-Initiative-to-Support-Next-Generation-Vehicle-EE-Architecture/default.aspx",
+          "https://ch.linkedin.com/in/claude-schnoz-02a383119"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "sales"
+      ],
+      "roles": [
+        "Sales Director Central Europe South"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.fbdi.de/arrow-electronics.html",
+      "https://news.arrow.com/news-releases/news-details/2026/Arrow-Electronics-Launches-Initiative-to-Support-Next-Generation-Vehicle-EE-Architecture/default.aspx",
+      "https://ch.linkedin.com/in/claude-schnoz-02a383119"
+    ],
+    "warnings": [
+      "Company has only weak channels: hypotheses or generic routes."
+    ]
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 3,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Basel",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|beunity|https://ch.linkedin.com/company/beunity|basel|switzerland",
+    "company_name": "beUnity",
+    "company_website": "https://ch.linkedin.com/company/beunity",
+    "country": "Switzerland",
+    "decision_maker_summary": {
+      "decision_maker_count": 0,
+      "decision_makers": []
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "alberto.toledo@beunity.io",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Alberto Toledo",
+        "hypothesis_email": "alberto.toledo@beunity.io",
+        "linkedin_profile_url": "",
+        "person_key": "person_alberto_toledo_7f788c8cc9",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "CEO and Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://beunity.io/en/about-us/",
+          "https://beunity.io/en/magazine/beunity-restructures-its-executive-management/",
+          "https://beunity.io/ueber-uns/kontakt-aufnehmen/",
+          "https://prospeo.io/c/beunity"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "dominik.heusser@beunity.io",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Dominik Heusser",
+        "hypothesis_email": "dominik.heusser@beunity.io",
+        "linkedin_profile_url": "",
+        "person_key": "person_dominik_heusser_c135776917",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Head of Sales and Chief Revenue Officer",
+        "role_category": "revenue",
+        "source_urls": [
+          "https://beunity.io/en/about-us/",
+          "https://www.seo-for-jobs.com/companies/beunity-ag/beunity-ag-profile",
+          "https://beunity.io/ueber-uns/kontakt-aufnehmen/",
+          "https://prospeo.io/c/beunity",
+          "https://beunity.io/en/magazine/beunity-restructures-its-executive-management/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "patrik.elsa@beunity.io",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Patrik Elsa",
+        "hypothesis_email": "patrik.elsa@beunity.io",
+        "linkedin_profile_url": "https://ch.linkedin.com/in/patrikelsa",
+        "person_key": "person_patrik_elsa_df05a9fcda",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Co-Founder and Executive Chairman",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://beunity.io/en/legal-notices/imprint/",
+          "https://beunity.io/en/about-us/",
+          "https://beunity.io/en/magazine/beunity-restructures-its-executive-management/",
+          "https://prospeo.io/c/beunity",
+          "https://ch.linkedin.com/in/patrikelsa"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "revenue"
+      ],
+      "roles": [
+        "CEO and Geschäftsführer",
+        "Head of Sales and Chief Revenue Officer",
+        "Co-Founder and Executive Chairman"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://beunity.io/en/about-us/",
+      "https://beunity.io/en/magazine/beunity-restructures-its-executive-management/",
+      "https://beunity.io/ueber-uns/kontakt-aufnehmen/",
+      "https://prospeo.io/c/beunity",
+      "https://www.seo-for-jobs.com/companies/beunity-ag/beunity-ag-profile",
+      "https://beunity.io/en/legal-notices/imprint/",
+      "https://ch.linkedin.com/in/patrikelsa"
+    ],
+    "warnings": [
+      "Company has only weak channels: hypotheses or generic routes."
+    ]
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 1,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bochum",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|centre people appointments|https://uk.linkedin.com/company/centre-people-appointments|bochum|germany",
+    "company_name": "Centre People Appointments",
+    "company_website": "https://uk.linkedin.com/company/centre-people-appointments",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Shinya Fukumoto",
+          "person_key": "",
+          "role": "Senior Recruitment Consultant"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "kota@centrepeople.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kota Matsuoka",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_kota_matsuoka_e4bb93f7e5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Recruitment Consultant and Business Development Manager",
+        "role_category": "business_development",
+        "source_urls": [
+          "https://ger.mixb.net/job/articles/317833",
+          "https://www.djw.de/de/job-pool/jobpool/jo-8893",
+          "https://uk.linkedin.com/in/kota-matsuoka/en"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "laura@centrepeople.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Laura Soriano",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_laura_soriano_ae7f8ce0df",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Country Manager France",
+        "role_category": "commercial",
+        "source_urls": [
+          "https://fra.mixb.net/job/articles/325533",
+          "https://uk.linkedin.com/in/laurasoriano1995/en"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "shinya@centrepeople.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Shinya Fukumoto",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_shinya_fukumoto_263c729022",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Senior Recruitment Consultant",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.djw.de/de/job-pool/jobpool/jo-8868",
+          "https://ger.mixb.net/job/articles/313349",
+          "https://uk.linkedin.com/in/shinya-fukumoto/en"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "dusseldorf@centrepeople.com",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_NAMED_COMPANY_ROUTE",
+        "full_name": "Toshiaki Tsuchiya",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_toshiaki_tsuchiya_056a25034a",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Managing Director",
+        "role_category": "managing_director",
+        "source_urls": [
+          "https://www.djw.de/de/expertenpool/expertenpool-details?expertID=1792",
+          "https://www.centrepeople.com/article/2023/11/centre-people-hosts-japan-seminar-2023/",
+          "https://www.centrepeople.com/search",
+          "https://www.centrepeople.com/jp/article/amsterdam-office/",
+          "https://www.linkedin.com/posts/toshiaki-tsuchiya-48a557146_employment-job-positions-activity-6651160612825108480-TyhH",
+          "DJW profile contact route for Toshiaki Tsuchiya"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "business_development",
+        "commercial",
+        "sales",
+        "managing_director"
+      ],
+      "roles": [
+        "Recruitment Consultant and Business Development Manager",
+        "Country Manager France",
+        "Senior Recruitment Consultant",
+        "Managing Director"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://ger.mixb.net/job/articles/317833",
+      "https://www.djw.de/de/job-pool/jobpool/jo-8893",
+      "https://uk.linkedin.com/in/kota-matsuoka/en",
+      "https://fra.mixb.net/job/articles/325533",
+      "https://uk.linkedin.com/in/laurasoriano1995/en",
+      "https://www.djw.de/de/job-pool/jobpool/jo-8868",
+      "https://ger.mixb.net/job/articles/313349",
+      "https://uk.linkedin.com/in/shinya-fukumoto/en",
+      "https://www.djw.de/de/expertenpool/expertenpool-details?expertID=1792",
+      "https://www.centrepeople.com/article/2023/11/centre-people-hosts-japan-seminar-2023/",
+      "https://www.centrepeople.com/search",
+      "https://www.centrepeople.com/jp/article/amsterdam-office/",
+      "https://www.linkedin.com/posts/toshiaki-tsuchiya-48a557146_employment-job-positions-activity-6651160612825108480-TyhH",
+      "DJW profile contact route for Toshiaki Tsuchiya"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 1,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Dornbirn",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|erwin hymer group|https://de.linkedin.com/company/erwin-hymer-group|dornbirn|austria",
+    "company_name": "ERWIN HYMER GROUP",
+    "company_website": "https://de.linkedin.com/company/erwin-hymer-group",
+    "country": "Austria",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Bernhard Kibler",
+          "person_key": "",
+          "role": "Head of Sales Operations International"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Bernhard Kibler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/bernhard-kibler-2a113a122/en",
+        "person_key": "person_bernhard_kibler_50456a8eb1",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Head of Sales Operations International",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.erwinhymergroup.com/de/footer/impressum",
+          "https://www.erwinhymergroup.com/en/press/1545210",
+          "https://de.linkedin.com/in/bernhard-kibler-2a113a122/en",
+          "https://www.hymer.com/de/de/home/connectivity-als-entscheidender-wertschoepfungsfaktor/p/40949"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "sales"
+      ],
+      "roles": [
+        "Head of Sales Operations International"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.erwinhymergroup.com/de/footer/impressum",
+      "https://www.erwinhymergroup.com/en/press/1545210",
+      "https://de.linkedin.com/in/bernhard-kibler-2a113a122/en",
+      "https://www.hymer.com/de/de/home/connectivity-als-entscheidender-wertschoepfungsfaktor/p/40949"
+    ],
+    "warnings": [
+      "Company has only weak channels: hypotheses or generic routes."
+    ]
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Kempten",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|arrow components|https://www.linkedin.com/company/arrow-components|kempten|germany",
+    "company_name": "Arrow Components",
+    "company_website": "https://www.linkedin.com/company/arrow-components",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Claude Schnoz",
+          "person_key": "",
+          "role": "Sales Director Central Europe South"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "claude.schnoz@arrow.com",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Claude Schnoz",
+        "hypothesis_email": "claude.schnoz@arrow.com",
+        "linkedin_profile_url": "https://ch.linkedin.com/in/claude-schnoz-02a383119",
+        "person_key": "person_claude_schnoz_066f418d96",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Sales Director Central Europe South",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.fbdi.de/arrow-electronics.html",
+          "https://news.arrow.com/news-releases/news-details/2026/Arrow-Electronics-Launches-Initiative-to-Support-Next-Generation-Vehicle-EE-Architecture/default.aspx",
+          "https://ch.linkedin.com/in/claude-schnoz-02a383119"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "sales"
+      ],
+      "roles": [
+        "Sales Director Central Europe South"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.fbdi.de/arrow-electronics.html",
+      "https://news.arrow.com/news-releases/news-details/2026/Arrow-Electronics-Launches-Initiative-to-Support-Next-Generation-Vehicle-EE-Architecture/default.aspx",
+      "https://ch.linkedin.com/in/claude-schnoz-02a383119"
+    ],
+    "warnings": [
+      "Company has only weak channels: hypotheses or generic routes."
+    ]
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 3,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Basel",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|beunity|https://ch.linkedin.com/company/beunity|basel|switzerland",
+    "company_name": "beUnity",
+    "company_website": "https://ch.linkedin.com/company/beunity",
+    "country": "Switzerland",
+    "decision_maker_summary": {
+      "decision_maker_count": 0,
+      "decision_makers": []
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "alberto.toledo@beunity.io",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Alberto Toledo",
+        "hypothesis_email": "alberto.toledo@beunity.io",
+        "linkedin_profile_url": "",
+        "person_key": "person_alberto_toledo_7f788c8cc9",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "CEO and Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://beunity.io/en/about-us/",
+          "https://beunity.io/en/magazine/beunity-restructures-its-executive-management/",
+          "https://beunity.io/ueber-uns/kontakt-aufnehmen/",
+          "https://prospeo.io/c/beunity"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "dominik.heusser@beunity.io",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Dominik Heusser",
+        "hypothesis_email": "dominik.heusser@beunity.io",
+        "linkedin_profile_url": "",
+        "person_key": "person_dominik_heusser_c135776917",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Head of Sales and Chief Revenue Officer",
+        "role_category": "revenue",
+        "source_urls": [
+          "https://beunity.io/en/about-us/",
+          "https://www.seo-for-jobs.com/companies/beunity-ag/beunity-ag-profile",
+          "https://beunity.io/ueber-uns/kontakt-aufnehmen/",
+          "https://prospeo.io/c/beunity",
+          "https://beunity.io/en/magazine/beunity-restructures-its-executive-management/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "patrik.elsa@beunity.io",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Patrik Elsa",
+        "hypothesis_email": "patrik.elsa@beunity.io",
+        "linkedin_profile_url": "https://ch.linkedin.com/in/patrikelsa",
+        "person_key": "person_patrik_elsa_df05a9fcda",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Co-Founder and Executive Chairman",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://beunity.io/en/legal-notices/imprint/",
+          "https://beunity.io/en/about-us/",
+          "https://beunity.io/en/magazine/beunity-restructures-its-executive-management/",
+          "https://prospeo.io/c/beunity",
+          "https://ch.linkedin.com/in/patrikelsa"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "revenue"
+      ],
+      "roles": [
+        "CEO and Geschäftsführer",
+        "Head of Sales and Chief Revenue Officer",
+        "Co-Founder and Executive Chairman"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://beunity.io/en/about-us/",
+      "https://beunity.io/en/magazine/beunity-restructures-its-executive-management/",
+      "https://beunity.io/ueber-uns/kontakt-aufnehmen/",
+      "https://prospeo.io/c/beunity",
+      "https://www.seo-for-jobs.com/companies/beunity-ag/beunity-ag-profile",
+      "https://beunity.io/en/legal-notices/imprint/",
+      "https://ch.linkedin.com/in/patrikelsa"
+    ],
+    "warnings": [
+      "Company has only weak channels: hypotheses or generic routes."
+    ]
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 1,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bochum",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|centre people appointments|https://uk.linkedin.com/company/centre-people-appointments|bochum|germany",
+    "company_name": "Centre People Appointments",
+    "company_website": "https://uk.linkedin.com/company/centre-people-appointments",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Shinya Fukumoto",
+          "person_key": "",
+          "role": "Senior Recruitment Consultant"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "kota@centrepeople.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kota Matsuoka",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_kota_matsuoka_e4bb93f7e5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Recruitment Consultant and Business Development Manager",
+        "role_category": "business_development",
+        "source_urls": [
+          "https://ger.mixb.net/job/articles/317833",
+          "https://www.djw.de/de/job-pool/jobpool/jo-8893",
+          "https://uk.linkedin.com/in/kota-matsuoka/en"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "laura@centrepeople.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Laura Soriano",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_laura_soriano_ae7f8ce0df",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Country Manager France",
+        "role_category": "commercial",
+        "source_urls": [
+          "https://fra.mixb.net/job/articles/325533",
+          "https://uk.linkedin.com/in/laurasoriano1995/en"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "shinya@centrepeople.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Shinya Fukumoto",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_shinya_fukumoto_263c729022",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Senior Recruitment Consultant",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.djw.de/de/job-pool/jobpool/jo-8868",
+          "https://ger.mixb.net/job/articles/313349",
+          "https://uk.linkedin.com/in/shinya-fukumoto/en"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "dusseldorf@centrepeople.com",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_NAMED_COMPANY_ROUTE",
+        "full_name": "Toshiaki Tsuchiya",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_toshiaki_tsuchiya_056a25034a",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Managing Director",
+        "role_category": "managing_director",
+        "source_urls": [
+          "https://www.djw.de/de/expertenpool/expertenpool-details?expertID=1792",
+          "https://www.centrepeople.com/article/2023/11/centre-people-hosts-japan-seminar-2023/",
+          "https://www.centrepeople.com/search",
+          "https://www.centrepeople.com/jp/article/amsterdam-office/",
+          "https://www.linkedin.com/posts/toshiaki-tsuchiya-48a557146_employment-job-positions-activity-6651160612825108480-TyhH",
+          "DJW profile contact route for Toshiaki Tsuchiya"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "business_development",
+        "commercial",
+        "sales",
+        "managing_director"
+      ],
+      "roles": [
+        "Recruitment Consultant and Business Development Manager",
+        "Country Manager France",
+        "Senior Recruitment Consultant",
+        "Managing Director"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://ger.mixb.net/job/articles/317833",
+      "https://www.djw.de/de/job-pool/jobpool/jo-8893",
+      "https://uk.linkedin.com/in/kota-matsuoka/en",
+      "https://fra.mixb.net/job/articles/325533",
+      "https://uk.linkedin.com/in/laurasoriano1995/en",
+      "https://www.djw.de/de/job-pool/jobpool/jo-8868",
+      "https://ger.mixb.net/job/articles/313349",
+      "https://uk.linkedin.com/in/shinya-fukumoto/en",
+      "https://www.djw.de/de/expertenpool/expertenpool-details?expertID=1792",
+      "https://www.centrepeople.com/article/2023/11/centre-people-hosts-japan-seminar-2023/",
+      "https://www.centrepeople.com/search",
+      "https://www.centrepeople.com/jp/article/amsterdam-office/",
+      "https://www.linkedin.com/posts/toshiaki-tsuchiya-48a557146_employment-job-positions-activity-6651160612825108480-TyhH",
+      "DJW profile contact route for Toshiaki Tsuchiya"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 1,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Dornbirn",
+    "company_identity_key": "vps_clean_top300_stage01_04_20260527_094021|batch_001|erwin hymer group|https://de.linkedin.com/company/erwin-hymer-group|dornbirn|austria",
+    "company_name": "ERWIN HYMER GROUP",
+    "company_website": "https://de.linkedin.com/company/erwin-hymer-group",
+    "country": "Austria",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Bernhard Kibler",
+          "person_key": "",
+          "role": "Head of Sales Operations International"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Bernhard Kibler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/bernhard-kibler-2a113a122/en",
+        "person_key": "person_bernhard_kibler_50456a8eb1",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Head of Sales Operations International",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.erwinhymergroup.com/de/footer/impressum",
+          "https://www.erwinhymergroup.com/en/press/1545210",
+          "https://de.linkedin.com/in/bernhard-kibler-2a113a122/en",
+          "https://www.hymer.com/de/de/home/connectivity-als-entscheidender-wertschoepfungsfaktor/p/40949"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "sales"
+      ],
+      "roles": [
+        "Head of Sales Operations International"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.erwinhymergroup.com/de/footer/impressum",
+      "https://www.erwinhymergroup.com/en/press/1545210",
+      "https://de.linkedin.com/in/bernhard-kibler-2a113a122/en",
+      "https://www.hymer.com/de/de/home/connectivity-als-entscheidender-wertschoepfungsfaktor/p/40949"
+    ],
+    "warnings": [
+      "Company has only weak channels: hypotheses or generic routes."
+    ]
+  }
+]
+
+Return CSV only. No markdown. No explanations.
