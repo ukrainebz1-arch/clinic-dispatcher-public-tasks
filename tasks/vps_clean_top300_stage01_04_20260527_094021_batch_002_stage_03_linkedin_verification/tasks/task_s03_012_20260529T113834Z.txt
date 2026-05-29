@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_012_20260529T113834Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_012_20260529T113834Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_002
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: TUI | company_website: https://de.linkedin.com/company/tuigroup | first_name: Marco | last_name: Ciomperlik | full_name: Marco Ciomperlik | role: Chief Operating Officer | role_category: operations | email_publicly_confirmed: false | confidence: high | notes: TUI news lists COO
+2. batch_id: batch_002 | company_name: WOLFF & MÜLLER ENERGY GMBH | company_website: https://de.linkedin.com/company/wolff-&-m%C3%BCller-energy-gmbh | first_name: Thorben | last_name: Bawidamann | full_name: Thorben Bawidamann | role: Geschäftsführer | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Official imprint lists managing director
+3. batch_id: batch_002 | company_name: WOLFF & MÜLLER ENERGY GMBH | company_website: https://de.linkedin.com/company/wolff-&-m%C3%BCller-energy-gmbh | first_name: André | last_name: Gölz | full_name: André Gölz | role: Geschäftsführer | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Official imprint lists managing director
+4. batch_id: batch_002 | company_name: WOLFF & MÜLLER ENERGY GMBH | company_website: https://de.linkedin.com/company/wolff-&-m%C3%BCller-energy-gmbh | first_name: Kevin-Robbyn | last_name: Wick | full_name: Kevin-Robbyn Wick | role: Geschäftsführer | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Official imprint lists managing director
+5. batch_id: batch_002 | company_name: aspaara AG | company_website: https://ch.linkedin.com/company/aspaara-ag | first_name: Alexander | last_name: Grimm | full_name: Dr. Alexander Grimm | role: CEO Co-Founder | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Company page lists founder role
+6. batch_id: batch_002 | company_name: aspaara AG | company_website: https://ch.linkedin.com/company/aspaara-ag | first_name: Kevin | last_name: Zemmer | full_name: Dr. Kevin Zemmer | role: CTO Co-Founder | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Company page lists founder role
+7. batch_id: batch_002 | company_name: aspaara AG | company_website: https://ch.linkedin.com/company/aspaara-ag | first_name: Hans-Peter | last_name: Saar | full_name: Hans-Peter Saar | role: Customer Success Manager | role_category: sales | email_publicly_confirmed: false | confidence: high | notes: Company page lists customer success role
+8. batch_id: batch_002 | company_name: autarc (YC S24) | company_website: https://de.linkedin.com/company/autarc-energy | first_name: Etienne-Noel | last_name: Krause | full_name: Etienne-Noel Krause | role: Co-Founder & CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/etienne-krause | email_publicly_confirmed: false | confidence: high | notes: YC profile lists founder CEO
+9. batch_id: batch_002 | company_name: autarc (YC S24) | company_website: https://de.linkedin.com/company/autarc-energy | first_name: Thies | last_name: Hansen | full_name: Thies Hansen | role: Co-Founder & COO | role_category: operations | email_publicly_confirmed: false | confidence: high | notes: YC profile lists founder COO
+10. batch_id: batch_002 | company_name: autarc (YC S24) | company_website: https://de.linkedin.com/company/autarc-energy | first_name: Marius | last_name: Seufzer | full_name: Marius Seufzer | role: Founder & CTO | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: YC profile lists founder CTO
+11. batch_id: batch_002 | company_name: TigerHebezeuge | company_website: https://de.linkedin.com/company/kurschildgen-hebezeugbau | first_name: Paul | last_name: Ammer | full_name: Paul Ammer | role: Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: XING company page lists him as Geschäftsführer
+12. batch_id: batch_002 | company_name: TigerHebezeuge | company_website: https://de.linkedin.com/company/kurschildgen-hebezeugbau | first_name: Felix | last_name: zu Löwenstein | full_name: Felix zu Löwenstein | role: COO at Kurschildgen GmbH Hebezeugbau | role_category: operations | email_publicly_confirmed: false | confidence: medium | notes: LinkedIn company page lists COO connection
+13. batch_id: batch_002 | company_name: VICINITY | company_website: https://de.linkedin.com/company/vicinity-gmbh | first_name: Kiyan | last_name: Yildiz | full_name: Kiyan Yildiz | role: Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Official imprint lists him as Geschäftsführer
+14. batch_id: batch_002 | company_name: VICINITY | company_website: https://de.linkedin.com/company/vicinity-gmbh | first_name: Berkan | last_name: Yildiz | full_name: Berkan Yildiz | role: Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Official imprint lists him as Geschäftsführer
+15. batch_id: batch_002 | company_name: WECK | company_website: https://de.linkedin.com/company/weckglassandpackaginggmbh | first_name: Jan-Christian | last_name: Becker | full_name: Jan-Christian Becker | role: Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Public register lists current Geschäftsführer
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_012_20260529T113834Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
