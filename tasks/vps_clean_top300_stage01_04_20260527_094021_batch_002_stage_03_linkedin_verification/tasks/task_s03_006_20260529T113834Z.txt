@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_006_20260529T113834Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_006_20260529T113834Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_002
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: HARTMANN TRESORE | company_website: https://de.linkedin.com/company/hartmanntresore | first_name: Olaf | last_name: Engler | full_name: Olaf Engler | role: Vertriebsleiter Privatkunden | role_category: sales | email_publicly_confirmed: false | confidence: medium | notes: Older trade article names private customer sales lead.
+2. batch_id: batch_002 | company_name: chargecloud | company_website: https://de.linkedin.com/company/chargecloud-gmbh | first_name: Markus | last_name: Bach | full_name: Markus Bach | role: CEO and CTO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/markusbach/de | email_publicly_confirmed: false | confidence: high | notes: Official news names CEO CTO and managing director
+3. batch_id: batch_002 | company_name: chargecloud | company_website: https://de.linkedin.com/company/chargecloud-gmbh | first_name: Oliver | last_name: Adrian | full_name: Oliver Adrian | role: COO and CRO | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/oliveradrian | email_publicly_confirmed: false | confidence: high | notes: Official news names COO and CRO
+4. batch_id: batch_002 | company_name: chargecloud | company_website: https://de.linkedin.com/company/chargecloud-gmbh | first_name: Marius | last_name: Mölders | full_name: Dr. Marius Mölders | role: CFO | role_category: finance | linkedin_profile_url: https://de.linkedin.com/in/marius-moelders | email_publicly_confirmed: false | confidence: high | notes: Official news names CFO
+5. batch_id: batch_002 | company_name: chargecloud | company_website: https://de.linkedin.com/company/chargecloud-gmbh | first_name: Jessica | last_name: Blank | full_name: Jessica Blank | role: Chief Strategist | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/jessica-chiara-blank-ba01a7136 | email_publicly_confirmed: false | confidence: high | notes: Official news names chief strategist
+6. batch_id: batch_002 | company_name: eworx Network & Internet GmbH | company_website: https://at.linkedin.com/company/eworx-at | first_name: Mario | last_name: Engleder | full_name: Mario Engleder | role: CEO | role_category: founder_ceo | linkedin_profile_url: https://www.linkedin.com/in/mario-engleder-75a727145/ | email_publicly_confirmed: false | confidence: high | notes: Official team page lists CEO
+7. batch_id: batch_002 | company_name: eworx Network & Internet GmbH | company_website: https://at.linkedin.com/company/eworx-at | first_name: Markus | last_name: Urmann | full_name: Markus Urmann | role: IT Services | Key Account Management & Vertriebsleitung | role_category: sales | linkedin_profile_url: https://www.linkedin.com/in/markus-urmann-633475157/ | email_publicly_confirmed: false | confidence: high | notes: Official team page lists sales leadership role
+8. batch_id: batch_002 | company_name: eworx Network & Internet GmbH | company_website: https://at.linkedin.com/company/eworx-at | first_name: Andreas | last_name: Fidler | full_name: Andreas Fidler | role: Software | Partner Sales Manager | role_category: sales | linkedin_profile_url: https://www.linkedin.com/in/andreasfidler/ | email_publicly_confirmed: false | confidence: high | notes: Official team page lists partner sales role
+9. batch_id: batch_002 | company_name: eworx Network & Internet GmbH | company_website: https://at.linkedin.com/company/eworx-at | first_name: Johanna | last_name: Blaha | full_name: Johanna Blaha | role: Service Center | Leitung Marketing-/Brandmanagement | role_category: marketing | email_publicly_confirmed: false | confidence: high | notes: Official team page lists marketing leadership role
+10. batch_id: batch_002 | company_name: flavor your life (fyl) | company_website: https://at.linkedin.com/company/flavor-your-life-fyl | first_name: Alexander | last_name: Offenthaler | full_name: Alexander Offenthaler | role: Vertretungsberechtigter Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Legal notice lists authorized managing director
+11. batch_id: batch_002 | company_name: flavor your life (fyl) | company_website: https://at.linkedin.com/company/flavor-your-life-fyl | first_name: Robert | last_name: Burger | full_name: Robert Burger | role: Vertretungsberechtigter Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Legal notice lists authorized managing director
+12. batch_id: batch_002 | company_name: hagebau Logistik GmbH & Co. KG | company_website: https://www.linkedin.com/company/hagebau-logistik-gmbh-&-co.-kg | first_name: Gerritt | last_name: Höppner-Tietz | full_name: Gerritt Höppner-Tietz | role: Geschäftsführer hagebau Logistik | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/gerritt-h%C3%B6ppner-tietz-69a87396 | email_publicly_confirmed: false | confidence: high | notes: Official hagebau news quotes him as logistics managing director
+13. batch_id: batch_002 | company_name: hagebau Logistik GmbH & Co. KG | company_website: https://www.linkedin.com/company/hagebau-logistik-gmbh-&-co.-kg | first_name: Sven | last_name: Grobrügge | full_name: Sven Grobrügge | role: Kaufmännischer Geschäftsführer hagebau Logistik | role_category: finance | email_publicly_confirmed: false | confidence: medium | notes: Trade source names commercial managing director
+14. batch_id: batch_002 | company_name: hellomed | company_website: https://de.linkedin.com/company/hellomed-com | first_name: Enrico | last_name: Bernardo | full_name: Enrico Bernardo | role: Gründer & Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/enricobernardo | email_publicly_confirmed: false | confidence: high | notes: Official company page lists founder and managing director
+15. batch_id: batch_002 | company_name: hellomed | company_website: https://de.linkedin.com/company/hellomed-com | first_name: Felix | last_name: Morawski | full_name: Felix Morawski | role: Gründer & Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Official company page lists founder and managing director
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_006_20260529T113834Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
