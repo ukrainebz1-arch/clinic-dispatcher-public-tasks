@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_003_20260529T113834Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_003_20260529T113834Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_002
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: WinLocal GmbH | company_website: https://de.linkedin.com/company/winlocal-gmbh | first_name: Alexander | last_name: Kasten | full_name: Alexander Kasten | role: Head of Marketing | role_category: marketing | linkedin_profile_url: https://at.linkedin.com/posts/alexanderkasten_socialessenseeleauf-tiktok-localseo-activity-6978410925829595136-7nsf | email_publicly_confirmed: false | confidence: high | notes: Public profile lists Head of Marketing
+2. batch_id: batch_002 | company_name: hagebau Handelsgesellschaft für Baustoffe mbH & Co. KG | company_website: https://de.linkedin.com/company/hagebau | first_name: Sven | last_name: Grobrügge | full_name: Sven Grobrügge | role: Geschäftsführer Finanzen | role_category: finance | email_publicly_confirmed: false | confidence: high | notes: Official management page lists role.
+3. batch_id: batch_002 | company_name: hagebau Handelsgesellschaft für Baustoffe mbH & Co. KG | company_website: https://de.linkedin.com/company/hagebau | first_name: Christian | last_name: Rabe | full_name: Christian Rabe | role: Geschäftsführer Fachhandel | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Official management page lists role.
+4. batch_id: batch_002 | company_name: hagebau Handelsgesellschaft für Baustoffe mbH & Co. KG | company_website: https://de.linkedin.com/company/hagebau | first_name: Frank | last_name: Staffeld | full_name: Frank Staffeld | role: Geschäftsführer Einzelhandel | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Official management page lists role.
+5. batch_id: batch_002 | company_name: hagebau Handelsgesellschaft für Baustoffe mbH & Co. KG | company_website: https://de.linkedin.com/company/hagebau | first_name: Ines | last_name: von Jagemann | full_name: Ines von Jagemann | role: Geschäftsführerin Digitales, Technologie & HR | role_category: hr_recruiting | email_publicly_confirmed: false | confidence: high | notes: Official management page lists role.
+6. batch_id: batch_002 | company_name: helfer-Line GmbH | company_website: https://de.linkedin.com/company/helfer-line-gmbh | first_name: Georgios | last_name: Dimakas | full_name: Georgios Dimakas | role: Managing Director | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Register lists him as managing director.
+7. batch_id: batch_002 | company_name: helfer-Line GmbH | company_website: https://de.linkedin.com/company/helfer-line-gmbh | first_name: Davut | last_name: Sahin | full_name: Davut Sahin | role: Chief Operating Officer | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/davut-sahin-3b9954b6 | email_publicly_confirmed: false | confidence: medium | notes: Public LinkedIn profile lists COO at company.
+8. batch_id: batch_002 | company_name: vfm-Gruppe | company_website: https://de.linkedin.com/company/vfm-gruppe | first_name: Klaus | last_name: Liebig | full_name: Klaus Liebig | role: Geschäftsführer and future Chair of Geschäftsleitung | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/klaus-liebig-vfm | email_publicly_confirmed: false | confidence: high | notes: Official source lists managing director and 2026 chair role.
+9. batch_id: batch_002 | company_name: vfm-Gruppe | company_website: https://de.linkedin.com/company/vfm-gruppe | first_name: Robert | last_name: Schmidt | full_name: Robert Schmidt | role: Geschäftsführer | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Official company page lists Geschäftsführer.
+10. batch_id: batch_002 | company_name: vfm-Gruppe | company_website: https://de.linkedin.com/company/vfm-gruppe | first_name: Ulla | last_name: Dörfler | full_name: Ulla Dörfler | role: Leiterin Vertrieb and future Geschäftsleitung | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/ulla-d%C3%B6rfler-82586a1b4 | email_publicly_confirmed: false | confidence: medium | notes: Leadership appointment starts 2026-07-01.
+11. batch_id: batch_002 | company_name: vfm-Gruppe | company_website: https://de.linkedin.com/company/vfm-gruppe | first_name: Konrad | last_name: Schmidt | full_name: Konrad Schmidt | role: Future Geschäftsleitung Marketing und Produktpartnermanagement | role_category: marketing | email_publicly_confirmed: false | confidence: medium | notes: Leadership appointment starts 2026-07-01.
+12. batch_id: batch_002 | company_name: 3m5. | company_website: https://de.linkedin.com/company/3m5- | first_name: Michael | last_name: Eckstein | full_name: Michael Eckstein | role: Geschäftsführer Unternehmensstrategie und Vertrieb | role_category: sales | email_publicly_confirmed: false | confidence: high | notes: Official management page lists role.
+13. batch_id: batch_002 | company_name: 3m5. | company_website: https://de.linkedin.com/company/3m5- | first_name: Stefan | last_name: Jahn | full_name: Stefan Jahn | role: Geschäftsführer Controlling und Projektmanagement | role_category: finance | email_publicly_confirmed: false | confidence: high | notes: Official management page lists role.
+14. batch_id: batch_002 | company_name: 3m5. | company_website: https://de.linkedin.com/company/3m5- | first_name: Alexander | last_name: Lehn | full_name: Alexander Lehn | role: Geschäftsführer und Leiter Software Technology | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Official management page lists role.
+15. batch_id: batch_002 | company_name: AMCS Group | company_website: https://ie.linkedin.com/company/amcs-group | first_name: Fred | last_name: Chauvire | full_name: Fred Chauvire | role: Chief Revenue Officer | role_category: sales | linkedin_profile_url: https://ie.linkedin.com/in/fredchauvire | email_publicly_confirmed: false | confidence: high | notes: Official press release lists CRO role.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_003_20260529T113834Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
