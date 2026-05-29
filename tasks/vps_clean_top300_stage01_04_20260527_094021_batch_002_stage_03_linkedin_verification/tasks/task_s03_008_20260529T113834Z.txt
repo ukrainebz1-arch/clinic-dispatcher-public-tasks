@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_008_20260529T113834Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_008_20260529T113834Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_002
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: Cycle Union | company_website: https://de.linkedin.com/company/cycle-union | first_name: Zitian | last_name: Wang | full_name: Zitian Wang | role: Geschäftsführer | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Cycle Union now New Cycle page lists him as GF
+2. batch_id: batch_002 | company_name: Cycle Union | company_website: https://de.linkedin.com/company/cycle-union | first_name: Folker | last_name: Rohlfing | full_name: Folker Rohlfing | role: General Manager / Geschäftsleitung | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/folker-rohlfing | email_publicly_confirmed: false | confidence: high | notes: Cycle Union now New Cycle page lists him as GL
+3. batch_id: batch_002 | company_name: DialedIn Recruiting | company_website: https://de.linkedin.com/company/dialedin-recruiting | first_name: Titus | last_name: von Pachelbel | full_name: Titus von Pachelbel | role: Founder and CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/titus-von-pachelbel-45ba17140 | email_publicly_confirmed: false | confidence: high | notes: Public agency profile names him founder and CEO
+4. batch_id: batch_002 | company_name: E.ON Deutschland | company_website: https://de.linkedin.com/company/eon-deutschland | first_name: Filip | last_name: Thon | full_name: Dr. Filip Thon | role: Chief Executive Officer and chair of management | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/filip-thon | email_publicly_confirmed: false | confidence: high | notes: Official management page lists him as CEO
+5. batch_id: batch_002 | company_name: E.ON Deutschland | company_website: https://de.linkedin.com/company/eon-deutschland | first_name: Veronika | last_name: Bunk-Sanderson | full_name: Dr. Veronika Bunk-Sanderson | role: Chief Financial Officer | role_category: finance | email_publicly_confirmed: false | confidence: high | notes: Official management page lists her in management
+6. batch_id: batch_002 | company_name: Enerithm | company_website: https://de.linkedin.com/company/enerithm-technology-gmbh | first_name: Felix | last_name: Valentin | full_name: Felix Valentin | role: Co-Founder and CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/felix-valentin-4b380a123 | email_publicly_confirmed: false | confidence: high | notes: Event speaker page names him Co-Founder and CEO
+7. batch_id: batch_002 | company_name: Enerithm | company_website: https://de.linkedin.com/company/enerithm-technology-gmbh | first_name: Thore | last_name: Obermann | full_name: Thore Obermann | role: Geschäftsführer | role_category: other_management | email_publicly_confirmed: false | confidence: medium | notes: Register profile links him to Enerithm management
+8. batch_id: batch_002 | company_name: Evy Solutions GmbH | company_website: https://de.linkedin.com/company/evy-solutions-gmbh | first_name: Michael | last_name: Vogel | full_name: Michael Vogel | role: Co-Founder and Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/michael-vogel-evy-solutions-gmbh | email_publicly_confirmed: false | confidence: high | notes: Interview identifies him as co-founder and Geschäftsführer
+9. batch_id: batch_002 | company_name: Evy Solutions GmbH | company_website: https://de.linkedin.com/company/evy-solutions-gmbh | first_name: Arian | last_name: Storch | full_name: Arian Storch | role: Co-Founder and Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/arian-storch-841480158 | email_publicly_confirmed: false | confidence: high | notes: Directory lists him as Geschäftsführer with Michael Vogel
+10. batch_id: batch_002 | company_name: Fabrik19 AG | company_website: https://de.linkedin.com/company/fabrik19-ag | first_name: Markwart | last_name: Pralle | full_name: Markwart Pralle | role: CEO / Vorstand | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Official impressum lists Markwart Pralle as Vorstand
+11. batch_id: batch_002 | company_name: Finmas GmbH | company_website: https://de.linkedin.com/company/finmasgmbh | first_name: Klaus | last_name: Kannen | full_name: Klaus Kannen | role: Geschäftsführer | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Official company page lists him as Geschäftsführer
+12. batch_id: batch_002 | company_name: Finmas GmbH | company_website: https://de.linkedin.com/company/finmasgmbh | first_name: Wolfgang | last_name: Thomaßen | full_name: Wolfgang Thomaßen | role: Geschäftsführer | role_category: other_management | email_publicly_confirmed: false | confidence: high | notes: Official impressum lists him as Geschäftsführer
+13. batch_id: batch_002 | company_name: Finmas GmbH | company_website: https://de.linkedin.com/company/finmasgmbh | first_name: Tobias | last_name: Hoffmann | full_name: Tobias Hoffmann | role: Bereichsleiter Vertrieb Produkt- und Kundenmanagement | role_category: sales | email_publicly_confirmed: false | confidence: medium | notes: Public XING profile lists current sales leadership
+14. batch_id: batch_002 | company_name: Front Row Germany | company_website: https://de.linkedin.com/company/frontrowgermany | first_name: Jan | last_name: Bechler | full_name: Jan Bechler | role: Managing Director Front Row Europe | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/jan-bechler-frontrow/de | email_publicly_confirmed: false | confidence: high | notes: Official profile names him Managing Director Europe
+15. batch_id: batch_002 | company_name: Front Row Germany | company_website: https://de.linkedin.com/company/frontrowgermany | first_name: Sven | last_name: Koch | full_name: Sven Koch | role: Managing Director Commercial Management | role_category: business_development | email_publicly_confirmed: false | confidence: high | notes: Official leadership page lists him as Managing Director
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_008_20260529T113834Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
