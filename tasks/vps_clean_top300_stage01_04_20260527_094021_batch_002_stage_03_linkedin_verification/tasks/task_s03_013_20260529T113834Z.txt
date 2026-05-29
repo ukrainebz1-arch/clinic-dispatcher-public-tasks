@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_013_20260529T113834Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_013_20260529T113834Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_002
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: WECK | company_website: https://de.linkedin.com/company/weckglassandpackaginggmbh | first_name: Lukas | last_name: Strasser | full_name: Lukas Strasser | role: Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Public register lists current Geschäftsführer
+2. batch_id: batch_002 | company_name: WPP Media | company_website: https://www.linkedin.com/company/wpp-media | first_name: Andreas | last_name: Vretscha | full_name: Andreas Vretscha | role: CEO / Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Public interview identifies him as CEO
+3. batch_id: batch_002 | company_name: WPP Media | company_website: https://www.linkedin.com/company/wpp-media | first_name: Andreas | last_name: Lederer | full_name: Andreas Lederer | role: Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Austrian company register lists Geschäftsführer
+4. batch_id: batch_002 | company_name: afb group | company_website: https://de.linkedin.com/company/afb-group | first_name: Daniel | last_name: Büchle | full_name: Daniel Büchle | role: Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Official management page lists him as Geschäftsführer
+5. batch_id: batch_002 | company_name: afb group | company_website: https://de.linkedin.com/company/afb-group | first_name: Yvonne | last_name: Cvilak | full_name: Yvonne Cvilak | role: Geschäftsführerin HR Legal IMS | role_category: hr_recruiting | email_publicly_confirmed: false | confidence: high | notes: Official page lists HR and legal responsibility
+6. batch_id: batch_002 | company_name: afb group | company_website: https://de.linkedin.com/company/afb-group | first_name: Mike | last_name: Reif | full_name: Mike Reif | role: Geschäftsführer Einkauf und Vertrieb | role_category: sales | email_publicly_confirmed: false | confidence: high | notes: Official page lists sales responsibility
+7. batch_id: batch_002 | company_name: ahead® | company_website: https://de.linkedin.com/company/ahead-nutrition | first_name: Philip | last_name: Brohlburg | full_name: Philip Brohlburg | role: Geschäftsführer | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Official imprint lists him as Geschäftsführer
+8. batch_id: batch_002 | company_name: ahead® | company_website: https://de.linkedin.com/company/ahead-nutrition | first_name: Johannes | last_name: Sörensen | full_name: Johannes Sörensen | role: Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/johannessoerensen | email_publicly_confirmed: false | confidence: high | notes: Official imprint lists him as Geschäftsführer
+9. batch_id: batch_002 | company_name: coffee perfect GmbH | company_website: https://de.linkedin.com/company/coffee-perfect | first_name: Heiko | last_name: Kroll | full_name: Dr. Heiko Kroll | role: Chief Executive Officer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/heiko-kroll | email_publicly_confirmed: false | confidence: high | notes: Official team page lists him as CEO
+10. batch_id: batch_002 | company_name: coffee perfect GmbH | company_website: https://de.linkedin.com/company/coffee-perfect | first_name: Farsin | last_name: Taromi | full_name: Farsin Taromi | role: Sales Director | role_category: sales | email_publicly_confirmed: false | confidence: high | notes: Official team page lists sales leadership
+11. batch_id: batch_002 | company_name: coffee perfect GmbH | company_website: https://de.linkedin.com/company/coffee-perfect | first_name: Dag | last_name: Sommerkamp | full_name: Dag Sommerkamp | role: Chief Human Resources & Marketing Officer | role_category: marketing | email_publicly_confirmed: false | confidence: high | notes: Official team page lists HR and marketing leadership
+12. batch_id: batch_002 | company_name: creditworld AG | company_website: https://ch.linkedin.com/company/creditworld-ag | first_name: Kai | last_name: Ren | full_name: Kai Ren | role: Geschäftsführer & Verwaltungsrat | role_category: founder_ceo | email_publicly_confirmed: false | confidence: high | notes: Official team page lists managing director
+13. batch_id: batch_002 | company_name: creditworld AG | company_website: https://ch.linkedin.com/company/creditworld-ag | first_name: Philipp | last_name: Schnyder | full_name: Philipp Schnyder | role: Head Risk & Compliance | role_category: finance | email_publicly_confirmed: false | confidence: high | notes: Official team page lists risk leadership
+14. batch_id: batch_002 | company_name: creditworld AG | company_website: https://ch.linkedin.com/company/creditworld-ag | first_name: Patrick | last_name: Thalmann | full_name: Patrick Thalmann | role: Head Investor Relations | role_category: finance | email_publicly_confirmed: false | confidence: high | notes: Official team page lists investor relations
+15. batch_id: batch_002 | company_name: heylogin | company_website: https://de.linkedin.com/company/heylogin | first_name: Dominik | last_name: Schürmann | full_name: Dr. Dominik Schürmann | role: CEO & Co-Founder | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dominik-schuermann | email_publicly_confirmed: false | confidence: high | notes: Public LinkedIn profile states CEO and co-founder
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_013_20260529T113834Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
