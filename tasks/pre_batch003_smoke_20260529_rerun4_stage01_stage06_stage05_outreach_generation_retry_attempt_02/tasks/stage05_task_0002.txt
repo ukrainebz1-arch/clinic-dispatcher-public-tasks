@@ -1,0 +1,667 @@
+TASK_ID: stage05_task_0002
+
+You generate German B2B outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Never output an unquoted header like:
+task_id,message_target_id,...
+
+If the CSV is unquoted, the result is invalid.
+If any field is not double-quoted, the result is invalid.
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+Message field rules:
+For email:
+- subject: fill
+- message_body: fill
+- connection_note: empty
+
+For linkedin_connection:
+- subject: empty
+- message_body: empty
+- connection_note: fill
+
+For linkedin_message:
+- subject: empty
+- message_body: fill
+- connection_note: empty
+- message_body must be 220–320 characters
+- one paragraph only
+- maximum 3 short sentences
+- no email-style long explanation
+
+SERVICE:
+Wir helfen B2B-Unternehmen, mit KI passende Zielkunden zu finden, Entscheider und Kontaktdaten zu recherchieren und konkrete Kontaktgründe für die Ansprache abzuleiten.
+
+VALUE TO COMMUNICATE:
+- bessere Zielkunden statt generischer Kontaktlisten
+- weniger manuelle Recherchezeit
+- mehr qualifizierte Neukundengespräche
+- individuell für das jeweilige Unternehmen
+
+WRITING STYLE:
+Write like a real human who briefly checked the company.
+Use the wir perspective, not an ich perspective.
+Preferred opening: "Wir haben uns {{company_short}} kurz angeschaut."
+Short, direct, concrete.
+Do not sound like an AI marketing assistant.
+Do not over-explain.
+Do not use the same wording for every person.
+
+QUALITY LOCK:
+For email messages, stay close to the role-specific templates below.
+Do not invent a completely new structure.
+Adapt mainly:
+- company_short
+- short_company_activity
+- target_customer_type
+- role phrase
+- CTA
+
+The human style should come from short wording, company_short, role-specific phrasing and concrete company activity.
+Do not make the message creative at the cost of clarity.
+Do not write vague AI marketing copy.
+Do not add long new explanations.
+
+Core offer wording should stay stable:
+"Mit unserem KI-System können wir passende Zielkunden finden, Entscheider und Kontaktdaten recherchieren und konkrete Kontaktgründe ableiten."
+
+Final value must stay stable:
+"weniger manuelle Recherchezeit und mehr qualifizierte Neukundengespräche."
+
+DISALLOWED OLD STYLE:
+Never use these exact phrases in any generated message:
+- "ich habe mir"
+- "ich habe gesehen"
+- "Vertriebsliste"
+Do not use "Vertriebsliste" as the final value or benefit. The benefit is less manual research plus more qualified new-customer conversations.
+
+CHANNEL SEPARATION:
+Email, LinkedIn connection note and LinkedIn follow-up are separate assets.
+Emails may use the role-specific templates and slightly more context.
+LinkedIn connection notes are short connection requests only.
+LinkedIn follow-ups are not shortened emails: no long role analysis, no strategic paragraph, no full sales pitch.
+
+For LinkedIn follow-up, never use the full email logic.
+No overlong strategic role analysis in LinkedIn follow-ups.
+Do not write:
+- "Auf Geschäftsführungs-Ebene..."
+- "Für Business Development bedeutet..."
+- "Welche Firmen passen wirklich, wer entscheidet dort..."
+- long paragraphs with 5 or more sentences
+
+Avoid:
+- "passt gut zu meinem Thema"
+- "vertriebsnahe Intelligence"
+- "Buying Signals" in every text
+- "Ich hoffe, es geht Ihnen gut"
+- inflated marketing language
+- too many words like "dürfte", "könnte", "möglicherweise"
+
+COMPANY NAME:
+Use a natural short company name.
+Do not repeat legal suffixes like GmbH, AG, SE, GmbH & Co. KG, Ltd., Holding, Group unless needed.
+Examples:
+- "ATOSS Software SE" -> "ATOSS"
+- "ALEX & GROSS GmbH" -> "ALEX & GROSS"
+- "Arrow Components" -> "Arrow"
+
+For each target infer from COMPANY_CONTEXT:
+- company_short
+- short_company_activity
+- target_customer_type
+- role_class
+- role_short
+
+Do not invent precise facts.
+If uncertain, use broad wording:
+- B2B-Unternehmen
+- mittelständische Unternehmen
+- Firmen in der DACH-Region
+- Unternehmen mit aktivem Vertrieb
+
+ROLE-BASED WRITING:
+
+A) CEO / Founder / Geschäftsführer / Managing Director
+Focus: planbare Kundengewinnung, bessere Zielkunden, Marktpotenzial.
+Email style:
+Sehr geehrter Herr/Frau {{last_name}},
+
+Wir haben uns {{company_short}} kurz angeschaut. Sie bieten {{short_company_activity}} an, vermutlich für {{target_customer_type}}.
+
+Mit unserem KI-System können wir passende Zielkunden finden, Entscheider und Kontaktdaten recherchieren und konkrete Kontaktgründe ableiten.
+
+Das Ziel: weniger manuelle Recherchezeit und mehr qualifizierte Neukundengespräche für {{company_short}}.
+
+Soll ich Ihnen einmal 5 Beispiele zeigen?
+
+B) CRO / VP Sales / Sales Director / Vertriebsleiter / Head of Sales
+Focus: mehr qualifizierte Neukundengespräche, bessere Zielkunden, weniger Recherchezeit.
+Email style:
+Sehr geehrter Herr/Frau {{last_name}},
+
+Wir haben uns {{company_short}} kurz angeschaut. Ihr Angebot rund um {{short_company_activity}} braucht wahrscheinlich einen sehr gezielten B2B-Vertrieb.
+
+Wir können mit KI Firmen finden, bei denen ein Gespräch wirklich Sinn ergibt – inklusive Entscheider, Kontaktdaten und Kontaktgrund.
+
+Für Ihr Sales-Team bedeutet das: weniger manuelle Recherchezeit, bessere Zielkunden und mehr qualifizierte Neukundengespräche.
+
+Soll ich Ihnen 5 Beispiele für {{company_short}} schicken?
+
+C) Key Account / Account Executive / Sales Manager / Senior Sales Manager
+Focus: praktische Sales-Arbeit, konkrete Firmen, richtiger Kontakt, warum jetzt.
+Email style:
+Sehr geehrter Herr/Frau {{last_name}},
+
+Wir haben uns {{company_short}} kurz angeschaut. Ihr Angebot scheint besonders für {{target_customer_type}} relevant zu sein.
+
+Für den Vertrieb ist wahrscheinlich wichtig: Welche Firmen passen wirklich, wer ist dort der richtige Kontakt und warum gerade jetzt?
+
+Unser KI-System kann genau diese Vorarbeit übernehmen. Das spart Recherchezeit und bringt konkretere Gesprächsanlässe.
+
+Soll ich Ihnen einmal 5 konkrete Zielkunden zeigen?
+
+D) Business Development / Growth / Partnerships / Expansion
+Focus: neue Kundensegmente, DACH-Markt, Zeitersparnis.
+Email style:
+Sehr geehrter Herr/Frau {{last_name}},
+
+Wir haben uns {{company_short}} kurz angeschaut. {{short_company_activity}} wirkt relevant für {{target_customer_type}} und neue Kundensegmente.
+
+Unser KI-System findet passende Firmen in der DACH-Region, recherchiert Entscheider und liefert den Kontaktgrund gleich mit.
+
+Das spart Recherchezeit und macht die Ansprache konkreter.
+
+Soll ich Ihnen einmal 5 Beispiel-Zielkunden zeigen?
+
+E) Technical Sales / Sales Engineer / Solution Consultant
+Focus: technischer oder operativer Bedarf, passende Ansprechpartner.
+Email style:
+Sehr geehrter Herr/Frau {{last_name}},
+
+Wir haben uns {{company_short}} kurz angeschaut. Bei {{short_company_activity}} sind wahrscheinlich Firmen spannend, bei denen ein konkreter technischer oder operativer Bedarf entsteht.
+
+Unser KI-System kann solche Firmen finden, passende Ansprechpartner recherchieren und den Grund für ein Gespräch ableiten.
+
+Das spart manuelle Recherche und macht den Erstkontakt deutlich konkreter.
+
+Soll ich Ihnen einmal 5 passende Firmen für {{company_short}} zeigen?
+
+F) Recruiting / Consulting / Agency / Dienstleister
+Focus: Firmen mit Wachstum, Hiring, Expansion oder Veränderung.
+Email style:
+Sehr geehrter Herr/Frau {{last_name}},
+
+Wir haben uns {{company_short}} kurz angeschaut. Im Bereich {{short_company_activity}} sind wahrscheinlich Firmen interessant, die gerade wachsen, einstellen oder neue Strukturen aufbauen.
+
+Genau solche Signale kann unser KI-System finden. Dazu recherchieren wir passende Ansprechpartner, Kontaktdaten und einen konkreten Grund für die Ansprache.
+
+So spart Ihr Team Zeit und bekommt bessere Zielkunden statt allgemeiner Kontaktlisten.
+
+Soll ich Ihnen einmal 5 Beispiele zeigen?
+
+Fallback email:
+Sehr geehrter Herr/Frau {{last_name}},
+
+Wir haben uns {{company_short}} kurz angeschaut. Sie bieten {{short_company_activity}} an, vermutlich für {{target_customer_type}}.
+
+Wir können mit KI genau solche Firmen recherchieren, die passenden Entscheider finden und den Erstkontakt vorbereiten.
+
+Das Ziel ist einfach: weniger manuelle Recherchezeit und mehr qualifizierte Neukundengespräche.
+
+Soll ich Ihnen einmal 5 Beispiele für {{company_short}} zeigen?
+
+LENGTH:
+- email message_body: 450–750 characters
+- subject: max 70 characters
+- linkedin_connection connection_note: max 220 characters
+- linkedin_message message_body: 220–320 characters HARD LIMIT
+
+SUBJECTS:
+Use short normal subjects:
+- 5 Zielkunden für {{company_short}}
+- Idee für {{company_short}}
+- Zielkunden für {{company_short}}
+- Mehr Neukundengespräche
+- Kurze Idee zu {{company_short}}
+
+LINKEDIN CONNECTION NOTE:
+Short and natural.
+Example:
+Hallo Herr {{last_name}}, wir haben uns {{company_short}} kurz angeschaut. Wir finden mit KI passende Zielkunden und Entscheider für B2B-Teams. Vernetzen?
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Write like a quick LinkedIn message, not like an email.
+Do not use the role-based email structure here.
+Do not use "Auf Geschäftsführungs-Ebene", "Für Business Development" or long role analysis.
+Mention company_short and either short_company_activity or target_customer_type briefly.
+End with a simple CTA.
+
+Use this structure:
+Hallo Herr/Frau {{last_name}}, wir haben uns {{company_short}} kurz angeschaut. {{short_company_activity}} wirkt relevant für {{target_customer_type}}. Wir finden mit KI passende Zielkunden, Entscheider und Kontaktgründe. Soll ich Ihnen 5 Beispiele zeigen?
+
+Good example:
+Hallo Herr Schneidmadel, wir haben uns ainavio kurz angeschaut. Produktdaten und E-Commerce-Prozesse wirken relevant für Firmen mit vielen Artikeln. Wir finden mit KI passende Zielkunden samt Entscheidern und Kontaktgrund. Soll ich Ihnen 5 Beispiele zeigen?
+
+Bad example:
+A long paragraph with 5–6 sentences, detailed role analysis, repeated company explanation and a long pitch.
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+SAFETY:
+Do not promise guaranteed revenue.
+Do not promise guaranteed meetings.
+Do not claim exact numbers unless framed as a possible goal.
+Allowed only for senior sales leadership:
+"Ziel ist, 10–20 zusätzliche qualifizierte Neukundengespräche aufzubauen."
+Not allowed:
+"Wir garantieren Ihnen 20 Gespräche pro Monat."
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "pre_batch003_smoke_20260529_rerun4|batch_001|ströer se & co. kgaa|https://de.linkedin.com/company/stroeer|braunschweig|germany",
+    "company_name": "Ströer SE & Co. KGaA",
+    "full_name": "Alexander Stotz",
+    "message_target_id": "stage05_task_0002::person_alexander_stotz_9a6b9faf49::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_alexander_stotz_9a6b9faf49",
+    "recipient_value": "astotz@stroeer.de",
+    "role_title": "CEO Ströer Media Deutschland GmbH",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "pre_batch003_smoke_20260529_rerun4|batch_001|ströer se & co. kgaa|https://de.linkedin.com/company/stroeer|braunschweig|germany",
+    "company_name": "Ströer SE & Co. KGaA",
+    "full_name": "Michael Noth",
+    "message_target_id": "stage05_task_0002::person_michael_noth_ebe25fe780::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_michael_noth_ebe25fe780",
+    "recipient_value": "mnoth@stroeer.de",
+    "role_title": "CEO Ströer Media Solutions",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "pre_batch003_smoke_20260529_rerun4|batch_001|ströer se & co. kgaa|https://de.linkedin.com/company/stroeer|braunschweig|germany",
+    "company_name": "Ströer SE & Co. KGaA",
+    "full_name": "Udo Müller",
+    "message_target_id": "stage05_task_0002::person_udo_m_ller_6e70041854::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_udo_m_ller_6e70041854",
+    "recipient_value": "umueller@stroeer.de",
+    "role_title": "CEO, Board of Management Ströer Management SE",
+    "task_id": "stage05_task_0002"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Braunschweig",
+    "company_identity_key": "pre_batch003_smoke_20260529_rerun4|batch_001|ströer se & co. kgaa|https://de.linkedin.com/company/stroeer|braunschweig|germany",
+    "company_name": "Ströer SE & Co. KGaA",
+    "company_website": "https://de.linkedin.com/company/stroeer",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Dirk Scholand",
+          "person_key": "",
+          "role": "Chief Sales Officer Ströer X"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "astotz@stroeer.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Alexander Stotz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/alexander-stotz",
+        "person_key": "person_alexander_stotz_9a6b9faf49",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "CEO Ströer Media Deutschland GmbH",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://telefon-kitab.cybo.com/DE-%C9%99laq%C9%99/dsm-zeit-und-werbung-gmbh_16O/Alexander%2BStotz",
+          "https://www.stroeer.de/ueber-uns/",
+          "https://de.linkedin.com/in/alexander-stotz",
+          "https://www.stroeer-direkt.de/impressum/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "dirk.scholand@stroeer-x.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dirk Scholand",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dirk-scholand/en",
+        "person_key": "person_dirk_scholand_20d504a25c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chief Sales Officer Ströer X",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.marktforschung.de/marktforschung/a/stroeer-x-wir-liefern-zuverlaessige-und-skalierbare-unterstuetzung-in-der-marktforschung/",
+          "https://www.stroeer-x.de/der-x-faktor/geschaeftsleitung-management/dirk-scholand/",
+          "https://de.linkedin.com/in/dirk-scholand/en",
+          "https://www.stroeer-x.de/kontakt/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "mnoth@stroeer.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Michael Noth",
+        "hypothesis_email": "mnoth@stroeer.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/michael-noth-a49a45211",
+        "person_key": "person_michael_noth_ebe25fe780",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "CEO Ströer Media Solutions",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.stroeer.de/media/02_downloads/06_ueber_uns/management_lebenslaeufe/stroeer_lebenslauf_michael_noth_de.pdf",
+          "https://www.turi2.de/index-2/koepfe/mueller-udo/",
+          "https://www.eqs-news.com/company/stroer-se-co-kgaa/info/5bca1f53-ea7c-11e8-902f-2c44fd856d8c",
+          "https://www.lobbyregister.bundestag.de/suche/R005503",
+          "https://www.landtag-bw.de/de/der-landtag/transparenzregister/stroeer-se-co-kgaa-506078",
+          "https://telefon-kitab.cybo.com/DE-%C9%99laq%C9%99/dsm-zeit-und-werbung-gmbh_16O/Alexander%2BStotz",
+          "https://www.stroeer.de/ueber-uns/",
+          "https://de.linkedin.com/in/michael-noth-a49a45211",
+          "https://now.stroeer.de/en/info/legal/imprint"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "umueller@stroeer.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Udo Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://es.linkedin.com/in/udo-mueller-2b9600322",
+        "person_key": "person_udo_m_ller_6e70041854",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "CEO, Board of Management Ströer Management SE",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.turi2.de/index-2/koepfe/mueller-udo/",
+          "https://www.stroeer.de/ueber-uns/",
+          "https://es.linkedin.com/in/udo-mueller-2b9600322",
+          "https://www.stroeer.de/kontakt/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "sales"
+      ],
+      "roles": [
+        "CEO Ströer Media Deutschland GmbH",
+        "Chief Sales Officer Ströer X",
+        "CEO Ströer Media Solutions",
+        "CEO, Board of Management Ströer Management SE"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://telefon-kitab.cybo.com/DE-%C9%99laq%C9%99/dsm-zeit-und-werbung-gmbh_16O/Alexander%2BStotz",
+      "https://www.stroeer.de/ueber-uns/",
+      "https://de.linkedin.com/in/alexander-stotz",
+      "https://www.stroeer-direkt.de/impressum/",
+      "https://www.marktforschung.de/marktforschung/a/stroeer-x-wir-liefern-zuverlaessige-und-skalierbare-unterstuetzung-in-der-marktforschung/",
+      "https://www.stroeer-x.de/der-x-faktor/geschaeftsleitung-management/dirk-scholand/",
+      "https://de.linkedin.com/in/dirk-scholand/en",
+      "https://www.stroeer-x.de/kontakt/",
+      "https://www.stroeer.de/media/02_downloads/06_ueber_uns/management_lebenslaeufe/stroeer_lebenslauf_michael_noth_de.pdf",
+      "https://www.turi2.de/index-2/koepfe/mueller-udo/",
+      "https://www.eqs-news.com/company/stroer-se-co-kgaa/info/5bca1f53-ea7c-11e8-902f-2c44fd856d8c",
+      "https://www.lobbyregister.bundestag.de/suche/R005503",
+      "https://www.landtag-bw.de/de/der-landtag/transparenzregister/stroeer-se-co-kgaa-506078",
+      "https://de.linkedin.com/in/michael-noth-a49a45211",
+      "https://now.stroeer.de/en/info/legal/imprint",
+      "https://es.linkedin.com/in/udo-mueller-2b9600322",
+      "https://www.stroeer.de/kontakt/"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Braunschweig",
+    "company_identity_key": "pre_batch003_smoke_20260529_rerun4|batch_001|ströer se & co. kgaa|https://de.linkedin.com/company/stroeer|braunschweig|germany",
+    "company_name": "Ströer SE & Co. KGaA",
+    "company_website": "https://de.linkedin.com/company/stroeer",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Dirk Scholand",
+          "person_key": "",
+          "role": "Chief Sales Officer Ströer X"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "astotz@stroeer.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Alexander Stotz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/alexander-stotz",
+        "person_key": "person_alexander_stotz_9a6b9faf49",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "CEO Ströer Media Deutschland GmbH",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://telefon-kitab.cybo.com/DE-%C9%99laq%C9%99/dsm-zeit-und-werbung-gmbh_16O/Alexander%2BStotz",
+          "https://www.stroeer.de/ueber-uns/",
+          "https://de.linkedin.com/in/alexander-stotz",
+          "https://www.stroeer-direkt.de/impressum/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "dirk.scholand@stroeer-x.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dirk Scholand",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dirk-scholand/en",
+        "person_key": "person_dirk_scholand_20d504a25c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chief Sales Officer Ströer X",
+        "role_category": "sales",
+        "source_urls": [
+          "https://www.marktforschung.de/marktforschung/a/stroeer-x-wir-liefern-zuverlaessige-und-skalierbare-unterstuetzung-in-der-marktforschung/",
+          "https://www.stroeer-x.de/der-x-faktor/geschaeftsleitung-management/dirk-scholand/",
+          "https://de.linkedin.com/in/dirk-scholand/en",
+          "https://www.stroeer-x.de/kontakt/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "mnoth@stroeer.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Michael Noth",
+        "hypothesis_email": "mnoth@stroeer.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/michael-noth-a49a45211",
+        "person_key": "person_michael_noth_ebe25fe780",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "CEO Ströer Media Solutions",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.stroeer.de/media/02_downloads/06_ueber_uns/management_lebenslaeufe/stroeer_lebenslauf_michael_noth_de.pdf",
+          "https://www.turi2.de/index-2/koepfe/mueller-udo/",
+          "https://www.eqs-news.com/company/stroer-se-co-kgaa/info/5bca1f53-ea7c-11e8-902f-2c44fd856d8c",
+          "https://www.lobbyregister.bundestag.de/suche/R005503",
+          "https://www.landtag-bw.de/de/der-landtag/transparenzregister/stroeer-se-co-kgaa-506078",
+          "https://telefon-kitab.cybo.com/DE-%C9%99laq%C9%99/dsm-zeit-und-werbung-gmbh_16O/Alexander%2BStotz",
+          "https://www.stroeer.de/ueber-uns/",
+          "https://de.linkedin.com/in/michael-noth-a49a45211",
+          "https://now.stroeer.de/en/info/legal/imprint"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "umueller@stroeer.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Udo Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://es.linkedin.com/in/udo-mueller-2b9600322",
+        "person_key": "person_udo_m_ller_6e70041854",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "CEO, Board of Management Ströer Management SE",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.turi2.de/index-2/koepfe/mueller-udo/",
+          "https://www.stroeer.de/ueber-uns/",
+          "https://es.linkedin.com/in/udo-mueller-2b9600322",
+          "https://www.stroeer.de/kontakt/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "sales"
+      ],
+      "roles": [
+        "CEO Ströer Media Deutschland GmbH",
+        "Chief Sales Officer Ströer X",
+        "CEO Ströer Media Solutions",
+        "CEO, Board of Management Ströer Management SE"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://telefon-kitab.cybo.com/DE-%C9%99laq%C9%99/dsm-zeit-und-werbung-gmbh_16O/Alexander%2BStotz",
+      "https://www.stroeer.de/ueber-uns/",
+      "https://de.linkedin.com/in/alexander-stotz",
+      "https://www.stroeer-direkt.de/impressum/",
+      "https://www.marktforschung.de/marktforschung/a/stroeer-x-wir-liefern-zuverlaessige-und-skalierbare-unterstuetzung-in-der-marktforschung/",
+      "https://www.stroeer-x.de/der-x-faktor/geschaeftsleitung-management/dirk-scholand/",
+      "https://de.linkedin.com/in/dirk-scholand/en",
+      "https://www.stroeer-x.de/kontakt/",
+      "https://www.stroeer.de/media/02_downloads/06_ueber_uns/management_lebenslaeufe/stroeer_lebenslauf_michael_noth_de.pdf",
+      "https://www.turi2.de/index-2/koepfe/mueller-udo/",
+      "https://www.eqs-news.com/company/stroer-se-co-kgaa/info/5bca1f53-ea7c-11e8-902f-2c44fd856d8c",
+      "https://www.lobbyregister.bundestag.de/suche/R005503",
+      "https://www.landtag-bw.de/de/der-landtag/transparenzregister/stroeer-se-co-kgaa-506078",
+      "https://de.linkedin.com/in/michael-noth-a49a45211",
+      "https://now.stroeer.de/en/info/legal/imprint",
+      "https://es.linkedin.com/in/udo-mueller-2b9600322",
+      "https://www.stroeer.de/kontakt/"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
