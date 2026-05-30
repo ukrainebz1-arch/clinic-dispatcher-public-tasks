@@ -1,0 +1,138 @@
+RUN_ID: pre_batch003_smoke_20260529_rerun2_batch_001_stage_02_public_email_lookup_resend2
+TASK_ID: task_stage_002_20260530T125112Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_002_20260530T125112Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / RESEND 2: deep email variant recovery for B2B email enrichment.
+
+Role:
+You are doing a deep recovery pass for unresolved or high-value rows after previous Stage 02 passes. Your task is to find missed person-company emails by searching variants, older sources, and deeper email evidence.
+
+Important routing context:
+The input rows are not all original people. They are remaining unresolved rows after SEND 1 and RESEND 1 have already been merged. Use all previous email-relevant fields as context: email_status, email, candidate_email, alternative_emails, source_urls, company_email_examples, pattern_examples_found, next_recovery_action, merge_history, validation_issues, and notes. Ignore route-only context unless it contains actual email evidence.
+
+Identity preservation rules:
+- Copy these fields exactly from the input row: campaign_id, batch_id, input_row_id, person_key, company_key.
+- Do not invent, normalize, shorten, translate, regenerate, or renumber these fields.
+- Do not use the numbered list index as input_row_id.
+- If an identity field is present in the input, the same exact value must appear in the output row.
+
+Goal:
+Return the best improved email result and the actionable recovery_signal / next_recovery_action that tells the pipeline what should happen next.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Search style:
+Use broad web search and older-source recovery. Look for email variants across PDFs, old event pages, association records, newsletters, speaker bios, partner pages, press pages, cached snippets, public documents, company pages, and visible snippets.
+
+Do not search for routes. Search for email evidence.
+Good evidence includes:
+- exact candidate email appearances;
+- concrete same-domain person emails at the target company;
+- older PDFs/newsletters/speaker bios exposing email addresses;
+- obfuscated emails such as name(at)domain or name [at] domain;
+- source snippets containing email addresses;
+- domain-specific examples that prove a stable format.
+
+Useful email identity variants:
+- firstname.lastname@domain
+- firstinitial.lastname@domain
+- firstname@domain
+- lastname@domain
+- firstname_lastname@domain
+- firstname-lastname@domain
+- formal-name variants such as Nick/Nicolas/Nicholas, Ben/Benjamin, Chris/Christopher
+- German character variants such as ä/ae, ö/oe, ü/ue, ß/ss
+- hyphen and compound surname variants
+- compound first-name or surname variants when visible in the person's public name.
+
+Recovery-signal logic:
+Use judgment. Do not mechanically complete a checklist. Do not produce auditability for its own sake. A recovery signal is useful only if it changes email routing.
+
+Useful recovery signals include:
+- exact person-company email found;
+- exact candidate still plausible but not verified;
+- 3+ same-domain pattern examples found;
+- only weak pattern evidence found;
+- provider candidate found but not confirmed;
+- no useful email signal.
+
+Do NOT treat these as useful recovery signals unless they expose an email:
+- booking route found;
+- contact button exists;
+- team profile exists;
+- LinkedIn/Xing/profile route exists;
+- generic contact form exists.
+
+Allowed next_recovery_action values and when to use them:
+- close_as_found_person_email: exact person-company email found.
+- send_to_exact_candidate_verification: exact candidate remains plausible and should be verified.
+- send_to_pattern_decision: 3+ same-domain pattern examples or strong candidate-pattern evidence exists.
+- keep_as_unverified_candidate: only weak pattern/provider evidence remains.
+- close_as_not_found_email: no useful email/candidate/pattern evidence remains.
+- keep_generic_route: only if a concrete generic company email was found quickly and no person email exists.
+- keep_named_route: compatibility fallback only; do not use for ordinary route-only findings.
+- send_to_technical_source_extraction: only if a source appears to hide an actual email address, such as obfuscated email/source email clue; not for simple contact forms or booking pages.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Core rules:
+- Generated/pattern emails are not FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found.
+- STRONG_PATTERN_HYPOTHESIS should normally be finalized in RESEND 3 pattern decision, not guessed here unless the evidence is already decisive.
+- Do not overwrite a stronger previous result with a weaker result.
+- Prefer NOT_FOUND_EMAIL over route-only output.
+- Do not create FOUND_NAMED_COMPANY_ROUTE as a search goal.
+
+Input format:
+You will receive CURRENT CHUNK INPUT as numbered rows generated by the dispatcher. Each row already contains the previous merged result and context fields. Do not require placeholder blocks.
+
+Output CSV only. Preserve one output row per input row. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- cascade_pass: RESEND_2_DEEP_VARIANT_RECOVERY.
+- email: only exact found confirmed person-company email or generic company email.
+- candidate_email: candidate that remains unconfirmed.
+- company_email_examples / pattern_examples_found: concrete same-domain examples if found.
+- source_urls: pipe-separated supporting URLs if multiple sources exist.
+- route_url / route_label: normally blank; do not fill route fields unless preserving unavoidable compatibility evidence.
+- next_recovery_action: must be one allowed value and should express the next email-routing decision.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true only for FOUND_GENERIC_COMPANY_EMAIL; false for FOUND_NAMED_COMPANY_ROUTE.
+- notes: short actionable email audit note, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Stellantis &You Deutschland | company_website: https://de.linkedin.com/company/stellantis-youdeutschland | first_name: Ralph | last_name: Wangemann | full_name: Ralph Wangemann | role: Managing Director | role_category: other_management | email: stellantisandyou-de@stellantis.com | email_type: generic_company | email_source_url: https://www.stellantisandyou.com/de/impressum | notes: Official imprint lists generic Stellantis &You email; no exact Ralph Wangemann email found. | alt: Company imprint lists him as managing director. | alt: Official imprint lists Ralph Wangemann and generic company email; no person email found. | campaign_id: pre_batch003_smoke_20260529_rerun2 | input_row_id: batch001::stellantisyoudeutschland::delinkedincom::ralph::wangemann | person_key: batch001::stellantisyoudeutschland::delinkedincom::ralph::wangemann | company_key: batch001::stellantisyoudeutschland::delinkedincom | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: stellantis.com | source_urls: https://www.stellantisandyou.com/de/impressum|https://www.stellantisandyou.com/content/dam/stellantis-and-you/website/privacy_e_legal_notes/IMPRESSUM_052026.pdf | company_email_examples: info-citysued@stellantis.com|info-tempelhof@stellantis.com|info-dresden@stellantis.com|info-koeln@stellantis.com|info-nl-frankfurt@stellantis.com | alternative_emails: stellantisandyou-de@stellantis.com | email_confidence: high | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|RESEND_1_EXACT_CANDIDATE_VERIFICATION kept FOUND_GENERIC_COMPANY_EMAIL over FOUND_GENERIC_COMPANY_EMAIL|RESEND_1_EXACT_CANDIDATE_VERIFICATION preserved_generic_email | recovery_signal: route_without_confirmed_person_email
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_002_20260530T125112Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
