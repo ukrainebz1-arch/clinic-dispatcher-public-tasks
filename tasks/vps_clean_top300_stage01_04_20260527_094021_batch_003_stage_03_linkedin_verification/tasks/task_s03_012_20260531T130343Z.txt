@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+TASK_ID: task_s03_012_20260531T130343Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_012_20260531T130343Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_003
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_003/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_003 | company_name: Nefino | company_website: https://de.linkedin.com/company/nefino | first_name: Jan-Hendrik | last_name: Piel | full_name: Jan-Hendrik Piel | role: Head of Business Development | role_category: business_development | confidence: high | notes: Company product page names him Head of Business Development.
+2. batch_id: batch_003 | company_name: Nefino | company_website: https://de.linkedin.com/company/nefino | first_name: Chris | last_name: Stetter | full_name: Dr. Chris Stetter | role: Co-Founder & CTO | role_category: other_management | confidence: high | notes: Company article confirms CTO and co-founder role.
+3. batch_id: batch_003 | company_name: Nexis | company_website: https://de.linkedin.com/company/nexis | first_name: Heiko | last_name: Klarl | full_name: Dr. Heiko Klarl | role: CEO | role_category: founder_ceo | confidence: high | notes: Company leadership page lists him as CEO.
+4. batch_id: batch_003 | company_name: Nexis | company_website: https://de.linkedin.com/company/nexis | first_name: Michael | last_name: Kunz | full_name: Dr. Michael Kunz | role: COO / Managing Director | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/michael-kunz-nexis | confidence: high | notes: Company leadership page lists him as COO.
+5. batch_id: batch_003 | company_name: Nexis | company_website: https://de.linkedin.com/company/nexis | first_name: Matthias | last_name: Hummer | full_name: Dr. Matthias Hummer | role: CTO | role_category: other_management | confidence: high | notes: Company leadership page lists him as CTO.
+6. batch_id: batch_003 | company_name: Nexis | company_website: https://de.linkedin.com/company/nexis | first_name: Felix | last_name: Gruber | full_name: Felix Gruber | role: CFO | role_category: finance | linkedin_profile_url: https://de.linkedin.com/in/felixgru | confidence: high | notes: Company leadership page lists him as CFO.
+7. batch_id: batch_003 | company_name: Nexis | company_website: https://de.linkedin.com/company/nexis | first_name: Roland | last_name: Franze | full_name: Roland Franze | role: Partner Manager | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/roland-franze | confidence: medium | notes: Public LinkedIn profile lists Partner Manager at Nexis.
+8. batch_id: batch_003 | company_name: PepsiCo | company_website: https://www.linkedin.com/company/pepsico | first_name: Torben | last_name: Nielsen | full_name: Torben Nielsen | role: General Manager PepsiCo DACH, Nordics & Italy | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/torbenielsen | confidence: high | notes: Official PepsiCo release confirms expanded general manager role.
+9. batch_id: batch_003 | company_name: PepsiCo | company_website: https://www.linkedin.com/company/pepsico | first_name: Alexander | last_name: Kern | full_name: Alexander Kern | role: Sales Director DACH | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/alexander-kern-8a285597 | confidence: high | notes: Official PepsiCo release confirms Sales Director DACH role.
+10. batch_id: batch_003 | company_name: PepsiCo | company_website: https://www.linkedin.com/company/pepsico | first_name: Michael | last_name: Henzler | full_name: Michael Henzler | role: Sales Director SodaStream Deutschland | role_category: sales | confidence: high | notes: SodaStream is PepsiCo-owned; source confirms German sales director.
+11. batch_id: batch_003 | company_name: PepsiCo | company_website: https://www.linkedin.com/company/pepsico | first_name: Randolf | last_name: Ruf | full_name: Randolf Ruf | role: Head of HR DACH SodaStream | role_category: hr_recruiting | linkedin_profile_url: https://de.linkedin.com/in/randolf-ruf-79290a85 | confidence: medium | notes: Public profile lists HR leadership for SodaStream, a PepsiCo company.
+12. batch_id: batch_003 | company_name: encosa energy | company_website: https://de.linkedin.com/company/encosa-energy | first_name: Sascha | last_name: Koberstaedt | full_name: Sascha Koberstaedt | role: Founder & CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/sascha-koberstaedt-1a490596 | confidence: high | notes: Official site and LinkedIn support founder leadership role
+13. batch_id: batch_003 | company_name: encosa energy | company_website: https://de.linkedin.com/company/encosa-energy | first_name: Sebastian | last_name: Becker | full_name: Sebastian Becker | role: Co-Founder & COO | role_category: founder_ceo | confidence: high | notes: Official imprint lists him as managing director
+14. batch_id: batch_003 | company_name: encosa energy | company_website: https://de.linkedin.com/company/encosa-energy | first_name: Dominik | last_name: Fries | full_name: Dominik Fries | role: Director Growth | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/dominik-fries-6b34a662 | confidence: high | notes: LinkedIn company page lists Director Growth
+15. batch_id: batch_003 | company_name: encosa energy | company_website: https://de.linkedin.com/company/encosa-energy | first_name: Max | last_name: Wolke | full_name: Max Wolke | role: GTM Lead | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/maxwolke | confidence: medium | notes: Recent public LinkedIn post states GTM Lead
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_012_20260531T130343Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
