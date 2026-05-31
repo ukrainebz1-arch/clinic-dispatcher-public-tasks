@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+TASK_ID: task_s03_005_20260531T130343Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_005_20260531T130343Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_003
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_003/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_003 | company_name: CARYSMO talent matching | company_website: https://de.linkedin.com/company/carysmo-talent-matching | first_name: Suna | last_name: Atayurt | full_name: Dr. Suna Atayurt | role: Founder and Managing Director | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-suna-atayurt-59a30b28 | confidence: high | notes: Imprint and LinkedIn support founder managing director role
+2. batch_id: batch_003 | company_name: Chapter. | company_website: https://de.linkedin.com/company/mychapterio | first_name: Jan Mark | last_name: Lingthaler | full_name: Jan Mark Lingthaler | role: Co-Founder | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/janmark-lingthaler | confidence: high | notes: Official contact page lists co-founder
+3. batch_id: batch_003 | company_name: Chapter. | company_website: https://de.linkedin.com/company/mychapterio | first_name: Denis | last_name: Harsch | full_name: Denis Harsch | role: Co-Founder | role_category: founder_ceo | confidence: high | notes: Official contact page lists co-founder
+4. batch_id: batch_003 | company_name: ChargeX | company_website: https://de.linkedin.com/company/charge-x | first_name: Michael | last_name: Masnitza | full_name: Michael Masnitza | role: Founder and CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/michaelmasnitza | confidence: high | notes: Company post says CEO handover to founder
+5. batch_id: batch_003 | company_name: ChargeX | company_website: https://de.linkedin.com/company/charge-x | first_name: Tobias | last_name: Scharfen | full_name: Tobias Scharfen | role: Advisory Board member | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/tobias-scharfen-07633283 | confidence: medium | notes: Company post says transitioning from CEO to advisory
+6. batch_id: batch_003 | company_name: ChargeX | company_website: https://de.linkedin.com/company/charge-x | first_name: Maximilian | last_name: Kirchenberger | full_name: Maximilian Kirchenberger | role: CTO | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/maximilian-kirchenberger | confidence: high | notes: Official site lists management team role
+7. batch_id: batch_003 | company_name: Confiserie Rabbel GmbH | company_website: https://de.linkedin.com/company/confiserie-rabbel-gmbh | first_name: Christian | last_name: Rabbel | full_name: Christian Rabbel | role: Managing Owner | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/christian-rabbel-b8b634179 | confidence: high | notes: Official imprint lists managing owner
+8. batch_id: batch_003 | company_name: Confiserie Rabbel GmbH | company_website: https://de.linkedin.com/company/confiserie-rabbel-gmbh | first_name: Mehtap | last_name: Rabbel | full_name: Mehtap Rabbel | role: Head of Sales & Business Development | role_category: sales | confidence: medium | notes: Public employee page lists sales and BD role
+9. batch_id: batch_003 | company_name: CRONIMET Hispania | company_website: https://www.linkedin.com/company/cronimet-hispania-sa | first_name: Urko | last_name: Rodríguez López | full_name: Urko Rodríguez López | role: Responsable Dpto. Comercial y Logística | role_category: sales | linkedin_profile_url: https://es.linkedin.com/in/urko-rodr%C3%ADguez-l%C3%B3pez-a5897834/en | confidence: high | notes: Company page and profile show commercial logistics role.
+10. batch_id: batch_003 | company_name: CRONIMET Hispania | company_website: https://www.linkedin.com/company/cronimet-hispania-sa | first_name: Iñaki | last_name: De la Rosa | full_name: Iñaki De la Rosa | role: Purchasing Manager | role_category: operations | linkedin_profile_url: https://es.linkedin.com/in/i%C3%B1aki-de-la-rosa-90160759 | confidence: high | notes: LinkedIn profile connects him to Cronimet Hispania.
+11. batch_id: batch_003 | company_name: CRONIMET Hispania | company_website: https://www.linkedin.com/company/cronimet-hispania-sa | first_name: Iñaki | last_name: Arroyo Barron | full_name: Iñaki Arroyo Barron | role: Technical Director | role_category: operations | confidence: medium | notes: CRONIMET Europe post names him technical director.
+12. batch_id: batch_003 | company_name: Carly | company_website: https://de.linkedin.com/company/carly-solutions | first_name: Avid | last_name: Avini | full_name: Avid Avini | role: CEO and Co-Founder | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/avidavini | confidence: high | notes: Official company page names him co-founder and CEO.
+13. batch_id: batch_003 | company_name: Carly | company_website: https://de.linkedin.com/company/carly-solutions | first_name: David | last_name: Grotzky | full_name: David Grotzky | role: Co-Founder and CTO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/david-grotzky-30b78170 | confidence: medium | notes: Public org profile lists co-founder and CTO.
+14. batch_id: batch_003 | company_name: Carly | company_website: https://de.linkedin.com/company/carly-solutions | first_name: Christopher | last_name: Polzar | full_name: Christopher Polzar | role: Chief Marketing Officer | role_category: marketing | linkedin_profile_url: https://de.linkedin.com/in/christopher-polzar-09616a38 | confidence: medium | notes: Public org profile lists CMO.
+15. batch_id: batch_003 | company_name: Carly | company_website: https://de.linkedin.com/company/carly-solutions | first_name: Ryssaldy | last_name: Ott | full_name: Ryssaldy Ott | role: Head of People | role_category: hr_recruiting | linkedin_profile_url: https://de.linkedin.com/in/ryssaldy-ott-a249ba110 | confidence: high | notes: LinkedIn profile shows Head of People at Carly.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_005_20260531T130343Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
