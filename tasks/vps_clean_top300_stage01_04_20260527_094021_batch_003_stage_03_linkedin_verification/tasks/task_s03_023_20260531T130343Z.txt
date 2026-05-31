@@ -1,0 +1,71 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+TASK_ID: task_s03_023_20260531T130343Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_023_20260531T130343Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_003
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_003/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_003 | company_name: Atos Medical | company_website: https://se.linkedin.com/company/atosmedicalcom | first_name: Pascale | last_name: Chapuis | full_name: Pascale Chapuis | role: Vice President, Commercialization | role_category: marketing | confidence: high | notes: Official management page lists commercialization leadership.
+2. batch_id: batch_003 | company_name: Atos Medical | company_website: https://se.linkedin.com/company/atosmedicalcom | first_name: Dirk | last_name: Barbeln | full_name: Dirk Barbeln | role: Director Sales | role_category: sales | confidence: medium | notes: XING employee page lists Director Sales.
+3. batch_id: batch_003 | company_name: Atos Medical | company_website: https://se.linkedin.com/company/atosmedicalcom | first_name: Melina | last_name: Lauterbach | full_name: Melina Lauterbach | role: HR Generalist & Recruiting Expert DACH | role_category: hr_recruiting | confidence: medium | notes: XING employee page lists DACH HR/recruiting role.
+4. batch_id: batch_003 | company_name: Auto Declic | company_website: https://fr.linkedin.com/company/autodeclic | first_name: Hervé | last_name: Caillaud | full_name: Hervé Caillaud | role: Founder and CEO / Président via HFC | role_category: founder_ceo | linkedin_profile_url: https://www.linkedin.com/in/herve-caillaud-705028160 | confidence: high | notes: Company post names him founder and CEO.
+5. batch_id: batch_003 | company_name: Auto Declic | company_website: https://fr.linkedin.com/company/autodeclic | first_name: Lionel | last_name: Chretien | full_name: Lionel Chretien | role: Responsable des ventes, marché francophone Europe | role_category: sales | linkedin_profile_url: https://fr.linkedin.com/in/lionel-chretien-72330115b | confidence: high | notes: Company post lists him as European sales lead.
+6. batch_id: batch_003 | company_name: Auto Declic | company_website: https://fr.linkedin.com/company/autodeclic | first_name: Laurent | last_name: Morlat | full_name: Laurent Morlat | role: Sales Development Manager B2B Trading Europe | role_category: sales | linkedin_profile_url: https://fr.linkedin.com/in/laurent-morlat-8611b8ba | confidence: medium | notes: LinkedIn directory lists B2B trading sales role.
+7. batch_id: batch_003 | company_name: Auto Declic | company_website: https://fr.linkedin.com/company/autodeclic | first_name: Pierre | last_name: Leca | full_name: Pierre Leca | role: Digital Transformation Specialist / Responsable communication | role_category: marketing | linkedin_profile_url: https://fr.linkedin.com/in/pierre-leca-47177764 | confidence: medium | notes: Public profile and testimonial connect him to Auto Declic.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_023_20260531T130343Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
