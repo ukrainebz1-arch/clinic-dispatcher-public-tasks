@@ -1,0 +1,151 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_02_public_email_lookup_send1
+TASK_ID: task_stage_003_20260531T110106Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_003_20260531T110106Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / SEND 1: email-first deep search for B2B email enrichment.
+
+Role:
+You are a senior B2B sales intelligence researcher. Your task is to find real person-company email evidence or useful email candidates for each input person.
+
+Primary goal for every input person:
+1. Find a person-company email if it is available.
+2. If exact email is not found, preserve only email-useful evidence: candidate_email, alternative_emails, company_email_examples, pattern_examples_found.
+3. Do NOT spend search budget finding contact routes, booking pages, profile pages, generic contact forms, LinkedIn/Xing routes, or named routes. Routes are not useful output for this campaign.
+4. If no exact email, no candidate email, and no strong pattern evidence exists, return NOT_FOUND_EMAIL.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Core rules:
+- Generated or pattern-only emails are NOT FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found.
+- Strong pattern hypotheses are useful, but must remain separate from confirmed person-company emails.
+- Do not add a philosophical/publicity filter. If email/source evidence is found through search/web/source_url, that is enough for audit. Focus on the 3 criteria above.
+- Preserve one output row per input person.
+- Email yield is the priority. Do not return a route just because a contact page or profile exists.
+
+Identity preservation rules:
+- Copy these fields exactly from the input row: campaign_id, batch_id, input_row_id, person_key, company_key.
+- Do not invent, normalize, shorten, translate, regenerate, or renumber these fields.
+- Do not use the numbered list index as input_row_id.
+- If an identity field is present in the input, the same exact value must appear in the output row.
+
+Search deeply before finalizing each row, but keep the search email-first:
+- quoted exact email-style searches for likely formats;
+- person name + company domain;
+- person name + company name + email;
+- company domain + email examples;
+- official company pages only when they may expose email addresses;
+- PDFs and public documents;
+- event/speaker pages;
+- association/member directories;
+- partner pages, newsletters, press pages, old pages, and visible snippets;
+- source snippets that expose emails or pattern examples.
+
+Useful candidate variants to check or preserve:
+- firstname.lastname@domain
+- firstinitial.lastname@domain
+- firstname@domain
+- lastname@domain
+- firstname_lastname@domain
+- firstname-lastname@domain
+- formal-name variants such as Nick/Nicolas/Nicholas, Ben/Benjamin, Chris/Christopher
+- German character variants such as ä/ae, ö/oe, ü/ue, ß/ss
+- hyphen and compound surname variants
+
+Route suppression:
+- Do not search for named routes as a goal.
+- Do not return FOUND_NAMED_COMPANY_ROUTE for ordinary contact forms, booking buttons, team profiles, LinkedIn/Xing pages, or contact pages.
+- route_url and route_label should normally stay blank.
+- Use FOUND_NAMED_COMPANY_ROUTE only as a compatibility fallback if a previous row already contains a named route that must be preserved and no email/candidate/pattern evidence exists. In SEND 1 this should almost never happen.
+- Prefer NOT_FOUND_EMAIL over a route-only result.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Status meaning:
+- FOUND_PERSON_COMPANY_EMAIL: exact person-level email found and matches person/company/domain criteria.
+- FOUND_NAMED_COMPANY_ROUTE: compatibility-only route status; do not actively search for it.
+- FOUND_GENERIC_COMPANY_EMAIL: only a concrete company-level email such as info@, kontakt@, hallo@, sales@, office@ is available. Do not spend extra time looking for generic emails.
+- STRONG_PATTERN_HYPOTHESIS: exact email is not found, but candidate is supported by 3+ concrete same-domain person emails following the same format.
+- UNVERIFIED_GENERATED_EMAIL: likely email generated from pattern, but exact email itself has not been found.
+- UNVERIFIED_PROVIDER_EMAIL: email appears only in provider/database-style source and needs stronger confirmation.
+- NOT_FOUND_EMAIL / NOT_FOUND: no useful person email result; use NOT_FOUND_EMAIL when the person-email search was exhausted.
+
+Allowed next_recovery_action values:
+close_as_found_person_email
+keep_named_route
+keep_generic_route
+send_to_exact_candidate_verification
+send_to_pattern_decision
+send_to_technical_source_extraction
+keep_as_unverified_candidate
+close_as_not_found_email
+
+Input format:
+You will receive CURRENT CHUNK INPUT as numbered rows generated by the dispatcher. Use the row fields as the input people. Do not require placeholder blocks.
+
+Output CSV only. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- email_status: one allowed status.
+- email: only exact found confirmed person email or generic company email. Do not put generated emails here.
+- candidate_email: generated/provider/pattern candidate only.
+- company_email_examples or pattern_examples_found: pipe-separated concrete same-domain examples if used.
+- source_urls: pipe-separated URLs when several sources exist.
+- email_source_url: strongest URL supporting the exact email result, candidate, or pattern evidence.
+- route_url / route_label: normally blank; do not fill route fields unless preserving unavoidable compatibility evidence.
+- email_confidence: high / medium / low / unknown.
+- cascade_pass: SEND_1_DEEP_ROUTE_SEARCH.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true only for FOUND_GENERIC_COMPANY_EMAIL; false for FOUND_NAMED_COMPANY_ROUTE.
+- notes: short audit note focused on email search, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_003 | company_name: Recyda GmbH | company_website: https://de.linkedin.com/company/recyda | first_name: Vivian | last_name: Loftin | full_name: Vivian Loftin | role: Co-Founder & CMO | role_category: marketing | linkedin_profile_url: https://de.linkedin.com/in/vivian-loftin | email_type: not_found | confidence: high | notes: Official team page confirms role. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::recydagmbh::delinkedincom::vivian::loftin | person_key: batch003::recydagmbh::delinkedincom::vivian::loftin | company_key: batch003::recydagmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+2. batch_id: batch_003 | company_name: Recyda GmbH | company_website: https://de.linkedin.com/company/recyda | first_name: Patrick | last_name: Felber | full_name: Patrick Felber | role: Head of Growth | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/patrickfelber | email_type: not_found | confidence: high | notes: Official team page confirms growth role. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::recydagmbh::delinkedincom::patrick::felber | person_key: batch003::recydagmbh::delinkedincom::patrick::felber | company_key: batch003::recydagmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+3. batch_id: batch_003 | company_name: Recyda GmbH | company_website: https://de.linkedin.com/company/recyda | first_name: Philipp | last_name: Blattert | full_name: Philipp Blattert | role: Account Executive | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/philipp-blattert | email_type: not_found | confidence: high | notes: Official team page confirms sales role. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::recydagmbh::delinkedincom::philipp::blattert | person_key: batch003::recydagmbh::delinkedincom::philipp::blattert | company_key: batch003::recydagmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+4. batch_id: batch_003 | company_name: Recyda GmbH | company_website: https://de.linkedin.com/company/recyda | first_name: Teresa | last_name: Galan | full_name: Teresa Galan | role: Account Manager | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/teresamartinezgalan | email_type: not_found | confidence: medium | notes: Official team page confirms account role. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::recydagmbh::delinkedincom::teresa::galan | person_key: batch003::recydagmbh::delinkedincom::teresa::galan | company_key: batch003::recydagmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+5. batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | first_name: Jan-Christoph | last_name: Maiwaldt | full_name: Jan-Christoph Maiwaldt | role: Chief Executive Officer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/jan-christoph-maiwaldt-0234206a | email_type: not_found | confidence: high | notes: Official company page confirms CEO. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::reosgmbh::delinkedincom::janchristoph::maiwaldt | person_key: batch003::reosgmbh::delinkedincom::janchristoph::maiwaldt | company_key: batch003::reosgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+6. batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | first_name: Kjell Ole | last_name: Beckmann | full_name: Kjell Ole Beckmann | role: Co-Founder & Chief Sales Officer | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/kjell-ole-beckmann-14b319172 | email_type: not_found | confidence: high | notes: Official company page confirms CSO. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::reosgmbh::delinkedincom::kjellole::beckmann | person_key: batch003::reosgmbh::delinkedincom::kjellole::beckmann | company_key: batch003::reosgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+7. batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | first_name: Ole | last_name: Jürs | full_name: Ole Jürs | role: Head of Key Account Management | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/ole-juers-07b32019b | email_type: not_found | confidence: high | notes: Official company page confirms key account role. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::reosgmbh::delinkedincom::ole::jrs | person_key: batch003::reosgmbh::delinkedincom::ole::jrs | company_key: batch003::reosgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+8. batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | first_name: Stephan | last_name: Langberg | full_name: Stephan Langberg | role: Chief Financial Officer | role_category: finance | linkedin_profile_url: https://www.linkedin.com/in/stephan-langberg/ | email_type: not_found | confidence: high | notes: Official company page confirms CFO. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::reosgmbh::delinkedincom::stephan::langberg | person_key: batch003::reosgmbh::delinkedincom::stephan::langberg | company_key: batch003::reosgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+9. batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | first_name: Tom | last_name: Leppin | full_name: Tom Leppin | role: Founder & Chief Digital Officer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/tom-leppin-3ab76716a | email_type: not_found | confidence: high | notes: Official company page confirms founder role. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::reosgmbh::delinkedincom::tom::leppin | person_key: batch003::reosgmbh::delinkedincom::tom::leppin | company_key: batch003::reosgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+10. batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | first_name: Amelie | last_name: Nerger | full_name: Amelie Nerger | role: Head of Corporate Communications | role_category: marketing | email_type: not_found | confidence: high | notes: Official company page confirms communications role. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::reosgmbh::delinkedincom::amelie::nerger | person_key: batch003::reosgmbh::delinkedincom::amelie::nerger | company_key: batch003::reosgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+11. batch_id: batch_003 | company_name: 450connect GmbH | company_website: https://de.linkedin.com/company/450connect-gmbh | first_name: Henrik | last_name: Desfontaines | full_name: Henrik Desfontaines | role: Geschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official impressum lists him in Geschäftsführung. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::450connectgmbh::delinkedincom::henrik::desfontaines | person_key: batch003::450connectgmbh::delinkedincom::henrik::desfontaines | company_key: batch003::450connectgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+12. batch_id: batch_003 | company_name: 450connect GmbH | company_website: https://de.linkedin.com/company/450connect-gmbh | first_name: Joachim | last_name: Groß | full_name: Joachim Groß | role: Geschäftsführer Technik | role_category: operations | email_type: not_found | confidence: high | notes: Newsletter and impressum verify executive role. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::450connectgmbh::delinkedincom::joachim::gro | person_key: batch003::450connectgmbh::delinkedincom::joachim::gro | company_key: batch003::450connectgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+13. batch_id: batch_003 | company_name: 450connect GmbH | company_website: https://de.linkedin.com/company/450connect-gmbh | first_name: Matthias | last_name: Groß | full_name: Matthias Groß | role: Geschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official impressum lists him in Geschäftsführung. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::450connectgmbh::delinkedincom::matthias::gro | person_key: batch003::450connectgmbh::delinkedincom::matthias::gro | company_key: batch003::450connectgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+14. batch_id: batch_003 | company_name: 450connect GmbH | company_website: https://de.linkedin.com/company/450connect-gmbh | first_name: Frederik | last_name: Giessing | full_name: Dr. Frederik Giessing | role: Geschäftsleiter Business Development, Regulation and Marketing | role_category: business_development | email_type: not_found | confidence: high | notes: Public event profile verifies leadership and business development remit. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::450connectgmbh::delinkedincom::frederik::giessing | person_key: batch003::450connectgmbh::delinkedincom::frederik::giessing | company_key: batch003::450connectgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+15. batch_id: batch_003 | company_name: 450connect GmbH | company_website: https://de.linkedin.com/company/450connect-gmbh | first_name: Uwe | last_name: Wermke | full_name: Uwe Wermke | role: Senior Channel Manager Vertriebspartner | role_category: sales | email_type: not_found | confidence: high | notes: Official contact page lists him as senior channel partner manager. | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::450connectgmbh::delinkedincom::uwe::wermke | person_key: batch003::450connectgmbh::delinkedincom::uwe::wermke | company_key: batch003::450connectgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_003_20260531T110106Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
