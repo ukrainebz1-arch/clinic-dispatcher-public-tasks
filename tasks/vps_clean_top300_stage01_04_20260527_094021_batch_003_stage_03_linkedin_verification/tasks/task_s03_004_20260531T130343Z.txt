@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+TASK_ID: task_s03_004_20260531T130343Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_004_20260531T130343Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_003
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_003/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_003 | company_name: AI Transformation Institute | company_website: https://de.linkedin.com/company/aiti-ai | first_name: Conrad | last_name: Schlenkhoff | full_name: Conrad Schlenkhoff | role: Gründer & Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/conrad-schlenkhoff | confidence: high | notes: Official team page lists founder and managing director role.
+2. batch_id: batch_003 | company_name: AI Transformation Institute | company_website: https://de.linkedin.com/company/aiti-ai | first_name: Philipp | last_name: Schlenkhoff | full_name: Dr. Philipp Schlenkhoff | role: Gründer & Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-philipp-schlenkhoff-ai-transformation | confidence: high | notes: Official team page lists founder and managing director role.
+3. batch_id: batch_003 | company_name: AI Transformation Institute | company_website: https://de.linkedin.com/company/aiti-ai | first_name: Sven | last_name: Schmeier | full_name: Dr. Sven Schmeier | role: Co-Gründer & Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official story page lists co-founder and managing director role.
+4. batch_id: batch_003 | company_name: Abet Laminati | company_website: https://it.linkedin.com/company/abet-laminati-spa | first_name: Alexander | last_name: Hösch | full_name: Alexander Hösch | role: Country Sales Manager | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/alexander-h%C3%B6sch-022ba2293 | confidence: high | notes: Public LinkedIn profile verifies Abet Laminati sales leadership.
+5. batch_id: batch_003 | company_name: Adam & Eve Beautylounge GmbH | company_website: https://de.linkedin.com/company/adam-eve-beautylounge | first_name: Filiz | last_name: Christoph-Atas | full_name: Filiz Christoph-Atas | role: CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/filiz-christoph-atas-58925877 | confidence: high | notes: Public profile lists CEO at Adam & Eve Beautylounge.
+6. batch_id: batch_003 | company_name: Adam & Eve Beautylounge GmbH | company_website: https://de.linkedin.com/company/adam-eve-beautylounge | first_name: Roald | last_name: Christoph | full_name: Roald Christoph | role: Co-Founder | role_category: founder_ceo | confidence: high | notes: Official about page says Filiz founded Adam & Eve with Roald.
+7. batch_id: batch_003 | company_name: Adam & Eve Beautylounge GmbH | company_website: https://de.linkedin.com/company/adam-eve-beautylounge | first_name: Jasmin | last_name: Grewe | full_name: Jasmin Grewe | role: Head of Finance & Accounting | role_category: finance | linkedin_profile_url: https://de.linkedin.com/in/jasmin-grewe-6b35822b6 | confidence: high | notes: Public profile lists current finance leadership at company.
+8. batch_id: batch_003 | company_name: Adecco Permanent Recruitment | company_website: https://pt.linkedin.com/company/adecco-recruitment-portugal | first_name: Bernardo | last_name: Samuel | full_name: Bernardo Samuel | role: Country Head of Permanent Recruitment | Executive Committee | role_category: hr_recruiting | linkedin_profile_url: https://pt.linkedin.com/in/bernardosamuel | confidence: high | notes: Profile verifies Adecco Permanent Recruitment leadership.
+9. batch_id: batch_003 | company_name: Adecco Permanent Recruitment | company_website: https://pt.linkedin.com/company/adecco-recruitment-portugal | first_name: Rui | last_name: Henriques | full_name: Rui Henriques | role: Diretor de Permanent Placement da Adecco Portugal | role_category: hr_recruiting | linkedin_profile_url: https://pt.linkedin.com/in/ruifilipehenriques/pt | confidence: high | notes: Public LinkedIn profile and company posts verify Adecco role.
+10. batch_id: batch_003 | company_name: Adecco Permanent Recruitment | company_website: https://pt.linkedin.com/company/adecco-recruitment-portugal | first_name: Lúcia | last_name: Guimarães | full_name: Lúcia Guimarães | role: Executive Manager & Head of Office Porto | role_category: other_management | linkedin_profile_url: https://pt.linkedin.com/in/l%C3%BAcia-guimar%C3%A3es | confidence: high | notes: Company post verifies her executive manager and office head role.
+11. batch_id: batch_003 | company_name: Adecco Permanent Recruitment | company_website: https://pt.linkedin.com/company/adecco-recruitment-portugal | first_name: Filipa | last_name: Aleixo | full_name: Filipa Aleixo | role: Manager Sales & Marketing | role_category: sales | linkedin_profile_url: https://pt.linkedin.com/in/filipaaleixo | confidence: high | notes: Public profile verifies Sales & Marketing manager role.
+12. batch_id: batch_003 | company_name: Bytec Medizintechnik GmbH | company_website: https://de.linkedin.com/company/bytec-medizintechnik-gmbh | first_name: Paul Willi | last_name: Coenen | full_name: Paul Willi Coenen | role: CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/paul-willi-coenen-68150a27b | confidence: high | notes: Official site lists him as CEO
+13. batch_id: batch_003 | company_name: Bytec Medizintechnik GmbH | company_website: https://de.linkedin.com/company/bytec-medizintechnik-gmbh | first_name: André | last_name: Coenen | full_name: André Coenen | role: Director Development, CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/andr%C3%A9-coenen-93a70b240 | confidence: high | notes: Official news confirms co-management role
+14. batch_id: batch_003 | company_name: Bytec Medizintechnik GmbH | company_website: https://de.linkedin.com/company/bytec-medizintechnik-gmbh | first_name: Claudia | last_name: Coenen | full_name: Claudia Coenen | role: CFO, Human Resources, Prokurist | role_category: finance | confidence: high | notes: Official site lists finance and HR leadership
+15. batch_id: batch_003 | company_name: Bytec Medizintechnik GmbH | company_website: https://de.linkedin.com/company/bytec-medizintechnik-gmbh | first_name: Christin | last_name: Coenen | full_name: Christin Coenen | role: Head of New Business Development & Marketing | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/christin-coenen | confidence: high | notes: Official site lists business development leadership
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_004_20260531T130343Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
