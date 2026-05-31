@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+TASK_ID: task_s03_018_20260531T130343Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_018_20260531T130343Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_003
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_003/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_003 | company_name: contentbird GmbH | company_website: https://de.linkedin.com/company/contentbird-gmbh | first_name: Johannes | last_name: Güldenpfennig | full_name: Johannes Güldenpfennig | role: Head of Business Development | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/johannes-gueldenpfennig | confidence: high | notes: Public XING profile lists Head of Business Development.
+2. batch_id: batch_003 | company_name: contentbird GmbH | company_website: https://de.linkedin.com/company/contentbird-gmbh | first_name: Andreas | last_name: Eisemann | full_name: Andreas Eisemann | role: CEO & SaaS Executive | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/andreas-eisemann-86584844 | confidence: medium | notes: Public profiles list CEO; official site also names Nicolai CEO.
+3. batch_id: batch_003 | company_name: Automobile Lopp | company_website: https://de.linkedin.com/company/automobile-lopp | first_name: Robert | last_name: Lopp | full_name: Robert Lopp | role: Geschäftsführer / Founder | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/robert-lopp-401a6373 | confidence: high | notes: Official site names him founder and Geschäftsführer
+4. batch_id: batch_003 | company_name: Automobile Lopp | company_website: https://de.linkedin.com/company/automobile-lopp | first_name: Philipp | last_name: Lopp | full_name: Philipp Lopp | role: Recruiting contact for B2B sales role | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/philipp-lopp-209196205 | confidence: medium | notes: Job ad lists him as contact for B2B sales
+5. batch_id: batch_003 | company_name: BAYOOSOFT | company_website: https://de.linkedin.com/company/bayoosoft | first_name: Svenja | last_name: Winkler | full_name: Svenja Winkler | role: CEO / Head of Products | role_category: founder_ceo | linkedin_profile_url: https://www.linkedin.com/in/svenja-winkler/ | confidence: high | notes: Official site lists her as CEO
+6. batch_id: batch_003 | company_name: BAYOOSOFT | company_website: https://de.linkedin.com/company/bayoosoft | first_name: Frank | last_name: Manger | full_name: Frank Manger | role: Geschäftsführer | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/frank-manger-08895918/de | confidence: high | notes: Impressum lists him in Geschäftsführung
+7. batch_id: batch_003 | company_name: BAYOOSOFT | company_website: https://de.linkedin.com/company/bayoosoft | first_name: Stefan | last_name: Becher | full_name: Stefan Becher | role: Geschäftsführer | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/stefan-becher-8915073 | confidence: high | notes: Impressum lists him in Geschäftsführung
+8. batch_id: batch_003 | company_name: BAYOOSOFT | company_website: https://de.linkedin.com/company/bayoosoft | first_name: Ingo | last_name: Schmall | full_name: Ingo Schmall | role: CBDO | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/ingo-schmall-4a983883 | confidence: high | notes: Expo profile lists him as BAYOOSOFT CBDO
+9. batch_id: batch_003 | company_name: BK Search | company_website: https://ch.linkedin.com/company/bksearch | first_name: Bakalilou | last_name: Yabi | full_name: Bakalilou Yabi | role: Founder / Managing Director | role_category: founder_ceo | linkedin_profile_url: https://ch.linkedin.com/in/bakalilou-yabi | confidence: high | notes: Company site names him founder of BK Search Geneva
+10. batch_id: batch_003 | company_name: BK Search | company_website: https://ch.linkedin.com/company/bksearch | first_name: Lassana | last_name: Diakhité | full_name: Lassana Diakhité | role: Gérant | role_category: other_management | confidence: high | notes: Registry profile lists him in management board
+11. batch_id: batch_003 | company_name: BK Search | company_website: https://ch.linkedin.com/company/bksearch | first_name: Seynabou | last_name: Thiam | full_name: Seynabou Thiam | role: Co-founder / Associate | role_category: founder_ceo | confidence: medium | notes: Article describes her as BK Search co-founder
+12. batch_id: batch_003 | company_name: Badiovo | company_website: https://www.linkedin.com/company/badiovo | first_name: Muhammed Emin | last_name: Günes | full_name: Muhammed Emin Günes | role: Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/emin-g%C3%BCnes-87665a17b | confidence: high | notes: Impressum lists him as representative
+13. batch_id: batch_003 | company_name: Bartels Bürotechnik GmbH | company_website: https://de.linkedin.com/company/bartels-b-rotechnik-gmbh | first_name: Christian | last_name: Kutscheidt | full_name: Christian Kutscheidt | role: Geschäftsführer | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/christian-kutscheidt-4a7877373 | confidence: high | notes: Official team page lists him as Geschäftsführer
+14. batch_id: batch_003 | company_name: Bartels Bürotechnik GmbH | company_website: https://de.linkedin.com/company/bartels-b-rotechnik-gmbh | first_name: Daniela | last_name: Kutscheidt | full_name: Daniela Kutscheidt | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official team page lists her as Geschäftsführerin
+15. batch_id: batch_003 | company_name: Bartels Bürotechnik GmbH | company_website: https://de.linkedin.com/company/bartels-b-rotechnik-gmbh | first_name: Volker | last_name: Lattenkamp | full_name: Volker Lattenkamp | role: Vertriebsleitung Großkunden | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/volker-lattenkamp-83961915 | confidence: high | notes: Official team page lists him in large-account sales
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_018_20260531T130343Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
