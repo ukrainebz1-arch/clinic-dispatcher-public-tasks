@@ -1,0 +1,141 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_02_public_email_lookup_send1
+TASK_ID: task_stage_031_20260531T093245Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_031_20260531T093245Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / SEND 1: email-first deep search for B2B email enrichment.
+
+Role:
+You are a senior B2B sales intelligence researcher. Your task is to find real person-company email evidence or useful email candidates for each input person.
+
+Primary goal for every input person:
+1. Find a person-company email if it is available.
+2. If exact email is not found, preserve only email-useful evidence: candidate_email, alternative_emails, company_email_examples, pattern_examples_found.
+3. Do NOT spend search budget finding contact routes, booking pages, profile pages, generic contact forms, LinkedIn/Xing routes, or named routes. Routes are not useful output for this campaign.
+4. If no exact email, no candidate email, and no strong pattern evidence exists, return NOT_FOUND_EMAIL.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Core rules:
+- Generated or pattern-only emails are NOT FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found.
+- Strong pattern hypotheses are useful, but must remain separate from confirmed person-company emails.
+- Do not add a philosophical/publicity filter. If email/source evidence is found through search/web/source_url, that is enough for audit. Focus on the 3 criteria above.
+- Preserve one output row per input person.
+- Email yield is the priority. Do not return a route just because a contact page or profile exists.
+
+Identity preservation rules:
+- Copy these fields exactly from the input row: campaign_id, batch_id, input_row_id, person_key, company_key.
+- Do not invent, normalize, shorten, translate, regenerate, or renumber these fields.
+- Do not use the numbered list index as input_row_id.
+- If an identity field is present in the input, the same exact value must appear in the output row.
+
+Search deeply before finalizing each row, but keep the search email-first:
+- quoted exact email-style searches for likely formats;
+- person name + company domain;
+- person name + company name + email;
+- company domain + email examples;
+- official company pages only when they may expose email addresses;
+- PDFs and public documents;
+- event/speaker pages;
+- association/member directories;
+- partner pages, newsletters, press pages, old pages, and visible snippets;
+- source snippets that expose emails or pattern examples.
+
+Useful candidate variants to check or preserve:
+- firstname.lastname@domain
+- firstinitial.lastname@domain
+- firstname@domain
+- lastname@domain
+- firstname_lastname@domain
+- firstname-lastname@domain
+- formal-name variants such as Nick/Nicolas/Nicholas, Ben/Benjamin, Chris/Christopher
+- German character variants such as ä/ae, ö/oe, ü/ue, ß/ss
+- hyphen and compound surname variants
+
+Route suppression:
+- Do not search for named routes as a goal.
+- Do not return FOUND_NAMED_COMPANY_ROUTE for ordinary contact forms, booking buttons, team profiles, LinkedIn/Xing pages, or contact pages.
+- route_url and route_label should normally stay blank.
+- Use FOUND_NAMED_COMPANY_ROUTE only as a compatibility fallback if a previous row already contains a named route that must be preserved and no email/candidate/pattern evidence exists. In SEND 1 this should almost never happen.
+- Prefer NOT_FOUND_EMAIL over a route-only result.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Status meaning:
+- FOUND_PERSON_COMPANY_EMAIL: exact person-level email found and matches person/company/domain criteria.
+- FOUND_NAMED_COMPANY_ROUTE: compatibility-only route status; do not actively search for it.
+- FOUND_GENERIC_COMPANY_EMAIL: only a concrete company-level email such as info@, kontakt@, hallo@, sales@, office@ is available. Do not spend extra time looking for generic emails.
+- STRONG_PATTERN_HYPOTHESIS: exact email is not found, but candidate is supported by 3+ concrete same-domain person emails following the same format.
+- UNVERIFIED_GENERATED_EMAIL: likely email generated from pattern, but exact email itself has not been found.
+- UNVERIFIED_PROVIDER_EMAIL: email appears only in provider/database-style source and needs stronger confirmation.
+- NOT_FOUND_EMAIL / NOT_FOUND: no useful person email result; use NOT_FOUND_EMAIL when the person-email search was exhausted.
+
+Allowed next_recovery_action values:
+close_as_found_person_email
+keep_named_route
+keep_generic_route
+send_to_exact_candidate_verification
+send_to_pattern_decision
+send_to_technical_source_extraction
+keep_as_unverified_candidate
+close_as_not_found_email
+
+Input format:
+You will receive CURRENT CHUNK INPUT as numbered rows generated by the dispatcher. Use the row fields as the input people. Do not require placeholder blocks.
+
+Output CSV only. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- email_status: one allowed status.
+- email: only exact found confirmed person email or generic company email. Do not put generated emails here.
+- candidate_email: generated/provider/pattern candidate only.
+- company_email_examples or pattern_examples_found: pipe-separated concrete same-domain examples if used.
+- source_urls: pipe-separated URLs when several sources exist.
+- email_source_url: strongest URL supporting the exact email result, candidate, or pattern evidence.
+- route_url / route_label: normally blank; do not fill route fields unless preserving unavoidable compatibility evidence.
+- email_confidence: high / medium / low / unknown.
+- cascade_pass: SEND_1_DEEP_ROUTE_SEARCH.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true only for FOUND_GENERIC_COMPANY_EMAIL; false for FOUND_NAMED_COMPANY_ROUTE.
+- notes: short audit note focused on email search, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_003 | company_name: Düsseldorf Congress GmbH | company_website: https://de.linkedin.com/company/duesseldorfcongress | first_name: Maria | last_name: Kofidou | full_name: Maria Kofidou | role: CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/mariakofidou | email_type: not_found | confidence: high | notes: Official team page lists as CEO | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::dsseldorfcongressgmbh::delinkedincom::maria::kofidou | person_key: batch003::dsseldorfcongressgmbh::delinkedincom::maria::kofidou | company_key: batch003::dsseldorfcongressgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+2. batch_id: batch_003 | company_name: Düsseldorf Congress GmbH | company_website: https://de.linkedin.com/company/duesseldorfcongress | first_name: Kai | last_name: Opitz | full_name: Kai Opitz | role: Director Sales und Business Development | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/kai-opitz | email_type: not_found | confidence: high | notes: Official sales team page lists role | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::dsseldorfcongressgmbh::delinkedincom::kai::opitz | person_key: batch003::dsseldorfcongressgmbh::delinkedincom::kai::opitz | company_key: batch003::dsseldorfcongressgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+3. batch_id: batch_003 | company_name: Düsseldorf Congress GmbH | company_website: https://de.linkedin.com/company/duesseldorfcongress | first_name: Martin | last_name: Rütten | full_name: Martin Rütten | role: Director MarCom | role_category: marketing | linkedin_profile_url: https://de.linkedin.com/in/martinruetten | email_type: not_found | confidence: high | notes: Official team page lists marketing director | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::dsseldorfcongressgmbh::delinkedincom::martin::rtten | person_key: batch003::dsseldorfcongressgmbh::delinkedincom::martin::rtten | company_key: batch003::dsseldorfcongressgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+4. batch_id: batch_003 | company_name: Düsseldorf Congress GmbH | company_website: https://de.linkedin.com/company/duesseldorfcongress | first_name: Yves | last_name: Kerckhofs | full_name: Yves Kerckhofs | role: Director Finance | role_category: finance | linkedin_profile_url: https://de.linkedin.com/in/yves-kerckhofs-29b28428 | email_type: not_found | confidence: high | notes: Official team page lists finance director | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::dsseldorfcongressgmbh::delinkedincom::yves::kerckhofs | person_key: batch003::dsseldorfcongressgmbh::delinkedincom::yves::kerckhofs | company_key: batch003::dsseldorfcongressgmbh::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+5. batch_id: batch_003 | company_name: EverReal | company_website: https://de.linkedin.com/company/everreal | first_name: Nessim | last_name: Djerboua | full_name: Nessim Djerboua | role: Mitgründer & CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/nessimdjerboua | email_type: not_found | confidence: high | notes: Official about page lists cofounder and CEO | campaign_id: vps_clean_top300_stage01_04_20260527_094021 | input_row_id: batch003::everreal::delinkedincom::nessim::djerboua | person_key: batch003::everreal::delinkedincom::nessim::djerboua | company_key: batch003::everreal::delinkedincom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_031_20260531T093245Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
