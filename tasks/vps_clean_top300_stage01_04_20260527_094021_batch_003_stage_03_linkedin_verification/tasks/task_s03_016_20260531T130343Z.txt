@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+TASK_ID: task_s03_016_20260531T130343Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_016_20260531T130343Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_003
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_003/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_003 | company_name: Herweck AG | company_website: https://de.linkedin.com/company/herweck-ag | first_name: Jörg | last_name: Herweck | full_name: Jörg Herweck | role: Vorstand | role_category: founder_ceo | confidence: high | notes: Official release lists him in the current board.
+2. batch_id: batch_003 | company_name: Herweck AG | company_website: https://de.linkedin.com/company/herweck-ag | first_name: Hans-Jürgen | last_name: Witfeld | full_name: Hans-Jürgen Witfeld | role: Vorstand | role_category: other_management | linkedin_profile_url: https://de.linkedin.com/in/witfeldh | confidence: high | notes: Official release lists him in the current board.
+3. batch_id: batch_003 | company_name: Herweck AG | company_website: https://de.linkedin.com/company/herweck-ag | first_name: Jakob | last_name: Saga | full_name: Jakob Saga | role: Vorstand | role_category: finance | linkedin_profile_url: https://de.linkedin.com/in/jakob-saga | confidence: high | notes: Official release lists him in the current board.
+4. batch_id: batch_003 | company_name: Herweck AG | company_website: https://de.linkedin.com/company/herweck-ag | first_name: Can | last_name: Güntuncer | full_name: Can Güntuncer | role: Executive Vice President Mobile | role_category: business_development | linkedin_profile_url: https://de.linkedin.com/in/can-g%C3%BCntuncer-1b5666127 | confidence: high | notes: Official release names him EVP Mobile.
+5. batch_id: batch_003 | company_name: Herweck AG | company_website: https://de.linkedin.com/company/herweck-ag | first_name: Silvie | last_name: Guardiola | full_name: Silvie Guardiola | role: Vertriebsleitung IT-COM | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/silvie-guardiola-riera | confidence: high | notes: Official release names her in IT-COM sales leadership.
+6. batch_id: batch_003 | company_name: Herweck AG | company_website: https://de.linkedin.com/company/herweck-ag | first_name: Thomas | last_name: Bauer | full_name: Thomas Bauer | role: Head of Sales Telekom | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/thomas-bauer-07b3441ba | confidence: high | notes: Public contact page lists Head of Sales Telekom.
+7. batch_id: batch_003 | company_name: Herweck AG | company_website: https://de.linkedin.com/company/herweck-ag | first_name: Sebastian | last_name: Faehte | full_name: Sebastian Faehte | role: Head of Sales Business Unit Mobile Devices | role_category: sales | confidence: high | notes: Official release names him Head of Sales.
+8. batch_id: batch_003 | company_name: HÖRMANN Gruppe | company_website: https://de.linkedin.com/company/hoermann-gruppe | first_name: Dirk-Eric | last_name: Loebermann | full_name: Dr. Dirk-Eric Loebermann | role: CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-dirk-eric-loebermann/en | confidence: high | notes: Official management page lists him as CEO.
+9. batch_id: batch_003 | company_name: HÖRMANN Gruppe | company_website: https://de.linkedin.com/company/hoermann-gruppe | first_name: Michael | last_name: Radke | full_name: Dr. Michael Radke | role: CEO until 30.06.2026 | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/michael-r-radke-5302a0121 | confidence: high | notes: Official page lists him as CEO during transition.
+10. batch_id: batch_003 | company_name: HÖRMANN Gruppe | company_website: https://de.linkedin.com/company/hoermann-gruppe | first_name: Anna | last_name: Hörmann | full_name: Anna Hörmann | role: Member of Management | role_category: other_management | confidence: high | notes: Official management page lists her as management member.
+11. batch_id: batch_003 | company_name: HÖRMANN Gruppe | company_website: https://de.linkedin.com/company/hoermann-gruppe | first_name: Johann | last_name: Schmid-Davis | full_name: Johann Schmid-Davis | role: CFO | role_category: finance | linkedin_profile_url: https://de.linkedin.com/in/johann-schmid-davis-455295a7 | confidence: high | notes: Official management page lists him as CFO.
+12. batch_id: batch_003 | company_name: HÖRMANN Gruppe | company_website: https://de.linkedin.com/company/hoermann-gruppe | first_name: Kerstin | last_name: Schreiber | full_name: Kerstin Schreiber | role: Member of Management | role_category: other_management | confidence: high | notes: Official management page lists her as management member.
+13. batch_id: batch_003 | company_name: IMEXCO Minerals GmbH | company_website: https://de.linkedin.com/company/imexco-minerals-gmbh | first_name: Hans-Walter | last_name: Henge | full_name: Hans-Walter Henge | role: Managing Director | role_category: founder_ceo | confidence: medium | notes: Public register profile lists him as managing director.
+14. batch_id: batch_003 | company_name: IMEXCO Minerals GmbH | company_website: https://de.linkedin.com/company/imexco-minerals-gmbh | first_name: Mats | last_name: Henge | full_name: Mats Henge | role: Managing Director | role_category: founder_ceo | confidence: medium | notes: Public register profile lists him as managing director.
+15. batch_id: batch_003 | company_name: IMEXCO Minerals GmbH | company_website: https://de.linkedin.com/company/imexco-minerals-gmbh | first_name: Tim | last_name: Wegmann | full_name: Tim Wegmann | role: Prokurist and Sales Director | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/tim-wegmann-60709685 | confidence: medium | notes: Public profiles connect him to IMEXCO sales leadership.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_016_20260531T130343Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
