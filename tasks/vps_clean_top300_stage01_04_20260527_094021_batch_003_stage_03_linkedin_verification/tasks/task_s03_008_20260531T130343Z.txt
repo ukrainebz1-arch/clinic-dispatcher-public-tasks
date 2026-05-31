@@ -1,0 +1,79 @@
+RUN_ID: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+TASK_ID: task_s03_008_20260531T130343Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_008_20260531T130343Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: vps_clean_top300_stage01_04_20260527_094021
+- batch_id: batch_003
+- run_id: vps_clean_top300_stage01_04_20260527_094021_batch_003_stage_03_linkedin_verification
+- input_csv: campaigns/vps_clean_top300_stage01_04_20260527_094021/batches/batch_003/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_003 | company_name: plancraft | company_website: https://de.linkedin.com/company/plancraft-gmbh | first_name: Till | last_name: Zimmermann | full_name: Till Zimmermann | role: VP Revenue | role_category: sales | linkedin_profile_url: https://www.linkedin.com/in/till-zimmermann/ | confidence: high | notes: Official team page lists VP Revenue
+2. batch_id: batch_003 | company_name: plancraft | company_website: https://de.linkedin.com/company/plancraft-gmbh | first_name: Alex | last_name: Kerber | full_name: Alex Kerber | role: VP Business Operations | role_category: operations | linkedin_profile_url: https://www.linkedin.com/in/alex-kerber-813bb1126/ | confidence: high | notes: Official team page lists VP Business Operations
+3. batch_id: batch_003 | company_name: shyftplan | company_website: https://de.linkedin.com/company/shyftplan | first_name: Farhood | last_name: Torabian | full_name: Dr. Farhood Torabian | role: CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/dr-farhood-torabian-71461379 | confidence: high | notes: Official about page lists CEO responsibilities
+4. batch_id: batch_003 | company_name: shyftplan | company_website: https://de.linkedin.com/company/shyftplan | first_name: Jan-Martin | last_name: Josten | full_name: Jan-Martin Josten | role: Founder & Managing Director | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/janmartinjosten | confidence: high | notes: Official about page lists founder and managing director
+5. batch_id: batch_003 | company_name: shyftplan | company_website: https://de.linkedin.com/company/shyftplan | first_name: Manuel | last_name: Ross | full_name: Dr. Manuel Ross | role: COO & Managing Director | role_category: operations | confidence: high | notes: Official about page lists COO and managing director
+6. batch_id: batch_003 | company_name: shyftplan | company_website: https://de.linkedin.com/company/shyftplan | first_name: Alexandra | last_name: Hof | full_name: Alexandra Hof | role: CTO | role_category: other_management | confidence: high | notes: Official about page lists CTO
+7. batch_id: batch_003 | company_name: simple system GmbH | company_website: https://de.linkedin.com/company/simple-system-gmbh | first_name: Michael | last_name: Petri | full_name: Michael Philipp Petri | role: Managing Director & CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/michaelphilipppetri | confidence: high | notes: Official team page lists CEO
+8. batch_id: batch_003 | company_name: simple system GmbH | company_website: https://de.linkedin.com/company/simple-system-gmbh | first_name: Thomas | last_name: Au | full_name: Thomas Au | role: CFO | role_category: finance | linkedin_profile_url: https://de.linkedin.com/in/thomas-au-96716a | confidence: high | notes: Official team page lists CFO
+9. batch_id: batch_003 | company_name: simple system GmbH | company_website: https://de.linkedin.com/company/simple-system-gmbh | first_name: Fabian | last_name: von Kleinsorgen | full_name: Fabian von Kleinsorgen | role: VP Growth & Sales Operations | role_category: sales | linkedin_profile_url: https://de.linkedin.com/in/fabian-von-kleinsorgen-ab8951124 | confidence: high | notes: Official team page lists VP Growth and Sales Operations
+10. batch_id: batch_003 | company_name: simple system GmbH | company_website: https://de.linkedin.com/company/simple-system-gmbh | first_name: Jörg | last_name: Schmidt | full_name: Jörg Schmidt | role: Head of Vendor Management | role_category: business_development | confidence: high | notes: Official team page lists Head of Vendor Management
+11. batch_id: batch_003 | company_name: simple system GmbH | company_website: https://de.linkedin.com/company/simple-system-gmbh | first_name: Andy | last_name: Freund | full_name: Andy Freund | role: Senior Growth Manager | role_category: sales | confidence: high | notes: Official team page lists Senior Growth Manager
+12. batch_id: batch_003 | company_name: sonares | company_website: https://de.linkedin.com/company/sonares | first_name: Erik | last_name: Eberwein | full_name: Erik Eberwein | role: CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/erik-eberwein-249217181 | confidence: high | notes: Impressum lists Geschäftsführer and LinkedIn lists CEO
+13. batch_id: batch_003 | company_name: sonares | company_website: https://de.linkedin.com/company/sonares | first_name: Hannes | last_name: Guhl | full_name: Dr. Hannes Guhl | role: Developer of first interdependent calculation model | role_category: other_management | confidence: medium | notes: Company story names technical model creator
+14. batch_id: batch_003 | company_name: sonares | company_website: https://de.linkedin.com/company/sonares | first_name: Jens | last_name: Birkenbeul | full_name: Jens O. Birkenbeul | role: Founder Sonares GmbH | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/jens-o-birkenbeul-117633182 | confidence: medium | notes: Public LinkedIn profile lists founder connection
+15. batch_id: batch_003 | company_name: 1Q Health Group | company_website: https://de.linkedin.com/company/1q-health-group | first_name: Philipp | last_name: Ziehr | full_name: Philipp D. E. Ziehr | role: CEO | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/philipp-ziehr | confidence: high | notes: Official leadership page lists CEO
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_008_20260531T130343Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
