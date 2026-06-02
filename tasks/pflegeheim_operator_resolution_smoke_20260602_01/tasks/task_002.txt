@@ -1,0 +1,61 @@
+RUN_ID: pflegeheim_operator_resolution_smoke_20260602_01
+TASK_ID: task_002
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+Du bist Research Worker für Pflegeheime in Bayern.
+
+Aufgabe:
+Für die unten stehenden Pflegeheim-/Domain-Targets sollst du NICHT nach einzelnen Ansprechpartnern suchen.
+Du sollst zuerst klären, wer der tatsächliche Träger / Betreiber / die Unternehmensgruppe ist.
+
+Ziel:
+Wir brauchen einen sauberen Input für den späteren Stage01 People Discovery.
+Stage01 soll nicht pro Pflegeheim laufen, wenn mehrere Häuser zu einem zentralen oder regionalen Betreiber gehören.
+
+Recherche-Regeln:
+1. Prüfe Website, Impressum, Datenschutz, Träger-Seiten und offizielle Einrichtungsseiten.
+2. Unterscheide sauber:
+   - GROUP_CENTRAL
+   - REGIONAL_TRAGER
+   - KREISVERBAND_OR_LOCAL_TRAGER
+   - STANDALONE_FACILITY
+   - UNCLEAR_NEEDS_RETRY
+3. Bei BRK, AWO, Caritas, Diakonie nicht blind alles zusammenwerfen.
+   Diese Strukturen sind oft regional, diözesan, als Kreisverband oder gGmbH organisiert.
+4. Wenn mehrere Häuser denselben echten Betreiber haben, gib den Betreiber als Stage01-Ziel zurück.
+5. Suche noch keine Personen, keine persönlichen Emails, keine LinkedIn-Profile.
+6. Evidence URL ist Pflicht, wenn möglich Impressum oder offizielle Betreiber-/Trägerseite.
+
+Output:
+Gib ausschließlich CSV zurück.
+Keine Erklärung vor oder nach der CSV.
+Keine Markdown-Tabelle.
+Header exakt:
+
+target_id,input_type,input_name,input_domain,operator_name,operator_domain,operator_level,stage01_target_type,confidence,evidence_url,notes
+
+Erlaubte Werte für confidence:
+A_CONFIRMED
+B_STRONG
+C_INFERRED
+D_UNCLEAR
+
+Erlaubte Werte für stage01_target_type:
+GROUP_CENTRAL
+REGIONAL_TRAGER
+KREISVERBAND_OR_LOCAL_TRAGER
+STANDALONE_FACILITY
+UNCLEAR_NEEDS_RETRY
+
+CURRENT CHUNK INPUT:
+1. target_id: op_006 | input_type: DOMAIN_CLUSTER | input_name: AWO Niederbayern Oberpfalz | input_domain: awo-ndb-opf.de | facility_count: 19 | sample_facilities: sample: AWO Einrichtungen Niederbayern/Oberpfalz | cities: Niederbayern/Oberpfalz | notes: likely Bezirksverband
+2. target_id: op_007 | input_type: DOMAIN_CLUSTER | input_name: AWO Schwaben | input_domain: awo-schwaben.de | facility_count: 19 | sample_facilities: sample: AWO Schwaben Pflegeheime | cities: Schwaben | notes: likely Bezirksverband
+3. target_id: op_008 | input_type: DOMAIN_CLUSTER | input_name: Alloheim Bayern | input_domain: alloheim.de | facility_count: 19 | sample_facilities: sample: Alloheim Senioren-Residenzen | cities: multiple Bavaria cities | notes: likely central group
+4. target_id: op_009 | input_type: DOMAIN_CLUSTER | input_name: Compassio Bayern | input_domain: compassio.de | facility_count: 17 | sample_facilities: sample: Compassio Seniorendomizile | cities: multiple Bavaria cities | notes: likely central group
+5. target_id: op_010 | input_type: DOMAIN_CLUSTER | input_name: Diakoneo Bayern | input_domain: diakoneo.de | facility_count: 18 | sample_facilities: sample: Diakoneo Pflegeeinrichtungen | cities: multiple Bavaria cities | notes: likely regional/central nonprofit operator
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_002
+- Return only the requested result.
+- Use public information only.
