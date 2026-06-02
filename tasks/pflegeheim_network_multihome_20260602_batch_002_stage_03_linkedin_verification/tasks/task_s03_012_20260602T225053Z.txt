@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_012_20260602T225053Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_012_20260602T225053Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_002
+- run_id: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: ProCurand Care GmbH | company_website: https://procurand.de | first_name: Judith | last_name: Bögelsack | full_name: Judith Bögelsack | role: Geschäftsführerin | role_category: other_management | confidence: high | notes: Official management page lists managing director.
+2. batch_id: batch_002 | company_name: ProCurand Care GmbH | company_website: https://procurand.de | first_name: Tanja | last_name: Monski | full_name: Tanja Monski | role: Geschäftsführerin | role_category: other_management | confidence: high | notes: Official management page lists managing director.
+3. batch_id: batch_002 | company_name: ProCurand Care GmbH | company_website: https://procurand.de | first_name: Eileen | last_name: Philipp | full_name: Eileen Philipp | role: Geschäftsführerin | role_category: other_management | confidence: high | notes: Official management page lists managing director.
+4. batch_id: batch_002 | company_name: Römergarten Senioren-Residenzen GmbH | company_website: https://roemergarten-residenzen.de | first_name: Jens | last_name: Harder | full_name: Jens Harder | role: Vertretungsberechtigter / Geschäftsführung | role_category: other_management | confidence: high | notes: Official imprint lists representation.
+5. batch_id: batch_002 | company_name: Römergarten Senioren-Residenzen GmbH | company_website: https://roemergarten-residenzen.de | first_name: Marcel | last_name: Trümpelmann | full_name: Marcel Trümpelmann | role: Vertretungsberechtigter / Geschäftsführung | role_category: other_management | confidence: high | notes: Official imprint lists representation.
+6. batch_id: batch_002 | company_name: Wohnen und Pflege im Alter in Maintal gGmbH | company_website: https://seniorenzentren-maintal.de | first_name: Rita | last_name: Wanninger | full_name: Rita Wanninger | role: Geschäftsführerin | role_category: other_management | confidence: high | notes: Official contact page lists managing director.
+7. batch_id: batch_002 | company_name: Wohnen und Pflege im Alter in Maintal gGmbH | company_website: https://seniorenzentren-maintal.de | first_name: Andreas | last_name: Hohmann-Esch | full_name: Andreas Hohmann-Esch | role: Einrichtungsleiter/Prokurist | role_category: operations | confidence: high | notes: Official contact page lists facility lead/prokurist.
+8. batch_id: batch_002 | company_name: Wohnen und Pflege im Alter in Maintal gGmbH | company_website: https://seniorenzentren-maintal.de | first_name: Verena | last_name: Fürnkäs | full_name: Verena Fürnkäs | role: Einrichtungsleiterin | role_category: operations | confidence: high | notes: Official contact page lists facility manager.
+9. batch_id: batch_002 | company_name: Sozialteam - Senioren- und Pflegeeinrichtungen GmbH | company_website: https://sozialteam.de | first_name: Christian | last_name: Weiß | full_name: Dr. Christian Weiß | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official senior care page lists managing director.
+10. batch_id: batch_002 | company_name: Sozialteam - Senioren- und Pflegeeinrichtungen GmbH | company_website: https://sozialteam.de | first_name: Andreas | last_name: Neugirg | full_name: Andreas Neugirg | role: Prokurist und Leiter Fachbereich Senioren und Pflege | role_category: operations | confidence: high | notes: Official senior care page lists prokurist and lead.
+11. batch_id: batch_002 | company_name: Sozialteam - Senioren- und Pflegeeinrichtungen GmbH | company_website: https://sozialteam.de | first_name: Jennifer | last_name: Graser | full_name: Jennifer Graser | role: Operative Leitung | role_category: operations | confidence: medium | notes: Official news names operative lead.
+12. batch_id: batch_002 | company_name: St. Aurelia GmbH / Mein Blick Seniorenwohnanlage GmbH | company_website: https://st-aurelia.de | first_name: Achim | last_name: Siedler | full_name: Achim Siedler | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official imprint lists managing director.
+13. batch_id: batch_002 | company_name: St. Aurelia GmbH / Mein Blick Seniorenwohnanlage GmbH | company_website: https://st-aurelia.de | first_name: Michael | last_name: Holstein | full_name: Michael Holstein | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official imprint lists managing director.
+14. batch_id: batch_002 | company_name: Stadtmission Nürnberg Pflege gGmbH | company_website: https://stadtmission-nuernberg.de | first_name: Kai | last_name: Stähler | full_name: Kai Stähler | role: Vorstandsvorsitzender | role_category: founder_ceo | confidence: high | notes: Official organization page lists board chair.
+15. batch_id: batch_002 | company_name: Stadtmission Nürnberg Pflege gGmbH | company_website: https://stadtmission-nuernberg.de | first_name: Gertrud M. | last_name: Barth | full_name: Gertrud M. Barth | role: Vorstand / Finanzvorständin | role_category: finance | confidence: high | notes: Official organization page lists finance board.
+16. batch_id: batch_002 | company_name: Stadtmission Nürnberg Pflege gGmbH | company_website: https://stadtmission-nuernberg.de | first_name: Uwe | last_name: Pihsowotzki | full_name: Uwe Pihsowotzki | role: Geschäftsführer Fachbereich Pflege | role_category: operations | confidence: high | notes: Official leadership page lists care division CEO.
+17. batch_id: batch_002 | company_name: Bürgerspitalstiftung Straubing | company_website: https://buergerspitalstiftung-straubing.de | first_name: Florian | last_name: Rammel | full_name: Florian Rammel | role: Ansprechpartner Seniorenheim St. Nikola | role_category: operations | confidence: medium | notes: Official jobs page lists him for St. Nikola inquiries.
+18. batch_id: batch_002 | company_name: Bürgerspitalstiftung Straubing | company_website: https://buergerspitalstiftung-straubing.de | first_name: Magdalena | last_name: Russek | full_name: Magdalena Russek | role: Ansprechpartnerin Bürgerheim | role_category: operations | confidence: medium | notes: Official jobs page lists her for Bürgerheim inquiries.
+19. batch_id: batch_002 | company_name: Bürgerspitalstiftung Straubing | company_website: https://buergerspitalstiftung-straubing.de | first_name: Alexandra | last_name: Bildl | full_name: Alexandra Bildl | role: Ansprechpartnerin Ambulante Pflege | role_category: operations | confidence: medium | notes: Official jobs page lists her for ambulatory care inquiries.
+20. batch_id: batch_002 | company_name: Carl von Heß Sozialstiftung Hammelburg | company_website: https://vonhess-stiftung.de | first_name: Marco | last_name: Schäfer | full_name: Dipl.-Kfm. (FH) Marco Schäfer | role: Stiftungsvorstand | role_category: founder_ceo | confidence: high | notes: Official contacts page lists foundation board.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_012_20260602T225053Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
