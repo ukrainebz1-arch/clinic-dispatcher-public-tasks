@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_005_20260602T175051Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_005_20260602T175051Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_001
+- run_id: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: SENIOTEL gGmbH (GKG Bamberg) | company_website: https://gkg-bamberg.de | first_name: Udo | last_name: Kunzmann | full_name: Dipl.-Kfm. Udo Kunzmann | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official contact page verifies role.
+2. batch_id: batch_001 | company_name: SENIOTEL gGmbH (GKG Bamberg) | company_website: https://gkg-bamberg.de | first_name: Harald | last_name: Poßer | full_name: Harald Poßer | role: Stellvertretender Geschäftsführer / Kaufmännischer Leiter | role_category: finance | confidence: high | notes: Official contact page verifies role.
+3. batch_id: batch_001 | company_name: SENIOTEL gGmbH (GKG Bamberg) | company_website: https://gkg-bamberg.de | first_name: Ute | last_name: Göbhardt | full_name: Ute Göbhardt | role: Leitung Personalwesen | role_category: hr_recruiting | confidence: high | notes: Official contact page verifies role.
+4. batch_id: batch_001 | company_name: SENIOTEL gGmbH (GKG Bamberg) | company_website: https://gkg-bamberg.de | first_name: Matthias | last_name: Russ | full_name: Matthias Russ | role: Leitung Finanz- und Rechnungswesen | role_category: finance | confidence: high | notes: Official contact page verifies role.
+5. batch_id: batch_001 | company_name: SENIOTEL gGmbH (GKG Bamberg) | company_website: https://gkg-bamberg.de | first_name: Ralf | last_name: Viering | full_name: Ralf Viering | role: Zentrale Heimverwaltung | role_category: operations | confidence: high | notes: Official contact page verifies role.
+6. batch_id: batch_001 | company_name: SENIOTEL gGmbH (GKG Bamberg) | company_website: https://gkg-bamberg.de | first_name: Anna | last_name: Weigert | full_name: Anna Weigert | role: Leitung PR & Marketing | role_category: marketing | confidence: high | notes: Official contact page verifies role.
+7. batch_id: batch_001 | company_name: AZURIT Gruppe / AZURIT Rohr GmbH | company_website: https://azurit-gruppe.de | first_name: Simon | last_name: Welte | full_name: Dr. Simon Welte | role: Vorsitzender der Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official management page confirms group leadership
+8. batch_id: batch_001 | company_name: AZURIT Gruppe / AZURIT Rohr GmbH | company_website: https://azurit-gruppe.de | first_name: Markus | last_name: von Puttkamer | full_name: Markus von Puttkamer | role: Operativer Geschäftsführer Betrieb | role_category: operations | confidence: high | notes: Official management page confirms operations leadership
+9. batch_id: batch_001 | company_name: AZURIT Gruppe / AZURIT Rohr GmbH | company_website: https://azurit-gruppe.de | first_name: Marco | last_name: Kolodziej | full_name: Marco Kolodziej | role: Geschäftsführer Catering und Service | role_category: operations | confidence: high | notes: Official management page confirms service leadership
+10. batch_id: batch_001 | company_name: Rummelsberger Diakonie e.V. | company_website: https://rummelsberger.net | first_name: Karl | last_name: Schulz | full_name: Karl Schulz | role: Vorstand Dienste | role_category: other_management | confidence: high | notes: Official Vorstand page confirms services leadership
+11. batch_id: batch_001 | company_name: Rummelsberger Diakonie e.V. | company_website: https://rummelsberger.net | first_name: Tobias | last_name: Gaydoul | full_name: Dr. Tobias Gaydoul | role: Vorstand Finanzen | role_category: finance | confidence: high | notes: Official Vorstand page confirms finance leadership
+12. batch_id: batch_001 | company_name: Rummelsberger Diakonie e.V. | company_website: https://rummelsberger.net | first_name: Christine | last_name: Meyer | full_name: Diakonin Christine Meyer | role: Mitglied des Vorstands | role_category: other_management | confidence: high | notes: Official Vorstand page confirms board role
+13. batch_id: batch_001 | company_name: Rummelsberger Diakonie e.V. | company_website: https://rummelsberger.net | first_name: Peter | last_name: Barbian | full_name: Diakon Peter Barbian | role: Mitglied des Vorstands | role_category: other_management | confidence: high | notes: Official Vorstand page confirms board role
+14. batch_id: batch_001 | company_name: Rummelsberger Diakonie e.V. | company_website: https://rummelsberger.net | first_name: Ellen | last_name: Eidt | full_name: Diakonin Prof. Ellen Eidt | role: Vorständin Theologie und Bildung | role_category: other_management | confidence: high | notes: Official Vorstand page confirms board role
+15. batch_id: batch_001 | company_name: Caritas-Einrichtungen gGmbH | company_website: https://caritas-einrichtungen.de | first_name: Georg | last_name: Sperrle | full_name: Georg Sperrle | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official team page confirms executive role
+16. batch_id: batch_001 | company_name: Caritas-Einrichtungen gGmbH | company_website: https://caritas-einrichtungen.de | first_name: Susanne | last_name: Scheiner | full_name: Susanne Scheiner | role: Referentin Leben im Alter | role_category: operations | confidence: high | notes: Official team page confirms senior care role
+17. batch_id: batch_001 | company_name: Caritas-Einrichtungen gGmbH | company_website: https://caritas-einrichtungen.de | first_name: Thomas | last_name: Scheuermann | full_name: Thomas Scheuermann | role: Leitung Finanzen | role_category: finance | confidence: high | notes: Official team page confirms finance leadership
+18. batch_id: batch_001 | company_name: Caritas-Einrichtungen gGmbH | company_website: https://caritas-einrichtungen.de | first_name: Christian | last_name: Kestler | full_name: Christian Kestler | role: Bereichsleiter Leben im Alter | role_category: operations | confidence: medium | notes: Recent official news identifies him in senior care leadership
+19. batch_id: batch_001 | company_name: Dr. Loew Soziale Dienstleistungen GmbH & Co. KG | company_website: https://dr.loew.de | first_name: Sandra | last_name: Loew | full_name: Sandra Loew | role: Geschäftsführerin Dr. Loew Soziale Dienstleistungen | role_category: founder_ceo | confidence: high | notes: Official news page confirms executive role
+20. batch_id: batch_001 | company_name: Dr. Loew Soziale Dienstleistungen GmbH & Co. KG | company_website: https://dr.loew.de | first_name: Johannes | last_name: Zitzelsberger | full_name: Johannes Zitzelsberger | role: Direktor Zentrale Verwaltung | role_category: operations | confidence: high | notes: Official administration page confirms director role
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_005_20260602T175051Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
