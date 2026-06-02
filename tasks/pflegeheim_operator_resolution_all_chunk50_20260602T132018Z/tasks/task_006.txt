@@ -1,0 +1,106 @@
+RUN_ID: pflegeheim_operator_resolution_all_chunk50_20260602T132018Z
+TASK_ID: task_006
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+Du bist Research Worker für Pflegeheime in Bayern.
+
+Aufgabe:
+Für die unten stehenden Pflegeheim-/Domain-Targets sollst du NICHT nach einzelnen Ansprechpartnern suchen.
+Du sollst zuerst klären, wer der tatsächliche Träger / Betreiber / die Unternehmensgruppe ist.
+
+Ziel:
+Wir brauchen einen sauberen Input für den späteren Stage01 People Discovery.
+Stage01 soll nicht pro Pflegeheim laufen, wenn mehrere Häuser zu einem zentralen oder regionalen Betreiber gehören.
+
+Recherche-Regeln:
+1. Prüfe Website, Impressum, Datenschutz, Träger-Seiten und offizielle Einrichtungsseiten.
+2. Unterscheide sauber:
+   - GROUP_CENTRAL
+   - REGIONAL_TRAGER
+   - KREISVERBAND_OR_LOCAL_TRAGER
+   - STANDALONE_FACILITY
+   - UNCLEAR_NEEDS_RETRY
+3. Bei BRK, AWO, Caritas, Diakonie nicht blind alles zusammenwerfen.
+   Diese Strukturen sind oft regional, diözesan, als Kreisverband oder gGmbH organisiert.
+4. Wenn mehrere Häuser denselben echten Betreiber haben, gib den Betreiber als Stage01-Ziel zurück.
+5. Suche noch keine Personen, keine persönlichen Emails, keine LinkedIn-Profile.
+6. Evidence URL ist Pflicht, wenn möglich Impressum oder offizielle Betreiber-/Trägerseite.
+
+Output:
+Gib ausschließlich CSV zurück.
+Keine Erklärung vor oder nach der CSV.
+Keine Markdown-Tabelle.
+Header exakt:
+
+target_id,input_type,input_name,input_domain,operator_name,operator_domain,operator_level,stage01_target_type,confidence,evidence_url,notes
+
+Erlaubte Werte für confidence:
+A_CONFIRMED
+B_STRONG
+C_INFERRED
+D_UNCLEAR
+
+Erlaubte Werte für stage01_target_type:
+GROUP_CENTRAL
+REGIONAL_TRAGER
+KREISVERBAND_OR_LOCAL_TRAGER
+STANDALONE_FACILITY
+UNCLEAR_NEEDS_RETRY
+
+CURRENT CHUNK INPUT:
+1. target_id: dom_0251 | input_type: DOMAIN_CLUSTER | input_name: sz-ffb.awo-obb.de | input_domain: sz-ffb.awo-obb.de | facility_count: 2 | sample_facilities: AWO Seniorenzentrum Josefstift; AWO Seniorenzentrum "Josefstift" | cities: Fürstenfeldbruck | notes: domain cluster; confirm operator/träger and decide if group/regional/local/standalone; split if domain is mixed
+2. target_id: dom_0252 | input_type: DOMAIN_CLUSTER | input_name: sztirschenreuth.brk.de | input_domain: sztirschenreuth.brk.de | facility_count: 2 | sample_facilities: Bayerisches Rotes Kreuz Seniorenzentrum Tirschenreuth Haus Mühlbühl; Bayerisches Rotes Kreuz Seniorenzentrum Tirschenreuth Haus Ziegelanger | cities: Tirschenreuth | notes: domain cluster; confirm operator/träger and decide if group/regional/local/standalone; split if domain is mixed
+3. target_id: dom_0253 | input_type: DOMAIN_CLUSTER | input_name: vivaldo.de | input_domain: vivaldo.de | facility_count: 2 | sample_facilities: Vivaldo GmbH Seniorenhaus St. Rupert; Vivaldo GmbH Seniorenhaus St. Laurentius | cities: Piding; Saaldorf-Surheim | notes: domain cluster; confirm operator/träger and decide if group/regional/local/standalone; split if domain is mixed
+4. target_id: dom_0254 | input_type: DOMAIN_CLUSTER | input_name: vs-poessneck.de | input_domain: vs-poessneck.de | facility_count: 2 | sample_facilities: Pflegeheim Gräfendorf der Volkssolidarität Pößneck; Pflegeheim der Volkssolidarität Pößneck | cities: Krölpa; Pößneck | notes: domain cluster; confirm operator/träger and decide if group/regional/local/standalone; split if domain is mixed
+5. target_id: dom_0255 | input_type: DOMAIN_CLUSTER | input_name: wohnstift-innblick.de | input_domain: wohnstift-innblick.de | facility_count: 2 | sample_facilities: Wohnstift Innblick II; Wohnstift Innblick | cities: Neuhaus a. Inn; Neuhaus am Inn | notes: domain cluster; confirm operator/träger and decide if group/regional/local/standalone; split if domain is mixed
+6. target_id: sgl_0001 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Alten- u. Pflegeheim Anni Emmerling Haus gGmbH Bischofsheimer Weg 77 | input_domain: aeh-of.de | facility_count: 1 | sample_facilities: Alten- u. Pflegeheim Anni Emmerling Haus gGmbH Bischofsheimer Weg 77 | cities: Offenbach | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+7. target_id: sgl_0002 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Caritas-Seniorenzentrum St. Agnes | input_domain: agnes.cab-caritas.de | facility_count: 1 | sample_facilities: Caritas-Seniorenzentrum St. Agnes | cities: Mering | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+8. target_id: sgl_0003 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Seniorenresidenz "Haus am Gröbenbach" GmbH | input_domain: agora-pflege.de | facility_count: 1 | sample_facilities: Seniorenresidenz "Haus am Gröbenbach" GmbH | cities: Gröbenzell | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+9. target_id: sgl_0004 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Senioren- und Pflegeheim St. Hedwig | input_domain: ah-st-hedwig.de | facility_count: 1 | sample_facilities: Senioren- und Pflegeheim St. Hedwig | cities: Beratzhausen | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+10. target_id: sgl_0005 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Seniorenzentrum St. Martin | input_domain: ah-st-martin.brk.de | facility_count: 1 | sample_facilities: BRK-Seniorenzentrum St. Martin | cities: Füssen | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+11. target_id: sgl_0006 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Seniorenheim Bogen | input_domain: ahbogen.brk.de | facility_count: 1 | sample_facilities: BRK Seniorenheim Bogen | cities: Bogen | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+12. target_id: sgl_0007 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Seniorenwohn- und Pflegeheim Burglengenfeld | input_domain: ahburglengenfeld.brk.de | facility_count: 1 | sample_facilities: BRK Seniorenwohn- und Pflegeheim Burglengenfeld | cities: Burglengenfeld | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+13. target_id: sgl_0008 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Senioren-Park Buxheim | input_domain: ahbuxheim.brk.de | facility_count: 1 | sample_facilities: BRK Senioren-Park Buxheim | cities: Buxheim | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+14. target_id: sgl_0009 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Senioren- und Pflegeheim Deggendorf | input_domain: ahdegstadtfeld.brk.de | facility_count: 1 | sample_facilities: BRK-Senioren- und Pflegeheim Deggendorf | cities: Deggendorf | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+15. target_id: sgl_0010 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Bayerisches Rotes Kreuz - Senioren- und Pflegeheim | input_domain: ahdingolfing.brk.de | facility_count: 1 | sample_facilities: Bayerisches Rotes Kreuz - Senioren- und Pflegeheim | cities: Dingolfing | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+16. target_id: sgl_0011 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Seniorenzentrum Zellertal | input_domain: ahdrachselsried.brk.de | facility_count: 1 | sample_facilities: BRK-Seniorenzentrum Zellertal | cities: Drachselsried | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+17. target_id: sgl_0012 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Haus für Betreuung und Pflege | input_domain: ahebersdorf.brk.de | facility_count: 1 | sample_facilities: BRK-Haus für Betreuung und Pflege | cities: Ebersdorf | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+18. target_id: sgl_0013 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Senioren- Wohn- und Pflegeheim Schloß Eggmühl | input_domain: aheggmuehl.brk.de | facility_count: 1 | sample_facilities: BRK-Senioren- Wohn- und Pflegeheim Schloß Eggmühl | cities: Schierling | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+19. target_id: sgl_0014 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Senioren Wohn- und Pflegeheim Erbendorf | input_domain: aherbendorf.brk.de | facility_count: 1 | sample_facilities: BRK Senioren Wohn- und Pflegeheim Erbendorf | cities: Erbendorf | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+20. target_id: sgl_0015 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Senioren Wohn- und Pflegeheim Eschenbach | input_domain: aheschenbach.brk.de | facility_count: 1 | sample_facilities: BRK Senioren Wohn- und Pflegeheim Eschenbach | cities: Eschenbach | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+21. target_id: sgl_0016 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Bayerisches Rotes Kreuz - Senioren- und Pflegeheim | input_domain: ahfrontenhausen.brk.de | facility_count: 1 | sample_facilities: Bayerisches Rotes Kreuz - Senioren- und Pflegeheim | cities: Frontenhausen | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+22. target_id: sgl_0017 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Wohn- und Pflegezentrum (Furth im Wald) | input_domain: ahfurthimwald.brk.de | facility_count: 1 | sample_facilities: BRK-Wohn- und Pflegezentrum (Furth im Wald) | cities: Furth im Wald | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+23. target_id: sgl_0018 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Bürgerheim St. Martin | input_domain: ahgangkofen.brk.de | facility_count: 1 | sample_facilities: BRK Bürgerheim St. Martin | cities: Gangkofen | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+24. target_id: sgl_0019 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Senioren- Wohn- und Pflegeheim Geisenhausen | input_domain: ahgeisenhausen.brk.de | facility_count: 1 | sample_facilities: BRK Senioren- Wohn- und Pflegeheim Geisenhausen | cities: Geisenhausen | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+25. target_id: sgl_0020 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Seniorenwohn- und Pflegeheim Gulielminetti | input_domain: ahgulielminetti.brk.de | facility_count: 1 | sample_facilities: BRK-Seniorenwohn- und Pflegeheim Gulielminetti | cities: Marktoberdorf | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+26. target_id: sgl_0021 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Seniorenhaus Bischof Sigismund Felix | input_domain: ahhaiming.brk.de | facility_count: 1 | sample_facilities: BRK Seniorenhaus Bischof Sigismund Felix | cities: Haiming | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+27. target_id: sgl_0022 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Senioren Wohn- u. Pflegeheim Hammergmünd | input_domain: ahhammergmuend.brk.de | facility_count: 1 | sample_facilities: BRK Senioren Wohn- u. Pflegeheim Hammergmünd | cities: Grafenwöhr | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+28. target_id: sgl_0023 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Wohnen und Leben Etzelskirchen | input_domain: ahhoechstadt.brk.de | facility_count: 1 | sample_facilities: BRK Wohnen und Leben Etzelskirchen | cities: Höchstadt a. d. Aisch | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+29. target_id: sgl_0024 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Senioren- und Pflegeheim im Isarpark Plattling | input_domain: ahisarparkplattling.brk.de | facility_count: 1 | sample_facilities: BRK-Senioren- und Pflegeheim im Isarpark Plattling | cities: Plattling | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+30. target_id: sgl_0025 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Senioren- und Pflegeheim Josef-Bauer-Haus | input_domain: ahkelheim.brk.de | facility_count: 1 | sample_facilities: BRK Senioren- und Pflegeheim Josef-Bauer-Haus | cities: Kelheim | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+31. target_id: sgl_0026 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Pflegestation am Krankenhaus Bad Kötzting | input_domain: ahkoetzting.brk.de | facility_count: 1 | sample_facilities: BRK Pflegestation am Krankenhaus Bad Kötzting | cities: Bad Kötzting | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+32. target_id: sgl_0027 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Wohn- und Pflegeheim "Am Weidengarten" | input_domain: ahlichtenfels.brk.de | facility_count: 1 | sample_facilities: BRK-Wohn- und Pflegeheim "Am Weidengarten" | cities: Lichtenfels | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+33. target_id: sgl_0028 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Seniorenhaus am Klosterberg | input_domain: ahmallersdorf.brk.de | facility_count: 1 | sample_facilities: BRK Seniorenhaus am Klosterberg | cities: Mallersdorf-Pfaffenberg | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+34. target_id: sgl_0029 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Seniorenzentrum Mitterfels | input_domain: ahmitterfels.brk.de | facility_count: 1 | sample_facilities: BRK Seniorenzentrum Mitterfels | cities: Mitterfels | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+35. target_id: sgl_0030 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Seniorenzentrum Woffenbach | input_domain: ahneumarkt.brk.de | facility_count: 1 | sample_facilities: BRK Seniorenzentrum Woffenbach | cities: Neumarkt | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+36. target_id: sgl_0031 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Seban Dönhuber Haus | input_domain: ahneuoetting.brk.de | facility_count: 1 | sample_facilities: BRK Seban Dönhuber Haus | cities: Neuötting | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+37. target_id: sgl_0032 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Senioren- und Servicezentrum | input_domain: ahneutraubling.brk.de | facility_count: 1 | sample_facilities: BRK Senioren- und Servicezentrum | cities: Neutraubling | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+38. target_id: sgl_0033 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Senioren-Wohn- und Pflegeheim Plattling | input_domain: ahplattling.brk.de | facility_count: 1 | sample_facilities: BRK-Senioren-Wohn- und Pflegeheim Plattling | cities: Plattling | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+39. target_id: sgl_0034 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Wohn- und Pflegehelm "Unter den Linden" | input_domain: ahrotthalmuenster.brk.de | facility_count: 1 | sample_facilities: BRK-Wohn- und Pflegehelm "Unter den Linden" | cities: Rotthalmünster | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+40. target_id: sgl_0035 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Senioren-Wohn- und Pflegeheim Waldmünchen | input_domain: ahwaldmuenchen.brk.de | facility_count: 1 | sample_facilities: BRK-Senioren-Wohn- und Pflegeheim Waldmünchen | cities: Waldmünchen | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+41. target_id: sgl_0036 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK Senioren Wohn- und Pflegeheim Weiden | input_domain: ahweiden.brk.de | facility_count: 1 | sample_facilities: BRK Senioren Wohn- und Pflegeheim Weiden | cities: Weiden | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+42. target_id: sgl_0037 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Senioren-Wohn- und Pflegeheim Wilting | input_domain: ahwilting.brk.de | facility_count: 1 | sample_facilities: BRK-Senioren-Wohn- und Pflegeheim Wilting | cities: Traitsching | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+43. target_id: sgl_0038 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Senioren- und Pflegeheim Winzer | input_domain: ahwinzer.brk.de | facility_count: 1 | sample_facilities: BRK-Senioren- und Pflegeheim Winzer | cities: Winzer | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+44. target_id: sgl_0039 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK - Haus der Senioren Wolnzach | input_domain: ahwolnzach.brk.de | facility_count: 1 | sample_facilities: BRK - Haus der Senioren Wolnzach | cities: Wolnzach | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+45. target_id: sgl_0040 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Altenheim Haus St. Elisabeth | input_domain: ahz-isny.de | facility_count: 1 | sample_facilities: Altenheim Haus St. Elisabeth | cities: Isny | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+46. target_id: sgl_0041 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: BRK-Senioren-Wohn- und Pflegeheim Zandt | input_domain: ahzandt.brk.de | facility_count: 1 | sample_facilities: BRK-Senioren-Wohn- und Pflegeheim Zandt | cities: Zandt | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+47. target_id: sgl_0042 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Heilig-Geist-Spitalstiftung Aichach | input_domain: aichach.de | facility_count: 1 | sample_facilities: Heilig-Geist-Spitalstiftung Aichach | cities: Aichach | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+48. target_id: sgl_0043 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Aicherhof Senioren- und Pflegeheim Bernau am Chiemsee | input_domain: aicherhof-bernau.de | facility_count: 1 | sample_facilities: Aicherhof Senioren- und Pflegeheim Bernau am Chiemsee | cities: Bernau am Chiemsee | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+49. target_id: sgl_0044 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Albert-Schweitzer-Seniorenstift | input_domain: albert-schweitzer-seniorenstift.de | facility_count: 1 | sample_facilities: Albert-Schweitzer-Seniorenstift | cities: Nürnberg | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+50. target_id: sgl_0045 | input_type: GROUP_LIKE_SINGLE_FACILITY | input_name: Senioreneinrichtung Albertusheim | input_domain: albertusheim-caritas.de | facility_count: 1 | sample_facilities: Senioreneinrichtung Albertusheim | cities: Augsburg | notes: single domain but name/domain looks like group/träger/association; confirm if standalone or belongs to higher operator
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_006
+- Return only the requested result.
+- Use public information only.
