@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_008_20260602T225053Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_008_20260602T225053Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_002
+- run_id: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: Bezirk Unterfranken - Krankenhäuser und Heime Schloss Werneck | company_website: https://kh-schloss-werneck.de | first_name: Stefan | last_name: Funk | full_name: Stefan Funk | role: Bezirkstagspräsident; vertretungsberechtigt | role_category: other_management | confidence: high | notes: Official imprint names legal representative.
+2. batch_id: batch_002 | company_name: Kliniken im Naturpark Altmühltal Kommunalunternehmen des Landkreises Eichstätt A.d.ö.R. | company_website: https://kna-online.de | first_name: Marco | last_name: Fürsich | full_name: Marco Fürsich | role: Vorstand | role_category: founder_ceo | confidence: high | notes: Official leadership page lists him.
+3. batch_id: batch_002 | company_name: Kliniken im Naturpark Altmühltal Kommunalunternehmen des Landkreises Eichstätt A.d.ö.R. | company_website: https://kna-online.de | first_name: Ann-Kathrin | last_name: Schmidt | full_name: Ann-Kathrin Schmidt | role: Betriebsdirektorin | role_category: operations | confidence: high | notes: Official leadership page lists her.
+4. batch_id: batch_002 | company_name: Kliniken im Naturpark Altmühltal Kommunalunternehmen des Landkreises Eichstätt A.d.ö.R. | company_website: https://kna-online.de | first_name: Anna | last_name: Pfaller | full_name: Anna Pfaller | role: Heimleitung Seniorenheim Anlautertal Titting | role_category: operations | confidence: medium | notes: Official senior home document names her.
+5. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Altötting | company_website: https://kvaltoetting.brk.de | first_name: Christian | last_name: Fendt | full_name: Christian Fendt | role: Direktor des Kreisverbandes | role_category: other_management | confidence: high | notes: Official contact page lists him.
+6. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Altötting | company_website: https://kvaltoetting.brk.de | first_name: Reinhard | last_name: Pillris | full_name: Reinhard Pillris | role: Referent für Seniorenhäuser; stellv. Kreisgeschäftsführer | role_category: operations | confidence: high | notes: Official contact page lists him.
+7. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Altötting | company_website: https://kvaltoetting.brk.de | first_name: Herbert | last_name: Hofauer | full_name: Herbert Hofauer | role: Kreisvorsitzender | role_category: other_management | confidence: high | notes: Official 2025 BRK news lists him.
+8. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Amberg-Sulzbach | company_website: https://kvamberg-sulzbach.brk.de | first_name: Sebastian | last_name: Schaller | full_name: Sebastian Schaller | role: Kreisgeschäftsführer | role_category: founder_ceo | confidence: high | notes: Official contact page lists him.
+9. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Amberg-Sulzbach | company_website: https://kvamberg-sulzbach.brk.de | first_name: Sabine | last_name: Bogner | full_name: Sabine Bogner | role: Verwaltungsleitung; stellv. Kreisgeschäftsführerin | role_category: finance | confidence: high | notes: Official contact page lists her.
+10. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Cham | company_website: https://kvcham.brk.de | first_name: Manfred | last_name: Aschenbrenner | full_name: Manfred Aschenbrenner | role: Kreisgeschäftsführer | role_category: founder_ceo | confidence: high | notes: Official management page lists him.
+11. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Cham | company_website: https://kvcham.brk.de | first_name: Dominik | last_name: Lommer | full_name: Dominik Lommer | role: Stellvertretender Kreisgeschäftsführer | role_category: other_management | confidence: high | notes: Official management page lists him.
+12. batch_id: batch_002 | company_name: Wichtelteam GmbH | company_website: https://baeren-familie.de | first_name: Johannes | last_name: Wiedmayer | full_name: Johannes Wiedmayer | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official Bärenfamilie location page lists him as Geschäftsführung.
+13. batch_id: batch_002 | company_name: Wichtelteam GmbH | company_website: https://baeren-familie.de | first_name: Ingrid | last_name: Wiedmayer | full_name: Ingrid Wiedmayer | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official Bärenfamilie location page lists her as Geschäftsführung.
+14. batch_id: batch_002 | company_name: AGAPEO Kinderintensivpflege GmbH | company_website: https://baeren-familie.de | first_name: Stefan | last_name: Schmidt | full_name: Stefan Schmidt | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official AGAPEO Coburg page lists him as Geschäftsführung.
+15. batch_id: batch_002 | company_name: BRK-Kreisverband München | company_website: https://brk-muenchen.de | first_name: Simone | last_name: Rohrer | full_name: Simone Rohrer | role: Geschäftsführerin | role_category: other_management | confidence: high | notes: Official BRK München page lists her as Geschäftsführerin.
+16. batch_id: batch_002 | company_name: BRK-Kreisverband München | company_website: https://brk-muenchen.de | first_name: Monika | last_name: Jahn | full_name: Monika Jahn | role: Stellvertretende Geschäftsführerin | role_category: other_management | confidence: high | notes: Official BRK München page lists her as stellvertretende Geschäftsführerin.
+17. batch_id: batch_002 | company_name: BRK-Kreisverband München | company_website: https://brk-muenchen.de | first_name: Michael | last_name: Schönberger | full_name: Michael Schönberger | role: Stellvertretender Geschäftsführer | role_category: other_management | confidence: high | notes: Official BRK München page lists him as stellvertretender Geschäftsführer.
+18. batch_id: batch_002 | company_name: BruderhausDiakonie Stiftung Gustav Werner und Haus am Berg | company_website: https://bruderhausdiakonie.de | first_name: Tobias | last_name: Staib | full_name: Dr. Tobias Staib | role: Vorstandsvorsitzender | role_category: other_management | confidence: high | notes: Official BruderhausDiakonie board page lists him as Vorstandsvorsitzender.
+19. batch_id: batch_002 | company_name: BruderhausDiakonie Stiftung Gustav Werner und Haus am Berg | company_website: https://bruderhausdiakonie.de | first_name: Andreas | last_name: Lingk | full_name: Andreas Lingk | role: Kaufmännischer Vorstand | role_category: finance | confidence: high | notes: Official BruderhausDiakonie board page lists him as Kaufmännischer Vorstand.
+20. batch_id: batch_002 | company_name: Caritas Wohnen und Pflege gGmbH | company_website: https://caritas-wohnenundpflege.de | first_name: Mechthild | last_name: Hattemer | full_name: Mechthild Hattemer | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official imprint names her as legal representative and Geschäftsführerin.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_008_20260602T225053Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
