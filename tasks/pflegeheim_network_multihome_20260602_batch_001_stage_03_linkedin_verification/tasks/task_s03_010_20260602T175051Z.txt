@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_010_20260602T175051Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_010_20260602T175051Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_001
+- run_id: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Seniorendienstleistungs gemeinnützige GmbH Gersprenz | company_website: https://sdlz.de | first_name: Christoph | last_name: Dahmen | full_name: Christoph Dahmen | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official central office page lists him in Geschäftsführung
+2. batch_id: batch_001 | company_name: Seniorendienstleistungs gemeinnützige GmbH Gersprenz | company_website: https://sdlz.de | first_name: Pelin | last_name: Meyer | full_name: Pelin Meyer | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official central office page lists her in Geschäftsführung
+3. batch_id: batch_001 | company_name: Seniorendienstleistungs gemeinnützige GmbH Gersprenz | company_website: https://sdlz.de | first_name: Alexander | last_name: Schuck | full_name: Alexander Schuck | role: Prokurist Leiter Finanzen Personal und EDV | role_category: finance | confidence: high | notes: Official central office page lists finance personnel and IT remit
+4. batch_id: batch_001 | company_name: Katholische Kirchengemeinde St. Johannes Baptist Bad Mergentheim KdöR | company_website: https://st-johannes-mgh.drs.de | first_name: Peter | last_name: Striffler | full_name: Peter Striffler | role: Vertreter der Kirchengemeinde | role_category: other_management | confidence: high | notes: Official imprint lists him as representative
+5. batch_id: batch_001 | company_name: Katholische Kirchengemeinde St. Johannes Baptist Bad Mergentheim KdöR | company_website: https://st-johannes-mgh.drs.de | first_name: Matthias | last_name: Hoffmann | full_name: Matthias Hoffmann | role: Gesamtkirchenpfleger | role_category: finance | confidence: high | notes: Official page lists him responsible for financial matters
+6. batch_id: batch_001 | company_name: NürnbergStift - Eigenbetrieb der Stadt Nürnberg | company_website: https://nuernberg.de | first_name: Melanie | last_name: Miermeister | full_name: Melanie Miermeister | role: Zweite Werkleiterin | role_category: other_management | confidence: high | notes: Official city press names her as second works manager.
+7. batch_id: batch_001 | company_name: NürnbergStift - Eigenbetrieb der Stadt Nürnberg | company_website: https://nuernberg.de | first_name: Frauke | last_name: Arndt | full_name: Frauke Arndt | role: Leitung Pflege | role_category: operations | confidence: high | notes: Official source says she leads strategic Pflege development.
+8. batch_id: batch_001 | company_name: NürnbergStift - Eigenbetrieb der Stadt Nürnberg | company_website: https://nuernberg.de | first_name: Elisabeth | last_name: Ries | full_name: Elisabeth Ries | role: Sozialreferentin und Erste Werkleiterin | role_category: other_management | confidence: high | notes: Official source names her as first works manager.
+9. batch_id: batch_001 | company_name: Martin Luther Stiftung Hanau | company_website: https://vmls.de | first_name: Thorsten | last_name: Hitzel | full_name: Thorsten Hitzel | role: Vorsitzender des Vorstands | role_category: founder_ceo | confidence: high | notes: Official impressum names him chair of the board.
+10. batch_id: batch_001 | company_name: Martin Luther Stiftung Hanau | company_website: https://vmls.de | first_name: Martin | last_name: Pfalz | full_name: Martin Pfalz | role: Vorstandsmitglied | role_category: other_management | confidence: high | notes: Official impressum names him as board member.
+11. batch_id: batch_001 | company_name: Martin Luther Stiftung Hanau | company_website: https://vmls.de | first_name: Norbert | last_name: Reichhold | full_name: Dr. Norbert Reichhold | role: Vorsitzender des Aufsichtsrates | role_category: other_management | confidence: high | notes: Official impressum names him supervisory board chair.
+12. batch_id: batch_001 | company_name: ALOISIUM Pflegemanagement AG | company_website: https://aloisium.de | first_name: Björn | last_name: Michael | full_name: Björn Michael | role: Vorstand | role_category: founder_ceo | confidence: high | notes: Official about page lists him as the board.
+13. batch_id: batch_001 | company_name: Kreis-Caritasverband Rottal-Inn e.V. | company_website: https://caritas-rottal-inn.de | first_name: Kathrin | last_name: Seiler | full_name: Kathrin Seiler | role: Geschäftsführender Vorstand | role_category: founder_ceo | confidence: high | notes: Official board page names her managing board member.
+14. batch_id: batch_001 | company_name: Kreis-Caritasverband Rottal-Inn e.V. | company_website: https://caritas-rottal-inn.de | first_name: Tanja | last_name: Treitinger | full_name: Tanja Treitinger | role: Vorstand | role_category: other_management | confidence: high | notes: Official board page names her as board member.
+15. batch_id: batch_001 | company_name: ArteCare GmbH & Co. KG | company_website: https://artecare.de | first_name: Philipp | last_name: Hünersdorf | full_name: Philipp Hünersdorf | role: Geschäftsführung | CEO | role_category: founder_ceo | confidence: high | notes: Official about page lists him as CEO.
+16. batch_id: batch_001 | company_name: ArteCare GmbH & Co. KG | company_website: https://artecare.de | first_name: Sandra | last_name: Leps | full_name: Sandra Leps | role: Chief Operating Officer | role_category: operations | confidence: high | notes: Official about page lists her as COO.
+17. batch_id: batch_001 | company_name: ArteCare GmbH & Co. KG | company_website: https://artecare.de | first_name: Nele | last_name: Wohlfeil | full_name: Nele Wohlfeil | role: Chief Sales Officer | role_category: sales | confidence: high | notes: Official about page lists her as CSO.
+18. batch_id: batch_001 | company_name: ASB-Casa-Vital GmbH | company_website: https://asb-casa-vital.de | first_name: Lars-Ejnar | last_name: Sterley | full_name: Lars-Ejnar Sterley | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official impressum names him managing director.
+19. batch_id: batch_001 | company_name: ASB-Casa-Vital GmbH | company_website: https://asb-casa-vital.de | first_name: Susanne | last_name: Lickert | full_name: Susanne Lickert | role: Regionalleitung | role_category: operations | confidence: high | notes: Official contacts page lists her as regional manager.
+20. batch_id: batch_001 | company_name: ASB-Casa-Vital GmbH | company_website: https://asb-casa-vital.de | first_name: Dörte | last_name: Florich-Biens | full_name: Dörte Florich-Biens | role: Leitung Zentrales Qualitätsmanagement | role_category: operations | confidence: high | notes: Official contacts page lists central quality management lead.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_010_20260602T175051Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
