@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_014_20260602T175051Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_014_20260602T175051Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_001
+- run_id: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: K&S Gruppe / K&S Dr. Krantz Sozialbau und Betreuung SE & Co. KG | company_website: https://ks-gruppe.de | first_name: Björn | last_name: Hagedorn | full_name: Björn Hagedorn | role: Vorstand | role_category: other_management | confidence: high | notes: Official about page lists executive management.
+2. batch_id: batch_001 | company_name: K&S Gruppe / K&S Dr. Krantz Sozialbau und Betreuung SE & Co. KG | company_website: https://ks-gruppe.de | first_name: Hans-Georg | last_name: Krantz | full_name: Dr. Hans-Georg Krantz | role: Firmengründer | role_category: founder_ceo | confidence: high | notes: Official about page lists founder.
+3. batch_id: batch_001 | company_name: RENAFAN Group / RENAFAN GmbH | company_website: https://renafan.de | first_name: Shaodong | last_name: Fan | full_name: Shaodong Fan | role: Inhaber und Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official company news identifies owner and managing director.
+4. batch_id: batch_001 | company_name: RENAFAN Group / RENAFAN GmbH | company_website: https://renafan.de | first_name: Gordana | last_name: Markovic | full_name: Gordana Markovic | role: Geschäftsführerin operative Bereiche und Personalmanagement | role_category: operations | confidence: high | notes: Official news names managing director for operations and HR.
+5. batch_id: batch_001 | company_name: St. Elisabeth-Stiftung | company_website: https://st-elisabeth-stiftung.de | first_name: Andrea | last_name: Thiele | full_name: Andrea Thiele | role: Vorstandssprecherin | role_category: founder_ceo | confidence: high | notes: Official board page lists role.
+6. batch_id: batch_001 | company_name: St. Elisabeth-Stiftung | company_website: https://st-elisabeth-stiftung.de | first_name: Matthias | last_name: Stöckle | full_name: Matthias Stöckle | role: Vorstand | role_category: other_management | confidence: high | notes: Official board page lists role.
+7. batch_id: batch_001 | company_name: ANTHOJO-Gruppe | company_website: https://anthojo.de | first_name: Georg | last_name: Anagnostopoulos | full_name: Georg Anagnostopoulos | role: Geschäftsführer und Inhaber | role_category: founder_ceo | confidence: high | notes: Official imprint lists owner-managing director.
+8. batch_id: batch_001 | company_name: ANTHOJO-Gruppe | company_website: https://anthojo.de | first_name: Sophia | last_name: Anagnostopoulos | full_name: Sophia Anagnostopoulos | role: Geschäftsführerin und Inhaberin | role_category: founder_ceo | confidence: high | notes: Official imprint lists owner-managing director.
+9. batch_id: batch_001 | company_name: Caritasverband Nürnberg e.V. | company_website: https://caritas-nuernberg.de | first_name: Bernhard | last_name: Wacker | full_name: Bernhard Wacker | role: Vorsitzender des Vorstands | role_category: founder_ceo | confidence: high | notes: Official imprint lists authorized board representative.
+10. batch_id: batch_001 | company_name: Caritasverband Nürnberg e.V. | company_website: https://caritas-nuernberg.de | first_name: Michael | last_name: Schwarz | full_name: Michael Schwarz | role: Caritasdirektor, Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official imprint lists management role.
+11. batch_id: batch_001 | company_name: CURATA Care Holding GmbH | company_website: https://curata.de | first_name: Rolf | last_name: Schneider | full_name: Rolf Schneider | role: Geschäftsführer, CEO | role_category: founder_ceo | confidence: high | notes: Official about page lists CEO responsibilities.
+12. batch_id: batch_001 | company_name: CURATA Care Holding GmbH | company_website: https://curata.de | first_name: Tomasz | last_name: Tomczyk | full_name: Tomasz Tomczyk | role: Geschäftsführer, COO | role_category: operations | confidence: high | notes: Official about page lists COO responsibilities.
+13. batch_id: batch_001 | company_name: Deutscher Orden Ordenswerke K.d.ö.R. | company_website: https://deutscher-orden.de | first_name: Susanne | last_name: Schnabel | full_name: Susanne Schnabel | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official management page lists role.
+14. batch_id: batch_001 | company_name: Deutscher Orden Ordenswerke K.d.ö.R. | company_website: https://deutscher-orden.de | first_name: Stefan | last_name: Faehndrich | full_name: Stefan Faehndrich | role: Geschäftsbereichsleitung Personal | role_category: hr_recruiting | confidence: high | notes: Official management page lists HR leadership.
+15. batch_id: batch_001 | company_name: Deutscher Orden Ordenswerke K.d.ö.R. | company_website: https://deutscher-orden.de | first_name: Severin | last_name: Kuhn | full_name: Severin Kuhn | role: Geschäftsbereichsleitung Altenhilfe und Behindertenhilfe | role_category: operations | confidence: high | notes: Official management page lists care division leadership.
+16. batch_id: batch_001 | company_name: Diakonisches Werk Augsburg e.V. | company_website: https://diakonie-augsburg.de | first_name: Fritz | last_name: Graßmann | full_name: Fritz Graßmann | role: Theologischer Vorstand, Sprecher des Vorstandes | role_category: founder_ceo | confidence: high | notes: Official about page lists board role.
+17. batch_id: batch_001 | company_name: Diakonisches Werk Augsburg e.V. | company_website: https://diakonie-augsburg.de | first_name: Michael | last_name: Krause | full_name: Michael Krause | role: Fachvorstand | role_category: operations | confidence: high | notes: Official about page lists board role.
+18. batch_id: batch_001 | company_name: Diakonisches Werk Augsburg e.V. | company_website: https://diakonie-augsburg.de | first_name: Markus | last_name: Bottlang | full_name: Markus Bottlang | role: Kaufmännischer Vorstand | role_category: finance | confidence: high | notes: Official about page lists finance board role.
+19. batch_id: batch_001 | company_name: DRK Kreisverband Fulda e.V. | company_website: https://drk-fulda.de | first_name: Christoph | last_name: Schwab | full_name: Christoph Schwab | role: Vorstandsvorsitzender und Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official leadership page lists executive role.
+20. batch_id: batch_001 | company_name: DRK Kreisverband Fulda e.V. | company_website: https://drk-fulda.de | first_name: Beate | last_name: Nawracay | full_name: Beate Nawracay | role: Prokuristin, Leiterin Geschäftsbereich Personal | role_category: hr_recruiting | confidence: high | notes: Official leadership page lists HR role.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_014_20260602T175051Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
