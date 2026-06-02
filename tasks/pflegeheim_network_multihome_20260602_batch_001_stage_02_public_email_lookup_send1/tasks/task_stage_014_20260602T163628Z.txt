@@ -1,0 +1,156 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_001_stage_02_public_email_lookup_send1
+TASK_ID: task_stage_014_20260602T163628Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_014_20260602T163628Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / SEND 1: email-first deep search for B2B email enrichment.
+
+Role:
+You are a senior B2B sales intelligence researcher. Your task is to find real person-company email evidence or useful email candidates for each input person.
+
+Primary goal for every input person:
+1. Find a person-company email if it is available.
+2. If exact email is not found, preserve only email-useful evidence: candidate_email, alternative_emails, company_email_examples, pattern_examples_found.
+3. Do NOT spend search budget finding contact routes, booking pages, profile pages, generic contact forms, LinkedIn/Xing routes, or named routes. Routes are not useful output for this campaign.
+4. If no exact email, no candidate email, and no strong pattern evidence exists, return NOT_FOUND_EMAIL.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Core rules:
+- Generated or pattern-only emails are NOT FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found.
+- Strong pattern hypotheses are useful, but must remain separate from confirmed person-company emails.
+- Do not add a philosophical/publicity filter. If email/source evidence is found through search/web/source_url, that is enough for audit. Focus on the 3 criteria above.
+- Preserve one output row per input person.
+- Email yield is the priority. Do not return a route just because a contact page or profile exists.
+
+Identity preservation rules:
+- Copy these fields exactly from the input row: campaign_id, batch_id, input_row_id, person_key, company_key.
+- Do not invent, normalize, shorten, translate, regenerate, or renumber these fields.
+- Do not use the numbered list index as input_row_id.
+- If an identity field is present in the input, the same exact value must appear in the output row.
+
+Search deeply before finalizing each row, but keep the search email-first:
+- quoted exact email-style searches for likely formats;
+- person name + company domain;
+- person name + company name + email;
+- company domain + email examples;
+- official company pages only when they may expose email addresses;
+- PDFs and public documents;
+- event/speaker pages;
+- association/member directories;
+- partner pages, newsletters, press pages, old pages, and visible snippets;
+- source snippets that expose emails or pattern examples.
+
+Useful candidate variants to check or preserve:
+- firstname.lastname@domain
+- firstinitial.lastname@domain
+- firstname@domain
+- lastname@domain
+- firstname_lastname@domain
+- firstname-lastname@domain
+- formal-name variants such as Nick/Nicolas/Nicholas, Ben/Benjamin, Chris/Christopher
+- German character variants such as ä/ae, ö/oe, ü/ue, ß/ss
+- hyphen and compound surname variants
+
+Route suppression:
+- Do not search for named routes as a goal.
+- Do not return FOUND_NAMED_COMPANY_ROUTE for ordinary contact forms, booking buttons, team profiles, LinkedIn/Xing pages, or contact pages.
+- route_url and route_label should normally stay blank.
+- Use FOUND_NAMED_COMPANY_ROUTE only as a compatibility fallback if a previous row already contains a named route that must be preserved and no email/candidate/pattern evidence exists. In SEND 1 this should almost never happen.
+- Prefer NOT_FOUND_EMAIL over a route-only result.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Status meaning:
+- FOUND_PERSON_COMPANY_EMAIL: exact person-level email found and matches person/company/domain criteria.
+- FOUND_NAMED_COMPANY_ROUTE: compatibility-only route status; do not actively search for it.
+- FOUND_GENERIC_COMPANY_EMAIL: only a concrete company-level email such as info@, kontakt@, hallo@, sales@, office@ is available. Do not spend extra time looking for generic emails.
+- STRONG_PATTERN_HYPOTHESIS: exact email is not found, but candidate is supported by 3+ concrete same-domain person emails following the same format.
+- UNVERIFIED_GENERATED_EMAIL: likely email generated from pattern, but exact email itself has not been found.
+- UNVERIFIED_PROVIDER_EMAIL: email appears only in provider/database-style source and needs stronger confirmation.
+- NOT_FOUND_EMAIL / NOT_FOUND: no useful person email result; use NOT_FOUND_EMAIL when the person-email search was exhausted.
+
+Allowed next_recovery_action values:
+close_as_found_person_email
+keep_named_route
+keep_generic_route
+send_to_exact_candidate_verification
+send_to_pattern_decision
+send_to_technical_source_extraction
+keep_as_unverified_candidate
+close_as_not_found_email
+
+Input format:
+You will receive CURRENT CHUNK INPUT as numbered rows generated by the dispatcher. Use the row fields as the input people. Do not require placeholder blocks.
+
+Output CSV only. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- email_status: one allowed status.
+- email: only exact found confirmed person email or generic company email. Do not put generated emails here.
+- candidate_email: generated/provider/pattern candidate only.
+- company_email_examples or pattern_examples_found: pipe-separated concrete same-domain examples if used.
+- source_urls: pipe-separated URLs when several sources exist.
+- email_source_url: strongest URL supporting the exact email result, candidate, or pattern evidence.
+- route_url / route_label: normally blank; do not fill route fields unless preserving unavoidable compatibility evidence.
+- email_confidence: high / medium / low / unknown.
+- cascade_pass: SEND_1_DEEP_ROUTE_SEARCH.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true only for FOUND_GENERIC_COMPANY_EMAIL; false for FOUND_NAMED_COMPANY_ROUTE.
+- notes: short audit note focused on email search, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: K&S Gruppe / K&S Dr. Krantz Sozialbau und Betreuung SE & Co. KG | company_website: https://ks-gruppe.de | first_name: Björn | last_name: Hagedorn | full_name: Björn Hagedorn | role: Vorstand | role_category: other_management | email_type: not_found | confidence: high | notes: Official about page lists executive management. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::ksgruppeksdrkrantzsozialbauundbetreuungsecokg::ksgruppede::bjrn::hagedorn | person_key: batch001::ksgruppeksdrkrantzsozialbauundbetreuungsecokg::ksgruppede::bjrn::hagedorn | company_key: batch001::ksgruppeksdrkrantzsozialbauundbetreuungsecokg::ksgruppede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+2. batch_id: batch_001 | company_name: K&S Gruppe / K&S Dr. Krantz Sozialbau und Betreuung SE & Co. KG | company_website: https://ks-gruppe.de | first_name: Hans-Georg | last_name: Krantz | full_name: Dr. Hans-Georg Krantz | role: Firmengründer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official about page lists founder. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::ksgruppeksdrkrantzsozialbauundbetreuungsecokg::ksgruppede::hansgeorg::krantz | person_key: batch001::ksgruppeksdrkrantzsozialbauundbetreuungsecokg::ksgruppede::hansgeorg::krantz | company_key: batch001::ksgruppeksdrkrantzsozialbauundbetreuungsecokg::ksgruppede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+3. batch_id: batch_001 | company_name: RENAFAN Group / RENAFAN GmbH | company_website: https://renafan.de | first_name: Shaodong | last_name: Fan | full_name: Shaodong Fan | role: Inhaber und Geschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official company news identifies owner and managing director. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::renafangrouprenafangmbh::renafande::shaodong::fan | person_key: batch001::renafangrouprenafangmbh::renafande::shaodong::fan | company_key: batch001::renafangrouprenafangmbh::renafande | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+4. batch_id: batch_001 | company_name: RENAFAN Group / RENAFAN GmbH | company_website: https://renafan.de | first_name: Gordana | last_name: Markovic | full_name: Gordana Markovic | role: Geschäftsführerin operative Bereiche und Personalmanagement | role_category: operations | email_type: not_found | confidence: high | notes: Official news names managing director for operations and HR. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::renafangrouprenafangmbh::renafande::gordana::markovic | person_key: batch001::renafangrouprenafangmbh::renafande::gordana::markovic | company_key: batch001::renafangrouprenafangmbh::renafande | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+5. batch_id: batch_001 | company_name: St. Elisabeth-Stiftung | company_website: https://st-elisabeth-stiftung.de | first_name: Andrea | last_name: Thiele | full_name: Andrea Thiele | role: Vorstandssprecherin | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official board page lists role. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::stelisabethstiftung::stelisabethstiftungde::andrea::thiele | person_key: batch001::stelisabethstiftung::stelisabethstiftungde::andrea::thiele | company_key: batch001::stelisabethstiftung::stelisabethstiftungde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+6. batch_id: batch_001 | company_name: St. Elisabeth-Stiftung | company_website: https://st-elisabeth-stiftung.de | first_name: Matthias | last_name: Stöckle | full_name: Matthias Stöckle | role: Vorstand | role_category: other_management | email_type: not_found | confidence: high | notes: Official board page lists role. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::stelisabethstiftung::stelisabethstiftungde::matthias::stckle | person_key: batch001::stelisabethstiftung::stelisabethstiftungde::matthias::stckle | company_key: batch001::stelisabethstiftung::stelisabethstiftungde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+7. batch_id: batch_001 | company_name: ANTHOJO-Gruppe | company_website: https://anthojo.de | first_name: Georg | last_name: Anagnostopoulos | full_name: Georg Anagnostopoulos | role: Geschäftsführer und Inhaber | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official imprint lists owner-managing director. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::anthojogruppe::anthojode::georg::anagnostopoulos | person_key: batch001::anthojogruppe::anthojode::georg::anagnostopoulos | company_key: batch001::anthojogruppe::anthojode | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+8. batch_id: batch_001 | company_name: ANTHOJO-Gruppe | company_website: https://anthojo.de | first_name: Sophia | last_name: Anagnostopoulos | full_name: Sophia Anagnostopoulos | role: Geschäftsführerin und Inhaberin | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official imprint lists owner-managing director. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::anthojogruppe::anthojode::sophia::anagnostopoulos | person_key: batch001::anthojogruppe::anthojode::sophia::anagnostopoulos | company_key: batch001::anthojogruppe::anthojode | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+9. batch_id: batch_001 | company_name: Caritasverband Nürnberg e.V. | company_website: https://caritas-nuernberg.de | first_name: Bernhard | last_name: Wacker | full_name: Bernhard Wacker | role: Vorsitzender des Vorstands | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official imprint lists authorized board representative. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::caritasverbandnrnbergev::caritasnuernbergde::bernhard::wacker | person_key: batch001::caritasverbandnrnbergev::caritasnuernbergde::bernhard::wacker | company_key: batch001::caritasverbandnrnbergev::caritasnuernbergde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+10. batch_id: batch_001 | company_name: Caritasverband Nürnberg e.V. | company_website: https://caritas-nuernberg.de | first_name: Michael | last_name: Schwarz | full_name: Michael Schwarz | role: Caritasdirektor, Geschäftsführung | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official imprint lists management role. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::caritasverbandnrnbergev::caritasnuernbergde::michael::schwarz | person_key: batch001::caritasverbandnrnbergev::caritasnuernbergde::michael::schwarz | company_key: batch001::caritasverbandnrnbergev::caritasnuernbergde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+11. batch_id: batch_001 | company_name: CURATA Care Holding GmbH | company_website: https://curata.de | first_name: Rolf | last_name: Schneider | full_name: Rolf Schneider | role: Geschäftsführer, CEO | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official about page lists CEO responsibilities. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::curatacareholdinggmbh::curatade::rolf::schneider | person_key: batch001::curatacareholdinggmbh::curatade::rolf::schneider | company_key: batch001::curatacareholdinggmbh::curatade | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+12. batch_id: batch_001 | company_name: CURATA Care Holding GmbH | company_website: https://curata.de | first_name: Tomasz | last_name: Tomczyk | full_name: Tomasz Tomczyk | role: Geschäftsführer, COO | role_category: operations | email_type: not_found | confidence: high | notes: Official about page lists COO responsibilities. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::curatacareholdinggmbh::curatade::tomasz::tomczyk | person_key: batch001::curatacareholdinggmbh::curatade::tomasz::tomczyk | company_key: batch001::curatacareholdinggmbh::curatade | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+13. batch_id: batch_001 | company_name: Deutscher Orden Ordenswerke K.d.ö.R. | company_website: https://deutscher-orden.de | first_name: Susanne | last_name: Schnabel | full_name: Susanne Schnabel | role: Geschäftsführerin | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official management page lists role. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::deutscherordenordenswerkekdr::deutscherordende::susanne::schnabel | person_key: batch001::deutscherordenordenswerkekdr::deutscherordende::susanne::schnabel | company_key: batch001::deutscherordenordenswerkekdr::deutscherordende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+14. batch_id: batch_001 | company_name: Deutscher Orden Ordenswerke K.d.ö.R. | company_website: https://deutscher-orden.de | first_name: Stefan | last_name: Faehndrich | full_name: Stefan Faehndrich | role: Geschäftsbereichsleitung Personal | role_category: hr_recruiting | email_type: not_found | confidence: high | notes: Official management page lists HR leadership. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::deutscherordenordenswerkekdr::deutscherordende::stefan::faehndrich | person_key: batch001::deutscherordenordenswerkekdr::deutscherordende::stefan::faehndrich | company_key: batch001::deutscherordenordenswerkekdr::deutscherordende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+15. batch_id: batch_001 | company_name: Deutscher Orden Ordenswerke K.d.ö.R. | company_website: https://deutscher-orden.de | first_name: Severin | last_name: Kuhn | full_name: Severin Kuhn | role: Geschäftsbereichsleitung Altenhilfe und Behindertenhilfe | role_category: operations | email_type: not_found | confidence: high | notes: Official management page lists care division leadership. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::deutscherordenordenswerkekdr::deutscherordende::severin::kuhn | person_key: batch001::deutscherordenordenswerkekdr::deutscherordende::severin::kuhn | company_key: batch001::deutscherordenordenswerkekdr::deutscherordende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+16. batch_id: batch_001 | company_name: Diakonisches Werk Augsburg e.V. | company_website: https://diakonie-augsburg.de | first_name: Fritz | last_name: Graßmann | full_name: Fritz Graßmann | role: Theologischer Vorstand, Sprecher des Vorstandes | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official about page lists board role. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::diakonischeswerkaugsburgev::diakonieaugsburgde::fritz::gramann | person_key: batch001::diakonischeswerkaugsburgev::diakonieaugsburgde::fritz::gramann | company_key: batch001::diakonischeswerkaugsburgev::diakonieaugsburgde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+17. batch_id: batch_001 | company_name: Diakonisches Werk Augsburg e.V. | company_website: https://diakonie-augsburg.de | first_name: Michael | last_name: Krause | full_name: Michael Krause | role: Fachvorstand | role_category: operations | email_type: not_found | confidence: high | notes: Official about page lists board role. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::diakonischeswerkaugsburgev::diakonieaugsburgde::michael::krause | person_key: batch001::diakonischeswerkaugsburgev::diakonieaugsburgde::michael::krause | company_key: batch001::diakonischeswerkaugsburgev::diakonieaugsburgde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+18. batch_id: batch_001 | company_name: Diakonisches Werk Augsburg e.V. | company_website: https://diakonie-augsburg.de | first_name: Markus | last_name: Bottlang | full_name: Markus Bottlang | role: Kaufmännischer Vorstand | role_category: finance | email_type: not_found | confidence: high | notes: Official about page lists finance board role. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::diakonischeswerkaugsburgev::diakonieaugsburgde::markus::bottlang | person_key: batch001::diakonischeswerkaugsburgev::diakonieaugsburgde::markus::bottlang | company_key: batch001::diakonischeswerkaugsburgev::diakonieaugsburgde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+19. batch_id: batch_001 | company_name: DRK Kreisverband Fulda e.V. | company_website: https://drk-fulda.de | first_name: Christoph | last_name: Schwab | full_name: Christoph Schwab | role: Vorstandsvorsitzender und Geschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official leadership page lists executive role. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::drkkreisverbandfuldaev::drkfuldade::christoph::schwab | person_key: batch001::drkkreisverbandfuldaev::drkfuldade::christoph::schwab | company_key: batch001::drkkreisverbandfuldaev::drkfuldade | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+20. batch_id: batch_001 | company_name: DRK Kreisverband Fulda e.V. | company_website: https://drk-fulda.de | first_name: Beate | last_name: Nawracay | full_name: Beate Nawracay | role: Prokuristin, Leiterin Geschäftsbereich Personal | role_category: hr_recruiting | email_type: not_found | confidence: high | notes: Official leadership page lists HR role. | campaign_id: pflegeheim_network_multihome_20260602 | input_row_id: batch001::drkkreisverbandfuldaev::drkfuldade::beate::nawracay | person_key: batch001::drkkreisverbandfuldaev::drkfuldade::beate::nawracay | company_key: batch001::drkkreisverbandfuldaev::drkfuldade | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_014_20260602T163628Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
