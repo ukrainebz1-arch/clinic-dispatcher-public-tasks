@@ -1,0 +1,61 @@
+RUN_ID: pflegeheim_operator_resolution_smoke_20260602_01
+TASK_ID: task_001
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+Du bist Research Worker für Pflegeheime in Bayern.
+
+Aufgabe:
+Für die unten stehenden Pflegeheim-/Domain-Targets sollst du NICHT nach einzelnen Ansprechpartnern suchen.
+Du sollst zuerst klären, wer der tatsächliche Träger / Betreiber / die Unternehmensgruppe ist.
+
+Ziel:
+Wir brauchen einen sauberen Input für den späteren Stage01 People Discovery.
+Stage01 soll nicht pro Pflegeheim laufen, wenn mehrere Häuser zu einem zentralen oder regionalen Betreiber gehören.
+
+Recherche-Regeln:
+1. Prüfe Website, Impressum, Datenschutz, Träger-Seiten und offizielle Einrichtungsseiten.
+2. Unterscheide sauber:
+   - GROUP_CENTRAL
+   - REGIONAL_TRAGER
+   - KREISVERBAND_OR_LOCAL_TRAGER
+   - STANDALONE_FACILITY
+   - UNCLEAR_NEEDS_RETRY
+3. Bei BRK, AWO, Caritas, Diakonie nicht blind alles zusammenwerfen.
+   Diese Strukturen sind oft regional, diözesan, als Kreisverband oder gGmbH organisiert.
+4. Wenn mehrere Häuser denselben echten Betreiber haben, gib den Betreiber als Stage01-Ziel zurück.
+5. Suche noch keine Personen, keine persönlichen Emails, keine LinkedIn-Profile.
+6. Evidence URL ist Pflicht, wenn möglich Impressum oder offizielle Betreiber-/Trägerseite.
+
+Output:
+Gib ausschließlich CSV zurück.
+Keine Erklärung vor oder nach der CSV.
+Keine Markdown-Tabelle.
+Header exakt:
+
+target_id,input_type,input_name,input_domain,operator_name,operator_domain,operator_level,stage01_target_type,confidence,evidence_url,notes
+
+Erlaubte Werte für confidence:
+A_CONFIRMED
+B_STRONG
+C_INFERRED
+D_UNCLEAR
+
+Erlaubte Werte für stage01_target_type:
+GROUP_CENTRAL
+REGIONAL_TRAGER
+KREISVERBAND_OR_LOCAL_TRAGER
+STANDALONE_FACILITY
+UNCLEAR_NEEDS_RETRY
+
+CURRENT CHUNK INPUT:
+1. target_id: op_001 | input_type: DOMAIN_CLUSTER | input_name: Korian Bayern | input_domain: korian.de | facility_count: 52 | sample_facilities: sample: Haus Curanum, Phönix, Korian Einrichtungen | cities: multiple Bavaria cities | notes: likely central group
+2. target_id: op_002 | input_type: DOMAIN_CLUSTER | input_name: Kursana / Dussmann | input_domain: dussmann.de | facility_count: 24 | sample_facilities: sample: Kursana Domizil Einrichtungen | cities: multiple Bavaria cities | notes: domain points to Dussmann, brand may be Kursana
+3. target_id: op_003 | input_type: DOMAIN_CLUSTER | input_name: BRK Sozialservice Gesellschaft | input_domain: ssg.brk.de | facility_count: 23 | sample_facilities: sample: SeniorenWohnen BRK Einrichtungen | cities: multiple Bavaria cities | notes: likely BRK SSG central operator
+4. target_id: op_004 | input_type: DOMAIN_CLUSTER | input_name: BRK mixed | input_domain: brk.de | facility_count: 23 | sample_facilities: sample: BRK Pflegeheime / Kreisverband structures | cities: multiple Bavaria cities | notes: may need split by Kreisverband
+5. target_id: op_005 | input_type: DOMAIN_CLUSTER | input_name: Caritas München | input_domain: caritasmuenchen.org | facility_count: 24 | sample_facilities: sample: Caritas Altenheime München/Freising | cities: München/Freising | notes: likely regional/diocese Träger
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_001
+- Return only the requested result.
+- Use public information only.
