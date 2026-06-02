@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_001_20260602T175051Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_001_20260602T175051Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_001
+- run_id: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Korian Deutschland GmbH | company_website: https://korian.de | first_name: Christian | last_name: Gharieb | full_name: Christian Gharieb | role: Vorsitzender der Geschäftsführung / CEO | role_category: founder_ceo | confidence: high | notes: Official management page verifies role.
+2. batch_id: batch_001 | company_name: Korian Deutschland GmbH | company_website: https://korian.de | first_name: Theo | last_name: Birkemeyer | full_name: Theo Birkemeyer | role: Chief Operating Officer | role_category: operations | confidence: high | notes: Official management page verifies role.
+3. batch_id: batch_001 | company_name: Korian Deutschland GmbH | company_website: https://korian.de | first_name: Vincent | last_name: Savajols | full_name: Vincent Savajols | role: Chief Financial Officer | role_category: finance | confidence: high | notes: Official management page verifies role.
+4. batch_id: batch_001 | company_name: Korian Deutschland GmbH | company_website: https://korian.de | first_name: Monika | last_name: Steilen | full_name: Monika Steilen | role: Chief Communications & Marketing Officer | role_category: marketing | confidence: high | notes: Official management page verifies role.
+5. batch_id: batch_001 | company_name: Korian Deutschland GmbH | company_website: https://korian.de | first_name: Dr. Marina | last_name: Vutova | full_name: Dr. Marina Vutova CFA | role: Chief Strategy and Transformation Officer | role_category: business_development | confidence: high | notes: Official management page verifies role.
+6. batch_id: batch_001 | company_name: Korian Deutschland GmbH | company_website: https://korian.de | first_name: Sabrina | last_name: Wißmiller | full_name: Sabrina Wißmiller | role: Chief Quality Officer | role_category: operations | confidence: high | notes: Official management page verifies role.
+7. batch_id: batch_001 | company_name: Caritasverband der Erzdiözese München und Freising e.V. | company_website: https://caritasmuenchen.org | first_name: Prof. Dr. Hermann | last_name: Sollfrank | full_name: Prof. Dr. Hermann Sollfrank | role: Vorstandsvorsitzender | role_category: other_management | confidence: high | notes: Official imprint verifies role.
+8. batch_id: batch_001 | company_name: Caritasverband der Erzdiözese München und Freising e.V. | company_website: https://caritasmuenchen.org | first_name: Gabriele | last_name: Stark-Angermeier | full_name: Gabriele Stark-Angermeier | role: Vorstand | role_category: other_management | confidence: high | notes: Official imprint verifies role.
+9. batch_id: batch_001 | company_name: Caritasverband der Erzdiözese München und Freising e.V. | company_website: https://caritasmuenchen.org | first_name: Thomas | last_name: Schwarz | full_name: Thomas Schwarz | role: Vorstand | role_category: other_management | confidence: high | notes: Official imprint verifies role.
+10. batch_id: batch_001 | company_name: Caritasverband der Erzdiözese München und Freising e.V. | company_website: https://caritasmuenchen.org | first_name: Aleksandra | last_name: Solda-Zaccaro | full_name: Aleksandra Solda-Zaccaro | role: Leitung Abteilung Kommunikation und Sozialmarketing | role_category: marketing | confidence: high | notes: Official imprint verifies communications role.
+11. batch_id: batch_001 | company_name: Kursana GmbH | company_website: https://kursana.de | first_name: Sebastian | last_name: Kabak | full_name: Sebastian Kabak | role: Vorsitzender der Geschäftsführung Kursana | role_category: founder_ceo | confidence: high | notes: Official management page verifies role.
+12. batch_id: batch_001 | company_name: Kursana GmbH | company_website: https://kursana.de | first_name: Ulf | last_name: Bieschke | full_name: Ulf Bieschke | role: Kaufmännischer Geschäftsführer | role_category: finance | confidence: high | notes: Official management page verifies role.
+13. batch_id: batch_001 | company_name: Kursana GmbH | company_website: https://kursana.de | first_name: Eva | last_name: Lettenmeier | full_name: Eva Lettenmeier | role: Operative Geschäftsführerin | role_category: operations | confidence: high | notes: Official management page verifies role.
+14. batch_id: batch_001 | company_name: Sozialservice-Gesellschaft des Bayerischen Roten Kreuzes GmbH | company_website: https://ssg.brk.de | first_name: Patrick | last_name: Bruhn | full_name: Patrick Bruhn | role: Geschäftsführung | role_category: other_management | confidence: high | notes: Official imprint verifies role.
+15. batch_id: batch_001 | company_name: Sozialservice-Gesellschaft des Bayerischen Roten Kreuzes GmbH | company_website: https://ssg.brk.de | first_name: Christian | last_name: Pietig | full_name: Christian Pietig | role: Geschäftsführung | role_category: other_management | confidence: high | notes: Official imprint verifies role.
+16. batch_id: batch_001 | company_name: Stiftung Liebenau Pflege - Liebenau Leben im Alter gemeinnützige GmbH / Liebenau Lebenswert Alter gemeinnützige GmbH | company_website: https://stiftung-liebenau.de | first_name: Alexander | last_name: Grunewald | full_name: Alexander Grunewald | role: Geschäftsführung | role_category: other_management | confidence: high | notes: Official contact page verifies role.
+17. batch_id: batch_001 | company_name: Stiftung Liebenau Pflege - Liebenau Leben im Alter gemeinnützige GmbH / Liebenau Lebenswert Alter gemeinnützige GmbH | company_website: https://stiftung-liebenau.de | first_name: Bernd | last_name: Reik | full_name: Bernd Reik | role: Regionalleitung Region Bayern | role_category: operations | confidence: high | notes: Official contact page verifies role.
+18. batch_id: batch_001 | company_name: Stiftung Liebenau Pflege - Liebenau Leben im Alter gemeinnützige GmbH / Liebenau Lebenswert Alter gemeinnützige GmbH | company_website: https://stiftung-liebenau.de | first_name: Simon | last_name: Quenzer | full_name: Simon Quenzer | role: Leitung Finanzen | role_category: finance | confidence: high | notes: Official contact page verifies role.
+19. batch_id: batch_001 | company_name: Stiftung Liebenau Pflege - Liebenau Leben im Alter gemeinnützige GmbH / Liebenau Lebenswert Alter gemeinnützige GmbH | company_website: https://stiftung-liebenau.de | first_name: Frank | last_name: Locher | full_name: Frank Locher | role: Projektmanagement / Personalmarketing | role_category: hr_recruiting | confidence: high | notes: Official contact page verifies role.
+20. batch_id: batch_001 | company_name: Stiftung Liebenau Pflege - Liebenau Leben im Alter gemeinnützige GmbH / Liebenau Lebenswert Alter gemeinnützige GmbH | company_website: https://stiftung-liebenau.de | first_name: Vera | last_name: Ruppert | full_name: Vera Ruppert | role: Stabsstelle Kommunikation / Marketing | role_category: marketing | confidence: high | notes: Official contact page verifies role.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_001_20260602T175051Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
