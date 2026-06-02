@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_003_20260602T225053Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_003_20260602T225053Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_002
+- run_id: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: Arbeiterwohlfahrt KV Hof Stadt und Land e.V. | company_website: https://awo-hof.de | first_name: Lena | last_name: Schörner | full_name: Lena Schörner | role: Einrichtungsleitung Haus Kamilla | role_category: operations | confidence: high | notes: Official facility page lists her as facility leader.
+2. batch_id: batch_002 | company_name: Arbeiterwohlfahrt KV Hof Stadt und Land e.V. | company_website: https://awo-hof.de | first_name: Nadine | last_name: Holzke | full_name: Nadine Holzke | role: Einrichtungsleitung Michaelis Hof | role_category: operations | confidence: high | notes: Official facility page lists her as facility leader.
+3. batch_id: batch_002 | company_name: AWO Seniorenbetreuung Neustadt GmbH | company_website: https://awo-neustadt.de | first_name: Robert | last_name: Schneider | full_name: Robert Schneider | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists him as managing director.
+4. batch_id: batch_002 | company_name: AWO Seniorenbetreuung Neustadt GmbH | company_website: https://awo-neustadt.de | first_name: Friedrich | last_name: Wiesinger | full_name: Friedrich Wiesinger | role: Einrichtungsleitung Marie-Juchacz Seniorenpflegeheim | role_category: operations | confidence: high | notes: Official information PDF lists him as facility leader.
+5. batch_id: batch_002 | company_name: AWO Bezirksverband Oberbayern e.V. | company_website: https://awo-obb.de | first_name: Cornelia | last_name: Emili | full_name: Cornelia Emili | role: Vorstandsvorsitzende | role_category: founder_ceo | confidence: high | notes: Official organization page lists her as board chair.
+6. batch_id: batch_002 | company_name: AWO Bezirksverband Oberbayern e.V. | company_website: https://awo-obb.de | first_name: Nicole | last_name: Schley | full_name: Nicole Schley | role: Präsidentin und Vorsitzende des Präsidiums | role_category: other_management | confidence: high | notes: Official organization page lists her as president.
+7. batch_id: batch_002 | company_name: AWO Bezirksverband Oberbayern e.V. | company_website: https://awo-obb.de | first_name: Ronny | last_name: Hinz | full_name: Ronny Hinz | role: Einrichtungsleitung Seniorenzentrum Benediktbeuern | role_category: operations | confidence: high | notes: Official facility page lists him as facility leader.
+8. batch_id: batch_002 | company_name: AWO Bezirksverband Oberbayern e.V. | company_website: https://awo-obb.de | first_name: Rosemarie | last_name: Holzapfel | full_name: Rosemarie Holzapfel | role: Einrichtungsleitung Seniorenzentrum Miesbach | role_category: operations | confidence: high | notes: Official facility page lists her as facility leader.
+9. batch_id: batch_002 | company_name: AWO Sozialmanagement gGmbH Saale-Orla-Kreis | company_website: https://awo-sok.de | first_name: Ulf | last_name: Grießmann | full_name: Ulf Grießmann | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official organization page identifies him as managing director.
+10. batch_id: batch_002 | company_name: AWO Sozialmanagement gGmbH Saale-Orla-Kreis | company_website: https://awo-sok.de | first_name: Kristin | last_name: Zienert | full_name: Kristin Zienert | role: Recruiting und Öffentlichkeitsarbeit | role_category: hr_recruiting | confidence: high | notes: Official office page lists her in recruiting and public relations.
+11. batch_id: batch_002 | company_name: AWO Sozialmanagement gGmbH Saale-Orla-Kreis | company_website: https://awo-sok.de | first_name: Tanja | last_name: Kröning | full_name: Tanja Kröning | role: Einrichtungsleitung Pflegeheim Neustadt an der Orla | role_category: operations | confidence: high | notes: Official facility page lists her as facility leader.
+12. batch_id: batch_002 | company_name: AWO Sozialmanagement gGmbH Saale-Orla-Kreis | company_website: https://awo-sok.de | first_name: Sandra | last_name: Kühn | full_name: Sandra Kühn | role: Einrichtungsleitung Seniorenresidenz Triptis | role_category: operations | confidence: high | notes: Official facility page lists her as facility leader.
+13. batch_id: batch_002 | company_name: AWO Soziale Dienste GmbH | company_website: https://awo-straubing.de | first_name: Klaus | last_name: Hoffmann | full_name: Klaus Hoffmann | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists him as managing director.
+14. batch_id: batch_002 | company_name: AWO Soziale Dienste GmbH | company_website: https://awo-straubing.de | first_name: Hans | last_name: Kopp | full_name: Hans Kopp | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists him as managing director.
+15. batch_id: batch_002 | company_name: AWO Soziale Dienste GmbH | company_website: https://awo-straubing.de | first_name: Helmut | last_name: Rohrmüller | full_name: Helmut Rohrmüller | role: Abteilungsleitung Senioren und Behinderte | role_category: operations | confidence: high | notes: Official contact page lists him as department head.
+16. batch_id: batch_002 | company_name: AWO Soziale Dienste GmbH | company_website: https://awo-straubing.de | first_name: Thomas | last_name: Pfeffer | full_name: Thomas Pfeffer | role: Verwaltungsleitung und Personalreferent | role_category: hr_recruiting | confidence: high | notes: Official contact page lists him as administration lead and HR officer.
+17. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Fürth | company_website: https://brk-fuerth.de | first_name: Thomas | last_name: Leipold | full_name: Thomas Leipold | role: Kreisgeschäftsführer | role_category: other_management | confidence: high | notes: Official office page lists Kreisgeschäftsführer.
+18. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Fürth | company_website: https://brk-fuerth.de | first_name: Katrin | last_name: Rohm | full_name: Katrin Rohm | role: Stellvertretende Kreisgeschäftsführerin und Leiterin Soziales und Pflege | role_category: operations | confidence: high | notes: Official office page lists deputy and care leadership.
+19. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Fürth | company_website: https://brk-fuerth.de | first_name: Sascha | last_name: Zillich | full_name: Sascha Zillich | role: Personalreferent Seniorenheime | role_category: hr_recruiting | confidence: high | notes: Official contact page lists senior homes HR contact.
+20. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Kelheim | company_website: https://kvkelheim.brk.de | first_name: Christoph | last_name: Kühnl | full_name: Christoph Kühnl | role: Kreisgeschäftsführer | role_category: other_management | confidence: high | notes: Official team page lists Kreisgeschäftsführer.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_003_20260602T225053Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
