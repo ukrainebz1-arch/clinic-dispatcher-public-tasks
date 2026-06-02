@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_012_20260602T175051Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_012_20260602T175051Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_001
+- run_id: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Caritasverband für die Diözese Eichstätt e.V. | company_website: https://caritas-eichstaett.de | first_name: Alfred | last_name: Frank | full_name: Alfred Frank | role: Caritasdirektor | role_category: founder_ceo | confidence: high | notes: Official leadership page lists him as Caritas director.
+2. batch_id: batch_001 | company_name: Caritasverband für die Diözese Eichstätt e.V. | company_website: https://caritas-eichstaett.de | first_name: Andreas | last_name: Steppberger | full_name: Andreas Steppberger | role: Stellvertretender Caritasdirektor und Geschäftsführer Caritasstiftung | role_category: other_management | confidence: high | notes: Official leadership page lists him deputy director.
+3. batch_id: batch_001 | company_name: Caritasverband Frankfurt e.V. | company_website: https://caritas-frankfurt.de | first_name: Gaby | last_name: Hagmans | full_name: Gaby Hagmans | role: Caritasdirektorin | role_category: founder_ceo | confidence: high | notes: Official structure page names her on the board.
+4. batch_id: batch_001 | company_name: Caritasverband Frankfurt e.V. | company_website: https://caritas-frankfurt.de | first_name: Sandra | last_name: Haischer | full_name: Sandra Haischer | role: Abteilungsleitung Gesundheit Pflege Teilhabe | role_category: operations | confidence: high | notes: Official structure page lists her health care participation lead.
+5. batch_id: batch_001 | company_name: Caritasverband Frankfurt e.V. | company_website: https://caritas-frankfurt.de | first_name: Ulf | last_name: Gerlach | full_name: Dr. Ulf Gerlach | role: Zentralbereichsleiter Personalmanagement | role_category: hr_recruiting | confidence: high | notes: Official structure page lists him as HR management lead.
+6. batch_id: batch_001 | company_name: Caritasverband für die Diözese Fulda e.V. | company_website: https://dicvfulda.caritas.de | first_name: Markus | last_name: Juch | full_name: Dr. Markus Juch | role: Diözesan-Caritasdirektor, Vorstandsvorsitzender | role_category: founder_ceo | confidence: high | notes: Official association page lists him as board chair.
+7. batch_id: batch_001 | company_name: Caritasverband für die Diözese Fulda e.V. | company_website: https://dicvfulda.caritas.de | first_name: Ansgar | last_name: Erb | full_name: Ansgar Erb | role: Vorstandsmitglied | role_category: finance | confidence: high | notes: Official association page lists him as board member.
+8. batch_id: batch_001 | company_name: Caritasverband für die Diözese Passau e.V. | company_website: https://caritas-passau.de | first_name: Andrea | last_name: Anderlik | full_name: Mag.a (FH) Andrea Anderlik, MSc | role: Diözesan-Caritasdirektorin | role_category: founder_ceo | confidence: high | notes: Official structure page lists her on the board.
+9. batch_id: batch_001 | company_name: Caritasverband für die Diözese Passau e.V. | company_website: https://caritas-passau.de | first_name: Stefan | last_name: Seiderer | full_name: Stefan Seiderer | role: Bischöflich Beauftragter | role_category: other_management | confidence: high | notes: Official structure page lists him on the board.
+10. batch_id: batch_001 | company_name: Gemeinnützige Caritas Pflege GmbH | company_website: https://caritas-straubing.de | first_name: Nicolas | last_name: Scheidler | full_name: Nicolas Scheidler | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official impressum names him managing director.
+11. batch_id: batch_001 | company_name: Gemeinnützige Caritas Pflege GmbH | company_website: https://caritas-straubing.de | first_name: Markus | last_name: Pannermayr | full_name: Markus Pannermayr | role: Aufsichtsratsvorsitzender | role_category: other_management | confidence: high | notes: Official impressum names him supervisory board chair.
+12. batch_id: batch_001 | company_name: Diakonie Allgäu e.V. | company_website: https://diakonie-allgaeu.de | first_name: Roland | last_name: Hüber | full_name: Roland Hüber | role: Vorstandsvorsitzender | role_category: founder_ceo | confidence: high | notes: Official impressum names him board chair.
+13. batch_id: batch_001 | company_name: Diakonie Allgäu e.V. | company_website: https://diakonie-allgaeu.de | first_name: Thomas | last_name: Roth | full_name: Thomas Roth | role: Vorstand | role_category: other_management | confidence: high | notes: Official impressum names him on the board.
+14. batch_id: batch_001 | company_name: Diakonisches Werk Schweinfurt e.V. | company_website: https://diakonie-schweinfurt.de | first_name: Carsten | last_name: Bräumer | full_name: Carsten Bräumer | role: Vorstand | role_category: founder_ceo | confidence: high | notes: Official leadership page lists role.
+15. batch_id: batch_001 | company_name: Diakonisches Werk Schweinfurt e.V. | company_website: https://diakonie-schweinfurt.de | first_name: Tanja | last_name: Back | full_name: Tanja Back | role: Leitungskonferenz Pflege | role_category: operations | confidence: high | notes: Official page lists care leadership.
+16. batch_id: batch_001 | company_name: Diakonisches Werk Schweinfurt e.V. | company_website: https://diakonie-schweinfurt.de | first_name: Martin | last_name: Schleyer | full_name: Martin Schleyer | role: Leitungskonferenz Verwaltung | role_category: other_management | confidence: high | notes: Official page lists administrative leadership.
+17. batch_id: batch_001 | company_name: Mission Leben gGmbH | company_website: https://mission-leben.de | first_name: Maike | last_name: Henningsen | full_name: Maike Henningsen | role: Sprecherin der Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official management page lists role.
+18. batch_id: batch_001 | company_name: Mission Leben gGmbH | company_website: https://mission-leben.de | first_name: Elke | last_name: Weyand | full_name: Elke Weyand | role: Geschäftsführerin Geschäftsfeld Leben im Alter | role_category: operations | confidence: high | notes: Official page links role to aging-care entities.
+19. batch_id: batch_001 | company_name: Mission Leben gGmbH | company_website: https://mission-leben.de | first_name: Markus | last_name: Wiedmaier | full_name: Markus Wiedmaier | role: Geschäftsführer Mission Leben gGmbH und Tochtergesellschaften | role_category: other_management | confidence: high | notes: Official management page lists role.
+20. batch_id: batch_001 | company_name: Vitanas GmbH & Co. KGaA | company_website: https://vitanas.de | first_name: Jens | last_name: Harder | full_name: Jens Harder | role: Geschäftsführer Vorsitz | role_category: founder_ceo | confidence: high | notes: Official management page lists role.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_012_20260602T175051Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
