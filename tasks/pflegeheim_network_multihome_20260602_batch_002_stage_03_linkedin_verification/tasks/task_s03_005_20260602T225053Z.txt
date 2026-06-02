@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_005_20260602T225053Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_005_20260602T225053Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_002
+- run_id: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: Vitalis Gesellschaft für soziale Einrichtungen mbH | company_website: https://vitalis-senioren.com | first_name: Götz | last_name: Leschonsky | full_name: Götz Leschonsky | role: CEO und vertretungsberechtigter Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists authorized managing director.
+2. batch_id: batch_002 | company_name: Vitalis Gesellschaft für soziale Einrichtungen mbH | company_website: https://vitalis-senioren.com | first_name: Robert | last_name: Kordic | full_name: Dr. Robert Kordic | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official imprint lists authorized managing director.
+3. batch_id: batch_002 | company_name: Vitalis Gesellschaft für soziale Einrichtungen mbH | company_website: https://vitalis-senioren.com | first_name: Jean-Christophe | last_name: Zell | full_name: Jean-Christophe Zell | role: CFO und Geschäftsführer | role_category: finance | confidence: high | notes: Official imprint lists authorized managing director.
+4. batch_id: batch_002 | company_name: Vitalis Gesellschaft für soziale Einrichtungen mbH | company_website: https://vitalis-senioren.com | first_name: Philipp | last_name: Reichmann | full_name: Dr. Philipp Reichmann | role: Verantwortlicher für Inhalte der Vitalis Gesellschaft | role_category: other_management | confidence: medium | notes: Official imprint names him for company content responsibility.
+5. batch_id: batch_002 | company_name: CAB Caritas Augsburg Betriebsträger gGmbH | company_website: https://cab-caritas.de | first_name: Brigitta | last_name: Hofmann | full_name: Brigitta Hofmann | role: Geschäftsführerin | role_category: other_management | confidence: high | notes: Official imprint lists managing director.
+6. batch_id: batch_002 | company_name: CAB Caritas Augsburg Betriebsträger gGmbH | company_website: https://cab-caritas.de | first_name: Sonja | last_name: Schoenberner | full_name: Sonja Schoenberner | role: Geschäftsführerin | role_category: other_management | confidence: high | notes: Official imprint lists managing director.
+7. batch_id: batch_002 | company_name: Heilig-Geist-Stiftung Nesselwang | company_website: https://pflegeheim-nesselwang.de | first_name: Robert | last_name: Sertel | full_name: Robert Sertel | role: Einrichtungsleitung | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/robert-sertel-ba0751134 | confidence: high | notes: Official contact page lists facility director.
+8. batch_id: batch_002 | company_name: Heilig-Geist-Stiftung Nesselwang | company_website: https://pflegeheim-nesselwang.de | first_name: Carmen | last_name: Driendl | full_name: Carmen Driendl | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official contact page lists nursing service director.
+9. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Fürstenfeldbruck | company_website: https://brk-ffb.de | first_name: Dennis | last_name: Behrendt | full_name: Dennis Behrendt | role: Kreisgeschäftsführer | role_category: other_management | confidence: high | notes: Official contacts page lists Kreisgeschäftsführer.
+10. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Fürstenfeldbruck | company_website: https://brk-ffb.de | first_name: Anja | last_name: Aydin | full_name: Anja Aydin | role: Leiterin Ambulante Pflege | role_category: operations | confidence: high | notes: Official contacts page lists ambulatory care lead.
+11. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Fürstenfeldbruck | company_website: https://brk-ffb.de | first_name: Andreas | last_name: Magg | full_name: Andreas Magg | role: Vorsitzender | role_category: other_management | confidence: high | notes: Official board page lists chairperson.
+12. batch_id: batch_002 | company_name: Stiftung Sankt Johannes | company_website: https://sanktjohannes.com | first_name: Doreen | last_name: Paus | full_name: Doreen Paus | role: Vorstand | role_category: other_management | confidence: high | notes: Official management page lists board member.
+13. batch_id: batch_002 | company_name: Stiftung Sankt Johannes | company_website: https://sanktjohannes.com | first_name: Gernot | last_name: Jungbauer | full_name: Gernot Jungbauer | role: Vorstand | role_category: other_management | confidence: high | notes: Official management page lists board member.
+14. batch_id: batch_002 | company_name: Stiftung Sankt Johannes | company_website: https://sanktjohannes.com | first_name: Velibor | last_name: Vasiljevic | full_name: Velibor Vasiljevic | role: Einrichtungsleiter | role_category: operations | confidence: high | notes: Official senior center page lists facility director.
+15. batch_id: batch_002 | company_name: Stiftung Sankt Johannes | company_website: https://sanktjohannes.com | first_name: Ali-Ibrahim | last_name: Eken | full_name: Ali-Ibrahim Eken | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official senior center page lists nursing service director.
+16. batch_id: batch_002 | company_name: SBW Vogtlandkreis gGmbH | company_website: https://sbw-vogtlandkreis.de | first_name: Annett | last_name: Stark | full_name: Dr. phil. Annett Stark | role: Geschäftsführerin | role_category: other_management | confidence: high | notes: Official office page lists managing director.
+17. batch_id: batch_002 | company_name: Franziska Schervier Altenhilfe gem. GmbH | company_website: https://schervier-altenhilfe.de | first_name: Klaus | last_name: Herzberg | full_name: Dr. Klaus Herzberg | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official contact page lists managing director.
+18. batch_id: batch_002 | company_name: Franziska Schervier Altenhilfe gem. GmbH | company_website: https://schervier-altenhilfe.de | first_name: Tanja | last_name: Hintzmann | full_name: Tanja Hintzmann | role: Hausleitung und Regionalleitung Aachen | role_category: operations | confidence: high | notes: Official contacts page lists house and regional lead.
+19. batch_id: batch_002 | company_name: Franziska Schervier Altenhilfe gem. GmbH | company_website: https://schervier-altenhilfe.de | first_name: Birgit | last_name: Thomas | full_name: Birgit Thomas | role: Pflegedienstleitung und stellvertretende Hausleitung | role_category: operations | confidence: high | notes: Official contacts page lists nursing and deputy house lead.
+20. batch_id: batch_002 | company_name: Hospitalstiftung Schweinfurt | company_website: https://schweinfurt.de | first_name: Ralf | last_name: Hofmann | full_name: Ralf Hofmann | role: Oberbürgermeister und Vertreter der Hospitalstiftung | role_category: other_management | confidence: medium | notes: Foundation is represented by city organs; current mayor page lists Hofmann.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_005_20260602T225053Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
