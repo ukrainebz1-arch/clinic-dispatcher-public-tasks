@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_006_20260602T225053Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_006_20260602T225053Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_002
+- run_id: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: Markt Pförring KdöR | company_website: https://seniorenheim-pfoerring.de | first_name: Dieter | last_name: Müller | full_name: Dieter Müller | role: Vertreter Markt Pförring KdöR | role_category: other_management | confidence: high | notes: Official imprint lists operator representative.
+2. batch_id: batch_002 | company_name: Markt Pförring KdöR | company_website: https://seniorenheim-pfoerring.de | first_name: Egon | last_name: Schuster | full_name: Egon Schuster | role: Einrichtungsleitung | role_category: operations | confidence: high | notes: Official contact page lists facility director.
+3. batch_id: batch_002 | company_name: Markt Pförring KdöR | company_website: https://seniorenheim-pfoerring.de | first_name: Gabriele | last_name: Werner | full_name: Gabriele Werner | role: Verantwortliche Pflegefachkraft | role_category: operations | confidence: high | notes: Official contact page lists responsible nursing professional.
+4. batch_id: batch_002 | company_name: Caritasverband Scheinfeld und Landkreis Neustadt/Aisch-Bad Windsheim e.V. | company_website: https://caritas-nea.de | first_name: Andreas | last_name: Schilling | full_name: Andreas Schilling | role: Geschäftsführender Vorstand | role_category: other_management | confidence: high | notes: Official article identifies managing board member.
+5. batch_id: batch_002 | company_name: Caritasverband Scheinfeld und Landkreis Neustadt/Aisch-Bad Windsheim e.V. | company_website: https://caritas-nea.de | first_name: Sabine | last_name: Herderich | full_name: Sabine Herderich | role: Vorstandsvorsitzende | role_category: other_management | confidence: high | notes: Official imprint lists board chair.
+6. batch_id: batch_002 | company_name: Caritasverband Scheinfeld und Landkreis Neustadt/Aisch-Bad Windsheim e.V. | company_website: https://caritas-nea.de | first_name: Gerhard | last_name: Habermeier | full_name: Gerhard Habermeier | role: Aufsichtsratsvorsitzender | role_category: other_management | confidence: high | notes: Official imprint lists supervisory board chair.
+7. batch_id: batch_002 | company_name: NOVITA Leben im Alter GmbH | company_website: https://seniorenzentrum.by | first_name: Florian | last_name: Pichlmayr | full_name: Florian Pichlmayr | role: Geschäftsführer und Inhaber | role_category: other_management | confidence: medium | notes: Business directory lists management; official site had sparse leadership data.
+8. batch_id: batch_002 | company_name: NOVITA Leben im Alter GmbH | company_website: https://seniorenzentrum.by | first_name: Johannes | last_name: Pichlmayr | full_name: Johannes Pichlmayr | role: Geschäftsführer und Inhaber | role_category: other_management | confidence: medium | notes: Business directory lists management; official site had sparse leadership data.
+9. batch_id: batch_002 | company_name: NOVITA Leben im Alter GmbH | company_website: https://seniorenzentrum.by | first_name: Edwin | last_name: Guth | full_name: Edwin Guth | role: Geschäftsführer | role_category: other_management | confidence: medium | notes: Business directory lists management; official site had sparse leadership data.
+10. batch_id: batch_002 | company_name: DRK-Kreisverband Saalfeld-Rudolstadt e.V. | company_website: https://drk-saalfeld-rudolstadt.de | first_name: Matthias | last_name: Schmidt | full_name: Matthias Schmidt | role: Vorstandsvorsitzender | role_category: founder_ceo | confidence: high | notes: Official page lists him as Vorstandsvorsitzender.
+11. batch_id: batch_002 | company_name: DRK-Kreisverband Saalfeld-Rudolstadt e.V. | company_website: https://drk-saalfeld-rudolstadt.de | first_name: Carolin | last_name: Wolf | full_name: Carolin Wolf | role: Personal | role_category: hr_recruiting | confidence: high | notes: Official office page lists Personal contact.
+12. batch_id: batch_002 | company_name: Feilitzsch Sozialwerk – Gesellschaft für soziale Einrichtungen mbH | company_website: https://feilitzsch-sozialwerk.de | first_name: Louis-Ferdinand | last_name: Freiherr von Feilitzsch | full_name: Louis-Ferdinand Freiherr von Feilitzsch | role: Geschäftsführer / vertretungsberechtigt | role_category: founder_ceo | confidence: high | notes: Official imprint names him as representative.
+13. batch_id: batch_002 | company_name: Feilitzsch Sozialwerk – Gesellschaft für soziale Einrichtungen mbH | company_website: https://feilitzsch-sozialwerk.de | first_name: Franz-Ferdinand | last_name: Freiherr von Feilitzsch | full_name: Franz-Ferdinand Freiherr von Feilitzsch | role: Geschäftsführer / vertretungsberechtigt | role_category: founder_ceo | confidence: high | notes: Official imprint names him as representative.
+14. batch_id: batch_002 | company_name: FINK. Das Zentrum für Betreuung. KG | company_website: https://fink-zfb.com | first_name: Günther | last_name: Fink | full_name: Günther Fink | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint names him as Geschäftsführer.
+15. batch_id: batch_002 | company_name: FINK. Das Zentrum für Betreuung. KG | company_website: https://fink-zfb.com | first_name: Roland | last_name: Fink | full_name: Roland Fink | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint names him as Geschäftsführer.
+16. batch_id: batch_002 | company_name: Gesellschaft für Dienste im Alter mbH (GDA) | company_website: https://gda.de | first_name: Holger | last_name: Horrmann | full_name: Dr. Holger Horrmann | role: Geschäftsführer | role_category: founder_ceo | confidence: medium | notes: Official GDA source identifies him as Geschäftsführer.
+17. batch_id: batch_002 | company_name: Greizer Senioren- und Pflegeheim gGmbH | company_website: https://greizer-pflegeheime.de | first_name: Ina | last_name: Wasilkowski | full_name: Ina Wasilkowski | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official imprint names her as Geschäftsführerin.
+18. batch_id: batch_002 | company_name: Habila GmbH | company_website: https://habila.de | first_name: Oliver | last_name: Cosalter | full_name: Oliver Cosalter | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint names him as Geschäftsführer.
+19. batch_id: batch_002 | company_name: Habila GmbH | company_website: https://habila.de | first_name: Thomas | last_name: Jaskolka | full_name: Thomas Jaskolka | role: Bereichsmanagement Soziale Teilhabe und Pflege | role_category: operations | confidence: high | notes: Official news names him Bereichsmanager.
+20. batch_id: batch_002 | company_name: Gesundheitsholding Tauberfranken gGmbH | company_website: https://ckbm.de | first_name: Frank | last_name: Zils | full_name: Dr. Frank Zils | role: Sprecher der Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official regional leadership page lists him.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_006_20260602T225053Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
