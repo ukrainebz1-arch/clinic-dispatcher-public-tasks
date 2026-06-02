@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_009_20260602T175051Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_009_20260602T175051Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_001
+- run_id: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Diakonisches Werk Würzburg e.V. | company_website: https://diakonie-wuerzburg.de | first_name: Gunter | last_name: Adams | full_name: Gunter Adams | role: Vorstand Bildung und Erziehung | role_category: other_management | confidence: high | notes: Official organs page lists him as Vorstand
+2. batch_id: batch_001 | company_name: Donau-Ries Kliniken und Seniorenheime gKU | company_website: https://donkliniken.de | first_name: Jürgen | last_name: Busse | full_name: Jürgen Busse | role: Vorstandsvorsitzender | role_category: founder_ceo | confidence: high | notes: Official press release names him as Vorstandsvorsitzender
+3. batch_id: batch_001 | company_name: Donau-Ries Kliniken und Seniorenheime gKU | company_website: https://donkliniken.de | first_name: Kathrin | last_name: Woratsch | full_name: Kathrin Woratsch | role: Vorständin | role_category: other_management | confidence: high | notes: Official press release reports her appointment to Vorstand
+4. batch_id: batch_001 | company_name: DRK Kreisverband Saale-Orla e.V. | company_website: https://drk-sok.de | first_name: Marc | last_name: Unverricht | full_name: Marc Unverricht | role: Vorstandsvorsitzender | role_category: founder_ceo | confidence: high | notes: Official board page lists him as Vorstandsvorsitzender
+5. batch_id: batch_001 | company_name: DRK Kreisverband Saale-Orla e.V. | company_website: https://drk-sok.de | first_name: Doreen | last_name: Freiberg | full_name: Doreen Freiberg | role: Finanzvorstand | role_category: finance | confidence: high | notes: Official board page lists her as Finanzvorstand
+6. batch_id: batch_001 | company_name: Vitalis Pflege Holding GmbH / emeis Deutschland Gruppe | company_website: https://vitalis-senioren.com | first_name: Götz | last_name: Leschonsky | full_name: Götz Leschonsky | role: CEO und Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists him as representative managing director and CEO
+7. batch_id: batch_001 | company_name: Vitalis Pflege Holding GmbH / emeis Deutschland Gruppe | company_website: https://vitalis-senioren.com | first_name: Robert | last_name: Kordic | full_name: Dr. Robert Kordic | role: Geschäftsführer | role_category: operations | confidence: high | notes: Official imprint lists him as representative managing director
+8. batch_id: batch_001 | company_name: Vitalis Pflege Holding GmbH / emeis Deutschland Gruppe | company_website: https://vitalis-senioren.com | first_name: Jean-Christophe | last_name: Zell | full_name: Jean-Christophe Zell | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official imprint lists him as representative managing director
+9. batch_id: batch_001 | company_name: Burchard Führer GmbH / Führer Gruppe | company_website: https://fuehrergruppe.de | first_name: Burchard | last_name: Führer | full_name: Burchard Führer | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official management page lists him as Geschäftsführer
+10. batch_id: batch_001 | company_name: Burchard Führer GmbH / Führer Gruppe | company_website: https://fuehrergruppe.de | first_name: Eike | last_name: Schmedes | full_name: Dr. Eike Schmedes | role: Geschäftsführer Strategie und Organisation | role_category: operations | confidence: high | notes: Official management page lists strategy and organization remit
+11. batch_id: batch_001 | company_name: Burchard Führer GmbH / Führer Gruppe | company_website: https://fuehrergruppe.de | first_name: Jan | last_name: Fritsche | full_name: Jan Fritsche | role: Geschäftsführer Banken und Finanzierungen | role_category: finance | confidence: high | notes: Official management page lists banks and financing remit
+12. batch_id: batch_001 | company_name: Johanniter Seniorenhäuser GmbH | company_website: https://johanniter.de | first_name: Lutz | last_name: Gebhardt | full_name: Lutz Gebhardt | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists him as Geschäftsführer
+13. batch_id: batch_001 | company_name: Johanniter Seniorenhäuser GmbH | company_website: https://johanniter.de | first_name: Thomas | last_name: Neeb | full_name: Thomas Neeb | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists him as Geschäftsführer
+14. batch_id: batch_001 | company_name: Novita GmbH / Firmengruppe Pichlmayr | company_website: https://novita-seniorenzentrum.de | first_name: Thorsten | last_name: Mohr | full_name: Thorsten Mohr | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists him as Geschäftsführer
+15. batch_id: batch_001 | company_name: Pflege mobil Seidel und Praxl GmbH / Pflege mobil plus Pflegeheime GmbH | company_website: https://pflege-mobil-plus.de | first_name: Martin | last_name: Seidel | full_name: Martin Seidel | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists him as Geschäftsführer
+16. batch_id: batch_001 | company_name: Pflege mobil Seidel und Praxl GmbH / Pflege mobil plus Pflegeheime GmbH | company_website: https://pflege-mobil-plus.de | first_name: Matthias | last_name: Karcher | full_name: Matthias Karcher | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists him as Geschäftsführer
+17. batch_id: batch_001 | company_name: Pflege mobil Seidel und Praxl GmbH / Pflege mobil plus Pflegeheime GmbH | company_website: https://pflege-mobil-plus.de | first_name: Ulrike | last_name: Praxl | full_name: Ulrike Praxl | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official imprint lists her as Geschäftsführerin
+18. batch_id: batch_001 | company_name: Regens-Wagner-Stiftung Dillingen / Regens-Wagner-Stiftungen | company_website: https://regens-wagner.de | first_name: Rainer | last_name: Remmele | full_name: Rainer Remmele | role: Vorsitzender des Stiftungsvorstands | role_category: founder_ceo | confidence: high | notes: Official contacts page lists him as foundation board chair
+19. batch_id: batch_001 | company_name: Regens-Wagner-Stiftung Dillingen / Regens-Wagner-Stiftungen | company_website: https://regens-wagner.de | first_name: Gerhard | last_name: Reile | full_name: Gerhard Reile | role: Stellvertretender Vorstandsvorsitzender | role_category: other_management | confidence: high | notes: Official contacts page lists him as deputy board chair
+20. batch_id: batch_001 | company_name: Regens-Wagner-Stiftung Dillingen / Regens-Wagner-Stiftungen | company_website: https://regens-wagner.de | first_name: Matthias | last_name: Bühler | full_name: Matthias Bühler | role: Vorstandsmitglied | role_category: other_management | confidence: medium | notes: Official archived press map documents his board appointment
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_009_20260602T175051Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
