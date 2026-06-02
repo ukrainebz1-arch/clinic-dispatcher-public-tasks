@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+TASK_ID: task_s03_004_20260602T225053Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_004_20260602T225053Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_002
+- run_id: pflegeheim_network_multihome_20260602_batch_002_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_002/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Kelheim | company_website: https://kvkelheim.brk.de | first_name: Bernhard | last_name: Müller | full_name: Bernhard Müller | role: Vorsitzender | role_category: other_management | confidence: high | notes: Official imprint lists legal representative.
+2. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Ostallgäu | company_website: https://brk-ostallgaeu.de | first_name: Thomas | last_name: Hofmann | full_name: Thomas Hofmann | role: Kreisgeschäftsführer | role_category: other_management | confidence: high | notes: Official contacts page lists Kreisgeschäftsführer.
+3. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Ostallgäu | company_website: https://brk-ostallgaeu.de | first_name: Renate | last_name: Dantinger | full_name: Renate Dantinger | role: Sachgebietsleiterin Pflege und Soziales | role_category: operations | confidence: high | notes: Official contacts page lists care and social services lead.
+4. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Ostallgäu | company_website: https://brk-ostallgaeu.de | first_name: Gunther | last_name: Herold | full_name: Gunther Herold | role: Stellvertretender Kreisgeschäftsführer und Sachgebietsleiter Rettungsdienst | role_category: operations | confidence: high | notes: Official contacts page lists deputy executive manager.
+5. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Regensburg | company_website: https://brk-regensburg.de | first_name: Björn | last_name: Heinrich | full_name: Björn Heinrich | role: Kreisgeschäftsführer | role_category: other_management | confidence: high | notes: Official contacts page lists Kreisgeschäftsführer.
+6. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Regensburg | company_website: https://brk-regensburg.de | first_name: Stefan | last_name: Deml | full_name: Stefan Deml | role: Stellvertretender Kreisgeschäftsführer | role_category: other_management | confidence: high | notes: Official contacts page lists deputy executive manager.
+7. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Regensburg | company_website: https://brk-regensburg.de | first_name: Magdalena | last_name: Fohrmann | full_name: Magdalena Fohrmann | role: Leiterin Referat Personal | role_category: hr_recruiting | confidence: high | notes: Official contacts page lists HR department lead.
+8. batch_id: batch_002 | company_name: Bayerisches Rotes Kreuz Kreisverband Regensburg | company_website: https://brk-regensburg.de | first_name: Ulrich | last_name: Hirmer | full_name: Ulrich Hirmer | role: Leiter Referat Häusliche Krankenpflege und Tagespflege | role_category: operations | confidence: high | notes: Official contacts page lists nursing and day care lead.
+9. batch_id: batch_002 | company_name: Heilig Geistspitalstiftung Landshut | company_website: https://heiliggeistspitalstiftung.de | first_name: Alexander | last_name: Fuchs | full_name: Alexander Fuchs | role: Einrichtungsleitung | role_category: operations | confidence: high | notes: Official facility page lists current home director.
+10. batch_id: batch_002 | company_name: Heilig Geistspitalstiftung Landshut | company_website: https://heiliggeistspitalstiftung.de | first_name: Anja | last_name: Oberhofer | full_name: Anja Oberhofer | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official facility page lists nursing service director.
+11. batch_id: batch_002 | company_name: Heilig Geistspitalstiftung Landshut | company_website: https://heiliggeistspitalstiftung.de | first_name: Marion | last_name: Stamminger | full_name: Marion Stamminger | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official Magdalenenheim page lists nursing service director.
+12. batch_id: batch_002 | company_name: Malteser Wohnen & Pflegen gGmbH | company_website: https://malteser.de | first_name: Thomas | last_name: Harazim | full_name: Thomas Harazim | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official contacts page lists managing director.
+13. batch_id: batch_002 | company_name: Malteser Wohnen & Pflegen gGmbH | company_website: https://malteser.de | first_name: Christoph | last_name: Rietzler | full_name: Christoph Rietzler | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official contacts page lists managing director.
+14. batch_id: batch_002 | company_name: Malteser Wohnen & Pflegen gGmbH | company_website: https://malteser.de | first_name: Heidi | last_name: Hegmann | full_name: Heidi Hegmann | role: Leitung Finanzmanagement | role_category: finance | confidence: high | notes: Official contacts page lists finance management lead.
+15. batch_id: batch_002 | company_name: Malteser Wohnen & Pflegen gGmbH | company_website: https://malteser.de | first_name: Sebastian | last_name: Toups | full_name: Sebastian Toups | role: Teamleitung Pflegesatzverhandlungen und Investitionskosten | role_category: finance | confidence: high | notes: Official contacts page lists reimbursement and investment cost lead.
+16. batch_id: batch_002 | company_name: Caritas-Einrichtungen Würzburg/Kitzingen gGmbH | company_website: https://caritas-einrichtungen.de | first_name: Georg | last_name: Sperrle | full_name: Georg Sperrle | role: Geschäftsführer | role_category: other_management | confidence: high | notes: Official article identifies CEG managing director.
+17. batch_id: batch_002 | company_name: Caritas-Einrichtungen Würzburg/Kitzingen gGmbH | company_website: https://caritas-einrichtungen.de | first_name: Bianca | last_name: Hahn | full_name: Bianca Hahn | role: Einrichtungsleitung St. Elisabeth | role_category: operations | confidence: high | notes: Official post identifies facility director.
+18. batch_id: batch_002 | company_name: Obervogtländischer Verein für Innere Mission Marienstift e.V. | company_website: https://marienstift-oelsnitz.de | first_name: Wolfgang | last_name: Kuhs | full_name: Wolfgang Kuhs | role: Vertretungsberechtigter Vorstand | role_category: other_management | confidence: high | notes: Official imprint lists representative board member.
+19. batch_id: batch_002 | company_name: Obervogtländischer Verein für Innere Mission Marienstift e.V. | company_website: https://marienstift-oelsnitz.de | first_name: Christin | last_name: Pfister | full_name: Christin Pfister | role: Ansprechpartnerin | role_category: hr_recruiting | confidence: medium | notes: External recruiting profile lists contact person.
+20. batch_id: batch_002 | company_name: Optandus Gruppe | company_website: https://optandus-gruppe.de | first_name: Elisabeth Barbara | last_name: Bratusek | full_name: Elisabeth Barbara Bratusek | role: Geschäftsführende Gesellschafterin und Geschäftsführerin | role_category: founder_ceo | linkedin_profile_url: https://de.linkedin.com/in/elisabeth-barbara-bratusek-1aa468158 | confidence: high | notes: News and public profiles identify founder and managing director.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_004_20260602T225053Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
