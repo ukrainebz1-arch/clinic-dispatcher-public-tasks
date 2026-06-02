@@ -1,0 +1,84 @@
+RUN_ID: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_003_20260602T175051Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_003_20260602T175051Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: pflegeheim_network_multihome_20260602
+- batch_id: batch_001
+- run_id: pflegeheim_network_multihome_20260602_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/pflegeheim_network_multihome_20260602/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Alloheim Senioren-Residenzen SE | company_website: https://alloheim.de | first_name: Philipp | last_name: Schuh | full_name: Philipp Schuh | role: Geschäftsführer Operations | role_category: operations | confidence: high | notes: Official management page verifies role.
+2. batch_id: batch_001 | company_name: AWO Bezirksverband Niederbayern/Oberpfalz e.V. | company_website: https://awo-ndb-opf.de | first_name: Bernhard | last_name: Feuerecker | full_name: Bernhard Feuerecker | role: Bezirksvorsitzender | role_category: other_management | confidence: high | notes: Official office page verifies role.
+3. batch_id: batch_001 | company_name: AWO Bezirksverband Niederbayern/Oberpfalz e.V. | company_website: https://awo-ndb-opf.de | first_name: Alexander | last_name: Trapp | full_name: Alexander Trapp | role: Bezirksgeschäftsführer | role_category: other_management | confidence: high | notes: Official office page verifies role.
+4. batch_id: batch_001 | company_name: AWO Bezirksverband Niederbayern/Oberpfalz e.V. | company_website: https://awo-ndb-opf.de | first_name: Katja | last_name: Kerscher | full_name: Katja Kerscher | role: Referentin Senioren- und Behindertenhilfe | role_category: operations | confidence: high | notes: Official office page verifies role.
+5. batch_id: batch_001 | company_name: AWO Bezirksverband Niederbayern/Oberpfalz e.V. | company_website: https://awo-ndb-opf.de | first_name: Johann | last_name: Kunkel | full_name: Johann Kunkel | role: Teamleitung Finanzbuchhaltung Controlling | role_category: finance | confidence: high | notes: Official office page verifies role.
+6. batch_id: batch_001 | company_name: AWO Bezirksverband Niederbayern/Oberpfalz e.V. | company_website: https://awo-ndb-opf.de | first_name: Petra | last_name: Vogl | full_name: Petra Vogl | role: HR-Managerin | role_category: hr_recruiting | confidence: high | notes: Official office page verifies role.
+7. batch_id: batch_001 | company_name: AWO Bezirksverband Niederbayern/Oberpfalz e.V. | company_website: https://awo-ndb-opf.de | first_name: Bettina | last_name: Renner | full_name: Bettina Renner | role: Teamleitung Personalwesen | role_category: hr_recruiting | confidence: high | notes: Official office page verifies role.
+8. batch_id: batch_001 | company_name: Arbeiterwohlfahrt Bezirksverband Schwaben e.V. | company_website: https://awo-schwaben.de | first_name: Brigitte | last_name: Protschka | full_name: Brigitte Protschka | role: Präsidentin / Vorsitzende des Verwaltungsrats | role_category: other_management | confidence: high | notes: Official organization page verifies role.
+9. batch_id: batch_001 | company_name: Arbeiterwohlfahrt Bezirksverband Schwaben e.V. | company_website: https://awo-schwaben.de | first_name: Dieter | last_name: Egger | full_name: Dieter Egger | role: Vorstand Personal Alten- und Behindertenhilfe | role_category: other_management | confidence: high | notes: Official organization page verifies role.
+10. batch_id: batch_001 | company_name: Arbeiterwohlfahrt Bezirksverband Schwaben e.V. | company_website: https://awo-schwaben.de | first_name: Marion | last_name: Leichtle-Werner | full_name: Marion Leichtle-Werner | role: Vorständin Bau Finanzen und Gleichstellung | role_category: finance | confidence: high | notes: Official organization page verifies role.
+11. batch_id: batch_001 | company_name: Arbeiterwohlfahrt Bezirksverband Schwaben e.V. | company_website: https://awo-schwaben.de | first_name: Sabine | last_name: Polzer | full_name: Sabine Polzer | role: Leitung Referat Altenhilfe | role_category: operations | confidence: high | notes: Official organization page verifies role.
+12. batch_id: batch_001 | company_name: Arbeiterwohlfahrt Bezirksverband Schwaben e.V. | company_website: https://awo-schwaben.de | first_name: Annika | last_name: Hecken | full_name: Annika Hecken | role: Leitung Personalentwicklung und Recruiting | role_category: hr_recruiting | confidence: high | notes: Official organization page verifies role.
+13. batch_id: batch_001 | company_name: Caritas gGmbH St. Heinrich und Kunigunde | company_website: https://caritas-ggmbh.de | first_name: Friederike | last_name: Müller | full_name: Friederike Müller | role: Geschäftsführung | role_category: other_management | confidence: high | notes: Official imprint verifies role.
+14. batch_id: batch_001 | company_name: Caritas gGmbH St. Heinrich und Kunigunde | company_website: https://caritas-ggmbh.de | first_name: Gerd-Richard | last_name: Neumeier | full_name: Domvikar Gerd-Richard Neumeier | role: Vorsitzender des Aufsichtsrates | role_category: other_management | confidence: high | notes: Official imprint verifies role.
+15. batch_id: batch_001 | company_name: AWO Bezirksverband Unterfranken e.V. | company_website: https://awo-unterfranken.de | first_name: Stefan | last_name: Wolfshörndl | full_name: Stefan Wolfshörndl | role: Bezirksvorsitzender | role_category: other_management | confidence: high | notes: Official leadership page verifies role.
+16. batch_id: batch_001 | company_name: AWO Bezirksverband Unterfranken e.V. | company_website: https://awo-unterfranken.de | first_name: Katharina | last_name: Räth | full_name: Katharina Räth | role: Stellvertretende Vorsitzende | role_category: other_management | confidence: high | notes: Official leadership page verifies role.
+17. batch_id: batch_001 | company_name: AWO Bezirksverband Unterfranken e.V. | company_website: https://awo-unterfranken.de | first_name: Gerald | last_name: Möhrlein | full_name: Gerald Möhrlein | role: Stellvertretender Vorsitzender | role_category: other_management | confidence: high | notes: Official leadership page verifies role.
+18. batch_id: batch_001 | company_name: AWO Bezirksverband Unterfranken e.V. | company_website: https://awo-unterfranken.de | first_name: Harald | last_name: Schneider | full_name: Harald Schneider | role: Stellvertretender Vorsitzender | role_category: other_management | confidence: high | notes: Official leadership page verifies role.
+19. batch_id: batch_001 | company_name: AWO Bezirksverband Unterfranken e.V. | company_website: https://awo-unterfranken.de | first_name: Martin | last_name: Ulses | full_name: Martin Ulses | role: Bezirksgeschäftsführer | role_category: other_management | confidence: high | notes: Official leadership page verifies role.
+20. batch_id: batch_001 | company_name: Diakoneo KdöR | company_website: https://diakoneo.de | first_name: Verena | last_name: Bikas | full_name: Verena Bikas | role: Vorständin Bildung | role_category: other_management | confidence: high | notes: Official organization page verifies role.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_003_20260602T175051Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
