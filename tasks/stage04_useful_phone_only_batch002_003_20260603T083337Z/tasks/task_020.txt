@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_020
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_003_0119 | batch_id: batch_003 | company_name: sonares | company_website: https://de.linkedin.com/company/sonares | full_name: Jens O. Birkenbeul | first_name: Jens | last_name: Birkenbeul | role: Founder Sonares GmbH | role_category: founder_ceo | previous_phone_note: Public LinkedIn profile lists founder connection
+2. input_row_id: batch_003_0120 | batch_id: batch_003 | company_name: 1Q Health Group | company_website: https://de.linkedin.com/company/1q-health-group | full_name: Philipp D. E. Ziehr | first_name: Philipp | last_name: Ziehr | role: CEO | role_category: founder_ceo | previous_phone_note: Official leadership page lists CEO
+3. input_row_id: batch_003_0121 | batch_id: batch_003 | company_name: 1Q Health Group | company_website: https://de.linkedin.com/company/1q-health-group | full_name: Axel Riedisser | first_name: Axel | last_name: Riedisser | role: CFO | role_category: finance | previous_phone_note: Official leadership page lists CFO
+4. input_row_id: batch_003_0122 | batch_id: batch_003 | company_name: 1Q Health Group | company_website: https://de.linkedin.com/company/1q-health-group | full_name: Dr. Philipp Ponton | first_name: Philipp | last_name: Ponton | role: COO | role_category: operations | previous_phone_note: Official leadership page lists COO
+5. input_row_id: batch_003_0123 | batch_id: batch_003 | company_name: 1Q Health Group | company_website: https://de.linkedin.com/company/1q-health-group | full_name: Nadja Fischer | first_name: Nadja | last_name: Fischer | role: Head of Corporate Sales & Marketing | role_category: sales | previous_phone_note: Official leadership page lists Sales and Marketing head
+6. input_row_id: batch_003_0124 | batch_id: batch_003 | company_name: 1Q Health Group | company_website: https://de.linkedin.com/company/1q-health-group | full_name: Stephanie Book | first_name: Stephanie | last_name: Book | role: Head of Corporate HR | role_category: hr_recruiting | previous_phone_note: Official leadership page lists Corporate HR head
+7. input_row_id: batch_003_0125 | batch_id: batch_003 | company_name: Consistent Performance | company_website: https://www.linkedin.com/company/consistent-performance-mentoring | full_name: Kilian Markert | first_name: Kilian | last_name: Markert | role: Owner and Founder | role_category: founder_ceo | previous_phone_note: Official site names him owner and founder
+8. input_row_id: batch_003_0126 | batch_id: batch_003 | company_name: Contigo Energie AG | company_website: https://www.linkedin.com/company/contigo-energie-ag | full_name: Sven Iwersen | first_name: Sven | last_name: Iwersen | role: Vorstand | role_category: other_management | previous_phone_note: Official imprint lists him on board
+9. input_row_id: batch_003_0127 | batch_id: batch_003 | company_name: Contigo Energie AG | company_website: https://www.linkedin.com/company/contigo-energie-ag | full_name: Ronald Raabe | first_name: Ronald | last_name: Raabe | role: Vorstand | role_category: other_management | previous_phone_note: Official imprint lists him on board
+10. input_row_id: batch_003_0128 | batch_id: batch_003 | company_name: Contigo Energie AG | company_website: https://www.linkedin.com/company/contigo-energie-ag | full_name: Andreas Schmieg | first_name: Andreas | last_name: Schmieg | role: Vorstand | role_category: other_management | previous_phone_note: Official imprint lists him on board
+11. input_row_id: batch_003_0129 | batch_id: batch_003 | company_name: Contigo Energie AG | company_website: https://www.linkedin.com/company/contigo-energie-ag | full_name: Johannes Päffgen | first_name: Johannes | last_name: Päffgen | role: Vorstand | role_category: other_management | previous_phone_note: Official imprint lists him on board
+12. input_row_id: batch_003_0130 | batch_id: batch_003 | company_name: Contigo Energie AG | company_website: https://www.linkedin.com/company/contigo-energie-ag | full_name: Thomas Muster | first_name: Thomas | last_name: Muster | role: Vorstandsvorsitzender | role_category: founder_ceo | previous_phone_note: Official imprint lists him as board chair
+13. input_row_id: batch_003_0131 | batch_id: batch_003 | company_name: Contigo Energie AG | company_website: https://www.linkedin.com/company/contigo-energie-ag | full_name: Gilbert Michaelis | first_name: Gilbert | last_name: Michaelis | role: Vertriebsleiter | role_category: sales | previous_phone_note: XING profile links him to sales leadership
+14. input_row_id: batch_003_0132 | batch_id: batch_003 | company_name: DENPAFLUX | company_website: https://de.linkedin.com/company/denpaflux | full_name: Reinhard Neureiter | first_name: Reinhard | last_name: Neureiter | role: Managing Director and CEO | role_category: founder_ceo | previous_phone_note: Official imprint names him managing director
+15. input_row_id: batch_003_0133 | batch_id: batch_003 | company_name: DENPAFLUX | company_website: https://de.linkedin.com/company/denpaflux | full_name: Marc Haag | first_name: Marc | last_name: Haag | role: Managing Director and Commercial Director | role_category: business_development | previous_phone_note: Official imprint names him managing director
+16. input_row_id: batch_003_0134 | batch_id: batch_003 | company_name: DatenBerg GmbH | company_website: https://de.linkedin.com/company/datenberg | full_name: Maximilian Backenstos | first_name: Maximilian | last_name: Backenstos | role: CEO and Co-Founder | role_category: founder_ceo | previous_phone_note: Register lists him as managing director
+17. input_row_id: batch_003_0135 | batch_id: batch_003 | company_name: DatenBerg GmbH | company_website: https://de.linkedin.com/company/datenberg | full_name: Martin Kahl | first_name: Martin | last_name: Kahl | role: Geschäftsführer | role_category: other_management | previous_phone_note: Register lists him as managing director
+18. input_row_id: batch_003_0136 | batch_id: batch_003 | company_name: DatenBerg GmbH | company_website: https://de.linkedin.com/company/datenberg | full_name: Dr. Joachim Kahl | first_name: Joachim | last_name: Kahl | role: Co-Founder and COO | role_category: operations | previous_phone_note: Register lists him as managing director
+19. input_row_id: batch_003_0137 | batch_id: batch_003 | company_name: DealerCenter Digital GmbH | company_website: https://de.linkedin.com/company/dealercenter-digital-gmbh | full_name: Oliver Ertelt | first_name: Oliver | last_name: Ertelt | role: Geschäftsführer and Head of Product | role_category: other_management | previous_phone_note: Official imprint names him managing director
+20. input_row_id: batch_003_0138 | batch_id: batch_003 | company_name: DealerCenter Digital GmbH | company_website: https://de.linkedin.com/company/dealercenter-digital-gmbh | full_name: Simon Kern | first_name: Simon | last_name: Kern | role: Geschäftsführer | role_category: other_management | previous_phone_note: Official imprint names him managing director
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_020
+- Return only the requested result.
+- Use public information only.
