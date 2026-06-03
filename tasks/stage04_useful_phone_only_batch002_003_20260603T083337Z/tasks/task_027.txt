@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_027
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_003_0259 | batch_id: batch_003 | company_name: Automobile Lopp | company_website: https://de.linkedin.com/company/automobile-lopp | full_name: Philipp Lopp | first_name: Philipp | last_name: Lopp | role: Recruiting contact for B2B sales role | role_category: sales | previous_phone_note: Job ad lists him as contact for B2B sales
+2. input_row_id: batch_003_0260 | batch_id: batch_003 | company_name: BAYOOSOFT | company_website: https://de.linkedin.com/company/bayoosoft | full_name: Svenja Winkler | first_name: Svenja | last_name: Winkler | role: CEO / Head of Products | role_category: founder_ceo | previous_phone_note: Official site lists her as CEO
+3. input_row_id: batch_003_0261 | batch_id: batch_003 | company_name: BAYOOSOFT | company_website: https://de.linkedin.com/company/bayoosoft | full_name: Frank Manger | first_name: Frank | last_name: Manger | role: Geschäftsführer | role_category: other_management | previous_phone_note: Impressum lists him in Geschäftsführung
+4. input_row_id: batch_003_0262 | batch_id: batch_003 | company_name: BAYOOSOFT | company_website: https://de.linkedin.com/company/bayoosoft | full_name: Stefan Becher | first_name: Stefan | last_name: Becher | role: Geschäftsführer | role_category: other_management | previous_phone_note: Impressum lists him in Geschäftsführung
+5. input_row_id: batch_003_0263 | batch_id: batch_003 | company_name: BAYOOSOFT | company_website: https://de.linkedin.com/company/bayoosoft | full_name: Ingo Schmall | first_name: Ingo | last_name: Schmall | role: CBDO | role_category: business_development | previous_phone_note: Expo profile lists him as BAYOOSOFT CBDO
+6. input_row_id: batch_003_0264 | batch_id: batch_003 | company_name: BK Search | company_website: https://ch.linkedin.com/company/bksearch | full_name: Bakalilou Yabi | first_name: Bakalilou | last_name: Yabi | role: Founder / Managing Director | role_category: founder_ceo | previous_phone_note: Company site names him founder of BK Search Geneva
+7. input_row_id: batch_003_0265 | batch_id: batch_003 | company_name: BK Search | company_website: https://ch.linkedin.com/company/bksearch | full_name: Lassana Diakhité | first_name: Lassana | last_name: Diakhité | role: Gérant | role_category: other_management | previous_phone_note: Registry profile lists him in management board
+8. input_row_id: batch_003_0266 | batch_id: batch_003 | company_name: BK Search | company_website: https://ch.linkedin.com/company/bksearch | full_name: Seynabou Thiam | first_name: Seynabou | last_name: Thiam | role: Co-founder / Associate | role_category: founder_ceo | previous_phone_note: Article describes her as BK Search co-founder
+9. input_row_id: batch_003_0267 | batch_id: batch_003 | company_name: Badiovo | company_website: https://www.linkedin.com/company/badiovo | full_name: Muhammed Emin Günes | first_name: Muhammed Emin | last_name: Günes | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Impressum lists him as representative
+10. input_row_id: batch_003_0268 | batch_id: batch_003 | company_name: Bartels Bürotechnik GmbH | company_website: https://de.linkedin.com/company/bartels-b-rotechnik-gmbh | full_name: Christian Kutscheidt | first_name: Christian | last_name: Kutscheidt | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official team page lists him as Geschäftsführer
+11. input_row_id: batch_003_0269 | batch_id: batch_003 | company_name: Bartels Bürotechnik GmbH | company_website: https://de.linkedin.com/company/bartels-b-rotechnik-gmbh | full_name: Daniela Kutscheidt | first_name: Daniela | last_name: Kutscheidt | role: Geschäftsführerin | role_category: founder_ceo | previous_phone_note: Official team page lists her as Geschäftsführerin
+12. input_row_id: batch_003_0270 | batch_id: batch_003 | company_name: Bartels Bürotechnik GmbH | company_website: https://de.linkedin.com/company/bartels-b-rotechnik-gmbh | full_name: Volker Lattenkamp | first_name: Volker | last_name: Lattenkamp | role: Vertriebsleitung Großkunden | role_category: sales | previous_phone_note: Official team page lists him in large-account sales
+13. input_row_id: batch_003_0271 | batch_id: batch_003 | company_name: Bartels Bürotechnik GmbH | company_website: https://de.linkedin.com/company/bartels-b-rotechnik-gmbh | full_name: Klaus Jinkertz | first_name: Klaus | last_name: Jinkertz | role: Vertriebsleitung Büroeinrichtungen & EDV-Zubehör | role_category: sales | previous_phone_note: Official team page lists him in sales leadership
+14. input_row_id: batch_003_0272 | batch_id: batch_003 | company_name: Bartels Bürotechnik GmbH | company_website: https://de.linkedin.com/company/bartels-b-rotechnik-gmbh | full_name: Beate Kluge | first_name: Beate | last_name: Kluge | role: Vertriebsspezialistin IT & Projekte | role_category: sales | previous_phone_note: Official team page lists her as IT projects sales specialist
+15. input_row_id: batch_003_0273 | batch_id: batch_003 | company_name: Bartels Bürotechnik GmbH | company_website: https://de.linkedin.com/company/bartels-b-rotechnik-gmbh | full_name: Simon Pütz | first_name: Simon | last_name: Pütz | role: Leiter Technischer Kundendienst | role_category: operations | previous_phone_note: Official team page lists him as technical service lead
+16. input_row_id: batch_003_0274 | batch_id: batch_003 | company_name: BLUVIT GmbH | company_website: https://de.linkedin.com/company/bluvit-gmbh | full_name: Timm Vollmer | first_name: Timm | last_name: Vollmer | role: Gründer & Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official site names founder and managing director
+17. input_row_id: batch_003_0275 | batch_id: batch_003 | company_name: BSP Arbeitssicherheit GmbH | company_website: https://de.linkedin.com/company/bsp-arbeitssicherheit | full_name: Thorsten Reichert | first_name: Thorsten | last_name: Reichert | role: Geschäftsführer | role_category: other_management | previous_phone_note: Official impressum lists management
+18. input_row_id: batch_003_0276 | batch_id: batch_003 | company_name: BSP Arbeitssicherheit GmbH | company_website: https://de.linkedin.com/company/bsp-arbeitssicherheit | full_name: Rolf Golz | first_name: Rolf | last_name: Golz | role: Geschäftsführer | role_category: other_management | previous_phone_note: Official impressum lists management
+19. input_row_id: batch_003_0277 | batch_id: batch_003 | company_name: Brack.Alltron | company_website: https://ch.linkedin.com/company/brackalltron | full_name: Stefan Fraude | first_name: Stefan | last_name: Fraude | role: Chief Executive Officer | role_category: founder_ceo | previous_phone_note: Official organisation page lists executive role
+20. input_row_id: batch_003_0278 | batch_id: batch_003 | company_name: Brack.Alltron | company_website: https://ch.linkedin.com/company/brackalltron | full_name: Andrej Golob | first_name: Andrej | last_name: Golob | role: Chief Sales Officer | role_category: sales | previous_phone_note: Official organisation page lists executive role
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_027
+- Return only the requested result.
+- Use public information only.
