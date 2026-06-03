@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_015
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_003_0019 | batch_id: batch_003 | company_name: Prospitalia GmbH | company_website: https://de.linkedin.com/company/prospitalia-gmbh | full_name: Fabian Becker | first_name: Fabian | last_name: Becker | role: Managing Director / CFO | role_category: finance | previous_phone_note: Official management page confirms CFO role.
+2. input_row_id: batch_003_0020 | batch_id: batch_003 | company_name: Quartierkraft GmbH | company_website: https://de.linkedin.com/company/quartierkraft | full_name: Henrik Drehmann-Westermann | first_name: Henrik | last_name: Drehmann-Westermann | role: Founder & Managing Director | role_category: founder_ceo | previous_phone_note: Impressum names him legal representative.
+3. input_row_id: batch_003_0021 | batch_id: batch_003 | company_name: Quartierkraft GmbH | company_website: https://de.linkedin.com/company/quartierkraft | full_name: David Mens | first_name: David | last_name: Mens | role: Growth & Partnerships Lead | role_category: business_development | previous_phone_note: Public LinkedIn profile supports company role.
+4. input_row_id: batch_003_0022 | batch_id: batch_003 | company_name: Quartierkraft GmbH | company_website: https://de.linkedin.com/company/quartierkraft | full_name: Frederic Gros MRICS | first_name: Frederic | last_name: Gros | role: Partner & Gesellschafter | role_category: other_management | previous_phone_note: LinkedIn company page lists him as employee.
+5. input_row_id: batch_003_0023 | batch_id: batch_003 | company_name: Quartierkraft GmbH | company_website: https://de.linkedin.com/company/quartierkraft | full_name: Nicolas von Lacroix | first_name: Nicolas | last_name: von Lacroix | role: Head of Sales | role_category: sales | previous_phone_note: Third-party public profile lists role.
+6. input_row_id: batch_003_0024 | batch_id: batch_003 | company_name: Rapp AG | company_website: https://ch.linkedin.com/company/rapp-ag | full_name: Annette Rapp | first_name: Annette | last_name: Rapp | role: CEO | role_category: founder_ceo | previous_phone_note: Official management page confirms CEO.
+7. input_row_id: batch_003_0025 | batch_id: batch_003 | company_name: Rapp AG | company_website: https://ch.linkedin.com/company/rapp-ag | full_name: Scarlett Herzog | first_name: Scarlett | last_name: Herzog | role: Leiterin Services und Development / COO | role_category: operations | previous_phone_note: Official management page confirms COO.
+8. input_row_id: batch_003_0026 | batch_id: batch_003 | company_name: Rapp AG | company_website: https://ch.linkedin.com/company/rapp-ag | full_name: Bernhard Oehry | first_name: Bernhard | last_name: Oehry | role: Bereichsleiter Mobilität und Logistik | role_category: operations | previous_phone_note: Official management page confirms role.
+9. input_row_id: batch_003_0027 | batch_id: batch_003 | company_name: Rapp AG | company_website: https://ch.linkedin.com/company/rapp-ag | full_name: Marcus Seiler | first_name: Marcus | last_name: Seiler | role: Leiter Finance und Risk / CFO | role_category: finance | previous_phone_note: Official management page confirms CFO.
+10. input_row_id: batch_003_0028 | batch_id: batch_003 | company_name: Rapp AG | company_website: https://ch.linkedin.com/company/rapp-ag | full_name: Gunnar Sengstake | first_name: Gunnar | last_name: Sengstake | role: Bereichsleiter Architektur / Geschäftsleitung | role_category: other_management | previous_phone_note: Official management page confirms executive role.
+11. input_row_id: batch_003_0029 | batch_id: batch_003 | company_name: Recyda GmbH | company_website: https://de.linkedin.com/company/recyda | full_name: Christian Knobloch | first_name: Christian | last_name: Knobloch | role: Co-Founder & CEO | role_category: founder_ceo | previous_phone_note: Official team page confirms role.
+12. input_row_id: batch_003_0030 | batch_id: batch_003 | company_name: Recyda GmbH | company_website: https://de.linkedin.com/company/recyda | full_name: Anna Zießow | first_name: Anna | last_name: Zießow | role: Co-Founder & CPO | role_category: other_management | previous_phone_note: Official team page confirms role.
+13. input_row_id: batch_003_0031 | batch_id: batch_003 | company_name: Recyda GmbH | company_website: https://de.linkedin.com/company/recyda | full_name: Vivian Loftin | first_name: Vivian | last_name: Loftin | role: Co-Founder & CMO | role_category: marketing | previous_phone_note: Official team page confirms role.
+14. input_row_id: batch_003_0032 | batch_id: batch_003 | company_name: Recyda GmbH | company_website: https://de.linkedin.com/company/recyda | full_name: Patrick Felber | first_name: Patrick | last_name: Felber | role: Head of Growth | role_category: business_development | previous_phone_note: Official team page confirms growth role.
+15. input_row_id: batch_003_0033 | batch_id: batch_003 | company_name: Recyda GmbH | company_website: https://de.linkedin.com/company/recyda | full_name: Philipp Blattert | first_name: Philipp | last_name: Blattert | role: Account Executive | role_category: sales | previous_phone_note: Official team page confirms sales role.
+16. input_row_id: batch_003_0034 | batch_id: batch_003 | company_name: Recyda GmbH | company_website: https://de.linkedin.com/company/recyda | full_name: Teresa Galan | first_name: Teresa | last_name: Galan | role: Account Manager | role_category: sales | previous_phone_note: Official team page confirms account role.
+17. input_row_id: batch_003_0035 | batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | full_name: Jan-Christoph Maiwaldt | first_name: Jan-Christoph | last_name: Maiwaldt | role: Chief Executive Officer | role_category: founder_ceo | previous_phone_note: Official company page confirms CEO.
+18. input_row_id: batch_003_0036 | batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | full_name: Kjell Ole Beckmann | first_name: Kjell Ole | last_name: Beckmann | role: Co-Founder & Chief Sales Officer | role_category: sales | previous_phone_note: Official company page confirms CSO.
+19. input_row_id: batch_003_0037 | batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | full_name: Ole Jürs | first_name: Ole | last_name: Jürs | role: Head of Key Account Management | role_category: sales | previous_phone_note: Official company page confirms key account role.
+20. input_row_id: batch_003_0038 | batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | full_name: Stephan Langberg | first_name: Stephan | last_name: Langberg | role: Chief Financial Officer | role_category: finance | previous_phone_note: Official company page confirms CFO.
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_015
+- Return only the requested result.
+- Use public information only.
