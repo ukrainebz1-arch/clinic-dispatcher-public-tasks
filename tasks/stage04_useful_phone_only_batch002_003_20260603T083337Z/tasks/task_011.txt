@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_011
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_002_0201 | batch_id: batch_002 | company_name: 1. FC Köln | company_website: https://de.linkedin.com/company/fckoeln | full_name: Philipp Liesenfeld | first_name: Philipp | last_name: Liesenfeld | role: Geschäftsführer Marketing und Vertrieb | role_category: sales | previous_phone_note: Official imprint lists him as Geschäftsführer
+2. input_row_id: batch_002_0202 | batch_id: batch_002 | company_name: 1. FC Köln | company_website: https://de.linkedin.com/company/fckoeln | full_name: Florian Dederichs | first_name: Florian | last_name: Dederichs | role: Bereichsleiter B2B-Vermarktung | role_category: business_development | previous_phone_note: Official partner contacts page lists B2B leadership
+3. input_row_id: batch_002_0203 | batch_id: batch_002 | company_name: 1. FC Köln | company_website: https://de.linkedin.com/company/fckoeln | full_name: Anouk Esbati | first_name: Anouk | last_name: Esbati | role: Leiterin Partnership Management Hospitality & Internationalisierung | role_category: business_development | previous_phone_note: Official partner contacts page lists partnership leadership
+4. input_row_id: batch_002_0204 | batch_id: batch_002 | company_name: ABxpert GmbH | company_website: https://de.linkedin.com/company/abxpert-gmbh | full_name: Maximilian Lohse | first_name: Maximilian | last_name: Lohse | role: Gründer & Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official imprint lists him as Geschäftsführer
+5. input_row_id: batch_002_0205 | batch_id: batch_002 | company_name: Aktion Mensch e.V. | company_website: https://de.linkedin.com/company/aktion-mensch | full_name: Armin v. Buttlar | first_name: Armin | last_name: v. Buttlar | role: Vorstand | role_category: other_management | previous_phone_note: Official imprint lists him as board member
+6. input_row_id: batch_002_0206 | batch_id: batch_002 | company_name: Aktion Mensch e.V. | company_website: https://de.linkedin.com/company/aktion-mensch | full_name: Björn Schneider | first_name: Björn | last_name: Schneider | role: Vorstand | role_category: other_management | previous_phone_note: Official imprint lists him as board member
+7. input_row_id: batch_002_0207 | batch_id: batch_002 | company_name: Bogner GmbH & Co. KG | company_website: https://de.linkedin.com/company/bogner-gmbh-&-co-kg | full_name: Gerald Bogner | first_name: Gerald | last_name: Bogner | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official imprint lists him as Geschäftsführer
+8. input_row_id: batch_002_0208 | batch_id: batch_002 | company_name: Bogner GmbH & Co. KG | company_website: https://de.linkedin.com/company/bogner-gmbh-&-co-kg | full_name: Alexander Bogner | first_name: Alexander | last_name: Bogner | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official imprint lists him as Geschäftsführer
+9. input_row_id: batch_002_0209 | batch_id: batch_002 | company_name: Calenso | company_website: https://ch.linkedin.com/company/calenso | full_name: Marvin Felder | first_name: Marvin | last_name: Felder | role: CEO & Co-Founder | role_category: founder_ceo | previous_phone_note: Official about page lists him as CEO and co-founder
+10. input_row_id: batch_002_0210 | batch_id: batch_002 | company_name: Calenso | company_website: https://ch.linkedin.com/company/calenso | full_name: Patrick Breiter | first_name: Patrick | last_name: Breiter | role: CTO & Co-Founder | role_category: other_management | previous_phone_note: Official about page lists CTO and co-founder
+11. input_row_id: batch_002_0211 | batch_id: batch_002 | company_name: Calenso | company_website: https://ch.linkedin.com/company/calenso | full_name: Michael Breiter | first_name: Michael | last_name: Breiter | role: VRP & Co-Founder | role_category: other_management | previous_phone_note: Official about page lists board chair and co-founder
+12. input_row_id: batch_002_0213 | batch_id: batch_002 | company_name: FINN | company_website: https://de.linkedin.com/company/finn-auto | full_name: Jürgen Lobach | first_name: Jürgen | last_name: Lobach | role: Chief Fleet Officer | role_category: operations | previous_phone_note: Official management team page.
+13. input_row_id: batch_002_0214 | batch_id: batch_002 | company_name: FINN | company_website: https://de.linkedin.com/company/finn-auto | full_name: Florian Drabeck | first_name: Florian | last_name: Drabeck | role: Chief Financial Officer | role_category: finance | previous_phone_note: Official management team page.
+14. input_row_id: batch_002_0215 | batch_id: batch_002 | company_name: FINN | company_website: https://de.linkedin.com/company/finn-auto | full_name: Karen Brandt | first_name: Karen | last_name: Brandt | role: Chief People Officer | role_category: hr_recruiting | previous_phone_note: Official management team page.
+15. input_row_id: batch_002_0216 | batch_id: batch_002 | company_name: FRICKE Group | company_website: https://de.linkedin.com/company/fricke-group | full_name: Hans-Peter Fricke | first_name: Hans-Peter | last_name: Fricke | role: Managing Director and Owner | role_category: founder_ceo | previous_phone_note: Official company news source.
+16. input_row_id: batch_002_0217 | batch_id: batch_002 | company_name: FRICKE Group | company_website: https://de.linkedin.com/company/fricke-group | full_name: Holger Wachholtz | first_name: Holger | last_name: Wachholtz | role: Managing Director | role_category: other_management | previous_phone_note: Official imprint lists management.
+17. input_row_id: batch_002_0218 | batch_id: batch_002 | company_name: IP Pilot | company_website: https://de.linkedin.com/company/ip-pilot | full_name: Volker Ruerup | first_name: Volker | last_name: Ruerup | role: Founder and Managing Director | role_category: founder_ceo | previous_phone_note: Public LinkedIn post names role.
+18. input_row_id: batch_002_0219 | batch_id: batch_002 | company_name: KISSA Tea - part of AIYA Europe GmbH | company_website: https://at.linkedin.com/company/kissa-tea | full_name: Thomas Grömer | first_name: Thomas | last_name: Grömer | role: CEO and Founder | role_category: founder_ceo | previous_phone_note: Public LinkedIn profile names role.
+19. input_row_id: batch_002_0220 | batch_id: batch_002 | company_name: Katapult | company_website: https://nl.linkedin.com/company/katapult-recruitment | full_name: Max Keur | first_name: Max | last_name: Keur | role: Co-Founder | role_category: founder_ceo | previous_phone_note: Official team page lists cofounder.
+20. input_row_id: batch_002_0221 | batch_id: batch_002 | company_name: Katapult | company_website: https://nl.linkedin.com/company/katapult-recruitment | full_name: Bill Chatfield | first_name: Bill | last_name: Chatfield | role: Co-Founder and Commercial Lead | role_category: founder_ceo | previous_phone_note: Official team page lists cofounder.
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_011
+- Return only the requested result.
+- Use public information only.
