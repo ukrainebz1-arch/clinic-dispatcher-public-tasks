@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_001
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_002_0001 | batch_id: batch_002 | company_name: Packaging Innovations & Empack | full_name: Monika Farkas | first_name: Monika | last_name: Farkas | role: Head of Sales | role_category: sales | previous_phone_note: Job posting names her as sales contact
+2. input_row_id: batch_002_0002 | batch_id: batch_002 | company_name: Piepenbrock | company_website: https://de.linkedin.com/company/piepenbrock | full_name: Arnulf Piepenbrock | first_name: Arnulf | last_name: Piepenbrock | role: Geschäftsführender Gesellschafter | role_category: founder_ceo | previous_phone_note: Official history says Arnulf and Olaf lead group
+3. input_row_id: batch_002_0003 | batch_id: batch_002 | company_name: Piepenbrock | company_website: https://de.linkedin.com/company/piepenbrock | full_name: Olaf Piepenbrock | first_name: Olaf | last_name: Piepenbrock | role: Geschäftsführender Gesellschafter | role_category: founder_ceo | previous_phone_note: Official history says Arnulf and Olaf lead group
+4. input_row_id: batch_002_0004 | batch_id: batch_002 | company_name: Piepenbrock | company_website: https://de.linkedin.com/company/piepenbrock | full_name: Andy Röben | first_name: Andy | last_name: Röben | role: Geschäftsführer | role_category: other_management | previous_phone_note: Profile links him to Piepenbrock management and sales leadership
+5. input_row_id: batch_002_0005 | batch_id: batch_002 | company_name: Rennecke-Medic | company_website: https://de.linkedin.com/company/rennecke-medic | full_name: Kilian Rennecke | first_name: Kilian | last_name: Rennecke | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official site names him as Geschäftsführer
+6. input_row_id: batch_002_0006 | batch_id: batch_002 | company_name: Rennecke-Medic | company_website: https://de.linkedin.com/company/rennecke-medic | full_name: Jonathan Rennecke | first_name: Jonathan | last_name: Rennecke | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official site names him as Geschäftsführer
+7. input_row_id: batch_002_0007 | batch_id: batch_002 | company_name: Réseau Initia | company_website: https://fr.linkedin.com/company/r%C3%A9seau-initia | full_name: Marc Fornas | first_name: Marc | last_name: Fornas | role: Membre du bureau du Réseau Initia | role_category: other_management | previous_phone_note: Public post identifies him as bureau member
+8. input_row_id: batch_002_0008 | batch_id: batch_002 | company_name: Scaling Spaces | company_website: https://de.linkedin.com/company/scalingspaces | full_name: Martin Ballweg | first_name: Martin | last_name: Ballweg | role: Founder and Managing Director | role_category: founder_ceo | previous_phone_note: Public interview names him founder and managing director
+9. input_row_id: batch_002_0009 | batch_id: batch_002 | company_name: Scaling Spaces | company_website: https://de.linkedin.com/company/scalingspaces | full_name: Nico Belzner | first_name: Nico | last_name: Belzner | role: Head of Sales I Prokurist | role_category: sales | previous_phone_note: Official contact page lists sales leadership
+10. input_row_id: batch_002_0010 | batch_id: batch_002 | company_name: Scaling Spaces | company_website: https://de.linkedin.com/company/scalingspaces | full_name: Timo Liebergesell | first_name: Timo | last_name: Liebergesell | role: Sales Manager | role_category: sales | previous_phone_note: Official contact page lists him as sales manager
+11. input_row_id: batch_002_0011 | batch_id: batch_002 | company_name: Setago.io | company_website: https://de.linkedin.com/company/setagoio-gmbh | full_name: Caner Kader | first_name: Caner | last_name: Kader | role: Managing Director | role_category: founder_ceo | previous_phone_note: Official site lists him as managing director
+12. input_row_id: batch_002_0012 | batch_id: batch_002 | company_name: Siepmann Media - eLearning Journal | company_website: https://de.linkedin.com/company/siepmann-media-elearning-journal | full_name: Frank Siepmann | first_name: Frank | last_name: Siepmann | role: CEO & Herausgeber | role_category: founder_ceo | previous_phone_note: Official team page lists him as CEO and publisher
+13. input_row_id: batch_002_0013 | batch_id: batch_002 | company_name: Siepmann Media - eLearning Journal | company_website: https://de.linkedin.com/company/siepmann-media-elearning-journal | full_name: Christian Jachens | first_name: Christian | last_name: Jachens | role: Vertriebsleitung | role_category: sales | previous_phone_note: Official team page lists him as sales lead
+14. input_row_id: batch_002_0014 | batch_id: batch_002 | company_name: Socomec Group | company_website: https://fr.linkedin.com/company/socomec | full_name: Ivan Steyert | first_name: Ivan | last_name: Steyert | role: Chairman and CEO | role_category: founder_ceo | previous_phone_note: Official Socomec page identifies chairman and CEO
+15. input_row_id: batch_002_0015 | batch_id: batch_002 | company_name: Swiss Renewable Solutions | company_website: https://ch.linkedin.com/company/swiss-renewable-solutions | full_name: Roman Gysel | first_name: Roman | last_name: Gysel | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official team page lists him as managing director
+16. input_row_id: batch_002_0016 | batch_id: batch_002 | company_name: Swiss Renewable Solutions | company_website: https://ch.linkedin.com/company/swiss-renewable-solutions | full_name: Tino Schumann | first_name: Tino | last_name: Schumann | role: Key Account Manager | role_category: sales | previous_phone_note: Official team page lists key account role
+17. input_row_id: batch_002_0017 | batch_id: batch_002 | company_name: Swiss Renewable Solutions | company_website: https://ch.linkedin.com/company/swiss-renewable-solutions | full_name: Jörg Gutowski | first_name: Jörg | last_name: Gutowski | role: CFO | role_category: finance | previous_phone_note: Official team page lists him as CFO
+18. input_row_id: batch_002_0018 | batch_id: batch_002 | company_name: Table.Briefings | company_website: https://de.linkedin.com/company/tablebriefings | full_name: Sebastian Turner | first_name: Sebastian | last_name: Turner | role: Founder and Publisher | role_category: founder_ceo | previous_phone_note: Official about page names founder and publisher
+19. input_row_id: batch_002_0019 | batch_id: batch_002 | company_name: Table.Briefings | company_website: https://de.linkedin.com/company/tablebriefings | full_name: Thomas Feinen | first_name: Thomas | last_name: Feinen | role: Geschäftsführer | role_category: other_management | previous_phone_note: Official about page lists managing director
+20. input_row_id: batch_002_0020 | batch_id: batch_002 | company_name: Table.Briefings | company_website: https://de.linkedin.com/company/tablebriefings | full_name: Jochen Beutgen | first_name: Jochen | last_name: Beutgen | role: Geschäftsführer | role_category: other_management | previous_phone_note: Official about page lists managing director
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_001
+- Return only the requested result.
+- Use public information only.
