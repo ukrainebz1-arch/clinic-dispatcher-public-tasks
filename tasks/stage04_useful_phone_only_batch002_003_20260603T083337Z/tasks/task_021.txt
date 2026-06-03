@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_021
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_003_0139 | batch_id: batch_003 | company_name: DealerCenter Digital GmbH | company_website: https://de.linkedin.com/company/dealercenter-digital-gmbh | full_name: Alexander Vetter | first_name: Alexander | last_name: Vetter | role: Prokurist and CTO | role_category: other_management | previous_phone_note: Official imprint names him authorized signatory
+2. input_row_id: batch_003_0140 | batch_id: batch_003 | company_name: Deutsche Glasfaser Unternehmensgruppe | company_website: https://de.linkedin.com/company/deutsche-glasfaser | full_name: Andreas Pfisterer | first_name: Andreas | last_name: Pfisterer | role: Chief Executive Officer | role_category: founder_ceo | previous_phone_note: Official management page lists as CEO
+3. input_row_id: batch_003_0141 | batch_id: batch_003 | company_name: Deutsche Glasfaser Unternehmensgruppe | company_website: https://de.linkedin.com/company/deutsche-glasfaser | full_name: Ruben Queimano | first_name: Ruben | last_name: Queimano | role: Chief Commercial Officer | role_category: sales | previous_phone_note: Official management page lists as CCO
+4. input_row_id: batch_003_0142 | batch_id: batch_003 | company_name: Deutsche Glasfaser Unternehmensgruppe | company_website: https://de.linkedin.com/company/deutsche-glasfaser | full_name: Roman Schachtsiek | first_name: Roman | last_name: Schachtsiek | role: Chief Human Resources Officer | role_category: hr_recruiting | previous_phone_note: Official management page lists as CHRO
+5. input_row_id: batch_003_0143 | batch_id: batch_003 | company_name: Deutsche Glasfaser Unternehmensgruppe | company_website: https://de.linkedin.com/company/deutsche-glasfaser | full_name: Gerhard Mack | first_name: Gerhard | last_name: Mack | role: Chief Operating Officer | role_category: operations | previous_phone_note: Official management page lists as COO
+6. input_row_id: batch_003_0144 | batch_id: batch_003 | company_name: Dotama GmbH | company_website: https://de.linkedin.com/company/dotama | full_name: Michael Maier | first_name: Michael | last_name: Maier | role: Coach & Geschäftsführer | role_category: founder_ceo | previous_phone_note: Company team page lists as Geschäftsführer
+7. input_row_id: batch_003_0145 | batch_id: batch_003 | company_name: Dotama GmbH | company_website: https://de.linkedin.com/company/dotama | full_name: Anna Dirr | first_name: Anna | last_name: Dirr | role: Business Development & Geschäftsleitung | role_category: business_development | previous_phone_note: Company team page lists business development leadership
+8. input_row_id: batch_003_0146 | batch_id: batch_003 | company_name: Dotama GmbH | company_website: https://de.linkedin.com/company/dotama | full_name: Tim Sakowski | first_name: Tim | last_name: Sakowski | role: Coach & Geschäftsleitung | role_category: operations | previous_phone_note: Company team page lists management role
+9. input_row_id: batch_003_0147 | batch_id: batch_003 | company_name: Dotama GmbH | company_website: https://de.linkedin.com/company/dotama | full_name: Melanie Rohmann | first_name: Melanie | last_name: Rohmann | role: Strategie & Vertrieb | role_category: sales | previous_phone_note: Company team page lists strategy and sales
+10. input_row_id: batch_003_0148 | batch_id: batch_003 | company_name: DÜBÖR Groneweg GmbH & Co. KG | company_website: https://de.linkedin.com/company/d%C3%BCb%C3%B6r-groneweg-gmbh-co-kg | full_name: Horst Groneweg | first_name: Horst | last_name: Groneweg | role: Geschäftsführer / Inhaber | role_category: founder_ceo | previous_phone_note: Official contacts page lists as managing owner
+11. input_row_id: batch_003_0149 | batch_id: batch_003 | company_name: DÜBÖR Groneweg GmbH & Co. KG | company_website: https://de.linkedin.com/company/d%C3%BCb%C3%B6r-groneweg-gmbh-co-kg | full_name: Holger Groneweg | first_name: Holger | last_name: Groneweg | role: Geschäftsführer / Inhaber | role_category: founder_ceo | previous_phone_note: Official contacts page lists as managing owner
+12. input_row_id: batch_003_0150 | batch_id: batch_003 | company_name: DÜBÖR Groneweg GmbH & Co. KG | company_website: https://de.linkedin.com/company/d%C3%BCb%C3%B6r-groneweg-gmbh-co-kg | full_name: Richard Jülicher | first_name: Richard | last_name: Jülicher | role: Leiter Vertrieb | role_category: sales | previous_phone_note: Official contacts page lists as sales lead
+13. input_row_id: batch_003_0151 | batch_id: batch_003 | company_name: Düsseldorf Congress GmbH | company_website: https://de.linkedin.com/company/duesseldorfcongress | full_name: Maria Kofidou | first_name: Maria | last_name: Kofidou | role: CEO | role_category: founder_ceo | previous_phone_note: Official team page lists as CEO
+14. input_row_id: batch_003_0152 | batch_id: batch_003 | company_name: Düsseldorf Congress GmbH | company_website: https://de.linkedin.com/company/duesseldorfcongress | full_name: Kai Opitz | first_name: Kai | last_name: Opitz | role: Director Sales und Business Development | role_category: business_development | previous_phone_note: Official sales team page lists role
+15. input_row_id: batch_003_0153 | batch_id: batch_003 | company_name: Düsseldorf Congress GmbH | company_website: https://de.linkedin.com/company/duesseldorfcongress | full_name: Martin Rütten | first_name: Martin | last_name: Rütten | role: Director MarCom | role_category: marketing | previous_phone_note: Official team page lists marketing director
+16. input_row_id: batch_003_0154 | batch_id: batch_003 | company_name: Düsseldorf Congress GmbH | company_website: https://de.linkedin.com/company/duesseldorfcongress | full_name: Yves Kerckhofs | first_name: Yves | last_name: Kerckhofs | role: Director Finance | role_category: finance | previous_phone_note: Official team page lists finance director
+17. input_row_id: batch_003_0155 | batch_id: batch_003 | company_name: EverReal | company_website: https://de.linkedin.com/company/everreal | full_name: Nessim Djerboua | first_name: Nessim | last_name: Djerboua | role: Mitgründer & CEO | role_category: founder_ceo | previous_phone_note: Official about page lists cofounder and CEO
+18. input_row_id: batch_003_0156 | batch_id: batch_003 | company_name: EverReal | company_website: https://de.linkedin.com/company/everreal | full_name: Liviu Ignat | first_name: Liviu | last_name: Ignat | role: Mitgründer & CTO | role_category: other_management | previous_phone_note: Official about page lists cofounder and CTO
+19. input_row_id: batch_003_0157 | batch_id: batch_003 | company_name: EverReal | company_website: https://de.linkedin.com/company/everreal | full_name: Philipp Fischer | first_name: Philipp | last_name: Fischer | role: Head of Sales Customer Success & Service | role_category: sales | previous_phone_note: Public LinkedIn result connects him to EverReal sales leadership
+20. input_row_id: batch_003_0158 | batch_id: batch_003 | company_name: Membrain GmbH | company_website: https://de.linkedin.com/company/membrain-gmbh | full_name: Harald Faulhaber | first_name: Harald | last_name: Faulhaber | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official imprint lists him as managing director.
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_021
+- Return only the requested result.
+- Use public information only.
