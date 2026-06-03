@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_019
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_003_0099 | batch_id: batch_003 | company_name: Seminarkontor GmbH | company_website: https://de.linkedin.com/company/seminarkontor-gmbh | full_name: Felix Dreher | first_name: Felix | last_name: Dreher | role: Bildungsberater | role_category: other_management | previous_phone_note: LinkedIn company page lists him as employee
+2. input_row_id: batch_003_0100 | batch_id: batch_003 | company_name: Studyflix | company_website: https://de.linkedin.com/company/studyflix-gmbh | full_name: Mathias Klement | first_name: Mathias | last_name: Klement | role: CEO | role_category: founder_ceo | previous_phone_note: Company post says sole CEO since 2026
+3. input_row_id: batch_003_0101 | batch_id: batch_003 | company_name: Studyflix | company_website: https://de.linkedin.com/company/studyflix-gmbh | full_name: Tanja Eisele | first_name: Tanja | last_name: Eisele | role: Head of Sales | role_category: sales | previous_phone_note: Public LinkedIn profile states Head of Sales at Studyflix
+4. input_row_id: batch_003_0102 | batch_id: batch_003 | company_name: plancraft | company_website: https://de.linkedin.com/company/plancraft-gmbh | full_name: Julian Wiedenhaus | first_name: Julian | last_name: Wiedenhaus | role: CEO & Co-Founder | role_category: founder_ceo | previous_phone_note: Official team page lists CEO and co-founder
+5. input_row_id: batch_003_0103 | batch_id: batch_003 | company_name: plancraft | company_website: https://de.linkedin.com/company/plancraft-gmbh | full_name: Alexander Noll | first_name: Alexander | last_name: Noll | role: CPO & Co-Founder | role_category: founder_ceo | previous_phone_note: Official team page lists CPO and co-founder
+6. input_row_id: batch_003_0104 | batch_id: batch_003 | company_name: plancraft | company_website: https://de.linkedin.com/company/plancraft-gmbh | full_name: Richard Keil | first_name: Richard | last_name: Keil | role: Founding Engineer & Co-Founder | role_category: founder_ceo | previous_phone_note: Official team page identifies founder management role
+7. input_row_id: batch_003_0105 | batch_id: batch_003 | company_name: plancraft | company_website: https://de.linkedin.com/company/plancraft-gmbh | full_name: Marcel Weiland | first_name: Marcel | last_name: Weiland | role: Head of Sales | role_category: sales | previous_phone_note: Official team page lists Head of Sales
+8. input_row_id: batch_003_0106 | batch_id: batch_003 | company_name: plancraft | company_website: https://de.linkedin.com/company/plancraft-gmbh | full_name: Till Zimmermann | first_name: Till | last_name: Zimmermann | role: VP Revenue | role_category: sales | previous_phone_note: Official team page lists VP Revenue
+9. input_row_id: batch_003_0107 | batch_id: batch_003 | company_name: plancraft | company_website: https://de.linkedin.com/company/plancraft-gmbh | full_name: Alex Kerber | first_name: Alex | last_name: Kerber | role: VP Business Operations | role_category: operations | previous_phone_note: Official team page lists VP Business Operations
+10. input_row_id: batch_003_0108 | batch_id: batch_003 | company_name: shyftplan | company_website: https://de.linkedin.com/company/shyftplan | full_name: Dr. Farhood Torabian | first_name: Farhood | last_name: Torabian | role: CEO | role_category: founder_ceo | previous_phone_note: Official about page lists CEO responsibilities
+11. input_row_id: batch_003_0109 | batch_id: batch_003 | company_name: shyftplan | company_website: https://de.linkedin.com/company/shyftplan | full_name: Jan-Martin Josten | first_name: Jan-Martin | last_name: Josten | role: Founder & Managing Director | role_category: founder_ceo | previous_phone_note: Official about page lists founder and managing director
+12. input_row_id: batch_003_0110 | batch_id: batch_003 | company_name: shyftplan | company_website: https://de.linkedin.com/company/shyftplan | full_name: Dr. Manuel Ross | first_name: Manuel | last_name: Ross | role: COO & Managing Director | role_category: operations | previous_phone_note: Official about page lists COO and managing director
+13. input_row_id: batch_003_0111 | batch_id: batch_003 | company_name: shyftplan | company_website: https://de.linkedin.com/company/shyftplan | full_name: Alexandra Hof | first_name: Alexandra | last_name: Hof | role: CTO | role_category: other_management | previous_phone_note: Official about page lists CTO
+14. input_row_id: batch_003_0112 | batch_id: batch_003 | company_name: simple system GmbH | company_website: https://de.linkedin.com/company/simple-system-gmbh | full_name: Michael Philipp Petri | first_name: Michael | last_name: Petri | role: Managing Director & CEO | role_category: founder_ceo | previous_phone_note: Official team page lists CEO
+15. input_row_id: batch_003_0113 | batch_id: batch_003 | company_name: simple system GmbH | company_website: https://de.linkedin.com/company/simple-system-gmbh | full_name: Thomas Au | first_name: Thomas | last_name: Au | role: CFO | role_category: finance | previous_phone_note: Official team page lists CFO
+16. input_row_id: batch_003_0114 | batch_id: batch_003 | company_name: simple system GmbH | company_website: https://de.linkedin.com/company/simple-system-gmbh | full_name: Fabian von Kleinsorgen | first_name: Fabian | last_name: von Kleinsorgen | role: VP Growth & Sales Operations | role_category: sales | previous_phone_note: Official team page lists VP Growth and Sales Operations
+17. input_row_id: batch_003_0115 | batch_id: batch_003 | company_name: simple system GmbH | company_website: https://de.linkedin.com/company/simple-system-gmbh | full_name: Jörg Schmidt | first_name: Jörg | last_name: Schmidt | role: Head of Vendor Management | role_category: business_development | previous_phone_note: Official team page lists Head of Vendor Management
+18. input_row_id: batch_003_0116 | batch_id: batch_003 | company_name: simple system GmbH | company_website: https://de.linkedin.com/company/simple-system-gmbh | full_name: Andy Freund | first_name: Andy | last_name: Freund | role: Senior Growth Manager | role_category: sales | previous_phone_note: Official team page lists Senior Growth Manager
+19. input_row_id: batch_003_0117 | batch_id: batch_003 | company_name: sonares | company_website: https://de.linkedin.com/company/sonares | full_name: Erik Eberwein | first_name: Erik | last_name: Eberwein | role: CEO | role_category: founder_ceo | previous_phone_note: Impressum lists Geschäftsführer and LinkedIn lists CEO
+20. input_row_id: batch_003_0118 | batch_id: batch_003 | company_name: sonares | company_website: https://de.linkedin.com/company/sonares | full_name: Dr. Hannes Guhl | first_name: Hannes | last_name: Guhl | role: Developer of first interdependent calculation model | role_category: other_management | previous_phone_note: Company story names technical model creator
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_019
+- Return only the requested result.
+- Use public information only.
