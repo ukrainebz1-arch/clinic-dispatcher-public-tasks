@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_016
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_003_0039 | batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | full_name: Tom Leppin | first_name: Tom | last_name: Leppin | role: Founder & Chief Digital Officer | role_category: founder_ceo | previous_phone_note: Official company page confirms founder role.
+2. input_row_id: batch_003_0040 | batch_id: batch_003 | company_name: Reos GmbH | company_website: https://de.linkedin.com/company/reos-digital | full_name: Amelie Nerger | first_name: Amelie | last_name: Nerger | role: Head of Corporate Communications | role_category: marketing | previous_phone_note: Official company page confirms communications role.
+3. input_row_id: batch_003_0041 | batch_id: batch_003 | company_name: 450connect GmbH | company_website: https://de.linkedin.com/company/450connect-gmbh | full_name: Henrik Desfontaines | first_name: Henrik | last_name: Desfontaines | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official impressum lists him in Geschäftsführung.
+4. input_row_id: batch_003_0042 | batch_id: batch_003 | company_name: 450connect GmbH | company_website: https://de.linkedin.com/company/450connect-gmbh | full_name: Joachim Groß | first_name: Joachim | last_name: Groß | role: Geschäftsführer Technik | role_category: operations | previous_phone_note: Newsletter and impressum verify executive role.
+5. input_row_id: batch_003_0043 | batch_id: batch_003 | company_name: 450connect GmbH | company_website: https://de.linkedin.com/company/450connect-gmbh | full_name: Matthias Groß | first_name: Matthias | last_name: Groß | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official impressum lists him in Geschäftsführung.
+6. input_row_id: batch_003_0044 | batch_id: batch_003 | company_name: 450connect GmbH | company_website: https://de.linkedin.com/company/450connect-gmbh | full_name: Dr. Frederik Giessing | first_name: Frederik | last_name: Giessing | role: Geschäftsleiter Business Development, Regulation and Marketing | role_category: business_development | previous_phone_note: Public event profile verifies leadership and business development remit.
+7. input_row_id: batch_003_0045 | batch_id: batch_003 | company_name: 450connect GmbH | company_website: https://de.linkedin.com/company/450connect-gmbh | full_name: Uwe Wermke | first_name: Uwe | last_name: Wermke | role: Senior Channel Manager Vertriebspartner | role_category: sales | previous_phone_note: Official contact page lists him as senior channel partner manager.
+8. input_row_id: batch_003_0046 | batch_id: batch_003 | company_name: AI Transformation Institute | company_website: https://de.linkedin.com/company/aiti-ai | full_name: Conrad Schlenkhoff | first_name: Conrad | last_name: Schlenkhoff | role: Gründer & Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official team page lists founder and managing director role.
+9. input_row_id: batch_003_0047 | batch_id: batch_003 | company_name: AI Transformation Institute | company_website: https://de.linkedin.com/company/aiti-ai | full_name: Dr. Philipp Schlenkhoff | first_name: Philipp | last_name: Schlenkhoff | role: Gründer & Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official team page lists founder and managing director role.
+10. input_row_id: batch_003_0048 | batch_id: batch_003 | company_name: AI Transformation Institute | company_website: https://de.linkedin.com/company/aiti-ai | full_name: Dr. Sven Schmeier | first_name: Sven | last_name: Schmeier | role: Co-Gründer & Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official story page lists co-founder and managing director role.
+11. input_row_id: batch_003_0049 | batch_id: batch_003 | company_name: Abet Laminati | company_website: https://it.linkedin.com/company/abet-laminati-spa | full_name: Alexander Hösch | first_name: Alexander | last_name: Hösch | role: Country Sales Manager | role_category: sales | previous_phone_note: Public LinkedIn profile verifies Abet Laminati sales leadership.
+12. input_row_id: batch_003_0050 | batch_id: batch_003 | company_name: Adam & Eve Beautylounge GmbH | company_website: https://de.linkedin.com/company/adam-eve-beautylounge | full_name: Filiz Christoph-Atas | first_name: Filiz | last_name: Christoph-Atas | role: CEO | role_category: founder_ceo | previous_phone_note: Public profile lists CEO at Adam & Eve Beautylounge.
+13. input_row_id: batch_003_0051 | batch_id: batch_003 | company_name: Adam & Eve Beautylounge GmbH | company_website: https://de.linkedin.com/company/adam-eve-beautylounge | full_name: Roald Christoph | first_name: Roald | last_name: Christoph | role: Co-Founder | role_category: founder_ceo | previous_phone_note: Official about page says Filiz founded Adam & Eve with Roald.
+14. input_row_id: batch_003_0052 | batch_id: batch_003 | company_name: Adam & Eve Beautylounge GmbH | company_website: https://de.linkedin.com/company/adam-eve-beautylounge | full_name: Jasmin Grewe | first_name: Jasmin | last_name: Grewe | role: Head of Finance & Accounting | role_category: finance | previous_phone_note: Public profile lists current finance leadership at company.
+15. input_row_id: batch_003_0053 | batch_id: batch_003 | company_name: Adecco Permanent Recruitment | company_website: https://pt.linkedin.com/company/adecco-recruitment-portugal | full_name: Bernardo Samuel | first_name: Bernardo | last_name: Samuel | role: Country Head of Permanent Recruitment | Executive Committee | role_category: hr_recruiting | previous_phone_note: Profile verifies Adecco Permanent Recruitment leadership.
+16. input_row_id: batch_003_0054 | batch_id: batch_003 | company_name: Adecco Permanent Recruitment | company_website: https://pt.linkedin.com/company/adecco-recruitment-portugal | full_name: Rui Henriques | first_name: Rui | last_name: Henriques | role: Diretor de Permanent Placement da Adecco Portugal | role_category: hr_recruiting | previous_phone_note: Public LinkedIn profile and company posts verify Adecco role.
+17. input_row_id: batch_003_0055 | batch_id: batch_003 | company_name: Adecco Permanent Recruitment | company_website: https://pt.linkedin.com/company/adecco-recruitment-portugal | full_name: Lúcia Guimarães | first_name: Lúcia | last_name: Guimarães | role: Executive Manager & Head of Office Porto | role_category: other_management | previous_phone_note: Company post verifies her executive manager and office head role.
+18. input_row_id: batch_003_0056 | batch_id: batch_003 | company_name: Adecco Permanent Recruitment | company_website: https://pt.linkedin.com/company/adecco-recruitment-portugal | full_name: Filipa Aleixo | first_name: Filipa | last_name: Aleixo | role: Manager Sales & Marketing | role_category: sales | previous_phone_note: Public profile verifies Sales & Marketing manager role.
+19. input_row_id: batch_003_0057 | batch_id: batch_003 | company_name: Bytec Medizintechnik GmbH | company_website: https://de.linkedin.com/company/bytec-medizintechnik-gmbh | full_name: Paul Willi Coenen | first_name: Paul Willi | last_name: Coenen | role: CEO | role_category: founder_ceo | previous_phone_note: Official site lists him as CEO
+20. input_row_id: batch_003_0058 | batch_id: batch_003 | company_name: Bytec Medizintechnik GmbH | company_website: https://de.linkedin.com/company/bytec-medizintechnik-gmbh | full_name: André Coenen | first_name: André | last_name: Coenen | role: Director Development, CEO | role_category: founder_ceo | previous_phone_note: Official news confirms co-management role
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_016
+- Return only the requested result.
+- Use public information only.
