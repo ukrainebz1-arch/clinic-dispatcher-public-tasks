@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_002
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_002_0021 | batch_id: batch_002 | company_name: Tchibo Coffee Service GmbH | company_website: https://de.linkedin.com/company/tchibo-coffee-service-gmbh | full_name: Peter Rikowski | first_name: Peter | last_name: Rikowski | role: Geschäftsführer | role_category: other_management | previous_phone_note: Official imprint lists managing directors
+2. input_row_id: batch_002_0022 | batch_id: batch_002 | company_name: Tchibo Coffee Service GmbH | company_website: https://de.linkedin.com/company/tchibo-coffee-service-gmbh | full_name: Nicholas Snow | first_name: Nicholas | last_name: Snow | role: Geschäftsführer | role_category: other_management | previous_phone_note: Official imprint lists managing directors
+3. input_row_id: batch_002_0023 | batch_id: batch_002 | company_name: Tchibo Coffee Service GmbH | company_website: https://de.linkedin.com/company/tchibo-coffee-service-gmbh | full_name: Dr. Friedrich Kroos | first_name: Friedrich | last_name: Kroos | role: Geschäftsführer | role_category: other_management | previous_phone_note: Official imprint lists managing directors
+4. input_row_id: batch_002_0024 | batch_id: batch_002 | company_name: Top Line Advisory | company_website: https://de.linkedin.com/company/top-line-advisory | full_name: Dr. Dominikus Kirchhoff | first_name: Dominikus | last_name: Kirchhoff | role: CEO | role_category: founder_ceo | previous_phone_note: Public profile and post identify CEO
+5. input_row_id: batch_002_0025 | batch_id: batch_002 | company_name: Top Line Advisory | company_website: https://de.linkedin.com/company/top-line-advisory | full_name: Nils Dantzer | first_name: Nils | last_name: Dantzer | role: Partner | role_category: other_management | previous_phone_note: Public profile identifies partner role
+6. input_row_id: batch_002_0026 | batch_id: batch_002 | company_name: Top Line Advisory | company_website: https://de.linkedin.com/company/top-line-advisory | full_name: Ayla Sozandeh | first_name: Ayla | last_name: Sozandeh | role: Director | role_category: other_management | previous_phone_note: Public profile links her to director role
+7. input_row_id: batch_002_0027 | batch_id: batch_002 | company_name: TripleTen | full_name: Ilya Zalessky | first_name: Ilya | last_name: Zalessky | role: CEO | role_category: founder_ceo | previous_phone_note: Official about page lists CEO
+8. input_row_id: batch_002_0028 | batch_id: batch_002 | company_name: TripleTen | full_name: Maiya Kolosnitsyna | first_name: Maiya | last_name: Kolosnitsyna | role: Head of B2B at Nebius Academy | role_category: business_development | previous_phone_note: Profile links her to B2B product referenced in job
+9. input_row_id: batch_002_0029 | batch_id: batch_002 | company_name: TripleTen Indonesia | full_name: NOT_FOUND | role_category: unknown | previous_phone_note: No named decision-maker verified for exact entity
+10. input_row_id: batch_002_0030 | batch_id: batch_002 | company_name: WinLocal GmbH | company_website: https://de.linkedin.com/company/winlocal-gmbh | full_name: Carsten Schmidt | first_name: Carsten | last_name: Schmidt | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official imprint lists managing director
+11. input_row_id: batch_002_0031 | batch_id: batch_002 | company_name: WinLocal GmbH | company_website: https://de.linkedin.com/company/winlocal-gmbh | full_name: Steffen Bimboese | first_name: Steffen | last_name: Bimboese | role: Head of Sales | role_category: sales | previous_phone_note: Public profile lists Head of Sales
+12. input_row_id: batch_002_0032 | batch_id: batch_002 | company_name: WinLocal GmbH | company_website: https://de.linkedin.com/company/winlocal-gmbh | full_name: Alexander Kasten | first_name: Alexander | last_name: Kasten | role: Head of Marketing | role_category: marketing | previous_phone_note: Public profile lists Head of Marketing
+13. input_row_id: batch_002_0033 | batch_id: batch_002 | company_name: hagebau Handelsgesellschaft für Baustoffe mbH & Co. KG | company_website: https://de.linkedin.com/company/hagebau | full_name: Sven Grobrügge | first_name: Sven | last_name: Grobrügge | role: Geschäftsführer Finanzen | role_category: finance | previous_phone_note: Official management page lists role.
+14. input_row_id: batch_002_0034 | batch_id: batch_002 | company_name: hagebau Handelsgesellschaft für Baustoffe mbH & Co. KG | company_website: https://de.linkedin.com/company/hagebau | full_name: Christian Rabe | first_name: Christian | last_name: Rabe | role: Geschäftsführer Fachhandel | role_category: other_management | previous_phone_note: Official management page lists role.
+15. input_row_id: batch_002_0035 | batch_id: batch_002 | company_name: hagebau Handelsgesellschaft für Baustoffe mbH & Co. KG | company_website: https://de.linkedin.com/company/hagebau | full_name: Frank Staffeld | first_name: Frank | last_name: Staffeld | role: Geschäftsführer Einzelhandel | role_category: other_management | previous_phone_note: Official management page lists role.
+16. input_row_id: batch_002_0036 | batch_id: batch_002 | company_name: hagebau Handelsgesellschaft für Baustoffe mbH & Co. KG | company_website: https://de.linkedin.com/company/hagebau | full_name: Ines von Jagemann | first_name: Ines | last_name: von Jagemann | role: Geschäftsführerin Digitales, Technologie & HR | role_category: hr_recruiting | previous_phone_note: Official management page lists role.
+17. input_row_id: batch_002_0037 | batch_id: batch_002 | company_name: helfer-Line GmbH | company_website: https://de.linkedin.com/company/helfer-line-gmbh | full_name: Georgios Dimakas | first_name: Georgios | last_name: Dimakas | role: Managing Director | role_category: founder_ceo | previous_phone_note: Register lists him as managing director.
+18. input_row_id: batch_002_0038 | batch_id: batch_002 | company_name: helfer-Line GmbH | company_website: https://de.linkedin.com/company/helfer-line-gmbh | full_name: Davut Sahin | first_name: Davut | last_name: Sahin | role: Chief Operating Officer | role_category: operations | previous_phone_note: Public LinkedIn profile lists COO at company.
+19. input_row_id: batch_002_0039 | batch_id: batch_002 | company_name: vfm-Gruppe | company_website: https://de.linkedin.com/company/vfm-gruppe | full_name: Klaus Liebig | first_name: Klaus | last_name: Liebig | role: Geschäftsführer and future Chair of Geschäftsleitung | role_category: founder_ceo | previous_phone_note: Official source lists managing director and 2026 chair role.
+20. input_row_id: batch_002_0040 | batch_id: batch_002 | company_name: vfm-Gruppe | company_website: https://de.linkedin.com/company/vfm-gruppe | full_name: Robert Schmidt | first_name: Robert | last_name: Schmidt | role: Geschäftsführer | role_category: other_management | previous_phone_note: Official company page lists Geschäftsführer.
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_002
+- Return only the requested result.
+- Use public information only.
