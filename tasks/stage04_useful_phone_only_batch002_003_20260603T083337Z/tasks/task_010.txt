@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_010
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_002_0181 | batch_id: batch_002 | company_name: WECK | company_website: https://de.linkedin.com/company/weckglassandpackaginggmbh | full_name: Jan-Christian Becker | first_name: Jan-Christian | last_name: Becker | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Public register lists current Geschäftsführer
+2. input_row_id: batch_002_0182 | batch_id: batch_002 | company_name: WECK | company_website: https://de.linkedin.com/company/weckglassandpackaginggmbh | full_name: Lukas Strasser | first_name: Lukas | last_name: Strasser | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Public register lists current Geschäftsführer
+3. input_row_id: batch_002_0183 | batch_id: batch_002 | company_name: WPP Media | company_website: https://www.linkedin.com/company/wpp-media | full_name: Andreas Vretscha | first_name: Andreas | last_name: Vretscha | role: CEO / Geschäftsführer | role_category: founder_ceo | previous_phone_note: Public interview identifies him as CEO
+4. input_row_id: batch_002_0184 | batch_id: batch_002 | company_name: WPP Media | company_website: https://www.linkedin.com/company/wpp-media | full_name: Andreas Lederer | first_name: Andreas | last_name: Lederer | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Austrian company register lists Geschäftsführer
+5. input_row_id: batch_002_0185 | batch_id: batch_002 | company_name: afb group | company_website: https://de.linkedin.com/company/afb-group | full_name: Daniel Büchle | first_name: Daniel | last_name: Büchle | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official management page lists him as Geschäftsführer
+6. input_row_id: batch_002_0186 | batch_id: batch_002 | company_name: afb group | company_website: https://de.linkedin.com/company/afb-group | full_name: Yvonne Cvilak | first_name: Yvonne | last_name: Cvilak | role: Geschäftsführerin HR Legal IMS | role_category: hr_recruiting | previous_phone_note: Official page lists HR and legal responsibility
+7. input_row_id: batch_002_0187 | batch_id: batch_002 | company_name: afb group | company_website: https://de.linkedin.com/company/afb-group | full_name: Mike Reif | first_name: Mike | last_name: Reif | role: Geschäftsführer Einkauf und Vertrieb | role_category: sales | previous_phone_note: Official page lists sales responsibility
+8. input_row_id: batch_002_0188 | batch_id: batch_002 | company_name: ahead® | company_website: https://de.linkedin.com/company/ahead-nutrition | full_name: Philip Brohlburg | first_name: Philip | last_name: Brohlburg | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official imprint lists him as Geschäftsführer
+9. input_row_id: batch_002_0189 | batch_id: batch_002 | company_name: ahead® | company_website: https://de.linkedin.com/company/ahead-nutrition | full_name: Johannes Sörensen | first_name: Johannes | last_name: Sörensen | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official imprint lists him as Geschäftsführer
+10. input_row_id: batch_002_0190 | batch_id: batch_002 | company_name: coffee perfect GmbH | company_website: https://de.linkedin.com/company/coffee-perfect | full_name: Dr. Heiko Kroll | first_name: Heiko | last_name: Kroll | role: Chief Executive Officer | role_category: founder_ceo | previous_phone_note: Official team page lists him as CEO
+11. input_row_id: batch_002_0191 | batch_id: batch_002 | company_name: coffee perfect GmbH | company_website: https://de.linkedin.com/company/coffee-perfect | full_name: Farsin Taromi | first_name: Farsin | last_name: Taromi | role: Sales Director | role_category: sales | previous_phone_note: Official team page lists sales leadership
+12. input_row_id: batch_002_0192 | batch_id: batch_002 | company_name: coffee perfect GmbH | company_website: https://de.linkedin.com/company/coffee-perfect | full_name: Dag Sommerkamp | first_name: Dag | last_name: Sommerkamp | role: Chief Human Resources & Marketing Officer | role_category: marketing | previous_phone_note: Official team page lists HR and marketing leadership
+13. input_row_id: batch_002_0193 | batch_id: batch_002 | company_name: creditworld AG | company_website: https://ch.linkedin.com/company/creditworld-ag | full_name: Kai Ren | first_name: Kai | last_name: Ren | role: Geschäftsführer & Verwaltungsrat | role_category: founder_ceo | previous_phone_note: Official team page lists managing director
+14. input_row_id: batch_002_0194 | batch_id: batch_002 | company_name: creditworld AG | company_website: https://ch.linkedin.com/company/creditworld-ag | full_name: Philipp Schnyder | first_name: Philipp | last_name: Schnyder | role: Head Risk & Compliance | role_category: finance | previous_phone_note: Official team page lists risk leadership
+15. input_row_id: batch_002_0195 | batch_id: batch_002 | company_name: creditworld AG | company_website: https://ch.linkedin.com/company/creditworld-ag | full_name: Patrick Thalmann | first_name: Patrick | last_name: Thalmann | role: Head Investor Relations | role_category: finance | previous_phone_note: Official team page lists investor relations
+16. input_row_id: batch_002_0196 | batch_id: batch_002 | company_name: heylogin | company_website: https://de.linkedin.com/company/heylogin | full_name: Dr. Dominik Schürmann | first_name: Dominik | last_name: Schürmann | role: CEO & Co-Founder | role_category: founder_ceo | previous_phone_note: Public LinkedIn profile states CEO and co-founder
+17. input_row_id: batch_002_0197 | batch_id: batch_002 | company_name: heylogin | company_website: https://de.linkedin.com/company/heylogin | full_name: Vincent Breitmoser | first_name: Vincent | last_name: Breitmoser | role: Co-Founder | role_category: founder_ceo | previous_phone_note: Official about page lists him as founder
+18. input_row_id: batch_002_0198 | batch_id: batch_002 | company_name: 1&1 Telecommunication SE | company_website: https://de.linkedin.com/company/1und1de | full_name: Alessandro Nava | first_name: Alessandro | last_name: Nava | role: Vorstandsvorsitzender | role_category: founder_ceo | previous_phone_note: Official management page lists him as chairman
+19. input_row_id: batch_002_0199 | batch_id: batch_002 | company_name: 1&1 Telecommunication SE | company_website: https://de.linkedin.com/company/1und1de | full_name: Cretièn Brandsma | first_name: Cretièn | last_name: Brandsma | role: Vorstand Customer Management | role_category: other_management | previous_phone_note: Official management page lists customer management board role
+20. input_row_id: batch_002_0200 | batch_id: batch_002 | company_name: 1&1 Telecommunication SE | company_website: https://de.linkedin.com/company/1und1de | full_name: Monika Weninger | first_name: Monika | last_name: Weninger | role: Vorstand Online-Marketing | role_category: marketing | previous_phone_note: Official management page lists online marketing board role
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_010
+- Return only the requested result.
+- Use public information only.
