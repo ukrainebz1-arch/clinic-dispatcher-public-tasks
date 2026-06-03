@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_007
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_002_0121 | batch_id: batch_002 | company_name: Front Row Germany | company_website: https://de.linkedin.com/company/frontrowgermany | full_name: Sven Koch | first_name: Sven | last_name: Koch | role: Managing Director Commercial Management | role_category: business_development | previous_phone_note: Official leadership page lists him as Managing Director
+2. input_row_id: batch_002_0122 | batch_id: batch_002 | company_name: Front Row Germany | company_website: https://de.linkedin.com/company/frontrowgermany | full_name: Niall Donohoe | first_name: Niall | last_name: Donohoe | role: Managing Director Digital Marketing B2B | role_category: marketing | previous_phone_note: Official profile names him B2B marketing lead
+3. input_row_id: batch_002_0123 | batch_id: batch_002 | company_name: Halvotec Group | company_website: https://de.linkedin.com/company/halvotec-group | full_name: Alexander Lerch | first_name: Alexander | last_name: Lerch | role: Geschäftsführung Halvotec Group and RAQUEST | role_category: founder_ceo | previous_phone_note: Official about page lists him in management
+4. input_row_id: batch_002_0124 | batch_id: batch_002 | company_name: Halvotec Group | company_website: https://de.linkedin.com/company/halvotec-group | full_name: Ulrich Vogl | first_name: Ulrich | last_name: Vogl | role: Co-Founder and CEO Halvotec Group and RAQUEST | role_category: founder_ceo | previous_phone_note: Official English page names him co-founder and CEO
+5. input_row_id: batch_002_0125 | batch_id: batch_002 | company_name: Kaffee Partner | company_website: https://de.linkedin.com/company/kaffee-partner | full_name: Jörg Baumgart | first_name: Jörg | last_name: Baumgart | role: CEO | role_category: founder_ceo | previous_phone_note: Official about page lists him as CEO
+6. input_row_id: batch_002_0126 | batch_id: batch_002 | company_name: Kaffee Partner | company_website: https://de.linkedin.com/company/kaffee-partner | full_name: Roger Lang | first_name: Roger | last_name: Lang | role: CFO | role_category: finance | previous_phone_note: Official about page lists him as CFO
+7. input_row_id: batch_002_0127 | batch_id: batch_002 | company_name: Kaffee Partner | company_website: https://de.linkedin.com/company/kaffee-partner | full_name: Torsten Schaarschmidt | first_name: Torsten | last_name: Schaarschmidt | role: Director of Sales DACH | role_category: sales | previous_phone_note: Public XING profile lists current DACH sales director
+8. input_row_id: batch_002_0128 | batch_id: batch_002 | company_name: Leadeffect GmbH | company_website: https://de.linkedin.com/company/leadeffect | full_name: Frederik Dohm | first_name: Frederik | last_name: Dohm | role: Founder and CEO | role_category: founder_ceo | previous_phone_note: Company blog identifies him as founder and CEO
+9. input_row_id: batch_002_0129 | batch_id: batch_002 | company_name: Leadeffect GmbH | company_website: https://de.linkedin.com/company/leadeffect | full_name: Daniel Mehlen | first_name: Daniel | last_name: Mehlen | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Company site names him as co-founder
+10. input_row_id: batch_002_0130 | batch_id: batch_002 | company_name: Media4Care | company_website: https://de.linkedin.com/company/media4care | full_name: Carsten Clanget | first_name: Carsten | last_name: Clanget | role: Geschäftsführer / CEO | role_category: founder_ceo | previous_phone_note: Company press page names him Geschäftsführer
+11. input_row_id: batch_002_0131 | batch_id: batch_002 | company_name: Neue Pressegesellschaft mbH & Co. KG | company_website: https://de.linkedin.com/company/neue-pressegesellschaft | full_name: Andreas Simmet | first_name: Andreas | last_name: Simmet | role: Vorsitzender der Geschäftsführung | role_category: other_management | previous_phone_note: Official 2026 post names him chair of management
+12. input_row_id: batch_002_0132 | batch_id: batch_002 | company_name: Neue Pressegesellschaft mbH & Co. KG | company_website: https://de.linkedin.com/company/neue-pressegesellschaft | full_name: Daniel Torka | first_name: Daniel | last_name: Torka | role: Geschäftsleitung Digitales Märkte und Transformation | role_category: business_development | previous_phone_note: Official leadership page lists his remit
+13. input_row_id: batch_002_0133 | batch_id: batch_002 | company_name: Neue Pressegesellschaft mbH & Co. KG | company_website: https://de.linkedin.com/company/neue-pressegesellschaft | full_name: Dr. Kathrin Heckner | first_name: Kathrin | last_name: Heckner | role: Geschäftsleitung Personal | role_category: hr_recruiting | previous_phone_note: Official leadership page lists HR responsibility
+14. input_row_id: batch_002_0134 | batch_id: batch_002 | company_name: O'Donnell Moonshine | company_website: https://de.linkedin.com/company/o'donnell-moonshine | full_name: August Ullrich | first_name: August | last_name: Ullrich | role: Founder and CEO / Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official legal notice lists him as Geschäftsführer
+15. input_row_id: batch_002_0135 | batch_id: batch_002 | company_name: O'Donnell Moonshine | company_website: https://de.linkedin.com/company/o'donnell-moonshine | full_name: Philip Morsink | first_name: Philip | last_name: Morsink | role: Co-Founder | role_category: founder_ceo | previous_phone_note: Official about page names him co-founder
+16. input_row_id: batch_002_0136 | batch_id: batch_002 | company_name: O'Donnell Moonshine | company_website: https://de.linkedin.com/company/o'donnell-moonshine | full_name: Jan Schmidt | first_name: Jan | last_name: Schmidt | role: Chief Operations Officer | role_category: operations | previous_phone_note: Public XING profile lists current COO role
+17. input_row_id: batch_002_0137 | batch_id: batch_002 | company_name: PPG | company_website: https://www.linkedin.com/company/ppg | full_name: Christian Loidolt | first_name: Christian | last_name: Loidolt | role: Director Automotive Refinish and Managing Director | role_category: other_management | previous_phone_note: Industry article says he became PPG Austria Geschäftsführer
+18. input_row_id: batch_002_0138 | batch_id: batch_002 | company_name: FINN | company_website: https://de.linkedin.com/company/finn-auto | full_name: Maximilian Wühr | first_name: Maximilian | last_name: Wühr | role: Chief Executive Officer | role_category: founder_ceo | previous_phone_note: Official management team lists him as CEO
+19. input_row_id: batch_002_0139 | batch_id: batch_002 | company_name: FINN | company_website: https://de.linkedin.com/company/finn-auto | full_name: Jürgen Lobach | first_name: Jürgen | last_name: Lobach | role: Chief Fleet Officer / Geschäftsführer | role_category: operations | previous_phone_note: Official management team lists him
+20. input_row_id: batch_002_0140 | batch_id: batch_002 | company_name: FINN | company_website: https://de.linkedin.com/company/finn-auto | full_name: Jan Hansen | first_name: Jan | last_name: Hansen | role: Senior Vice President Growth B2B | role_category: sales | previous_phone_note: Official management team lists B2B growth role
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_007
+- Return only the requested result.
+- Use public information only.
