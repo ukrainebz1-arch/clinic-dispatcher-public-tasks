@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_013
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_002_0247 | batch_id: batch_002 | company_name: autarc (YC S24) | company_website: https://de.linkedin.com/company/autarc-energy | full_name: Etienne-Noel Krause | first_name: Etienne-Noel | last_name: Krause | role: Co-Founder and CEO | role_category: founder_ceo | previous_phone_note: Official press release names role.
+2. input_row_id: batch_002_0248 | batch_id: batch_002 | company_name: autarc (YC S24) | company_website: https://de.linkedin.com/company/autarc-energy | full_name: Thies Hansen | first_name: Thies | last_name: Hansen | role: Co-Founder and COO | role_category: operations | previous_phone_note: Official press release names role.
+3. input_row_id: batch_002_0249 | batch_id: batch_002 | company_name: HOCHTIEF | company_website: https://de.linkedin.com/company/hochtief | full_name: Juan Santamaría Cases | first_name: Juan | last_name: Santamaría Cases | role: Chairman of the Executive Board | role_category: founder_ceo | previous_phone_note: Official executive board page lists role
+4. input_row_id: batch_002_0250 | batch_id: batch_002 | company_name: HOCHTIEF | company_website: https://de.linkedin.com/company/hochtief | full_name: Christa Andresky | first_name: Christa | last_name: Andresky | role: Chief Financial Officer | role_category: finance | previous_phone_note: Official executive board page lists role
+5. input_row_id: batch_002_0251 | batch_id: batch_002 | company_name: HOGAPAGE | company_website: https://de.linkedin.com/company/hogapage | full_name: Daniela Müller | first_name: Daniela | last_name: Müller | role: Geschäftsführerin BUHL Holding und HOGAPAGE Media GmbH | role_category: founder_ceo | previous_phone_note: Company team page lists management role
+6. input_row_id: batch_002_0252 | batch_id: batch_002 | company_name: HOGAPAGE | company_website: https://de.linkedin.com/company/hogapage | full_name: Alexander Groh | first_name: Alexander | last_name: Groh | role: Vertriebsleiter Jobbörsen | role_category: sales | previous_phone_note: Company team page lists sales leadership
+7. input_row_id: batch_002_0253 | batch_id: batch_002 | company_name: JoB Training & Coaching | company_website: https://pt.linkedin.com/company/jobtrainingcoaching | full_name: NOT_FOUND | role_category: unknown | previous_phone_note: No public named decision-maker verified
+8. input_row_id: batch_002_0254 | batch_id: batch_002 | company_name: KEEY GmbH | company_website: https://de.linkedin.com/company/keey-gmbh | full_name: Timur Sakanci | first_name: Timur | last_name: Sakanci | role: Inhaber und Geschäftsführer | role_category: founder_ceo | previous_phone_note: Public profile verifies owner managing director
+9. input_row_id: batch_002_0255 | batch_id: batch_002 | company_name: OLM Consultants | company_website: https://ph.linkedin.com/company/olmconsultants | full_name: Morten Carstensen | first_name: Morten | last_name: Carstensen | role: CEO and Chief Headhunter | role_category: founder_ceo | previous_phone_note: OLM Business Solutions appears connected to OLM Consultants brand
+10. input_row_id: batch_002_0256 | batch_id: batch_002 | company_name: Optimind | company_website: https://www.linkedin.com/company/optimindso | full_name: Johannes Fladenhofer | first_name: Johannes | last_name: Fladenhofer | role: CEO and Co-Founder | role_category: founder_ceo | previous_phone_note: Startup article verifies CEO co-founder
+11. input_row_id: batch_002_0257 | batch_id: batch_002 | company_name: Optimind | company_website: https://www.linkedin.com/company/optimindso | full_name: Peter Jedinger | first_name: Peter | last_name: Jedinger | role: CTO and Co-Founder | role_category: other_management | previous_phone_note: Startup article verifies CTO co-founder
+12. input_row_id: batch_002_0258 | batch_id: batch_002 | company_name: Prosatech GmbH | company_website: https://www.linkedin.com/company/prosatech | full_name: Andreas Sawicki | first_name: Andreas | last_name: Sawicki | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Company imprint lists managing director
+13. input_row_id: batch_002_0259 | batch_id: batch_002 | company_name: Ricano | company_website: https://de.linkedin.com/company/ricano | full_name: Stefanos Adamopoulos | first_name: Stefanos | last_name: Adamopoulos | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Company imprint lists managing director
+14. input_row_id: batch_002_0260 | batch_id: batch_002 | company_name: Roth & Kern | company_website: https://ch.linkedin.com/company/rothundkern | full_name: Patrick Roth | first_name: Patrick | last_name: Roth | role: Founder and Employer Brand Architect | role_category: founder_ceo | previous_phone_note: LinkedIn company post identifies founder
+15. input_row_id: batch_002_0261 | batch_id: batch_002 | company_name: Sage | company_website: https://uk.linkedin.com/company/sage-software | full_name: Christian Mehrtens | first_name: Christian | last_name: Mehrtens | role: Geschäftsführer Sage Central Europe | role_category: other_management | previous_phone_note: Official Sage release verifies role
+16. input_row_id: batch_002_0262 | batch_id: batch_002 | company_name: Sage | company_website: https://uk.linkedin.com/company/sage-software | full_name: Jessica Claßen | first_name: Jessica | last_name: Claßen | role: Geschäftsführerin Central Europe and Director Finance | role_category: finance | previous_phone_note: Official Sage management page verifies role
+17. input_row_id: batch_002_0263 | batch_id: batch_002 | company_name: Silvernova GmbH | company_website: https://de.linkedin.com/company/silvernova-gmbh | full_name: Lukas Ballweg | first_name: Lukas | last_name: Ballweg | role: CEO Silvernova GmbH | role_category: founder_ceo | previous_phone_note: Public project page identifies CEO
+18. input_row_id: batch_002_0264 | batch_id: batch_002 | company_name: Talentnavigator | company_website: https://de.linkedin.com/company/talentnavigator-io | full_name: Kilian Schmidt | first_name: Kilian | last_name: Schmidt | role: Founder and CEO at getexperts Founder at Talentnavigator | role_category: founder_ceo | previous_phone_note: LinkedIn company page lists founder
+19. input_row_id: batch_002_0265 | batch_id: batch_002 | company_name: TechRizon GmbH | company_website: https://de.linkedin.com/company/techrizon-gmbh | full_name: Guido Bücker | first_name: Guido | last_name: Bücker | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Company imprint lists managing director
+20. input_row_id: batch_002_0266 | batch_id: batch_002 | company_name: Telemarketing Plus AG | company_website: https://ch.linkedin.com/company/telemarketing-plus-ag | full_name: Stefan Zivanovic | first_name: Stefan | last_name: Zivanovic | role: Geschäftsleiter | role_category: other_management | previous_phone_note: Public directory lists CEO
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_013
+- Return only the requested result.
+- Use public information only.
