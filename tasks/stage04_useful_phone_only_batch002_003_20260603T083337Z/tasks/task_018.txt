@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_018
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_003_0079 | batch_id: batch_003 | company_name: Cotral Lab | company_website: https://fr.linkedin.com/company/cotrallab | full_name: Guénolé Piquet | first_name: Guénolé | last_name: Piquet | role: Area Sales Manager / Vertriebsaußendienst B2B | role_category: sales | previous_phone_note: LinkedIn profile shows B2B area sales role.
+2. input_row_id: batch_003_0080 | batch_id: batch_003 | company_name: Cotral Lab | company_website: https://fr.linkedin.com/company/cotrallab | full_name: Jens Katzenberger | first_name: Jens | last_name: Katzenberger | role: Regionalverkaufsleiter West | role_category: sales | previous_phone_note: LinkedIn profile shows regional sales leadership.
+3. input_row_id: batch_003_0081 | batch_id: batch_003 | company_name: Cotral Lab | company_website: https://fr.linkedin.com/company/cotrallab | full_name: Thomas Schmidt | first_name: Thomas | last_name: Schmidt | role: Area Sales Manager | role_category: sales | previous_phone_note: LinkedIn profile shows area sales role.
+4. input_row_id: batch_003_0082 | batch_id: batch_003 | company_name: Destinus | company_website: https://nl.linkedin.com/company/destinusdefence | full_name: Mikhail Kokorich | first_name: Mikhail | last_name: Kokorich | role: CEO and Founder | role_category: founder_ceo | previous_phone_note: Official Destinus page names founder and CEO.
+5. input_row_id: batch_003_0083 | batch_id: batch_003 | company_name: Destinus | company_website: https://nl.linkedin.com/company/destinusdefence | full_name: Wouter Van Beek | first_name: Wouter | last_name: Van Beek | role: Group Chief Commercial Officer | role_category: business_development | previous_phone_note: Forum speaker page lists commercial leadership role.
+6. input_row_id: batch_003_0084 | batch_id: batch_003 | company_name: Destinus | company_website: https://nl.linkedin.com/company/destinusdefence | full_name: Bas Gouverneur | first_name: Bas | last_name: Gouverneur | role: Chief Military Program Officer | role_category: operations | previous_phone_note: Press release confirms Destinus executive appointment.
+7. input_row_id: batch_003_0085 | batch_id: batch_003 | company_name: Destinus | company_website: https://nl.linkedin.com/company/destinusdefence | full_name: Anne-Pascale Guedon | first_name: Anne-Pascale | last_name: Guedon | role: Presidente / Directrice Generale | role_category: other_management | previous_phone_note: LinkedIn profile connects her to Destinus leadership.
+8. input_row_id: batch_003_0086 | batch_id: batch_003 | company_name: Destinus | company_website: https://nl.linkedin.com/company/destinusdefence | full_name: Pedro Sallent | first_name: Pedro | last_name: Sallent | role: Board Member / General Manager / Business Development | role_category: business_development | previous_phone_note: LinkedIn profile lists Destinus business development role.
+9. input_row_id: batch_003_0087 | batch_id: batch_003 | company_name: Deutsche Extrakt Kaffee GmbH | company_website: https://de.linkedin.com/company/dek-hamburg | full_name: Jan Beernd Rothfos | first_name: Jan Beernd | last_name: Rothfos | role: Managing Director | role_category: other_management | previous_phone_note: Official legal notice lists him as managing director.
+10. input_row_id: batch_003_0088 | batch_id: batch_003 | company_name: Deutsche Extrakt Kaffee GmbH | company_website: https://de.linkedin.com/company/dek-hamburg | full_name: Anne Kathrin Rothfos | first_name: Anne Kathrin | last_name: Rothfos | role: Managing Director | role_category: other_management | previous_phone_note: Coffee association lists her as managing director.
+11. input_row_id: batch_003_0089 | batch_id: batch_003 | company_name: Deutsche Extrakt Kaffee GmbH | company_website: https://de.linkedin.com/company/dek-hamburg | full_name: Dorian Suchan | first_name: Dorian | last_name: Suchan | role: Sales Director B2B | role_category: sales | previous_phone_note: LinkedIn profile shows Sales Director B2B.
+12. input_row_id: batch_003_0090 | batch_id: batch_003 | company_name: Deutsche Extrakt Kaffee GmbH | company_website: https://de.linkedin.com/company/dek-hamburg | full_name: Stefan Wiegand | first_name: Stefan | last_name: Wiegand | role: Area Sales Manager DACH LU NL | role_category: sales | previous_phone_note: LinkedIn profile shows area sales role.
+13. input_row_id: batch_003_0091 | batch_id: batch_003 | company_name: Deutsche Extrakt Kaffee GmbH | company_website: https://de.linkedin.com/company/dek-hamburg | full_name: Silja Voß | first_name: Silja | last_name: Voß | role: Leitung CAFEA Marketing | role_category: marketing | previous_phone_note: LinkedIn profile shows marketing leadership.
+14. input_row_id: batch_003_0092 | batch_id: batch_003 | company_name: Richard Borek Unternehmensgruppe | company_website: https://de.linkedin.com/company/richardborekunternehmensgruppe | full_name: Richard Borek | first_name: Richard | last_name: Borek | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Official impressum names him Geschäftsführer
+15. input_row_id: batch_003_0093 | batch_id: batch_003 | company_name: Richard Borek Unternehmensgruppe | company_website: https://de.linkedin.com/company/richardborekunternehmensgruppe | full_name: Niels Hagemann | first_name: Niels | last_name: Hagemann | role: Geschäftsführer | role_category: other_management | previous_phone_note: Directory links him to MDM group management
+16. input_row_id: batch_003_0094 | batch_id: batch_003 | company_name: Roger | company_website: https://de.linkedin.com/company/goroger | full_name: Victor Charlier | first_name: Victor | last_name: Charlier | role: Founder and CEO | role_category: founder_ceo | previous_phone_note: Company team page names him founder
+17. input_row_id: batch_003_0095 | batch_id: batch_003 | company_name: Roger | company_website: https://de.linkedin.com/company/goroger | full_name: Andreas Wolff | first_name: Andreas | last_name: Wolff | role: Co-founder and CTO | role_category: other_management | previous_phone_note: Company team page names him founder
+18. input_row_id: batch_003_0096 | batch_id: batch_003 | company_name: Scope Content AG | company_website: https://ch.linkedin.com/company/scope-content-ag | full_name: Dr. Peter Hogenkamp | first_name: Peter | last_name: Hogenkamp | role: President of the board and CEO | role_category: founder_ceo | previous_phone_note: Company team page confirms CEO and board president
+19. input_row_id: batch_003_0097 | batch_id: batch_003 | company_name: Scope Content AG | company_website: https://ch.linkedin.com/company/scope-content-ag | full_name: Jens Alder | first_name: Jens | last_name: Alder | role: Board Director | role_category: other_management | previous_phone_note: Public profile lists Scope director role
+20. input_row_id: batch_003_0098 | batch_id: batch_003 | company_name: Seminarkontor GmbH | company_website: https://de.linkedin.com/company/seminarkontor-gmbh | full_name: Oscar Nobre | first_name: Oscar | last_name: Nobre | role: Geschäftsführer | role_category: founder_ceo | previous_phone_note: Impressum states company represented by him
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_018
+- Return only the requested result.
+- Use public information only.
