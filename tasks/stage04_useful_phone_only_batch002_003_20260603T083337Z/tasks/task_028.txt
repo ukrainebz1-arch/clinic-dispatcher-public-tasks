@@ -1,0 +1,112 @@
+RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z
+TASK_ID: task_028
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are doing Stage04 useful phone route research for a B2B people pipeline.
+
+Goal:
+For each input person, find a useful phone route to the named person or to their relevant department/team.
+
+A phone number is useful only if calling it gives a realistic route to:
+1. the named person directly, or
+2. the person's role/function/team/department.
+
+Useful results:
+- direct phone / Durchwahl of the named person
+- business mobile of the named person
+- phone listed next to the person's name
+- team/profile/contact-person page where this person and phone are connected
+- PDF, signature, event page, job posting, press page or contact block where this person is listed with a phone
+- department or role route matching the person's position:
+  - Sales / Vertrieb / Business Development for sales roles
+  - HR / Recruiting / Talent Acquisition for HR/recruiting roles
+  - Geschäftsführung / Management / Sekretariat / Assistant route for CEO/GF/management roles
+  - Pflegedirektion / PDL / Sekretariat Pflege for clinic nursing roles
+
+Not useful:
+- generic company phone
+- Impressum-only phone
+- Zentrale
+- Empfang / reception
+- headquarters / HQ phone
+- general contact-page phone
+- phone that is not connected to the person, role, team, or department
+
+Important:
+Do not fill phone_number with a generic company number.
+If only a generic company phone, Impressum phone, Zentrale, Empfang, HQ or general contact-page number is found, return NOT_FOUND_USEFUL_PHONE and leave phone_number empty.
+
+Search strategy:
+For each person, search carefully using:
+- company website
+- team pages
+- contact pages
+- PDFs
+- press pages
+- event pages
+- job postings
+- web snippets
+- queries with the person's full name, role, company name, Telefon, Durchwahl, Kontakt, PDF
+
+Evidence rule:
+A filled phone_number must have a source URL and a short evidence quote or explanation showing why the number is connected to the person or relevant department/team.
+If the evidence does not prove a person/role/department route, reject the number.
+
+Return exactly one CSV row per input person.
+
+Required output columns:
+input_row_id,batch_id,company_name,company_website,full_name,first_name,last_name,role,phone_status,phone_number,phone_type,route_label,department_or_team,phone_source_url,evidence_quote,confidence,validation_issues,notes
+
+Allowed phone_status:
+USEFUL_DIRECT_PERSON_PHONE
+USEFUL_DEPARTMENT_ROLE_ROUTE
+NOT_FOUND_USEFUL_PHONE
+PARSE_ERROR
+
+Allowed phone_type:
+direct_person
+business_mobile
+person_durchwahl
+department_route
+role_route
+assistant_or_secretariat_route
+not_found
+parse_error
+
+Rules:
+- phone_number must be empty for NOT_FOUND_USEFUL_PHONE.
+- phone_source_url is required when phone_number is filled.
+- confidence must be high, medium, low, or unknown.
+- Do not invent or guess phone numbers.
+- Do not return email addresses.
+- Do not return LinkedIn URLs unless they directly support the phone route.
+- Do not add commentary outside the CSV.
+- The first two lines of your answer must contain the RUN_ID and TASK_ID from the task header.
+
+CURRENT CHUNK INPUT:
+1. input_row_id: batch_003_0279 | batch_id: batch_003 | company_name: Brack.Alltron | company_website: https://ch.linkedin.com/company/brackalltron | full_name: Roman Reichelt | first_name: Roman | last_name: Reichelt | role: Chief Marketing & Communications Officer | role_category: marketing | previous_phone_note: Official organisation page lists executive role
+2. input_row_id: batch_003_0280 | batch_id: batch_003 | company_name: Brack.Alltron | company_website: https://ch.linkedin.com/company/brackalltron | full_name: Fitore Aliu-Keller | first_name: Fitore | last_name: Aliu-Keller | role: Chief People & Culture Officer | role_category: hr_recruiting | previous_phone_note: Official organisation page lists executive role
+3. input_row_id: batch_003_0281 | batch_id: batch_003 | company_name: Brack.Alltron | company_website: https://ch.linkedin.com/company/brackalltron | full_name: Tobias Gruener | first_name: Tobias | last_name: Gruener | role: Chief Commercial Officer | role_category: business_development | previous_phone_note: Official organisation page lists executive role
+4. input_row_id: batch_003_0282 | batch_id: batch_003 | company_name: CAIRO AG | company_website: https://de.linkedin.com/company/cairo.ag | full_name: Marcus Düsi | first_name: Marcus | last_name: Düsi | role: CEO / Vorstand | role_category: founder_ceo | previous_phone_note: Official impressum and company page identify CEO
+5. input_row_id: batch_003_0283 | batch_id: batch_003 | company_name: CASA AKTIVA | company_website: https://www.linkedin.com/company/casa-aktiva-ltd | full_name: Chadli Gdouda | first_name: Chadli | last_name: Gdouda | role: Geschäftsführer / CEO | role_category: founder_ceo | previous_phone_note: Official impressum names managing director
+6. input_row_id: batch_003_0284 | batch_id: batch_003 | company_name: Kasseler Verkehrs- und Versorgungs-GmbH | company_website: https://www.linkedin.com/company/kvv-kassel | full_name: Carsten Harkner | first_name: Carsten | last_name: Harkner | role: Managing Director | role_category: other_management | previous_phone_note: Official KVV page lists him as Geschäftsführer.
+7. input_row_id: batch_003_0285 | batch_id: batch_003 | company_name: LEIPA Group | company_website: https://de.linkedin.com/company/leipagroup | full_name: Antonio Bellante | first_name: Antonio | last_name: Bellante | role: CEO | role_category: founder_ceo | previous_phone_note: Official leadership page lists him as CEO.
+8. input_row_id: batch_003_0286 | batch_id: batch_003 | company_name: LEIPA Group | company_website: https://de.linkedin.com/company/leipagroup | full_name: Patrick Walczak | first_name: Patrick | last_name: Walczak | role: Chief Sales Officer | role_category: sales | previous_phone_note: Official leadership page lists him as CSO.
+9. input_row_id: batch_003_0287 | batch_id: batch_003 | company_name: LEIPA Group | company_website: https://de.linkedin.com/company/leipagroup | full_name: Christian Schürmann | first_name: Christian | last_name: Schürmann | role: Chief Operating Officer | role_category: operations | previous_phone_note: Official leadership page lists him as COO.
+10. input_row_id: batch_003_0288 | batch_id: batch_003 | company_name: LEIPA Group | company_website: https://de.linkedin.com/company/leipagroup | full_name: André Bäcker | first_name: André | last_name: Bäcker | role: CFO interim | role_category: finance | previous_phone_note: Official leadership page lists him as interim CFO.
+11. input_row_id: batch_003_0289 | batch_id: batch_003 | company_name: LEIPA Group | company_website: https://de.linkedin.com/company/leipagroup | full_name: Nicole Vierck | first_name: Nicole | last_name: Vierck | role: Manager HR | role_category: hr_recruiting | previous_phone_note: LinkedIn profile connects her to LEIPA Group HR.
+12. input_row_id: batch_003_0290 | batch_id: batch_003 | company_name: LORENTZ | company_website: https://de.linkedin.com/company/bernt-lorentz-gmbh | full_name: Bernt Lorentz | first_name: Bernt | last_name: Lorentz | role: Managing Director | role_category: founder_ceo | previous_phone_note: Official imprint names him as Geschäftsführer.
+13. input_row_id: batch_003_0291 | batch_id: batch_003 | company_name: LORENTZ | company_website: https://de.linkedin.com/company/bernt-lorentz-gmbh | full_name: Jens Lorentz | first_name: Jens | last_name: Lorentz | role: Managing Director / CFO | role_category: finance | previous_phone_note: Official imprint names him as Geschäftsführer.
+14. input_row_id: batch_003_0292 | batch_id: batch_003 | company_name: MartinBauer | company_website: https://de.linkedin.com/company/martinbauer | full_name: Sebastian Sieben | first_name: Sebastian | last_name: Sieben | role: Global CEO | role_category: founder_ceo | previous_phone_note: Company news says he has global responsibility for MartinBauer.
+15. input_row_id: batch_003_0293 | batch_id: batch_003 | company_name: MartinBauer | company_website: https://de.linkedin.com/company/martinbauer | full_name: Christian Wenzel | first_name: Christian | last_name: Wenzel | role: Head of Sales Beverage Industry / Global Key Account Director | role_category: sales | previous_phone_note: Official career article states his sales leadership role.
+16. input_row_id: batch_003_0294 | batch_id: batch_003 | company_name: MartinBauer | company_website: https://de.linkedin.com/company/martinbauer | full_name: Janine Soysev | first_name: Janine | last_name: Soysev | role: Head of Human Resources | role_category: hr_recruiting | previous_phone_note: Official careers contact page lists her as Head of HR.
+17. input_row_id: batch_003_0295 | batch_id: batch_003 | company_name: MartinBauer | company_website: https://de.linkedin.com/company/martinbauer | full_name: Christian Dinkler | first_name: Christian | last_name: Dinkler | role: Global Key Account Director and Head of Sales International | role_category: sales | previous_phone_note: LinkedIn profile connects him to MartinBauer sales leadership.
+18. input_row_id: batch_003_0296 | batch_id: batch_003 | company_name: MartinBauer | company_website: https://de.linkedin.com/company/martinbauer | full_name: Oliver Scheller | first_name: Oliver | last_name: Scheller | role: Head of Sales Animal Nutrition and Pharmaceutical Industry | role_category: sales | previous_phone_note: LinkedIn profile connects him to MartinBauer sales leadership.
+19. input_row_id: batch_003_0297 | batch_id: batch_003 | company_name: MegaCAD Deutschland GmbH | company_website: https://de.linkedin.com/company/megacad-gmbh | full_name: Nicolas Weisensee | first_name: Nicolas | last_name: Weisensee | role: Managing Director / CEO | role_category: founder_ceo | previous_phone_note: Official imprint lists him as authorized managing director.
+20. input_row_id: batch_003_0298 | batch_id: batch_003 | company_name: MegaCAD Deutschland GmbH | company_website: https://de.linkedin.com/company/megacad-gmbh | full_name: André Kohut | first_name: André | last_name: Kohut | role: Managing Director | role_category: other_management | previous_phone_note: Official imprint lists him as authorized managing director.
+
+REQUIRED OUTPUT:
+- Start your answer with exactly these two lines:\n  RUN_ID: stage04_useful_phone_only_batch002_003_20260603T083337Z\n  TASK_ID: task_028
+- Return only the requested result.
+- Use public information only.
