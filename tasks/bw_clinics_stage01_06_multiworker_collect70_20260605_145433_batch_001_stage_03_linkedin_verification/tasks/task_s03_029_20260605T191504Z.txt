@@ -1,0 +1,84 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_029_20260605T191504Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_029_20260605T191504Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_collect70_20260605_145433/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Klinik am Eichert in Göppingen | company_website: https://www.alb-fils-klinikum.de | first_name: Brigitte | last_name: Käser | full_name: Brigitte Käser | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflege team page confirms role
+2. batch_id: batch_001 | company_name: Klinik am Eichert in Göppingen | company_website: https://www.alb-fils-klinikum.de | first_name: Irene | last_name: Sauerbrey | full_name: Irene Sauerbrey | role: Stellvertretende Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflege team page confirms deputy role
+3. batch_id: batch_001 | company_name: Klinik am Eichert in Göppingen | company_website: https://www.alb-fils-klinikum.de | first_name: Martina | last_name: Heusel | full_name: Martina Heusel | role: Leiterin Geschäftsbereich Personal | role_category: hr_recruiting | confidence: high | notes: Official press page confirms HR leadership
+4. batch_id: batch_001 | company_name: Klinik am Eichert in Göppingen | company_website: https://www.alb-fils-klinikum.de | first_name: Wolfgang | last_name: Schmid | full_name: Wolfgang Schmid | role: Kaufmännischer Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official press page confirms management role
+5. batch_id: batch_001 | company_name: Ortenau Klinikum Offenburg-Kehl Standort Offenburg | company_website: http://offenburg-kehl.ortenau-klinikum.de/ | first_name: Rafaela | last_name: Kedzierski | full_name: Rafaela Kedzierski | role: Kommissarische Pflegedirektorin | role_category: operations | confidence: high | notes: Official site Pflegedirektion page confirms role
+6. batch_id: batch_001 | company_name: Ortenau Klinikum Offenburg-Kehl Standort Offenburg | company_website: http://offenburg-kehl.ortenau-klinikum.de/ | first_name: Kathleen | last_name: Messer | full_name: Kathleen Messer | role: Pflegerische Vorständin | role_category: operations | confidence: high | notes: Official group board page confirms nursing executive
+7. batch_id: batch_001 | company_name: Ortenau Klinikum Offenburg-Kehl Standort Offenburg | company_website: http://offenburg-kehl.ortenau-klinikum.de/ | first_name: Claudia | last_name: Bauer-Rabe | full_name: Claudia Bauer-Rabe | role: Kaufmännische Vorständin und Vorstandsvorsitzende | role_category: founder_ceo | confidence: high | notes: Official group management page confirms executive role
+8. batch_id: batch_001 | company_name: Klinikum am Steinenberg in Reutlingen | company_website: http://www.kreiskliniken-reutlingen.de | first_name: Matthias | last_name: Ziller | full_name: Matthias Ziller | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official Pflegedirektion page confirms current role
+9. batch_id: batch_001 | company_name: Klinikum am Steinenberg in Reutlingen | company_website: http://www.kreiskliniken-reutlingen.de | first_name: Thomas | last_name: Heinzelmann | full_name: Thomas Heinzelmann | role: Stellvertretender Pflegedirektor und Verwaltungsleitung Münsingen | role_category: operations | confidence: high | notes: Official Pflegedirektion page confirms role
+10. batch_id: batch_001 | company_name: Klinikum am Steinenberg in Reutlingen | company_website: http://www.kreiskliniken-reutlingen.de | first_name: Alexander | last_name: Muras | full_name: Alexander Muras | role: Kommissarischer stellvertretender Pflegedirektor | role_category: operations | confidence: high | notes: Official Pflegedirektion page confirms role
+11. batch_id: batch_001 | company_name: Klinikum am Steinenberg in Reutlingen | company_website: http://www.kreiskliniken-reutlingen.de | first_name: Anja | last_name: Fujan | full_name: Anja Fujan | role: Leitung Personal und Recht | role_category: hr_recruiting | confidence: high | notes: Official management page confirms HR leadership
+12. batch_id: batch_001 | company_name: Psychiatrisches Zentrum Nordbaden in Wiesloch | company_website: https://www.pzn-wiesloch.de/ | first_name: Andreas | last_name: Emmerich | full_name: Andreas Emmerich | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official news page confirms current nursing director
+13. batch_id: batch_001 | company_name: Psychiatrisches Zentrum Nordbaden in Wiesloch | company_website: https://www.pzn-wiesloch.de/ | first_name: Isolde | last_name: Schuller | full_name: Isolde Schuller | role: Personaldirektorin | role_category: hr_recruiting | confidence: high | notes: Official organization page confirms HR director
+14. batch_id: batch_001 | company_name: Psychiatrisches Zentrum Nordbaden in Wiesloch | company_website: https://www.pzn-wiesloch.de/ | first_name: Anett | last_name: Rose-Losert | full_name: Anett Rose-Losert | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official organization page confirms CEO role
+15. batch_id: batch_001 | company_name: Tagesklinik für Kinder- und Jugendpsychiatrie Winnenden | company_website: http://www.klinikum-weissenhof.de/ | first_name: Markus | last_name: Mauch | full_name: Markus Mauch | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official KJPP page names him Pflegedienstleiter for Tageskliniken including Winnenden.
+16. batch_id: batch_001 | company_name: Tagesklinik für Kinder- und Jugendpsychiatrie Winnenden | company_website: http://www.klinikum-weissenhof.de/ | first_name: Tina | last_name: Schlüter | full_name: Dr. Tina Schlüter | role: Chefärztin Kinder- und Jugendpsychiatrie | role_category: other_management | confidence: high | notes: Official KJPP page names her Chefärztin for this department.
+17. batch_id: batch_001 | company_name: Steinlach-Klinik in Mössingen | company_website: http://www.steinlach-klinik.com | first_name: Monika | last_name: Katicic | full_name: Monika Katicic | role: Pflegedienstleitung / Stationsleitung | role_category: operations | confidence: high | notes: 2024 quality report names her as Pflegedienstleitung and Stationsleitung.
+18. batch_id: batch_001 | company_name: Steinlach-Klinik in Mössingen | company_website: http://www.steinlach-klinik.com | first_name: Matthias | last_name: Wokittel | full_name: Dr. Matthias Wokittel | role: Klinikleitung | role_category: other_management | confidence: medium | notes: 2024 quality report names him under Klinikleitung/Verwaltungsleitung.
+19. batch_id: batch_001 | company_name: Praxis am Rathauenplatz in Heilbronn | company_website: http://www.chirurgie-hn.de | first_name: Alexandra | last_name: Stutz | full_name: Alexandra Stutz | role: Pflegedienstleiterin | role_category: operations | confidence: high | notes: Quality report names her Pflegedienstleiterin.
+20. batch_id: batch_001 | company_name: Praxis am Rathauenplatz in Heilbronn | company_website: http://www.chirurgie-hn.de | first_name: Andreas | last_name: Simpfendörfer | full_name: Dr. Andreas Simpfendörfer | role: Ärztliche Leitung / Verwaltungsleitung | role_category: other_management | confidence: high | notes: Quality report names him for ärztliche Leitung and Verwaltungsleitung.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_029_20260605T191504Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
