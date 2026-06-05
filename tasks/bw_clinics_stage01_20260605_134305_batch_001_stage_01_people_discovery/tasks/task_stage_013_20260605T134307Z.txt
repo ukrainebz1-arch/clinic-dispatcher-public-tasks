@@ -1,0 +1,103 @@
+RUN_ID: bw_clinics_stage01_20260605_134305_batch_001_stage_01_people_discovery
+TASK_ID: task_stage_013_20260605T134307Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_013_20260605T134307Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic contact people discovery
+
+Run context:
+- campaign_id: bw_clinics_stage01_20260605_134305
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_20260605_134305_batch_001_stage_01_people_discovery
+- input_csv: campaigns/bw_clinics_stage01_20260605_134305/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital company rows. For each clinic, find publicly available named contact people relevant for recruiting cooperation for examinierte Pflegefachkräfte.
+
+Primary goal:
+Find real named people connected to the exact clinic / hospital / hospital group location who are relevant for nursing recruitment, care leadership, HR, or clinic management.
+
+Target role priority:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL
+4. Klinikleitung / Geschäftsführung / Standortleitung
+5. Personalleitung / HR-Leitung / Recruiting-Leitung
+6. Stellvertretende Personalleitung
+7. Ärztliche Direktion only as fallback if no better nursing/HR/management contact is found
+
+Search guidance:
+- Search official clinic website, team pages, Leitung pages, Organigramm, Geschäftsführung pages, Pflege pages, Karriere pages, Impressum, Presse, PDFs, annual reports, quality reports, public documents, and official clinic group pages.
+- Prefer official clinic or operator sources.
+- LinkedIn/Xing can be used only if it clearly matches the exact person and clinic.
+- If a clinic belongs to a group, prefer location-specific contacts first. Use group-level HR or management only if no local clinic contact is available.
+- For nursing recruitment, Pflegedirektion / Pflegeleitung / PDL is usually more relevant than Ärztliche Direktion.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails, phone numbers, or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic, clinic location, or responsible operator through a public source.
+- Better fewer relevant people than many weak or unrelated people.
+- If the role is uncertain, include the row only if a public source supports the company + person + role connection.
+- Do not include random doctors, Oberärzte, Chefärzte, ward doctors, nursing staff, or general employees unless they match the target role priority.
+- Do not use info@, kontakt@, zentrale@, bewerbung@, or other generic inboxes as people.
+- If no relevant named person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role: use the public role title as accurately as possible, e.g. Pflegedirektorin, Pflegedienstleitung, Klinikgeschäftsführer, Personalleiterin.
+- role_category:
+  - operations for Pflegedirektion, Pflegedienstleitung, Pflegeleitung, PDL, nursing leadership
+  - hr_recruiting for Personalleitung, HR, Recruiting
+  - other_management for Klinikleitung, Geschäftsführung, Standortleitung, Ärztliche Direktion
+  - unknown only if role is relevant but cannot be categorized
+- linkedin_profile_url: use only if publicly found and person match is clear; otherwise leave empty.
+- source_url: public source URL proving person + clinic + role.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Tagesklinik für Kinder- und Jugendpsychiatrie Winnenden | company_website: http://www.klinikum-weissenhof.de/ | city: Winnenden | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-kinder-und-jugendpsychiatrie-winnenden | pflegekraefte: 5
+2. company_name: Steinlach-Klinik in Mössingen | company_website: http://www.steinlach-klinik.com | city: Mössingen | country: Germany | source_url: https://klinikradar.de/kliniken/steinlach-klinik | pflegekraefte: 18
+3. company_name: Praxis am Rathauenplatz in Heilbronn | company_website: http://www.chirurgie-hn.de | city: Heilbronn | country: Germany | source_url: https://klinikradar.de/kliniken/praxis-am-rathauenplatz | pflegekraefte: 7
+4. company_name: InTakT Tagesklinik für Kinder- und Jugendpsychiatrie und Psychotherapie Pforzheim | company_website: https://www.kize.de/intakt-pf/ | city: Pforzheim | country: Germany | source_url: https://klinikradar.de/kliniken/intakt-tagesklinik-fuer-kinder-und-jugendpsychiatrie-und-psychotherapie-pforzheim | pflegekraefte: 4
+5. company_name: Tagesklinik Vaihingen | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/ | city: Vaihingen an der Enz | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-vaihingen | pflegekraefte: 2
+6. company_name: St. Elisabethen-Krankenhaus, Kinder- und Jugendpsychiatrie in Lörrach | company_website: https://klinloe.de | city: Lörrach | country: Germany | source_url: https://klinikradar.de/kliniken/st-elisabethen-krankenhaus-kinder-und-jugendpsychiatrie | pflegekraefte: 14
+7. company_name: Psychiatrische Tagesklinik Stockach | company_website: http://zfp-reichenau.de | city: Stockach | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-stockach | pflegekraefte: 3
+8. company_name: Tagesklinik Lauchringen | company_website: https://klinloe.de | city: Lauchringen | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-lauchringen | pflegekraefte: 2
+9. company_name: Klinik im Kronprinzenbau in Reutlingen | company_website: http://www.kronprinzenbau-klinik.de | city: Reutlingen | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-im-kronprinzenbau | pflegekraefte: 10
+10. company_name: ZfP Südwürttemberg Zwiefalten Tagesklinik Riedlingen | company_website: http://www.zfp-web.de | city: Riedlingen | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen | pflegekraefte: 3
+11. company_name: ZfP Südwürttemberg Weissenau, TAZ Aulendorf | company_website: http://www.zfp-web.de | city: Aulendorf | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-weissenau-taz-aulendorf | pflegekraefte: 2
+12. company_name: MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik) | company_website: http://www.median-kliniken.de | city: Ottenhöfen im Schwarzwald | country: Germany | source_url: https://klinikradar.de/kliniken/median-achertal-klinik-ottenhoefen-psychiatrische-tagesklinik | pflegekraefte: 6
+13. company_name: EchTAZ in Reutlingen | company_website: https://medizin.uni-tuebingen.de | city: Reutlingen | country: Germany | source_url: https://klinikradar.de/kliniken/echtaz | pflegekraefte: 3
+14. company_name: MediClin Klinik an der Lindenhöhe, Standort Okenstraße in Offenburg | company_website: http://www.klinik-lindenhoehe.de | city: Offenburg | country: Germany | source_url: https://klinikradar.de/kliniken/mediclin-klinik-an-der-lindenhoehe-standort-okenstrasse | pflegekraefte: 5
+15. company_name: MediClin Klinik an der Lindenhöhe (Standort Rastatt) | company_website: http://www.klinik-lindenhoehe.de | city: Rastatt | country: Germany | source_url: https://klinikradar.de/kliniken/mediclin-klinik-an-der-lindenhoehe-standort-rastatt | pflegekraefte: 1
+16. company_name: Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie Tagesklinik Albstadt | company_website: http://www.kjp-mariaberg.de | city: Albstadt | country: Germany | source_url: https://klinikradar.de/kliniken/mariaberg-fachkrankenhaus-kinder-und-jugendpsychiatrie-tagesklinik-albstadt | pflegekraefte: 3
+17. company_name: Universitätsklinikum Ulm - Strahlentherapie am Krankenhaus Ehingen | company_website: http://www.uniklinik-ulm.de/ | city: Ehingen | country: Germany | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-ulm-strahlentherapie-am-krankenhaus-ehingen | pflegekraefte: 1
+18. company_name: Psychiatrische Tagesklinik Bad Mergentheim | company_website: http://www.khtbb.de/khtbb/index.php | city: Bad Mergentheim | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-bad-mergentheim | pflegekraefte: 3
+19. company_name: Suchtmedizinische Tagesklinik Bad Säckingen | company_website: https://www.zfp-reichenau.de/ | city: Bad Säckingen | country: Germany | source_url: https://klinikradar.de/kliniken/suchtmedizinische-tagesklinik-bad-saeckingen
+20. company_name: Klinikum Mittelbaden Forbach | company_website: http://www.klinikum-mittelbaden.de | city: Forbach | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-mittelbaden-forbach
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_013_20260605T134307Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
