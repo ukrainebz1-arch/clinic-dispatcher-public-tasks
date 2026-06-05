@@ -1,0 +1,1027 @@
+TASK_ID: stage05_task_0001
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura fachklinik in albstadt|https://www.acura-fachklinik.de/|albstadt|germany",
+    "company_name": "Acura Fachklinik in Albstadt",
+    "full_name": "Achim Schütz",
+    "message_target_id": "stage05_task_0001::person_achim_sch_tz_e463240da3::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_achim_sch_tz_e463240da3",
+    "recipient_value": "achim.schuetz@acura-fachklinik.de",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura fachklinik in albstadt|https://www.acura-fachklinik.de/|albstadt|germany",
+    "company_name": "Acura Fachklinik in Albstadt",
+    "full_name": "Jessica Beck",
+    "message_target_id": "stage05_task_0001::person_jessica_beck_804cef9448::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_jessica_beck_804cef9448",
+    "recipient_value": "jessica.beck@acura-fachklinik.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura kliniken baden-baden|http://www.acura-kliniken.com|baden-baden|germany",
+    "company_name": "Acura Kliniken Baden-Baden",
+    "full_name": "Dirk Schmitz",
+    "message_target_id": "stage05_task_0001::person_dirk_schmitz_c4bcef65cd::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dirk_schmitz_c4bcef65cd",
+    "recipient_value": "dirk.schmitz@acura-kliniken.com",
+    "role_title": "Geschäftsleitung",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura kliniken baden-baden|http://www.acura-kliniken.com|baden-baden|germany",
+    "company_name": "Acura Kliniken Baden-Baden",
+    "full_name": "Dirk Schmitz",
+    "message_target_id": "stage05_task_0001::person_dirk_schmitz_c4bcef65cd::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dirk_schmitz_c4bcef65cd",
+    "recipient_value": "https://de.linkedin.com/in/dirk-schmitz-m-a-a271a11b",
+    "role_title": "Geschäftsleitung",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura kliniken baden-baden|http://www.acura-kliniken.com|baden-baden|germany",
+    "company_name": "Acura Kliniken Baden-Baden",
+    "full_name": "Dirk Schmitz",
+    "message_target_id": "stage05_task_0001::person_dirk_schmitz_c4bcef65cd::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dirk_schmitz_c4bcef65cd",
+    "recipient_value": "https://de.linkedin.com/in/dirk-schmitz-m-a-a271a11b",
+    "role_title": "Geschäftsleitung",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura kliniken baden-baden|http://www.acura-kliniken.com|baden-baden|germany",
+    "company_name": "Acura Kliniken Baden-Baden",
+    "full_name": "Harry Schröter",
+    "message_target_id": "stage05_task_0001::person_harry_schr_ter_2ca97e7e8c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_harry_schr_ter_2ca97e7e8c",
+    "recipient_value": "h.schroeter@acura-kliniken.com",
+    "role_title": "Stellvertretende Pflegedienstleitung",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura kliniken baden-baden|http://www.acura-kliniken.com|baden-baden|germany",
+    "company_name": "Acura Kliniken Baden-Baden",
+    "full_name": "Julia Maifarth",
+    "message_target_id": "stage05_task_0001::person_julia_maifarth_daa164d4d4::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_julia_maifarth_daa164d4d4",
+    "recipient_value": "j.maifarth@acura-kliniken.com",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura kliniken baden-baden|http://www.acura-kliniken.com|baden-baden|germany",
+    "company_name": "Acura Kliniken Baden-Baden",
+    "full_name": "Maja Treichel",
+    "message_target_id": "stage05_task_0001::person_maja_treichel_7b8fdca8d5::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_maja_treichel_7b8fdca8d5",
+    "recipient_value": "maja.treichel@acura-kliniken.com",
+    "role_title": "Geschäftsleitung",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura kliniken baden-baden|http://www.acura-kliniken.com|baden-baden|germany",
+    "company_name": "Acura Kliniken Baden-Baden",
+    "full_name": "Maja Treichel",
+    "message_target_id": "stage05_task_0001::person_maja_treichel_7b8fdca8d5::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_maja_treichel_7b8fdca8d5",
+    "recipient_value": "https://cn.linkedin.com/in/maja-treichel-chu-079b0219",
+    "role_title": "Geschäftsleitung",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura kliniken baden-baden|http://www.acura-kliniken.com|baden-baden|germany",
+    "company_name": "Acura Kliniken Baden-Baden",
+    "full_name": "Maja Treichel",
+    "message_target_id": "stage05_task_0001::person_maja_treichel_7b8fdca8d5::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_maja_treichel_7b8fdca8d5",
+    "recipient_value": "https://cn.linkedin.com/in/maja-treichel-chu-079b0219",
+    "role_title": "Geschäftsleitung",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|agaplesion bethesda klinik ulm|https://www.bethesda-ulm.de/start|ulm|germany",
+    "company_name": "Agaplesion Bethesda Klinik Ulm",
+    "full_name": "Judith Barth",
+    "message_target_id": "stage05_task_0001::person_judith_barth_4610ba15d9::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_judith_barth_4610ba15d9",
+    "recipient_value": "judith.barth@agaplesion.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|agaplesion bethesda klinik ulm|https://www.bethesda-ulm.de/start|ulm|germany",
+    "company_name": "Agaplesion Bethesda Klinik Ulm",
+    "full_name": "Judith Barth",
+    "message_target_id": "stage05_task_0001::person_judith_barth_4610ba15d9::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_judith_barth_4610ba15d9",
+    "recipient_value": "https://de.linkedin.com/in/judith-barth-3a099b123",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|agaplesion bethesda klinik ulm|https://www.bethesda-ulm.de/start|ulm|germany",
+    "company_name": "Agaplesion Bethesda Klinik Ulm",
+    "full_name": "Judith Barth",
+    "message_target_id": "stage05_task_0001::person_judith_barth_4610ba15d9::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_judith_barth_4610ba15d9",
+    "recipient_value": "https://de.linkedin.com/in/judith-barth-3a099b123",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|agaplesion bethesda klinik ulm|https://www.bethesda-ulm.de/start|ulm|germany",
+    "company_name": "Agaplesion Bethesda Klinik Ulm",
+    "full_name": "Natalie Waldherr",
+    "message_target_id": "stage05_task_0001::person_natalie_waldherr_34d6dfbd0d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_natalie_waldherr_34d6dfbd0d",
+    "recipient_value": "natalie.waldherr@agaplesion.de",
+    "role_title": "Pflegedirektion",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|agaplesion bethesda klinik ulm|https://www.bethesda-ulm.de/start|ulm|germany",
+    "company_name": "Agaplesion Bethesda Klinik Ulm",
+    "full_name": "Natalie Waldherr",
+    "message_target_id": "stage05_task_0001::person_natalie_waldherr_34d6dfbd0d::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_natalie_waldherr_34d6dfbd0d",
+    "recipient_value": "https://de.linkedin.com/in/natalie-waldherr",
+    "role_title": "Pflegedirektion",
+    "task_id": "stage05_task_0001"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|agaplesion bethesda klinik ulm|https://www.bethesda-ulm.de/start|ulm|germany",
+    "company_name": "Agaplesion Bethesda Klinik Ulm",
+    "full_name": "Natalie Waldherr",
+    "message_target_id": "stage05_task_0001::person_natalie_waldherr_34d6dfbd0d::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_natalie_waldherr_34d6dfbd0d",
+    "recipient_value": "https://de.linkedin.com/in/natalie-waldherr",
+    "role_title": "Pflegedirektion",
+    "task_id": "stage05_task_0001"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Albstadt",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura fachklinik in albstadt|https://www.acura-fachklinik.de/|albstadt|germany",
+    "company_name": "Acura Fachklinik in Albstadt",
+    "company_website": "https://www.acura-fachklinik.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Jessica Beck",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "achim.schuetz@acura-fachklinik.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Achim Schütz",
+        "hypothesis_email": "achim.schuetz@acura-fachklinik.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_achim_sch_tz_e463240da3",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://acura-fachklinik.de/kontakt/",
+          "false",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/d93bb343b5938862/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "jessica.beck@acura-fachklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jessica Beck",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jessica_beck_804cef9448",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://acura-fachklinik.de/kontakt/",
+          "https://acura-fachklinik.de/wp-content/uploads/2024/06/260841780-772672000-2022-xml.pdf",
+          "false"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführung",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://acura-fachklinik.de/kontakt/",
+      "false",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/d93bb343b5938862/start",
+      "https://acura-fachklinik.de/wp-content/uploads/2024/06/260841780-772672000-2022-xml.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Baden-Baden",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura kliniken baden-baden|http://www.acura-kliniken.com|baden-baden|germany",
+    "company_name": "Acura Kliniken Baden-Baden",
+    "company_website": "http://www.acura-kliniken.com",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Harry Schröter",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedienstleitung"
+        },
+        {
+          "full_name": "Julia Maifarth",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "dirk.schmitz@acura-kliniken.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dirk Schmitz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dirk-schmitz-m-a-a271a11b",
+        "person_key": "person_dirk_schmitz_c4bcef65cd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsleitung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://acura-kliniken.com/wp-content/uploads/2021/05/Information-zur-Testung-von-Kindergarten-Kindern.pdf",
+          "https://acura-kliniken.com/unsere-kliniken/management/",
+          "https://de.linkedin.com/in/dirk-schmitz-m-a-a271a11b",
+          "https://acura-kliniken.com/wp-content/uploads/2025/08/Controller_Buchhalter_2025.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "h.schroeter@acura-kliniken.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Harry Schröter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_harry_schr_ter_2ca97e7e8c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://acura-kliniken.com/team/harry-schroter/",
+          "https://acura-kliniken.com/die-psychosomatik/unser-pflege-team/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "j.maifarth@acura-kliniken.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Julia Maifarth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_julia_maifarth_daa164d4d4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://acura-kliniken.com/team/julia-maifarth/",
+          "https://acura-kliniken.com/die-psychosomatik/unser-pflege-team/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "maja.treichel@acura-kliniken.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Maja Treichel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://cn.linkedin.com/in/maja-treichel-chu-079b0219",
+        "person_key": "person_maja_treichel_7b8fdca8d5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsleitung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://acura-kliniken.com/wp-content/uploads/2021/05/Information-zur-Testung-von-Kindergarten-Kindern.pdf",
+          "https://acura-kliniken.com/unsere-kliniken/management/",
+          "https://cn.linkedin.com/in/maja-treichel-chu-079b0219",
+          "https://acura-kliniken.com/wp-content/uploads/2025/08/Controller_Buchhalter_2025.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsleitung",
+        "Stellvertretende Pflegedienstleitung",
+        "Pflegedirektorin"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://acura-kliniken.com/wp-content/uploads/2021/05/Information-zur-Testung-von-Kindergarten-Kindern.pdf",
+      "https://acura-kliniken.com/unsere-kliniken/management/",
+      "https://de.linkedin.com/in/dirk-schmitz-m-a-a271a11b",
+      "https://acura-kliniken.com/wp-content/uploads/2025/08/Controller_Buchhalter_2025.pdf",
+      "https://acura-kliniken.com/team/harry-schroter/",
+      "https://acura-kliniken.com/die-psychosomatik/unser-pflege-team/",
+      "https://acura-kliniken.com/team/julia-maifarth/",
+      "https://cn.linkedin.com/in/maja-treichel-chu-079b0219"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ulm",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|agaplesion bethesda klinik ulm|https://www.bethesda-ulm.de/start|ulm|germany",
+    "company_name": "Agaplesion Bethesda Klinik Ulm",
+    "company_website": "https://www.bethesda-ulm.de/start",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Natalie Waldherr",
+          "person_key": "",
+          "role": "Pflegedirektion"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "judith.barth@agaplesion.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Judith Barth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/judith-barth-3a099b123",
+        "person_key": "person_judith_barth_4610ba15d9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bethesda-ulm.de/ueber-uns/management",
+          "https://de.linkedin.com/in/judith-barth-3a099b123"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "natalie.waldherr@agaplesion.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Natalie Waldherr",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/natalie-waldherr",
+        "person_key": "person_natalie_waldherr_34d6dfbd0d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektion",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/2023-06-07_GZU-Rundbrief_Sommer_2023.pdf",
+          "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/GZU-Taetigkeitsbericht_2024.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/0295ba9aa51b75e2/start",
+          "https://www.bethesda-ulm.de/ueber-uns/management",
+          "https://de.linkedin.com/in/natalie-waldherr",
+          "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/GZU_2022_Taetigkeitsbericht_20230607.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Pflegedirektion"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.bethesda-ulm.de/ueber-uns/management",
+      "https://de.linkedin.com/in/judith-barth-3a099b123",
+      "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/2023-06-07_GZU-Rundbrief_Sommer_2023.pdf",
+      "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/GZU-Taetigkeitsbericht_2024.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/0295ba9aa51b75e2/start",
+      "https://de.linkedin.com/in/natalie-waldherr",
+      "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/GZU_2022_Taetigkeitsbericht_20230607.pdf"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Albstadt",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura fachklinik in albstadt|https://www.acura-fachklinik.de/|albstadt|germany",
+    "company_name": "Acura Fachklinik in Albstadt",
+    "company_website": "https://www.acura-fachklinik.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Jessica Beck",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "achim.schuetz@acura-fachklinik.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Achim Schütz",
+        "hypothesis_email": "achim.schuetz@acura-fachklinik.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_achim_sch_tz_e463240da3",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://acura-fachklinik.de/kontakt/",
+          "false",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/d93bb343b5938862/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "jessica.beck@acura-fachklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jessica Beck",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jessica_beck_804cef9448",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://acura-fachklinik.de/kontakt/",
+          "https://acura-fachklinik.de/wp-content/uploads/2024/06/260841780-772672000-2022-xml.pdf",
+          "false"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführung",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://acura-fachklinik.de/kontakt/",
+      "false",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/d93bb343b5938862/start",
+      "https://acura-fachklinik.de/wp-content/uploads/2024/06/260841780-772672000-2022-xml.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Baden-Baden",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|acura kliniken baden-baden|http://www.acura-kliniken.com|baden-baden|germany",
+    "company_name": "Acura Kliniken Baden-Baden",
+    "company_website": "http://www.acura-kliniken.com",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Harry Schröter",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedienstleitung"
+        },
+        {
+          "full_name": "Julia Maifarth",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "dirk.schmitz@acura-kliniken.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dirk Schmitz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dirk-schmitz-m-a-a271a11b",
+        "person_key": "person_dirk_schmitz_c4bcef65cd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsleitung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://acura-kliniken.com/wp-content/uploads/2021/05/Information-zur-Testung-von-Kindergarten-Kindern.pdf",
+          "https://acura-kliniken.com/unsere-kliniken/management/",
+          "https://de.linkedin.com/in/dirk-schmitz-m-a-a271a11b",
+          "https://acura-kliniken.com/wp-content/uploads/2025/08/Controller_Buchhalter_2025.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "h.schroeter@acura-kliniken.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Harry Schröter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_harry_schr_ter_2ca97e7e8c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://acura-kliniken.com/team/harry-schroter/",
+          "https://acura-kliniken.com/die-psychosomatik/unser-pflege-team/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "j.maifarth@acura-kliniken.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Julia Maifarth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_julia_maifarth_daa164d4d4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://acura-kliniken.com/team/julia-maifarth/",
+          "https://acura-kliniken.com/die-psychosomatik/unser-pflege-team/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "maja.treichel@acura-kliniken.com",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Maja Treichel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://cn.linkedin.com/in/maja-treichel-chu-079b0219",
+        "person_key": "person_maja_treichel_7b8fdca8d5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsleitung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://acura-kliniken.com/wp-content/uploads/2021/05/Information-zur-Testung-von-Kindergarten-Kindern.pdf",
+          "https://acura-kliniken.com/unsere-kliniken/management/",
+          "https://cn.linkedin.com/in/maja-treichel-chu-079b0219",
+          "https://acura-kliniken.com/wp-content/uploads/2025/08/Controller_Buchhalter_2025.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsleitung",
+        "Stellvertretende Pflegedienstleitung",
+        "Pflegedirektorin"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://acura-kliniken.com/wp-content/uploads/2021/05/Information-zur-Testung-von-Kindergarten-Kindern.pdf",
+      "https://acura-kliniken.com/unsere-kliniken/management/",
+      "https://de.linkedin.com/in/dirk-schmitz-m-a-a271a11b",
+      "https://acura-kliniken.com/wp-content/uploads/2025/08/Controller_Buchhalter_2025.pdf",
+      "https://acura-kliniken.com/team/harry-schroter/",
+      "https://acura-kliniken.com/die-psychosomatik/unser-pflege-team/",
+      "https://acura-kliniken.com/team/julia-maifarth/",
+      "https://cn.linkedin.com/in/maja-treichel-chu-079b0219"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ulm",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|agaplesion bethesda klinik ulm|https://www.bethesda-ulm.de/start|ulm|germany",
+    "company_name": "Agaplesion Bethesda Klinik Ulm",
+    "company_website": "https://www.bethesda-ulm.de/start",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Natalie Waldherr",
+          "person_key": "",
+          "role": "Pflegedirektion"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "judith.barth@agaplesion.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Judith Barth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/judith-barth-3a099b123",
+        "person_key": "person_judith_barth_4610ba15d9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bethesda-ulm.de/ueber-uns/management",
+          "https://de.linkedin.com/in/judith-barth-3a099b123"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "natalie.waldherr@agaplesion.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Natalie Waldherr",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/natalie-waldherr",
+        "person_key": "person_natalie_waldherr_34d6dfbd0d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektion",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/2023-06-07_GZU-Rundbrief_Sommer_2023.pdf",
+          "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/GZU-Taetigkeitsbericht_2024.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/0295ba9aa51b75e2/start",
+          "https://www.bethesda-ulm.de/ueber-uns/management",
+          "https://de.linkedin.com/in/natalie-waldherr",
+          "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/GZU_2022_Taetigkeitsbericht_20230607.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Pflegedirektion"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.bethesda-ulm.de/ueber-uns/management",
+      "https://de.linkedin.com/in/judith-barth-3a099b123",
+      "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/2023-06-07_GZU-Rundbrief_Sommer_2023.pdf",
+      "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/GZU-Taetigkeitsbericht_2024.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/0295ba9aa51b75e2/start",
+      "https://de.linkedin.com/in/natalie-waldherr",
+      "https://www.bethesda-ulm.de/fileadmin/Agaplesion_bkl-ulm/user_upload/GZU/GZU_2022_Taetigkeitsbericht_20230607.pdf"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
