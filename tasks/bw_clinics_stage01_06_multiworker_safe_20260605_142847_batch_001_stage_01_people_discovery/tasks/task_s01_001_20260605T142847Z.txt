@@ -1,0 +1,89 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_safe_20260605_142847_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_001_20260605T142847Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_001_20260605T142847Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_safe_20260605_142847
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_safe_20260605_142847_batch_001_stage_01_people_discovery
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_safe_20260605_142847/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Universitätsklinikum Freiburg | company_website: https://www.uniklinik-freiburg.de/de.html | city: Freiburg im Breisgau | country: Germany | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-freiburg | pflegekraefte: 2.742
+2. company_name: Universitätsklinikum Mannheim | company_website: https://www.umm.de/start/ | city: Mannheim | country: Germany | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-mannheim | pflegekraefte: 1.552
+3. company_name: Städtisches Klinikum Karlsruhe | company_website: http://www.klinikum-karlsruhe.de | country: Germany | source_url: https://klinikradar.de/kliniken/staedtisches-klinikum-karlsruhe | pflegekraefte: 1.638
+4. company_name: Diakonie-Klinikum Stuttgart | company_website: https://www.diakonie-klinikum.de/ | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/diakonie-klinikum-stuttgart | pflegekraefte: 46
+5. company_name: Universitätsklinikum Heidelberg | company_website: https://www.klinikum.uni-heidelberg.de/ | city: Heidelberg | country: Germany | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-heidelberg | pflegekraefte: 2.265
+6. company_name: Klinikum Stuttgart - Katharinenhospital | company_website: https://www.klinikum-stuttgart.de/ | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-stuttgart-katharinenhospital | pflegekraefte: 1.090
+7. company_name: Robert-Bosch-Krankenhaus in Stuttgart | company_website: http://www.rbk.de/ | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/robert-bosch-krankenhaus | pflegekraefte: 947
+8. company_name: Klinikum Ludwigsburg | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/ | city: Ludwigsburg | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-ludwigsburg | pflegekraefte: 1.327
+9. company_name: SLK-Kliniken Heilbronn Klinikum am Gesundbrunnen | company_website: http://www.slk-kliniken.de/home/ | city: Heilbronn | country: Germany | source_url: https://klinikradar.de/kliniken/slk-kliniken-heilbronn-klinikum-am-gesundbrunnen | pflegekraefte: 1.127
+10. company_name: Schwarzwald-Baar Klinikum Villingen-Schwenningen | company_website: http://www.sbk-vs.de | city: Villingen-Schwenningen | country: Germany | source_url: https://klinikradar.de/kliniken/schwarzwald-baar-klinikum-villingen-schwenningen | pflegekraefte: 743
+11. company_name: Marienhospital Stuttgart | company_website: http://www.marienhospital-stuttgart.de | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/marienhospital-stuttgart | pflegekraefte: 865
+12. company_name: St. Vincentius Kliniken Karlsruhe | company_website: http://www.vidia-kliniken.de/ | city: Karlsruhe | country: Germany | source_url: https://klinikradar.de/kliniken/st-vincentius-kliniken-karlsruhe | pflegekraefte: 809
+13. company_name: Universitätsklinikum Ulm | company_website: http://www.uniklinik-ulm.de/ | city: Ulm | country: Germany | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-ulm | pflegekraefte: 1.044
+14. company_name: Klinikum Stuttgart - Krankenhaus Bad Cannstatt | company_website: https://www.klinikum-stuttgart.de/ | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-stuttgart-krankenhaus-bad-cannstatt | pflegekraefte: 511
+15. company_name: Klinikum Esslingen | company_website: http://www.klinikum-esslingen.de | city: Esslingen am Neckar | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-esslingen | pflegekraefte: 655
+16. company_name: Rems-Murr-Klinikum Winnenden | company_website: http://www.rems-murr-kliniken.de | city: Winnenden | country: Germany | source_url: https://klinikradar.de/kliniken/rems-murr-klinikum-winnenden | pflegekraefte: 813
+17. company_name: Klinik am Eichert in Göppingen | company_website: https://www.alb-fils-klinikum.de | city: Göppingen | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-am-eichert | pflegekraefte: 698
+18. company_name: Ortenau Klinikum Offenburg-Kehl Standort Offenburg | company_website: http://offenburg-kehl.ortenau-klinikum.de/ | city: Offenburg | country: Germany | source_url: https://klinikradar.de/kliniken/ortenau-klinikum-offenburg-kehl-standort-offenburg | pflegekraefte: 985
+19. company_name: Klinikum am Steinenberg in Reutlingen | company_website: http://www.kreiskliniken-reutlingen.de | city: Reutlingen | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-am-steinenberg | pflegekraefte: 696
+20. company_name: Psychiatrisches Zentrum Nordbaden in Wiesloch | company_website: https://www.pzn-wiesloch.de/ | city: Wiesloch | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrisches-zentrum-nordbaden | pflegekraefte: 502
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_001_20260605T142847Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
