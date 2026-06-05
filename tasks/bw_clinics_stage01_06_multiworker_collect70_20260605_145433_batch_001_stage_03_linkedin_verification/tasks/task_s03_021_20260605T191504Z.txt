@@ -1,0 +1,84 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_021_20260605T191504Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_021_20260605T191504Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_collect70_20260605_145433/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Suchtmedizinische Tagesklinik Freiburg | company_website: https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg | first_name: Viola | last_name: Wegener | full_name: Viola Wegener | role: Ärztliche Leitung | role_category: unknown | confidence: medium | notes: Fallback clinical leader in quality report
+2. batch_id: batch_001 | company_name: Waiblinger Zentralklinik in Waiblingen | company_website: http://wn-zentralklinik.de | first_name: Elena | last_name: Hazenbühler | full_name: Elena Hazenbühler | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Hospital Directory lists PDL
+3. batch_id: batch_001 | company_name: Waiblinger Zentralklinik in Waiblingen | company_website: http://wn-zentralklinik.de | first_name: Nadir | last_name: Arif | full_name: Nadir Arif | role: Prokurist | role_category: other_management | confidence: high | notes: Official clinic page lists prokurist
+4. batch_id: batch_001 | company_name: Waiblinger Zentralklinik in Waiblingen | company_website: http://wn-zentralklinik.de | first_name: Karsten | last_name: Reichmann | full_name: Karsten Reichmann | role: Geschäftsführer Leiter OP Leiter Station | role_category: founder_ceo | confidence: high | notes: Hospital Directory lists medical management
+5. batch_id: batch_001 | company_name: Tagesklinik Ludwigsburg | company_website: http://www.klinikum-weissenhof.de/ | first_name: Birgit | last_name: Karl | full_name: Birgit Karl | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Quality report lists PDL for Ludwigsburg
+6. batch_id: batch_001 | company_name: Tagesklinik Ludwigsburg | company_website: http://www.klinikum-weissenhof.de/ | first_name: Andreas | last_name: Breitmayer | full_name: Andreas Breitmayer | role: Kaufmännischer Direktor und stellvertretender Geschäftsführer | role_category: other_management | confidence: high | notes: Quality report lists administrative leadership
+7. batch_id: batch_001 | company_name: Tagesklinik Ludwigsburg | company_website: http://www.klinikum-weissenhof.de/ | first_name: Anett | last_name: Rose-Losert | full_name: Anett Rose-Losert | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official organization page lists Geschäftsführerin
+8. batch_id: batch_001 | company_name: Thoraxklinik Heidelberg | company_website: http://www.thoraxklinik-heidelberg.de/ | first_name: Sebastian | last_name: Frank | full_name: Sebastian Frank | role: Kaufmännischer Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official management page.
+9. batch_id: batch_001 | company_name: Thoraxklinik Heidelberg | company_website: http://www.thoraxklinik-heidelberg.de/ | first_name: Felix | last_name: Herth | full_name: Univ.-Prof. Dr. med. Felix Herth | role: Medizinischer Geschäftsführer | role_category: other_management | confidence: high | notes: Official management page.
+10. batch_id: batch_001 | company_name: Thoraxklinik Heidelberg | company_website: http://www.thoraxklinik-heidelberg.de/ | first_name: Brigitte | last_name: Radovanovic | full_name: Brigitte Radovanovic | role: Pflegemanagement | role_category: operations | confidence: medium | notes: Official Pflegemanagement contact page.
+11. batch_id: batch_001 | company_name: Thoraxklinik Heidelberg | company_website: http://www.thoraxklinik-heidelberg.de/ | first_name: Stefan | last_name: Bauer | full_name: Stefan Bauer | role: Leiter Personal / Stellvertretender Geschäftsführer | role_category: hr_recruiting | linkedin_profile_url: https://de.linkedin.com/in/stefan-bauer-7320a5b0 | confidence: medium | notes: LinkedIn profile lists Thoraxklinik role.
+12. batch_id: batch_001 | company_name: Klinikum Hochrhein in Waldshut-Tiengen | company_website: http://www.klinikum-hochrhein.de | first_name: Frank | last_name: Müller | full_name: Frank Müller | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official about-us leadership page.
+13. batch_id: batch_001 | company_name: Klinikum Hochrhein in Waldshut-Tiengen | company_website: http://www.klinikum-hochrhein.de | first_name: Mirjam | last_name: Wangler | full_name: Mirjam Wangler | role: Bereichsleitung Pflege | role_category: operations | confidence: high | notes: Official about-us leadership page.
+14. batch_id: batch_001 | company_name: Klinikum Hochrhein in Waldshut-Tiengen | company_website: http://www.klinikum-hochrhein.de | first_name: Hans-Peter | last_name: Schlaudt | full_name: Dr. Hans-Peter Schlaudt | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: County source identifies current Geschäftsführer in 2025 clinic context.
+15. batch_id: batch_001 | company_name: Universitäts-Herzzentrum Freiburg (Bad Krozingen) | company_website: https://www.uniklinik-freiburg.de/de.html | first_name: Stefan | last_name: Brade | full_name: Stefan Brade | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official Herzzentrum team page.
+16. batch_id: batch_001 | company_name: Universitäts-Herzzentrum Freiburg (Bad Krozingen) | company_website: https://www.uniklinik-freiburg.de/de.html | first_name: Barbara | last_name: Nikolaus | full_name: Barbara Nikolaus | role: Stellvertretende Pflegedienstleiterin | role_category: operations | confidence: high | notes: Official Herzzentrum team page.
+17. batch_id: batch_001 | company_name: Universitäts-Herzzentrum Freiburg (Bad Krozingen) | company_website: https://www.uniklinik-freiburg.de/de.html | first_name: Stefanie | last_name: Bieberstein | full_name: Stefanie Bieberstein | role: Pflegedirektorin Universitätsklinikum Freiburg | role_category: operations | confidence: medium | notes: Overarching Uniklinik Freiburg nursing leadership; Herzzentrum is part of Uniklinik Freiburg.
+18. batch_id: batch_001 | company_name: Universitäts-Herzzentrum Freiburg (Bad Krozingen) | company_website: https://www.uniklinik-freiburg.de/de.html | first_name: André | last_name: Doherr | full_name: André Doherr | role: Stellvertretender Pflegedirektor Universitätsklinikum Freiburg | role_category: operations | confidence: medium | notes: Overarching Uniklinik Freiburg nursing leadership; Herzzentrum is part of Uniklinik Freiburg.
+19. batch_id: batch_001 | company_name: St. Josefskrankenhaus in Freiburg im Breisgau | company_website: https://www.josefskrankenhaus-freiburg.de | first_name: Andreas | last_name: Bernhard | full_name: Andreas Bernhard | role: Pflegedirektor Artemed Kliniken Freiburg | role_category: operations | confidence: high | notes: Official nursing page.
+20. batch_id: batch_001 | company_name: St. Josefskrankenhaus in Freiburg im Breisgau | company_website: https://www.josefskrankenhaus-freiburg.de | first_name: Lukas | last_name: Schwehn | full_name: Lukas Schwehn | role: Stellvertretender Pflegedirektor | role_category: operations | confidence: high | notes: Official nursing page.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_021_20260605T191504Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
