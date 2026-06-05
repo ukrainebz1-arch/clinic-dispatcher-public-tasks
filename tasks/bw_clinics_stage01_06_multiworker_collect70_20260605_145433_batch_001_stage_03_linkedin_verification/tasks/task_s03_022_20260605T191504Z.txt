@@ -1,0 +1,84 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_022_20260605T191504Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_022_20260605T191504Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_collect70_20260605_145433/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: St. Josefskrankenhaus in Freiburg im Breisgau | company_website: https://www.josefskrankenhaus-freiburg.de | first_name: Naemi | last_name: Kaufmann | full_name: Naemi Kaufmann | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official nursing page.
+2. batch_id: batch_001 | company_name: St. Josefskrankenhaus in Freiburg im Breisgau | company_website: https://www.josefskrankenhaus-freiburg.de | first_name: Tobias | last_name: Haug | full_name: Tobias Haug | role: Klinikleiter | role_category: other_management | confidence: high | notes: Official clinic leadership page.
+3. batch_id: batch_001 | company_name: St. Josefskrankenhaus in Freiburg im Breisgau | company_website: https://www.josefskrankenhaus-freiburg.de | first_name: Michael | last_name: Kneis | full_name: Michael Kneis | role: Geschäftsführender Direktor Artemed SE / Geschäftsführer Artemed Kliniken Freiburg | role_category: founder_ceo | confidence: high | notes: Official clinic leadership page.
+4. batch_id: batch_001 | company_name: Medius Klinik Ostfildern-Ruit | company_website: http://www.medius-kliniken.de | first_name: Bernd | last_name: Poweleit | full_name: Bernd Poweleit | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official medius nursing article identifies role.
+5. batch_id: batch_001 | company_name: Medius Klinik Ostfildern-Ruit | company_website: http://www.medius-kliniken.de | first_name: Sabine | last_name: Otteni | full_name: Sabine Otteni | role: Pflegedirektion | role_category: operations | confidence: high | notes: Official medius nursing page.
+6. batch_id: batch_001 | company_name: Medius Klinik Ostfildern-Ruit | company_website: http://www.medius-kliniken.de | first_name: Michael | last_name: Eßer | full_name: Michael Eßer | role: Prokurist / Klinikleitung Ostfildern-Ruit | role_category: other_management | confidence: high | notes: Official hospital leadership page.
+7. batch_id: batch_001 | company_name: Medius Klinik Ostfildern-Ruit | company_website: http://www.medius-kliniken.de | first_name: Sebastian | last_name: Krupp | full_name: Sebastian Krupp | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official management page.
+8. batch_id: batch_001 | company_name: Medius Klinik Ostfildern-Ruit | company_website: http://www.medius-kliniken.de | first_name: Katharina | last_name: Weber | full_name: Katharina Weber | role: Leitung Personalmarketing und Recruiting | role_category: hr_recruiting | confidence: high | notes: Official recruitment contact page.
+9. batch_id: batch_001 | company_name: GRN-Klinik Schwetzingen | company_website: https://www.grn.de/ | first_name: Jens | last_name: Scheurich | full_name: Jens Scheurich | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official GRN Schwetzingen nursing team page.
+10. batch_id: batch_001 | company_name: GRN-Klinik Schwetzingen | company_website: https://www.grn.de/ | first_name: Doreen | last_name: Edelmann | full_name: Doreen Edelmann | role: Stellvertretende Pflegedienstleiterin / Bereichsleitung Stationsdienste | role_category: operations | confidence: high | notes: Official GRN Schwetzingen nursing team page.
+11. batch_id: batch_001 | company_name: GRN-Klinik Schwetzingen | company_website: https://www.grn.de/ | first_name: Tobias | last_name: Schneider | full_name: Tobias Schneider | role: Klinikleiter Schwetzingen | role_category: other_management | confidence: high | notes: Official GRN leadership-change announcement.
+12. batch_id: batch_001 | company_name: GRN-Klinik Schwetzingen | company_website: https://www.grn.de/ | first_name: Judith | last_name: Masuch | full_name: Judith Masuch | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official GRN careers imprint.
+13. batch_id: batch_001 | company_name: GRN-Klinik Schwetzingen | company_website: https://www.grn.de/ | first_name: Katharina | last_name: Elbs | full_name: Katharina Elbs | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official GRN careers imprint.
+14. batch_id: batch_001 | company_name: Kreiskrankenhaus Emmendingen | company_website: http://www.krankenhaus-emmendingen.de | first_name: Kerstin | last_name: Harms | full_name: Kerstin Harms | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official nursing service page.
+15. batch_id: batch_001 | company_name: Kreiskrankenhaus Emmendingen | company_website: http://www.krankenhaus-emmendingen.de | first_name: Manfred | last_name: Klipfel | full_name: Manfred Klipfel | role: Stellvertretender Pflegedirektor | role_category: operations | confidence: high | notes: Official nursing service page.
+16. batch_id: batch_001 | company_name: Kreiskrankenhaus Emmendingen | company_website: http://www.krankenhaus-emmendingen.de | first_name: Armin | last_name: Müller | full_name: Armin Müller | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint.
+17. batch_id: batch_001 | company_name: Kreiskrankenhaus Emmendingen | company_website: http://www.krankenhaus-emmendingen.de | first_name: Ramona | last_name: Baur | full_name: Ramona Baur | role: Ansprechpartnerin Bewerbungen | role_category: hr_recruiting | confidence: medium | notes: Official career page application contact.
+18. batch_id: batch_001 | company_name: BG Klinik Tübingen | company_website: https://www.bg-kliniken.de/klinik-tuebingen/ | first_name: Gerd | last_name: Hauffe | full_name: Gerd Hauffe | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official BG Klinik announcement.
+19. batch_id: batch_001 | company_name: BG Klinik Tübingen | company_website: https://www.bg-kliniken.de/klinik-tuebingen/ | first_name: Susanne | last_name: Dieffenbach | full_name: Susanne Dieffenbach | role: Vorsitzende der Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official management page.
+20. batch_id: batch_001 | company_name: BG Klinik Tübingen | company_website: https://www.bg-kliniken.de/klinik-tuebingen/ | first_name: Sylvia | last_name: Pansow | full_name: Sylvia Pansow | role: Geschäftsführung Standort Tübingen | role_category: founder_ceo | confidence: high | notes: Official management page.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_022_20260605T191504Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
