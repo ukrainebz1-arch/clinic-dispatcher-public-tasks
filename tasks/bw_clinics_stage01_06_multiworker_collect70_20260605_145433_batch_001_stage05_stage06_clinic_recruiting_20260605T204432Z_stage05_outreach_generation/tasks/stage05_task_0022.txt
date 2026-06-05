@@ -1,0 +1,2287 @@
+TASK_ID: stage05_task_0022
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum hochrhein in waldshut-tiengen|http://www.klinikum-hochrhein.de|waldshut-tiengen|germany",
+    "company_name": "Klinikum Hochrhein in Waldshut-Tiengen",
+    "full_name": "Dr. Hans-Peter Schlaudt",
+    "message_target_id": "stage05_task_0022::person_dr_hans_peter_schlaudt_808aea5593::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_hans_peter_schlaudt_808aea5593",
+    "recipient_value": "hans-peter.schlaudt@klhr.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum hochrhein in waldshut-tiengen|http://www.klinikum-hochrhein.de|waldshut-tiengen|germany",
+    "company_name": "Klinikum Hochrhein in Waldshut-Tiengen",
+    "full_name": "Dr. Hans-Peter Schlaudt",
+    "message_target_id": "stage05_task_0022::person_dr_hans_peter_schlaudt_808aea5593::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_hans_peter_schlaudt_808aea5593",
+    "recipient_value": "https://de.linkedin.com/in/dr-hans-peter-schlaudt-54367383",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum hochrhein in waldshut-tiengen|http://www.klinikum-hochrhein.de|waldshut-tiengen|germany",
+    "company_name": "Klinikum Hochrhein in Waldshut-Tiengen",
+    "full_name": "Dr. Hans-Peter Schlaudt",
+    "message_target_id": "stage05_task_0022::person_dr_hans_peter_schlaudt_808aea5593::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_hans_peter_schlaudt_808aea5593",
+    "recipient_value": "https://de.linkedin.com/in/dr-hans-peter-schlaudt-54367383",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum hochrhein in waldshut-tiengen|http://www.klinikum-hochrhein.de|waldshut-tiengen|germany",
+    "company_name": "Klinikum Hochrhein in Waldshut-Tiengen",
+    "full_name": "Frank Müller",
+    "message_target_id": "stage05_task_0022::person_frank_m_ller_58ce7624aa::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_frank_m_ller_58ce7624aa",
+    "recipient_value": "frank.mueller@klhr.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum hochrhein in waldshut-tiengen|http://www.klinikum-hochrhein.de|waldshut-tiengen|germany",
+    "company_name": "Klinikum Hochrhein in Waldshut-Tiengen",
+    "full_name": "Mirjam Wangler",
+    "message_target_id": "stage05_task_0022::person_mirjam_wangler_8caa00fb3c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_mirjam_wangler_8caa00fb3c",
+    "recipient_value": "mirjam.wangler@klhr.de",
+    "role_title": "Bereichsleitung Pflege",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Bernd Sieber",
+    "message_target_id": "stage05_task_0022::person_bernd_sieber_528ffc2e42::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_bernd_sieber_528ffc2e42",
+    "recipient_value": "bernd.sieber@glkn.de",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Bernd Sieber",
+    "message_target_id": "stage05_task_0022::person_bernd_sieber_528ffc2e42::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_bernd_sieber_528ffc2e42",
+    "recipient_value": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Bernd Sieber",
+    "message_target_id": "stage05_task_0022::person_bernd_sieber_528ffc2e42::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_bernd_sieber_528ffc2e42",
+    "recipient_value": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Bernd Sieber",
+    "message_target_id": "stage05_task_0022::person_bernd_sieber_1a188137e7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_bernd_sieber_1a188137e7",
+    "recipient_value": "bernd.sieber@glkn.de",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Bernd Sieber",
+    "message_target_id": "stage05_task_0022::person_bernd_sieber_1a188137e7::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_bernd_sieber_1a188137e7",
+    "recipient_value": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Bernd Sieber",
+    "message_target_id": "stage05_task_0022::person_bernd_sieber_1a188137e7::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_bernd_sieber_1a188137e7",
+    "recipient_value": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Dr. rer. cur. Sabine Proksch",
+    "message_target_id": "stage05_task_0022::person_dr_rer_cur_sabine_proksch_566354e558::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_rer_cur_sabine_proksch_566354e558",
+    "recipient_value": "sabine.proksch@glkn.de",
+    "role_title": "Pflegedirektorin Klinikum Konstanz",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Dr. rer. cur. Sabine Proksch",
+    "message_target_id": "stage05_task_0022::person_dr_rer_cur_sabine_proksch_2205897800::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_rer_cur_sabine_proksch_2205897800",
+    "recipient_value": "sabine.proksch@glkn.de",
+    "role_title": "Pflegedirektorin Klinikum Konstanz",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Jennifer Neumaier",
+    "message_target_id": "stage05_task_0022::person_jennifer_neumaier_8d83052b34::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_jennifer_neumaier_8d83052b34",
+    "recipient_value": "jennifer.neumaier@glkn.de",
+    "role_title": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Jennifer Neumaier",
+    "message_target_id": "stage05_task_0022::person_jennifer_neumaier_8d83052b34::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_jennifer_neumaier_8d83052b34",
+    "recipient_value": "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+    "role_title": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Jennifer Neumaier",
+    "message_target_id": "stage05_task_0022::person_jennifer_neumaier_8d83052b34::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_jennifer_neumaier_8d83052b34",
+    "recipient_value": "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+    "role_title": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Jennifer Neumaier",
+    "message_target_id": "stage05_task_0022::person_jennifer_neumaier_4bc9b307dc::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_jennifer_neumaier_4bc9b307dc",
+    "recipient_value": "jennifer.neumaier@glkn.de",
+    "role_title": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Jennifer Neumaier",
+    "message_target_id": "stage05_task_0022::person_jennifer_neumaier_4bc9b307dc::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_jennifer_neumaier_4bc9b307dc",
+    "recipient_value": "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+    "role_title": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Jennifer Neumaier",
+    "message_target_id": "stage05_task_0022::person_jennifer_neumaier_4bc9b307dc::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_jennifer_neumaier_4bc9b307dc",
+    "recipient_value": "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+    "role_title": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Sabine Gaag",
+    "message_target_id": "stage05_task_0022::person_sabine_gaag_e014040e44::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_sabine_gaag_e014040e44",
+    "recipient_value": "sabine.gaag@glkn.de",
+    "role_title": "Personalleitung Klinikum Konstanz",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Sabine Gaag",
+    "message_target_id": "stage05_task_0022::person_sabine_gaag_e014040e44::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sabine_gaag_e014040e44",
+    "recipient_value": "https://de.linkedin.com/in/sabine-gaag-68642b84",
+    "role_title": "Personalleitung Klinikum Konstanz",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Sabine Gaag",
+    "message_target_id": "stage05_task_0022::person_sabine_gaag_e014040e44::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sabine_gaag_e014040e44",
+    "recipient_value": "https://de.linkedin.com/in/sabine-gaag-68642b84",
+    "role_title": "Personalleitung Klinikum Konstanz",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Sabine Gaag",
+    "message_target_id": "stage05_task_0022::person_sabine_gaag_fdc7af6ba4::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_sabine_gaag_fdc7af6ba4",
+    "recipient_value": "sabine.gaag@glkn.de",
+    "role_title": "Personalleitung Klinikum Konstanz",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Sabine Gaag",
+    "message_target_id": "stage05_task_0022::person_sabine_gaag_fdc7af6ba4::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sabine_gaag_fdc7af6ba4",
+    "recipient_value": "https://de.linkedin.com/in/sabine-gaag-68642b84",
+    "role_title": "Personalleitung Klinikum Konstanz",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "full_name": "Sabine Gaag",
+    "message_target_id": "stage05_task_0022::person_sabine_gaag_fdc7af6ba4::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sabine_gaag_fdc7af6ba4",
+    "recipient_value": "https://de.linkedin.com/in/sabine-gaag-68642b84",
+    "role_title": "Personalleitung Klinikum Konstanz",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum ludwigsburg|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/|ludwigsburg|germany",
+    "company_name": "Klinikum Ludwigsburg",
+    "full_name": "Barbara Yokota",
+    "message_target_id": "stage05_task_0022::person_barbara_yokota_5469e6ca78::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_barbara_yokota_5469e6ca78",
+    "recipient_value": "barbara.yokota@rkh-gesundheit.de",
+    "role_title": "Direktorin Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum ludwigsburg|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/|ludwigsburg|germany",
+    "company_name": "Klinikum Ludwigsburg",
+    "full_name": "Carina Heitmann",
+    "message_target_id": "stage05_task_0022::person_carina_heitmann_36b6691fee::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_carina_heitmann_36b6691fee",
+    "recipient_value": "carina.heitmann@rkh-gesundheit.de",
+    "role_title": "Leitung Ressort Personal und Arbeit",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum ludwigsburg|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/|ludwigsburg|germany",
+    "company_name": "Klinikum Ludwigsburg",
+    "full_name": "Carina Heitmann",
+    "message_target_id": "stage05_task_0022::person_carina_heitmann_36b6691fee::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_carina_heitmann_36b6691fee",
+    "recipient_value": "https://de.linkedin.com/in/carina-heitmann-753665127",
+    "role_title": "Leitung Ressort Personal und Arbeit",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum ludwigsburg|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/|ludwigsburg|germany",
+    "company_name": "Klinikum Ludwigsburg",
+    "full_name": "Carina Heitmann",
+    "message_target_id": "stage05_task_0022::person_carina_heitmann_36b6691fee::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_carina_heitmann_36b6691fee",
+    "recipient_value": "https://de.linkedin.com/in/carina-heitmann-753665127",
+    "role_title": "Leitung Ressort Personal und Arbeit",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum ludwigsburg|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/|ludwigsburg|germany",
+    "company_name": "Klinikum Ludwigsburg",
+    "full_name": "Marcus Herbst",
+    "message_target_id": "stage05_task_0022::person_marcus_herbst_1d24f4aeaf::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_marcus_herbst_1d24f4aeaf",
+    "recipient_value": "marcus.herbst@rkh-gesundheit.de",
+    "role_title": "Klinikgeschäftsführer RKH Kliniken Ludwigsburg-Bietigheim",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum ludwigsburg|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/|ludwigsburg|germany",
+    "company_name": "Klinikum Ludwigsburg",
+    "full_name": "Silvia Kruger",
+    "message_target_id": "stage05_task_0022::person_silvia_kruger_e6157b8579::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_silvia_kruger_e6157b8579",
+    "recipient_value": "silvia.kruger@rkh-gesundheit.de",
+    "role_title": "Bereichsleitung Pflege Allgemein- und Gefäßchirurgie",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum ludwigsburg|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/|ludwigsburg|germany",
+    "company_name": "Klinikum Ludwigsburg",
+    "full_name": "Silvia Kruger",
+    "message_target_id": "stage05_task_0022::person_silvia_kruger_e6157b8579::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_silvia_kruger_e6157b8579",
+    "recipient_value": "https://de.linkedin.com/in/silvia-kruger-9a1301164",
+    "role_title": "Bereichsleitung Pflege Allgemein- und Gefäßchirurgie",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum ludwigsburg|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/|ludwigsburg|germany",
+    "company_name": "Klinikum Ludwigsburg",
+    "full_name": "Silvia Kruger",
+    "message_target_id": "stage05_task_0022::person_silvia_kruger_e6157b8579::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_silvia_kruger_e6157b8579",
+    "recipient_value": "https://de.linkedin.com/in/silvia-kruger-9a1301164",
+    "role_title": "Bereichsleitung Pflege Allgemein- und Gefäßchirurgie",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Doris Noeltner",
+    "message_target_id": "stage05_task_0022::person_doris_noeltner_0fd9482ccf::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_doris_noeltner_0fd9482ccf",
+    "recipient_value": "d.noeltner@klinikum-mittelbaden.de",
+    "role_title": "Stellvertretende Pflegedirektorin Baden-Baden Bühl",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Doris Noeltner",
+    "message_target_id": "stage05_task_0022::person_doris_noeltner_c090e26d74::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_doris_noeltner_c090e26d74",
+    "recipient_value": "d.noeltner@klinikum-mittelbaden.de",
+    "role_title": "Stellvertretende Pflegedirektorin Baden-Baden Bühl",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Heike Himmelsbach",
+    "message_target_id": "stage05_task_0022::person_heike_himmelsbach_1e9e2d3448::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_heike_himmelsbach_1e9e2d3448",
+    "recipient_value": "h.himmelsbach@klinikum-mittelbaden.de",
+    "role_title": "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Heike Himmelsbach",
+    "message_target_id": "stage05_task_0022::person_heike_himmelsbach_a39325e4d2::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_heike_himmelsbach_a39325e4d2",
+    "recipient_value": "h.himmelsbach@klinikum-mittelbaden.de",
+    "role_title": "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Heike Ullrich-Bunge",
+    "message_target_id": "stage05_task_0022::person_heike_ullrich_bunge_b8fbbbdb97::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_heike_ullrich_bunge_b8fbbbdb97",
+    "recipient_value": "h.ullrich-bunge@klinikum-mittelbaden.de",
+    "role_title": "Klinikdirektorin Baden-Baden Bühl",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Heike Ullrich-Bunge",
+    "message_target_id": "stage05_task_0022::person_heike_ullrich_bunge_b8fbbbdb97::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_heike_ullrich_bunge_b8fbbbdb97",
+    "recipient_value": "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8",
+    "role_title": "Klinikdirektorin Baden-Baden Bühl",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Heike Ullrich-Bunge",
+    "message_target_id": "stage05_task_0022::person_heike_ullrich_bunge_b8fbbbdb97::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_heike_ullrich_bunge_b8fbbbdb97",
+    "recipient_value": "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8",
+    "role_title": "Klinikdirektorin Baden-Baden Bühl",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Heike Ullrich-Bunge",
+    "message_target_id": "stage05_task_0022::person_heike_ullrich_bunge_07a653a0c0::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_heike_ullrich_bunge_07a653a0c0",
+    "recipient_value": "h.ullrich-bunge@klinikum-mittelbaden.de",
+    "role_title": "Klinikdirektorin Baden-Baden Bühl",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Heike Ullrich-Bunge",
+    "message_target_id": "stage05_task_0022::person_heike_ullrich_bunge_07a653a0c0::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_heike_ullrich_bunge_07a653a0c0",
+    "recipient_value": "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8",
+    "role_title": "Klinikdirektorin Baden-Baden Bühl",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Heike Ullrich-Bunge",
+    "message_target_id": "stage05_task_0022::person_heike_ullrich_bunge_07a653a0c0::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_heike_ullrich_bunge_07a653a0c0",
+    "recipient_value": "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8",
+    "role_title": "Klinikdirektorin Baden-Baden Bühl",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Ute Heinrich",
+    "message_target_id": "stage05_task_0022::person_ute_heinrich_4bb21830ee::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_ute_heinrich_4bb21830ee",
+    "recipient_value": "u.heinrich@klinikum-mittelbaden.de",
+    "role_title": "Pflegedirektorin der Akutkliniken",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Ute Heinrich",
+    "message_target_id": "stage05_task_0022::person_ute_heinrich_4bb21830ee::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ute_heinrich_4bb21830ee",
+    "recipient_value": "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+    "role_title": "Pflegedirektorin der Akutkliniken",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Ute Heinrich",
+    "message_target_id": "stage05_task_0022::person_ute_heinrich_4bb21830ee::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ute_heinrich_4bb21830ee",
+    "recipient_value": "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+    "role_title": "Pflegedirektorin der Akutkliniken",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Ute Heinrich",
+    "message_target_id": "stage05_task_0022::person_ute_heinrich_7be4d57adb::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_ute_heinrich_7be4d57adb",
+    "recipient_value": "u.heinrich@klinikum-mittelbaden.de",
+    "role_title": "Pflegedirektorin der Akutkliniken",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Ute Heinrich",
+    "message_target_id": "stage05_task_0022::person_ute_heinrich_7be4d57adb::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ute_heinrich_7be4d57adb",
+    "recipient_value": "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+    "role_title": "Pflegedirektorin der Akutkliniken",
+    "task_id": "stage05_task_0022"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "full_name": "Ute Heinrich",
+    "message_target_id": "stage05_task_0022::person_ute_heinrich_7be4d57adb::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ute_heinrich_7be4d57adb",
+    "recipient_value": "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+    "role_title": "Pflegedirektorin der Akutkliniken",
+    "task_id": "stage05_task_0022"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Waldshut-Tiengen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum hochrhein in waldshut-tiengen|http://www.klinikum-hochrhein.de|waldshut-tiengen|germany",
+    "company_name": "Klinikum Hochrhein in Waldshut-Tiengen",
+    "company_website": "http://www.klinikum-hochrhein.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Frank Müller",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Mirjam Wangler",
+          "person_key": "",
+          "role": "Bereichsleitung Pflege"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "hans-peter.schlaudt@klhr.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Hans-Peter Schlaudt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-hans-peter-schlaudt-54367383",
+        "person_key": "person_dr_hans_peter_schlaudt_808aea5593",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://medconsulting-center.de/clinics/klinikum-hochrhein/",
+          "https://www.klinikum-hochrhein.de/ueber-uns.html",
+          "https://www.bibliomedmanager.de/news/klinikum-hochrhein-verlaengert-mit-hans-peter-schlaudt",
+          "https://de.linkedin.com/in/dr-hans-peter-schlaudt-54367383"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "frank.mueller@klhr.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Frank Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_frank_m_ller_58ce7624aa",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-hochrhein.de/ueber-uns.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "mirjam.wangler@klhr.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Mirjam Wangler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_mirjam_wangler_8caa00fb3c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Bereichsleitung Pflege",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-hochrhein.de/ueber-uns.html"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedirektor",
+        "Bereichsleitung Pflege"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://medconsulting-center.de/clinics/klinikum-hochrhein/",
+      "https://www.klinikum-hochrhein.de/ueber-uns.html",
+      "https://www.bibliomedmanager.de/news/klinikum-hochrhein-verlaengert-mit-hans-peter-schlaudt",
+      "https://de.linkedin.com/in/dr-hans-peter-schlaudt-54367383"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 6,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Konstanz",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "company_website": "https://www.glkn.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Dr. rer. cur. Sabine Proksch",
+          "person_key": "",
+          "role": "Pflegedirektorin Klinikum Konstanz"
+        },
+        {
+          "full_name": "Dr. rer. cur. Sabine Proksch",
+          "person_key": "",
+          "role": "Pflegedirektorin Klinikum Konstanz"
+        },
+        {
+          "full_name": "Jennifer Neumaier",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin"
+        },
+        {
+          "full_name": "Jennifer Neumaier",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "bernd.sieber@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Bernd Sieber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+        "person_key": "person_bernd_sieber_528ffc2e42",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsfuehrung.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260831481-772585000-2023-xml.pdf",
+          "https://de.linkedin.com/in/bernd-sieber-2643779a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "bernd.sieber@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Bernd Sieber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+        "person_key": "person_bernd_sieber_1a188137e7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsfuehrung.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260831481-772585000-2023-xml.pdf",
+          "https://de.linkedin.com/in/bernd-sieber-2643779a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sabine.proksch@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. rer. cur. Sabine Proksch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_rer_cur_sabine_proksch_566354e558",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Klinikum Konstanz",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion/pflegedirektion-konstanz.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://freundeskreis-klinikum-konstanz.de/",
+          "https://de.linkedin.com/jobs/view/pflegefachkraft-m-w-d-flexibel-im-einsatz-flexpool-springerpool-at-gesundheitsverbund-landkreis-konstanz-4406494063",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sabine.proksch@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. rer. cur. Sabine Proksch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_rer_cur_sabine_proksch_2205897800",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Klinikum Konstanz",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion/pflegedirektion-konstanz.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://freundeskreis-klinikum-konstanz.de/",
+          "https://de.linkedin.com/jobs/view/pflegefachkraft-m-w-d-flexibel-im-einsatz-flexpool-springerpool-at-gesundheitsverbund-landkreis-konstanz-4406494063",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "jennifer.neumaier@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jennifer Neumaier",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+        "person_key": "person_jennifer_neumaier_8d83052b34",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion/pflegedirektion-konstanz.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/4841_Anerkennung-als-Pflegefachfrau-mann-m-w-d.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5160_Pflegefachkraft-Pulmologie-Kardiologie-m-w-d.php",
+          "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5919_Pflegefachkraft-Orthopaedie-m-w-d.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "jennifer.neumaier@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jennifer Neumaier",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+        "person_key": "person_jennifer_neumaier_4bc9b307dc",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion/pflegedirektion-konstanz.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/4841_Anerkennung-als-Pflegefachfrau-mann-m-w-d.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5160_Pflegefachkraft-Pulmologie-Kardiologie-m-w-d.php",
+          "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5919_Pflegefachkraft-Orthopaedie-m-w-d.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "sabine.gaag@glkn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Sabine Gaag",
+        "hypothesis_email": "sabine.gaag@glkn.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sabine-gaag-68642b84",
+        "person_key": "person_sabine_gaag_e014040e44",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Personalleitung Klinikum Konstanz",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5160_Pflegefachkraft-Pulmologie-Kardiologie-m-w-d.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/6657_Stationsleitung-IMC-m-w-d.php",
+          "https://de.linkedin.com/in/sabine-gaag-68642b84"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "sabine.gaag@glkn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Sabine Gaag",
+        "hypothesis_email": "sabine.gaag@glkn.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sabine-gaag-68642b84",
+        "person_key": "person_sabine_gaag_fdc7af6ba4",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Personalleitung Klinikum Konstanz",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5160_Pflegefachkraft-Pulmologie-Kardiologie-m-w-d.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/6657_Stationsleitung-IMC-m-w-d.php",
+          "https://de.linkedin.com/in/sabine-gaag-68642b84"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführung",
+        "Pflegedirektorin Klinikum Konstanz",
+        "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+        "Personalleitung Klinikum Konstanz"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsfuehrung.php",
+      "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260831481-772585000-2023-xml.pdf",
+      "https://de.linkedin.com/in/bernd-sieber-2643779a",
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion/pflegedirektion-konstanz.php",
+      "https://freundeskreis-klinikum-konstanz.de/",
+      "https://de.linkedin.com/jobs/view/pflegefachkraft-m-w-d-flexibel-im-einsatz-flexpool-springerpool-at-gesundheitsverbund-landkreis-konstanz-4406494063",
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php",
+      "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/4841_Anerkennung-als-Pflegefachfrau-mann-m-w-d.php",
+      "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5160_Pflegefachkraft-Pulmologie-Kardiologie-m-w-d.php",
+      "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+      "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5919_Pflegefachkraft-Orthopaedie-m-w-d.php",
+      "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+      "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/6657_Stationsleitung-IMC-m-w-d.php",
+      "https://de.linkedin.com/in/sabine-gaag-68642b84"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ludwigsburg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum ludwigsburg|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/|ludwigsburg|germany",
+    "company_name": "Klinikum Ludwigsburg",
+    "company_website": "https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Barbara Yokota",
+          "person_key": "",
+          "role": "Direktorin Pflege- und Prozessmanagement"
+        },
+        {
+          "full_name": "Silvia Kruger",
+          "person_key": "",
+          "role": "Bereichsleitung Pflege Allgemein- und Gefäßchirurgie"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "barbara.yokota@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Yokota",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_barbara_yokota_5469e6ca78",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktorin Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/",
+          "https://de.linkedin.com/posts/hc-s-ag_barbara-yokota-beuret-verst%C3%A4rkt-pflegemanagement-activity-7206173411075633152-RWlU"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "carina.heitmann@rkh-gesundheit.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Carina Heitmann",
+        "hypothesis_email": "carina.heitmann@rkh-gesundheit.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/carina-heitmann-753665127",
+        "person_key": "person_carina_heitmann_36b6691fee",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Leitung Ressort Personal und Arbeit",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/team/",
+          "https://www.rkh-gesundheit.de/media/pressemitteilungen/detailseite/news/wechsel-in-der-personaldirektion-der-rkh-gesundheit/",
+          "https://de.linkedin.com/in/carina-heitmann-753665127",
+          "https://www.rkh-karriere.de/stellenangebote/stellenanzeigen/job/show/Log/22679/?cHash=edac606fd34cce2e376d214af677ca32"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "marcus.herbst@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marcus Herbst",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_marcus_herbst_1d24f4aeaf",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikgeschäftsführer RKH Kliniken Ludwigsburg-Bietigheim",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Ludwigsburg_2024.pdf",
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/ueber-uns/leitung/",
+          "https://de.linkedin.com/in/marcus-herbst-508a822b3"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "silvia.kruger@rkh-gesundheit.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Silvia Kruger",
+        "hypothesis_email": "silvia.kruger@rkh-gesundheit.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/silvia-kruger-9a1301164",
+        "person_key": "person_silvia_kruger_e6157b8579",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Bereichsleitung Pflege Allgemein- und Gefäßchirurgie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/team/",
+          "https://de.linkedin.com/in/silvia-kruger-9a1301164",
+          "https://www.rkh-karriere.de/stellenangebote/stellenanzeigen/job/show/Log/18303/?cHash=15b7d312f9d2f322835ef4d981f93b3b"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Direktorin Pflege- und Prozessmanagement",
+        "Leitung Ressort Personal und Arbeit",
+        "Klinikgeschäftsführer RKH Kliniken Ludwigsburg-Bietigheim",
+        "Bereichsleitung Pflege Allgemein- und Gefäßchirurgie"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/",
+      "https://de.linkedin.com/posts/hc-s-ag_barbara-yokota-beuret-verst%C3%A4rkt-pflegemanagement-activity-7206173411075633152-RWlU",
+      "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/team/",
+      "https://www.rkh-gesundheit.de/media/pressemitteilungen/detailseite/news/wechsel-in-der-personaldirektion-der-rkh-gesundheit/",
+      "https://de.linkedin.com/in/carina-heitmann-753665127",
+      "https://www.rkh-karriere.de/stellenangebote/stellenanzeigen/job/show/Log/22679/?cHash=edac606fd34cce2e376d214af677ca32",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Ludwigsburg_2024.pdf",
+      "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/ueber-uns/leitung/",
+      "https://de.linkedin.com/in/marcus-herbst-508a822b3",
+      "https://de.linkedin.com/in/silvia-kruger-9a1301164",
+      "https://www.rkh-karriere.de/stellenangebote/stellenanzeigen/job/show/Log/18303/?cHash=15b7d312f9d2f322835ef4d981f93b3b"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 4,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Baden-Baden",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "company_website": "http://www.klinikum-mittelbaden.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 6,
+      "decision_makers": [
+        {
+          "full_name": "Doris Noeltner",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin Baden-Baden Bühl"
+        },
+        {
+          "full_name": "Doris Noeltner",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin Baden-Baden Bühl"
+        },
+        {
+          "full_name": "Heike Himmelsbach",
+          "person_key": "",
+          "role": "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl"
+        },
+        {
+          "full_name": "Heike Himmelsbach",
+          "person_key": "",
+          "role": "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl"
+        },
+        {
+          "full_name": "Ute Heinrich",
+          "person_key": "",
+          "role": "Pflegedirektorin der Akutkliniken"
+        },
+        {
+          "full_name": "Ute Heinrich",
+          "person_key": "",
+          "role": "Pflegedirektorin der Akutkliniken"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "d.noeltner@klinikum-mittelbaden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Doris Noeltner",
+        "hypothesis_email": "d.noeltner@klinikum-mittelbaden.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_doris_noeltner_0fd9482ccf",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Stellvertretende Pflegedirektorin Baden-Baden Bühl",
+        "role_category": "operations",
+        "source_urls": [
+          "https://karriere.klinikum-mittelbaden.de/de/jobs/114/pflegefachkraft-mwd-zna",
+          "https://www.klinikum-mittelbaden.de/wp-content/uploads/2023/02/Flyer_klinikvorort_Buehl_2023.pdf",
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://jobs.bewerbung2go.de/job/detail/gesundheits-und-krankenpfleger-in-tz-oder-vz-baden-baden.1906409025.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "d.noeltner@klinikum-mittelbaden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Doris Noeltner",
+        "hypothesis_email": "d.noeltner@klinikum-mittelbaden.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_doris_noeltner_c090e26d74",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Stellvertretende Pflegedirektorin Baden-Baden Bühl",
+        "role_category": "operations",
+        "source_urls": [
+          "https://karriere.klinikum-mittelbaden.de/de/jobs/114/pflegefachkraft-mwd-zna",
+          "https://www.klinikum-mittelbaden.de/wp-content/uploads/2023/02/Flyer_klinikvorort_Buehl_2023.pdf",
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://jobs.bewerbung2go.de/job/detail/gesundheits-und-krankenpfleger-in-tz-oder-vz-baden-baden.1906409025.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "h.himmelsbach@klinikum-mittelbaden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heike Himmelsbach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_heike_himmelsbach_1e9e2d3448",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/ec11a169e0eedda0/start",
+          "https://www.klinikum-mittelbaden.de/unternehmensorganisation/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "h.himmelsbach@klinikum-mittelbaden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heike Himmelsbach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_heike_himmelsbach_a39325e4d2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/ec11a169e0eedda0/start",
+          "https://www.klinikum-mittelbaden.de/unternehmensorganisation/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "h.ullrich-bunge@klinikum-mittelbaden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heike Ullrich-Bunge",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8",
+        "person_key": "person_heike_ullrich_bunge_b8fbbbdb97",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikdirektorin Baden-Baden Bühl",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://www.klinikum-mittelbaden.de/unternehmensorganisation/",
+          "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "h.ullrich-bunge@klinikum-mittelbaden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heike Ullrich-Bunge",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8",
+        "person_key": "person_heike_ullrich_bunge_07a653a0c0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikdirektorin Baden-Baden Bühl",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://www.klinikum-mittelbaden.de/unternehmensorganisation/",
+          "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "u.heinrich@klinikum-mittelbaden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Ute Heinrich",
+        "hypothesis_email": "u.heinrich@klinikum-mittelbaden.de",
+        "linkedin_profile_url": "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+        "person_key": "person_ute_heinrich_4bb21830ee",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektorin der Akutkliniken",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-mittelbaden.de/willkommen-am-kmb-neue-pflegedirektorin-fuer-die-akutkliniken/",
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/ec11a169e0eedda0/start",
+          "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+          "https://de.linkedin.com/jobs/view/standort%C3%BCbergreifende-bereichsleitung-der-zentralen-notaufnahmen-m-w-d-at-klinikum-mittelbaden-ggmbh-4419245980"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "u.heinrich@klinikum-mittelbaden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Ute Heinrich",
+        "hypothesis_email": "u.heinrich@klinikum-mittelbaden.de",
+        "linkedin_profile_url": "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+        "person_key": "person_ute_heinrich_7be4d57adb",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektorin der Akutkliniken",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-mittelbaden.de/willkommen-am-kmb-neue-pflegedirektorin-fuer-die-akutkliniken/",
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/ec11a169e0eedda0/start",
+          "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+          "https://de.linkedin.com/jobs/view/standort%C3%BCbergreifende-bereichsleitung-der-zentralen-notaufnahmen-m-w-d-at-klinikum-mittelbaden-ggmbh-4419245980"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin Baden-Baden Bühl",
+        "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl",
+        "Klinikdirektorin Baden-Baden Bühl",
+        "Pflegedirektorin der Akutkliniken"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://karriere.klinikum-mittelbaden.de/de/jobs/114/pflegefachkraft-mwd-zna",
+      "https://www.klinikum-mittelbaden.de/wp-content/uploads/2023/02/Flyer_klinikvorort_Buehl_2023.pdf",
+      "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+      "https://jobs.bewerbung2go.de/job/detail/gesundheits-und-krankenpfleger-in-tz-oder-vz-baden-baden.1906409025.html",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/ec11a169e0eedda0/start",
+      "https://www.klinikum-mittelbaden.de/unternehmensorganisation/",
+      "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8",
+      "https://www.klinikum-mittelbaden.de/willkommen-am-kmb-neue-pflegedirektorin-fuer-die-akutkliniken/",
+      "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+      "https://de.linkedin.com/jobs/view/standort%C3%BCbergreifende-bereichsleitung-der-zentralen-notaufnahmen-m-w-d-at-klinikum-mittelbaden-ggmbh-4419245980"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Waldshut-Tiengen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum hochrhein in waldshut-tiengen|http://www.klinikum-hochrhein.de|waldshut-tiengen|germany",
+    "company_name": "Klinikum Hochrhein in Waldshut-Tiengen",
+    "company_website": "http://www.klinikum-hochrhein.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Frank Müller",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Mirjam Wangler",
+          "person_key": "",
+          "role": "Bereichsleitung Pflege"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "hans-peter.schlaudt@klhr.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Hans-Peter Schlaudt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-hans-peter-schlaudt-54367383",
+        "person_key": "person_dr_hans_peter_schlaudt_808aea5593",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://medconsulting-center.de/clinics/klinikum-hochrhein/",
+          "https://www.klinikum-hochrhein.de/ueber-uns.html",
+          "https://www.bibliomedmanager.de/news/klinikum-hochrhein-verlaengert-mit-hans-peter-schlaudt",
+          "https://de.linkedin.com/in/dr-hans-peter-schlaudt-54367383"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "frank.mueller@klhr.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Frank Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_frank_m_ller_58ce7624aa",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-hochrhein.de/ueber-uns.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "mirjam.wangler@klhr.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Mirjam Wangler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_mirjam_wangler_8caa00fb3c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Bereichsleitung Pflege",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-hochrhein.de/ueber-uns.html"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedirektor",
+        "Bereichsleitung Pflege"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://medconsulting-center.de/clinics/klinikum-hochrhein/",
+      "https://www.klinikum-hochrhein.de/ueber-uns.html",
+      "https://www.bibliomedmanager.de/news/klinikum-hochrhein-verlaengert-mit-hans-peter-schlaudt",
+      "https://de.linkedin.com/in/dr-hans-peter-schlaudt-54367383"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 6,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Konstanz",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum konstanz|https://www.glkn.de|konstanz|germany",
+    "company_name": "Klinikum Konstanz",
+    "company_website": "https://www.glkn.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Dr. rer. cur. Sabine Proksch",
+          "person_key": "",
+          "role": "Pflegedirektorin Klinikum Konstanz"
+        },
+        {
+          "full_name": "Dr. rer. cur. Sabine Proksch",
+          "person_key": "",
+          "role": "Pflegedirektorin Klinikum Konstanz"
+        },
+        {
+          "full_name": "Jennifer Neumaier",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin"
+        },
+        {
+          "full_name": "Jennifer Neumaier",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "bernd.sieber@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Bernd Sieber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+        "person_key": "person_bernd_sieber_528ffc2e42",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsfuehrung.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260831481-772585000-2023-xml.pdf",
+          "https://de.linkedin.com/in/bernd-sieber-2643779a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "bernd.sieber@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Bernd Sieber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+        "person_key": "person_bernd_sieber_1a188137e7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsfuehrung.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260831481-772585000-2023-xml.pdf",
+          "https://de.linkedin.com/in/bernd-sieber-2643779a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sabine.proksch@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. rer. cur. Sabine Proksch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_rer_cur_sabine_proksch_566354e558",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Klinikum Konstanz",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion/pflegedirektion-konstanz.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://freundeskreis-klinikum-konstanz.de/",
+          "https://de.linkedin.com/jobs/view/pflegefachkraft-m-w-d-flexibel-im-einsatz-flexpool-springerpool-at-gesundheitsverbund-landkreis-konstanz-4406494063",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sabine.proksch@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. rer. cur. Sabine Proksch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_rer_cur_sabine_proksch_2205897800",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Klinikum Konstanz",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion/pflegedirektion-konstanz.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://freundeskreis-klinikum-konstanz.de/",
+          "https://de.linkedin.com/jobs/view/pflegefachkraft-m-w-d-flexibel-im-einsatz-flexpool-springerpool-at-gesundheitsverbund-landkreis-konstanz-4406494063",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "jennifer.neumaier@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jennifer Neumaier",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+        "person_key": "person_jennifer_neumaier_8d83052b34",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion/pflegedirektion-konstanz.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/4841_Anerkennung-als-Pflegefachfrau-mann-m-w-d.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5160_Pflegefachkraft-Pulmologie-Kardiologie-m-w-d.php",
+          "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5919_Pflegefachkraft-Orthopaedie-m-w-d.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "jennifer.neumaier@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jennifer Neumaier",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+        "person_key": "person_jennifer_neumaier_4bc9b307dc",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion/pflegedirektion-konstanz.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/4841_Anerkennung-als-Pflegefachfrau-mann-m-w-d.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5160_Pflegefachkraft-Pulmologie-Kardiologie-m-w-d.php",
+          "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5919_Pflegefachkraft-Orthopaedie-m-w-d.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "sabine.gaag@glkn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Sabine Gaag",
+        "hypothesis_email": "sabine.gaag@glkn.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sabine-gaag-68642b84",
+        "person_key": "person_sabine_gaag_e014040e44",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Personalleitung Klinikum Konstanz",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5160_Pflegefachkraft-Pulmologie-Kardiologie-m-w-d.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/6657_Stationsleitung-IMC-m-w-d.php",
+          "https://de.linkedin.com/in/sabine-gaag-68642b84"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "sabine.gaag@glkn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Sabine Gaag",
+        "hypothesis_email": "sabine.gaag@glkn.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sabine-gaag-68642b84",
+        "person_key": "person_sabine_gaag_fdc7af6ba4",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Personalleitung Klinikum Konstanz",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5160_Pflegefachkraft-Pulmologie-Kardiologie-m-w-d.php",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/6657_Stationsleitung-IMC-m-w-d.php",
+          "https://de.linkedin.com/in/sabine-gaag-68642b84"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführung",
+        "Pflegedirektorin Klinikum Konstanz",
+        "Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin",
+        "Personalleitung Klinikum Konstanz"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsfuehrung.php",
+      "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260831481-772585000-2023-xml.pdf",
+      "https://de.linkedin.com/in/bernd-sieber-2643779a",
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion/pflegedirektion-konstanz.php",
+      "https://freundeskreis-klinikum-konstanz.de/",
+      "https://de.linkedin.com/jobs/view/pflegefachkraft-m-w-d-flexibel-im-einsatz-flexpool-springerpool-at-gesundheitsverbund-landkreis-konstanz-4406494063",
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php",
+      "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/4841_Anerkennung-als-Pflegefachfrau-mann-m-w-d.php",
+      "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5160_Pflegefachkraft-Pulmologie-Kardiologie-m-w-d.php",
+      "https://de.linkedin.com/in/jennifer-neumaier-244242295",
+      "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/5919_Pflegefachkraft-Orthopaedie-m-w-d.php",
+      "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+      "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/6657_Stationsleitung-IMC-m-w-d.php",
+      "https://de.linkedin.com/in/sabine-gaag-68642b84"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ludwigsburg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum ludwigsburg|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/|ludwigsburg|germany",
+    "company_name": "Klinikum Ludwigsburg",
+    "company_website": "https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/klinikum-ludwigsburg/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Barbara Yokota",
+          "person_key": "",
+          "role": "Direktorin Pflege- und Prozessmanagement"
+        },
+        {
+          "full_name": "Silvia Kruger",
+          "person_key": "",
+          "role": "Bereichsleitung Pflege Allgemein- und Gefäßchirurgie"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "barbara.yokota@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Yokota",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_barbara_yokota_5469e6ca78",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktorin Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/",
+          "https://de.linkedin.com/posts/hc-s-ag_barbara-yokota-beuret-verst%C3%A4rkt-pflegemanagement-activity-7206173411075633152-RWlU"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "carina.heitmann@rkh-gesundheit.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Carina Heitmann",
+        "hypothesis_email": "carina.heitmann@rkh-gesundheit.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/carina-heitmann-753665127",
+        "person_key": "person_carina_heitmann_36b6691fee",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Leitung Ressort Personal und Arbeit",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/team/",
+          "https://www.rkh-gesundheit.de/media/pressemitteilungen/detailseite/news/wechsel-in-der-personaldirektion-der-rkh-gesundheit/",
+          "https://de.linkedin.com/in/carina-heitmann-753665127",
+          "https://www.rkh-karriere.de/stellenangebote/stellenanzeigen/job/show/Log/22679/?cHash=edac606fd34cce2e376d214af677ca32"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "marcus.herbst@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marcus Herbst",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_marcus_herbst_1d24f4aeaf",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikgeschäftsführer RKH Kliniken Ludwigsburg-Bietigheim",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Ludwigsburg_2024.pdf",
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/ueber-uns/leitung/",
+          "https://de.linkedin.com/in/marcus-herbst-508a822b3"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "silvia.kruger@rkh-gesundheit.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Silvia Kruger",
+        "hypothesis_email": "silvia.kruger@rkh-gesundheit.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/silvia-kruger-9a1301164",
+        "person_key": "person_silvia_kruger_e6157b8579",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Bereichsleitung Pflege Allgemein- und Gefäßchirurgie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/team/",
+          "https://de.linkedin.com/in/silvia-kruger-9a1301164",
+          "https://www.rkh-karriere.de/stellenangebote/stellenanzeigen/job/show/Log/18303/?cHash=15b7d312f9d2f322835ef4d981f93b3b"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Direktorin Pflege- und Prozessmanagement",
+        "Leitung Ressort Personal und Arbeit",
+        "Klinikgeschäftsführer RKH Kliniken Ludwigsburg-Bietigheim",
+        "Bereichsleitung Pflege Allgemein- und Gefäßchirurgie"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/",
+      "https://de.linkedin.com/posts/hc-s-ag_barbara-yokota-beuret-verst%C3%A4rkt-pflegemanagement-activity-7206173411075633152-RWlU",
+      "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/team/",
+      "https://www.rkh-gesundheit.de/media/pressemitteilungen/detailseite/news/wechsel-in-der-personaldirektion-der-rkh-gesundheit/",
+      "https://de.linkedin.com/in/carina-heitmann-753665127",
+      "https://www.rkh-karriere.de/stellenangebote/stellenanzeigen/job/show/Log/22679/?cHash=edac606fd34cce2e376d214af677ca32",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Ludwigsburg_2024.pdf",
+      "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/ueber-uns/leitung/",
+      "https://de.linkedin.com/in/marcus-herbst-508a822b3",
+      "https://de.linkedin.com/in/silvia-kruger-9a1301164",
+      "https://www.rkh-karriere.de/stellenangebote/stellenanzeigen/job/show/Log/18303/?cHash=15b7d312f9d2f322835ef4d981f93b3b"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 4,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Baden-Baden",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinikum mittelbaden (balg) in baden-baden|http://www.klinikum-mittelbaden.de|baden-baden|germany",
+    "company_name": "Klinikum Mittelbaden (Balg) in Baden-Baden",
+    "company_website": "http://www.klinikum-mittelbaden.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 6,
+      "decision_makers": [
+        {
+          "full_name": "Doris Noeltner",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin Baden-Baden Bühl"
+        },
+        {
+          "full_name": "Doris Noeltner",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin Baden-Baden Bühl"
+        },
+        {
+          "full_name": "Heike Himmelsbach",
+          "person_key": "",
+          "role": "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl"
+        },
+        {
+          "full_name": "Heike Himmelsbach",
+          "person_key": "",
+          "role": "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl"
+        },
+        {
+          "full_name": "Ute Heinrich",
+          "person_key": "",
+          "role": "Pflegedirektorin der Akutkliniken"
+        },
+        {
+          "full_name": "Ute Heinrich",
+          "person_key": "",
+          "role": "Pflegedirektorin der Akutkliniken"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "d.noeltner@klinikum-mittelbaden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Doris Noeltner",
+        "hypothesis_email": "d.noeltner@klinikum-mittelbaden.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_doris_noeltner_0fd9482ccf",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Stellvertretende Pflegedirektorin Baden-Baden Bühl",
+        "role_category": "operations",
+        "source_urls": [
+          "https://karriere.klinikum-mittelbaden.de/de/jobs/114/pflegefachkraft-mwd-zna",
+          "https://www.klinikum-mittelbaden.de/wp-content/uploads/2023/02/Flyer_klinikvorort_Buehl_2023.pdf",
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://jobs.bewerbung2go.de/job/detail/gesundheits-und-krankenpfleger-in-tz-oder-vz-baden-baden.1906409025.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "d.noeltner@klinikum-mittelbaden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Doris Noeltner",
+        "hypothesis_email": "d.noeltner@klinikum-mittelbaden.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_doris_noeltner_c090e26d74",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Stellvertretende Pflegedirektorin Baden-Baden Bühl",
+        "role_category": "operations",
+        "source_urls": [
+          "https://karriere.klinikum-mittelbaden.de/de/jobs/114/pflegefachkraft-mwd-zna",
+          "https://www.klinikum-mittelbaden.de/wp-content/uploads/2023/02/Flyer_klinikvorort_Buehl_2023.pdf",
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://jobs.bewerbung2go.de/job/detail/gesundheits-und-krankenpfleger-in-tz-oder-vz-baden-baden.1906409025.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "h.himmelsbach@klinikum-mittelbaden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heike Himmelsbach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_heike_himmelsbach_1e9e2d3448",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/ec11a169e0eedda0/start",
+          "https://www.klinikum-mittelbaden.de/unternehmensorganisation/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "h.himmelsbach@klinikum-mittelbaden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heike Himmelsbach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_heike_himmelsbach_a39325e4d2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/ec11a169e0eedda0/start",
+          "https://www.klinikum-mittelbaden.de/unternehmensorganisation/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "h.ullrich-bunge@klinikum-mittelbaden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heike Ullrich-Bunge",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8",
+        "person_key": "person_heike_ullrich_bunge_b8fbbbdb97",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikdirektorin Baden-Baden Bühl",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://www.klinikum-mittelbaden.de/unternehmensorganisation/",
+          "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "h.ullrich-bunge@klinikum-mittelbaden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heike Ullrich-Bunge",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8",
+        "person_key": "person_heike_ullrich_bunge_07a653a0c0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikdirektorin Baden-Baden Bühl",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://www.klinikum-mittelbaden.de/unternehmensorganisation/",
+          "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "u.heinrich@klinikum-mittelbaden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Ute Heinrich",
+        "hypothesis_email": "u.heinrich@klinikum-mittelbaden.de",
+        "linkedin_profile_url": "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+        "person_key": "person_ute_heinrich_4bb21830ee",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektorin der Akutkliniken",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-mittelbaden.de/willkommen-am-kmb-neue-pflegedirektorin-fuer-die-akutkliniken/",
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/ec11a169e0eedda0/start",
+          "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+          "https://de.linkedin.com/jobs/view/standort%C3%BCbergreifende-bereichsleitung-der-zentralen-notaufnahmen-m-w-d-at-klinikum-mittelbaden-ggmbh-4419245980"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "u.heinrich@klinikum-mittelbaden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Ute Heinrich",
+        "hypothesis_email": "u.heinrich@klinikum-mittelbaden.de",
+        "linkedin_profile_url": "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+        "person_key": "person_ute_heinrich_7be4d57adb",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektorin der Akutkliniken",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-mittelbaden.de/willkommen-am-kmb-neue-pflegedirektorin-fuer-die-akutkliniken/",
+          "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/ec11a169e0eedda0/start",
+          "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+          "https://de.linkedin.com/jobs/view/standort%C3%BCbergreifende-bereichsleitung-der-zentralen-notaufnahmen-m-w-d-at-klinikum-mittelbaden-ggmbh-4419245980"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin Baden-Baden Bühl",
+        "Pflegedienstleitung Kliniken Baden-Baden Balg und Bühl",
+        "Klinikdirektorin Baden-Baden Bühl",
+        "Pflegedirektorin der Akutkliniken"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://karriere.klinikum-mittelbaden.de/de/jobs/114/pflegefachkraft-mwd-zna",
+      "https://www.klinikum-mittelbaden.de/wp-content/uploads/2023/02/Flyer_klinikvorort_Buehl_2023.pdf",
+      "https://www.klinikum-mittelbaden.de/standort-zentren/zentrum-fuer-haematologische-neoplasien/",
+      "https://jobs.bewerbung2go.de/job/detail/gesundheits-und-krankenpfleger-in-tz-oder-vz-baden-baden.1906409025.html",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/ec11a169e0eedda0/start",
+      "https://www.klinikum-mittelbaden.de/unternehmensorganisation/",
+      "https://de.linkedin.com/in/heike-ullrich-bunge-8487852b8",
+      "https://www.klinikum-mittelbaden.de/willkommen-am-kmb-neue-pflegedirektorin-fuer-die-akutkliniken/",
+      "https://ch.linkedin.com/in/ute-heinrich-22516ba1",
+      "https://de.linkedin.com/jobs/view/standort%C3%BCbergreifende-bereichsleitung-der-zentralen-notaufnahmen-m-w-d-at-klinikum-mittelbaden-ggmbh-4419245980"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
