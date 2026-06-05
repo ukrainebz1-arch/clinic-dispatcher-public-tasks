@@ -1,0 +1,1333 @@
+TASK_ID: stage05_task_0030
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "full_name": "Iris Heizmann",
+    "message_target_id": "stage05_task_0030::person_iris_heizmann_4ab647e8ce::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_iris_heizmann_4ab647e8ce",
+    "recipient_value": "i.heizmann@luisenklinik.de",
+    "role_title": "Leitung pädagogisch-pflegerischer Dienst",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "full_name": "Iris Heizmann",
+    "message_target_id": "stage05_task_0030::person_iris_heizmann_4ab647e8ce::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_iris_heizmann_4ab647e8ce",
+    "recipient_value": "https://de.linkedin.com/in/iris-heizmann-18764484",
+    "role_title": "Leitung pädagogisch-pflegerischer Dienst",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "full_name": "Iris Heizmann",
+    "message_target_id": "stage05_task_0030::person_iris_heizmann_4ab647e8ce::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_iris_heizmann_4ab647e8ce",
+    "recipient_value": "https://de.linkedin.com/in/iris-heizmann-18764484",
+    "role_title": "Leitung pädagogisch-pflegerischer Dienst",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "full_name": "Marianne Ledwon-Feuerstein",
+    "message_target_id": "stage05_task_0030::person_marianne_ledwon_feuerstein_5482afbf25::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_marianne_ledwon_feuerstein_5482afbf25",
+    "recipient_value": "m.ledwon-feuerstein@luisenklinik.de",
+    "role_title": "Chefärztin Tagesklinik Radolfzell",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "full_name": "Marianne Ledwon-Feuerstein",
+    "message_target_id": "stage05_task_0030::person_marianne_ledwon_feuerstein_5482afbf25::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marianne_ledwon_feuerstein_5482afbf25",
+    "recipient_value": "https://www.linkedin.com/in/marianne-ledwon-feuerstein-255157255",
+    "role_title": "Chefärztin Tagesklinik Radolfzell",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "full_name": "Marianne Ledwon-Feuerstein",
+    "message_target_id": "stage05_task_0030::person_marianne_ledwon_feuerstein_5482afbf25::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marianne_ledwon_feuerstein_5482afbf25",
+    "recipient_value": "https://www.linkedin.com/in/marianne-ledwon-feuerstein-255157255",
+    "role_title": "Chefärztin Tagesklinik Radolfzell",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "full_name": "Sven Wahl",
+    "message_target_id": "stage05_task_0030::person_sven_wahl_67777aa78e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sven_wahl_67777aa78e",
+    "recipient_value": "s.wahl@luisenklinik.de",
+    "role_title": "Vorstandsvorsitzender",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "full_name": "Sven Wahl",
+    "message_target_id": "stage05_task_0030::person_sven_wahl_67777aa78e::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sven_wahl_67777aa78e",
+    "recipient_value": "https://de.linkedin.com/in/sven-wahl-97b48067",
+    "role_title": "Vorstandsvorsitzender",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "full_name": "Sven Wahl",
+    "message_target_id": "stage05_task_0030::person_sven_wahl_67777aa78e::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sven_wahl_67777aa78e",
+    "recipient_value": "https://de.linkedin.com/in/sven-wahl-97b48067",
+    "role_title": "Vorstandsvorsitzender",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|mariaberg - fachkrankenhaus kinder- und jugendpsychiatrie in gammertingen|http://www.kjp-mariaberg.de|gammertingen|germany",
+    "company_name": "Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie in Gammertingen",
+    "full_name": "Andreas Scheffner",
+    "message_target_id": "stage05_task_0030::person_andreas_scheffner_aba87c39c8::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_andreas_scheffner_aba87c39c8",
+    "recipient_value": "a.scheffner@mariaberg.de",
+    "role_title": "Geschäftsführer / Verwaltungsleitung",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|mariaberg - fachkrankenhaus kinder- und jugendpsychiatrie in gammertingen|http://www.kjp-mariaberg.de|gammertingen|germany",
+    "company_name": "Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie in Gammertingen",
+    "full_name": "Thomas Pfeil",
+    "message_target_id": "stage05_task_0030::person_thomas_pfeil_c05d634139::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_thomas_pfeil_c05d634139",
+    "recipient_value": "t.pfeil@mariaberg.de",
+    "role_title": "Pflegedienstleiter und Sozialdienst Regelversorgung",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|mariaberg - fachkrankenhaus kinder- und jugendpsychiatrie tagesklinik albstadt|http://www.kjp-mariaberg.de|albstadt|germany",
+    "company_name": "Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie Tagesklinik Albstadt",
+    "full_name": "Dr. Ulrike Scheid",
+    "message_target_id": "stage05_task_0030::person_dr_ulrike_scheid_a4ac433636::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_ulrike_scheid_a4ac433636",
+    "recipient_value": "u.scheid@mariaberg.de",
+    "role_title": "Chefärztin",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|mariaberg - fachkrankenhaus kinder- und jugendpsychiatrie tagesklinik albstadt|http://www.kjp-mariaberg.de|albstadt|germany",
+    "company_name": "Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie Tagesklinik Albstadt",
+    "full_name": "Melanie Ziegler",
+    "message_target_id": "stage05_task_0030::person_melanie_ziegler_c1cd63ab81::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_melanie_ziegler_c1cd63ab81",
+    "recipient_value": "m.ziegler@mariaberg.de",
+    "role_title": "Verwaltungsleitung",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|mariaberg - fachkrankenhaus kinder- und jugendpsychiatrie tagesklinik albstadt|http://www.kjp-mariaberg.de|albstadt|germany",
+    "company_name": "Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie Tagesklinik Albstadt",
+    "full_name": "Thomas Pfeil",
+    "message_target_id": "stage05_task_0030::person_thomas_pfeil_38055a6bdd::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_thomas_pfeil_38055a6bdd",
+    "recipient_value": "t.pfeil@mariaberg.de",
+    "role_title": "Stationsdienstleitung und Sozialdienst",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|marienhospital stuttgart|http://www.marienhospital-stuttgart.de|stuttgart|germany",
+    "company_name": "Marienhospital Stuttgart",
+    "full_name": "Andrea Birkenbach",
+    "message_target_id": "stage05_task_0030::person_andrea_birkenbach_1005d6e4e6::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_andrea_birkenbach_1005d6e4e6",
+    "recipient_value": "andrea.birkenbach@vinzenz.de",
+    "role_title": "Geschäftsbereichsleiterin Personal",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|marienhospital stuttgart|http://www.marienhospital-stuttgart.de|stuttgart|germany",
+    "company_name": "Marienhospital Stuttgart",
+    "full_name": "Frank Lehre",
+    "message_target_id": "stage05_task_0030::person_frank_lehre_cdd0b9ef54::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_frank_lehre_cdd0b9ef54",
+    "recipient_value": "frank.lehre@vinzenz.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|marienhospital stuttgart|http://www.marienhospital-stuttgart.de|stuttgart|germany",
+    "company_name": "Marienhospital Stuttgart",
+    "full_name": "Martina Elser",
+    "message_target_id": "stage05_task_0030::person_martina_elser_7332f6f2a9::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_martina_elser_7332f6f2a9",
+    "recipient_value": "martina.elser@vinzenz.de",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|marienhospital stuttgart|http://www.marienhospital-stuttgart.de|stuttgart|germany",
+    "company_name": "Marienhospital Stuttgart",
+    "full_name": "Martina Elser",
+    "message_target_id": "stage05_task_0030::person_martina_elser_7332f6f2a9::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_martina_elser_7332f6f2a9",
+    "recipient_value": "https://de.linkedin.com/in/martina-elser-79953420b",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|marienhospital stuttgart|http://www.marienhospital-stuttgart.de|stuttgart|germany",
+    "company_name": "Marienhospital Stuttgart",
+    "full_name": "Martina Elser",
+    "message_target_id": "stage05_task_0030::person_martina_elser_7332f6f2a9::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_martina_elser_7332f6f2a9",
+    "recipient_value": "https://de.linkedin.com/in/martina-elser-79953420b",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0030"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|marienhospital stuttgart|http://www.marienhospital-stuttgart.de|stuttgart|germany",
+    "company_name": "Marienhospital Stuttgart",
+    "full_name": "Tanja Czerwinski",
+    "message_target_id": "stage05_task_0030::person_tanja_czerwinski_ddc5318e88::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_tanja_czerwinski_ddc5318e88",
+    "recipient_value": "tanja.czerwinski@vinzenz.de",
+    "role_title": "Pflegedienstleiterin",
+    "task_id": "stage05_task_0030"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Radolfzell am Bodensee",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "company_website": "http://www.luisenklinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Iris Heizmann",
+          "person_key": "",
+          "role": "Leitung pädagogisch-pflegerischer Dienst"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "i.heizmann@luisenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Iris Heizmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/iris-heizmann-18764484",
+        "person_key": "person_iris_heizmann_4ab647e8ce",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung pädagogisch-pflegerischer Dienst",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_11095.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40bf57a2659c38ca/start",
+          "https://de.linkedin.com/in/iris-heizmann-18764484",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/82b0c7c7382bf118/daycareShow"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "m.ledwon-feuerstein@luisenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marianne Ledwon-Feuerstein",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://www.linkedin.com/in/marianne-ledwon-feuerstein-255157255",
+        "person_key": "person_marianne_ledwon_feuerstein_5482afbf25",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefärztin Tagesklinik Radolfzell",
+        "role_category": "unknown",
+        "source_urls": [
+          "https://luisenklinik.de/kontakt/",
+          "https://de.linkedin.com/posts/luisenklinik_luisenklinik-gesundzur%C3%BCckinsleben-badd%C3%BCrrheim-activity-7087739445788975105-kEOm",
+          "https://www.linkedin.com/in/marianne-ledwon-feuerstein-255157255"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.wahl@luisenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sven Wahl",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sven-wahl-97b48067",
+        "person_key": "person_sven_wahl_67777aa78e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Vorstandsvorsitzender",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_11095.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40bf57a2659c38ca/start",
+          "https://de.linkedin.com/in/sven-wahl-97b48067",
+          "https://luisenklinik.de/kontakt/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "unknown",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Leitung pädagogisch-pflegerischer Dienst",
+        "Chefärztin Tagesklinik Radolfzell",
+        "Vorstandsvorsitzender"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_11095.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40bf57a2659c38ca/start",
+      "https://de.linkedin.com/in/iris-heizmann-18764484",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/82b0c7c7382bf118/daycareShow",
+      "https://luisenklinik.de/kontakt/",
+      "https://de.linkedin.com/posts/luisenklinik_luisenklinik-gesundzur%C3%BCckinsleben-badd%C3%BCrrheim-activity-7087739445788975105-kEOm",
+      "https://www.linkedin.com/in/marianne-ledwon-feuerstein-255157255",
+      "https://de.linkedin.com/in/sven-wahl-97b48067"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Gammertingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|mariaberg - fachkrankenhaus kinder- und jugendpsychiatrie in gammertingen|http://www.kjp-mariaberg.de|gammertingen|germany",
+    "company_name": "Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie in Gammertingen",
+    "company_website": "http://www.kjp-mariaberg.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Thomas Pfeil",
+          "person_key": "",
+          "role": "Pflegedienstleiter und Sozialdienst Regelversorgung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "a.scheffner@mariaberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Scheffner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_andreas_scheffner_aba87c39c8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer / Verwaltungsleitung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.kjp-mariaberg.de/team",
+          "https://www.kjp-mariaberg.de/ansprechpartnerin",
+          "https://www.kjp-mariaberg.de/files/qualittsbrichtkjpmariaberg2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.pfeil@mariaberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Pfeil",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_pfeil_c05d634139",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiter und Sozialdienst Regelversorgung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kjp-mariaberg.de/team",
+          "https://www.kjp-mariaberg.de/files/qualittsbrichtkjpmariaberg2024.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer / Verwaltungsleitung",
+        "Pflegedienstleiter und Sozialdienst Regelversorgung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.kjp-mariaberg.de/team",
+      "https://www.kjp-mariaberg.de/ansprechpartnerin",
+      "https://www.kjp-mariaberg.de/files/qualittsbrichtkjpmariaberg2024.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Albstadt",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|mariaberg - fachkrankenhaus kinder- und jugendpsychiatrie tagesklinik albstadt|http://www.kjp-mariaberg.de|albstadt|germany",
+    "company_name": "Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie Tagesklinik Albstadt",
+    "company_website": "http://www.kjp-mariaberg.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Thomas Pfeil",
+          "person_key": "",
+          "role": "Stationsdienstleitung und Sozialdienst"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "u.scheid@mariaberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Ulrike Scheid",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_ulrike_scheid_a4ac433636",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefärztin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kjp-mariaberg.de/ansprechpartnerin",
+          "https://www.kjp-mariaberg.de/team",
+          "https://www.kjp-mariaberg.de/files/qualittsberichtkjpalbstadtebingen2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.ziegler@mariaberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Melanie Ziegler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_melanie_ziegler_c1cd63ab81",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kjp-mariaberg.de/team"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.pfeil@mariaberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Pfeil",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_pfeil_38055a6bdd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stationsdienstleitung und Sozialdienst",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kjp-mariaberg.de/team"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Chefärztin",
+        "Verwaltungsleitung",
+        "Stationsdienstleitung und Sozialdienst"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kjp-mariaberg.de/ansprechpartnerin",
+      "https://www.kjp-mariaberg.de/team",
+      "https://www.kjp-mariaberg.de/files/qualittsberichtkjpalbstadtebingen2024.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|marienhospital stuttgart|http://www.marienhospital-stuttgart.de|stuttgart|germany",
+    "company_name": "Marienhospital Stuttgart",
+    "company_website": "http://www.marienhospital-stuttgart.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Frank Lehre",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Martina Elser",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Tanja Czerwinski",
+          "person_key": "",
+          "role": "Pflegedienstleiterin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "andrea.birkenbach@vinzenz.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Andrea Birkenbach",
+        "hypothesis_email": "andrea.birkenbach@vinzenz.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_andrea_birkenbach_1005d6e4e6",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsbereichsleiterin Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.marienhospital-stuttgart.de/medizin-pflege/pflege/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260810191-772796000-2023-xml.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/6b6de563838ef5eb/start",
+          "https://www.marienhospital-stuttgart.de/newsdetail/leserfrage-wer-sucht-unsere-aerzte-aus/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "frank.lehre@vinzenz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Frank Lehre",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_frank_lehre_cdd0b9ef54",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.marienhospital-stuttgart.de/medizin-pflege/pflege/",
+          "https://www.marienhospital-stuttgart.de/ueber-uns/geschaeftsfuehrung/",
+          "https://de.linkedin.com/posts/marienhospitalstuttgart_marienhospitalstuttgart-marienhospital-activity-7270708585628659713-Rgze"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "martina.elser@vinzenz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martina Elser",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/martina-elser-79953420b",
+        "person_key": "person_martina_elser_7332f6f2a9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.marienhospital-stuttgart.de/medizin-pflege/pflege/",
+          "https://de.linkedin.com/in/martina-elser-79953420b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "tanja.czerwinski@vinzenz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tanja Czerwinski",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_tanja_czerwinski_ddc5318e88",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.marienhospital-stuttgart.de/medizin-pflege/pflege/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsbereichsleiterin Personal",
+        "Pflegedirektor",
+        "Stellvertretende Pflegedirektorin",
+        "Pflegedienstleiterin"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.marienhospital-stuttgart.de/medizin-pflege/pflege/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260810191-772796000-2023-xml.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/6b6de563838ef5eb/start",
+      "https://www.marienhospital-stuttgart.de/newsdetail/leserfrage-wer-sucht-unsere-aerzte-aus/",
+      "https://www.marienhospital-stuttgart.de/ueber-uns/geschaeftsfuehrung/",
+      "https://de.linkedin.com/posts/marienhospitalstuttgart_marienhospitalstuttgart-marienhospital-activity-7270708585628659713-Rgze",
+      "https://de.linkedin.com/in/martina-elser-79953420b"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Radolfzell am Bodensee",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|luisenklinik tagesklinik radolfzell|http://www.luisenklinik.de|radolfzell am bodensee|germany",
+    "company_name": "Luisenklinik Tagesklinik Radolfzell",
+    "company_website": "http://www.luisenklinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Iris Heizmann",
+          "person_key": "",
+          "role": "Leitung pädagogisch-pflegerischer Dienst"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "i.heizmann@luisenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Iris Heizmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/iris-heizmann-18764484",
+        "person_key": "person_iris_heizmann_4ab647e8ce",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung pädagogisch-pflegerischer Dienst",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_11095.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40bf57a2659c38ca/start",
+          "https://de.linkedin.com/in/iris-heizmann-18764484",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/82b0c7c7382bf118/daycareShow"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "m.ledwon-feuerstein@luisenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marianne Ledwon-Feuerstein",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://www.linkedin.com/in/marianne-ledwon-feuerstein-255157255",
+        "person_key": "person_marianne_ledwon_feuerstein_5482afbf25",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefärztin Tagesklinik Radolfzell",
+        "role_category": "unknown",
+        "source_urls": [
+          "https://luisenklinik.de/kontakt/",
+          "https://de.linkedin.com/posts/luisenklinik_luisenklinik-gesundzur%C3%BCckinsleben-badd%C3%BCrrheim-activity-7087739445788975105-kEOm",
+          "https://www.linkedin.com/in/marianne-ledwon-feuerstein-255157255"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.wahl@luisenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sven Wahl",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sven-wahl-97b48067",
+        "person_key": "person_sven_wahl_67777aa78e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Vorstandsvorsitzender",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_11095.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40bf57a2659c38ca/start",
+          "https://de.linkedin.com/in/sven-wahl-97b48067",
+          "https://luisenklinik.de/kontakt/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "unknown",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Leitung pädagogisch-pflegerischer Dienst",
+        "Chefärztin Tagesklinik Radolfzell",
+        "Vorstandsvorsitzender"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_11095.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40bf57a2659c38ca/start",
+      "https://de.linkedin.com/in/iris-heizmann-18764484",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/82b0c7c7382bf118/daycareShow",
+      "https://luisenklinik.de/kontakt/",
+      "https://de.linkedin.com/posts/luisenklinik_luisenklinik-gesundzur%C3%BCckinsleben-badd%C3%BCrrheim-activity-7087739445788975105-kEOm",
+      "https://www.linkedin.com/in/marianne-ledwon-feuerstein-255157255",
+      "https://de.linkedin.com/in/sven-wahl-97b48067"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Gammertingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|mariaberg - fachkrankenhaus kinder- und jugendpsychiatrie in gammertingen|http://www.kjp-mariaberg.de|gammertingen|germany",
+    "company_name": "Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie in Gammertingen",
+    "company_website": "http://www.kjp-mariaberg.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Thomas Pfeil",
+          "person_key": "",
+          "role": "Pflegedienstleiter und Sozialdienst Regelversorgung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "a.scheffner@mariaberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Scheffner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_andreas_scheffner_aba87c39c8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer / Verwaltungsleitung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.kjp-mariaberg.de/team",
+          "https://www.kjp-mariaberg.de/ansprechpartnerin",
+          "https://www.kjp-mariaberg.de/files/qualittsbrichtkjpmariaberg2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.pfeil@mariaberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Pfeil",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_pfeil_c05d634139",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiter und Sozialdienst Regelversorgung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kjp-mariaberg.de/team",
+          "https://www.kjp-mariaberg.de/files/qualittsbrichtkjpmariaberg2024.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer / Verwaltungsleitung",
+        "Pflegedienstleiter und Sozialdienst Regelversorgung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.kjp-mariaberg.de/team",
+      "https://www.kjp-mariaberg.de/ansprechpartnerin",
+      "https://www.kjp-mariaberg.de/files/qualittsbrichtkjpmariaberg2024.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Albstadt",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|mariaberg - fachkrankenhaus kinder- und jugendpsychiatrie tagesklinik albstadt|http://www.kjp-mariaberg.de|albstadt|germany",
+    "company_name": "Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie Tagesklinik Albstadt",
+    "company_website": "http://www.kjp-mariaberg.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Thomas Pfeil",
+          "person_key": "",
+          "role": "Stationsdienstleitung und Sozialdienst"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "u.scheid@mariaberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Ulrike Scheid",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_ulrike_scheid_a4ac433636",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefärztin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kjp-mariaberg.de/ansprechpartnerin",
+          "https://www.kjp-mariaberg.de/team",
+          "https://www.kjp-mariaberg.de/files/qualittsberichtkjpalbstadtebingen2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.ziegler@mariaberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Melanie Ziegler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_melanie_ziegler_c1cd63ab81",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kjp-mariaberg.de/team"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.pfeil@mariaberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Pfeil",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_pfeil_38055a6bdd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stationsdienstleitung und Sozialdienst",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kjp-mariaberg.de/team"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Chefärztin",
+        "Verwaltungsleitung",
+        "Stationsdienstleitung und Sozialdienst"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kjp-mariaberg.de/ansprechpartnerin",
+      "https://www.kjp-mariaberg.de/team",
+      "https://www.kjp-mariaberg.de/files/qualittsberichtkjpalbstadtebingen2024.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|marienhospital stuttgart|http://www.marienhospital-stuttgart.de|stuttgart|germany",
+    "company_name": "Marienhospital Stuttgart",
+    "company_website": "http://www.marienhospital-stuttgart.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Frank Lehre",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Martina Elser",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Tanja Czerwinski",
+          "person_key": "",
+          "role": "Pflegedienstleiterin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "andrea.birkenbach@vinzenz.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Andrea Birkenbach",
+        "hypothesis_email": "andrea.birkenbach@vinzenz.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_andrea_birkenbach_1005d6e4e6",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsbereichsleiterin Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.marienhospital-stuttgart.de/medizin-pflege/pflege/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260810191-772796000-2023-xml.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/6b6de563838ef5eb/start",
+          "https://www.marienhospital-stuttgart.de/newsdetail/leserfrage-wer-sucht-unsere-aerzte-aus/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "frank.lehre@vinzenz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Frank Lehre",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_frank_lehre_cdd0b9ef54",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.marienhospital-stuttgart.de/medizin-pflege/pflege/",
+          "https://www.marienhospital-stuttgart.de/ueber-uns/geschaeftsfuehrung/",
+          "https://de.linkedin.com/posts/marienhospitalstuttgart_marienhospitalstuttgart-marienhospital-activity-7270708585628659713-Rgze"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "martina.elser@vinzenz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martina Elser",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/martina-elser-79953420b",
+        "person_key": "person_martina_elser_7332f6f2a9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.marienhospital-stuttgart.de/medizin-pflege/pflege/",
+          "https://de.linkedin.com/in/martina-elser-79953420b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "tanja.czerwinski@vinzenz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tanja Czerwinski",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_tanja_czerwinski_ddc5318e88",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.marienhospital-stuttgart.de/medizin-pflege/pflege/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsbereichsleiterin Personal",
+        "Pflegedirektor",
+        "Stellvertretende Pflegedirektorin",
+        "Pflegedienstleiterin"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.marienhospital-stuttgart.de/medizin-pflege/pflege/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260810191-772796000-2023-xml.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/6b6de563838ef5eb/start",
+      "https://www.marienhospital-stuttgart.de/newsdetail/leserfrage-wer-sucht-unsere-aerzte-aus/",
+      "https://www.marienhospital-stuttgart.de/ueber-uns/geschaeftsfuehrung/",
+      "https://de.linkedin.com/posts/marienhospitalstuttgart_marienhospitalstuttgart-marienhospital-activity-7270708585628659713-Rgze",
+      "https://de.linkedin.com/in/martina-elser-79953420b"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
