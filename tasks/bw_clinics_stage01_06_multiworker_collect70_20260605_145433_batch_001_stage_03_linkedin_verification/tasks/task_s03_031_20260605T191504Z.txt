@@ -1,0 +1,84 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_031_20260605T191504Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_031_20260605T191504Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_collect70_20260605_145433/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: ZfP Südwürttemberg Weissenau, TAZ Aulendorf | company_website: http://www.zfp-web.de | first_name: Hüsniye | last_name: Bilgic | full_name: Hüsniye Bilgic | role: Pflegedirektorin Klinik 2 | role_category: operations | confidence: high | notes: Quality report names her Pflegedirektorin Klinik 2.
+2. batch_id: batch_001 | company_name: ZfP Südwürttemberg Weissenau, TAZ Aulendorf | company_website: http://www.zfp-web.de | first_name: Dieter | last_name: Haug | full_name: Dieter Haug | role: Betriebsdirektor | role_category: other_management | confidence: high | notes: TAZ Aulendorf quality report names him Betriebsdirektor.
+3. batch_id: batch_001 | company_name: MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik) | company_website: http://www.median-kliniken.de | first_name: Alexandra | last_name: Heinzelmann | full_name: Alexandra Heinzelmann | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: MEDIAN job page names her Pflegedienstleitung at Achertal-Klinik Ottenhöfen.
+4. batch_id: batch_001 | company_name: MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik) | company_website: http://www.median-kliniken.de | first_name: Simon | last_name: Baltes | full_name: Simon Baltes | role: Kaufmännische Leitung | role_category: other_management | confidence: high | notes: Official clinic page names him Kaufmännische Leitung.
+5. batch_id: batch_001 | company_name: EchTAZ in Reutlingen | company_website: https://medizin.uni-tuebingen.de | first_name: Klaus | last_name: Tischler | full_name: Klaus Tischler | role: Pflegedirektor | role_category: operations | confidence: high | notes: 2024 EchTAZ quality report names him Pflegedirektor.
+6. batch_id: batch_001 | company_name: EchTAZ in Reutlingen | company_website: https://medizin.uni-tuebingen.de | first_name: Silvia | last_name: Brand | full_name: Silvia Brand | role: Stellvertretende Pflegedirektorin | role_category: operations | confidence: high | notes: 2024 EchTAZ quality report names her deputy nursing director.
+7. batch_id: batch_001 | company_name: MediClin Klinik an der Lindenhöhe, Standort Okenstraße in Offenburg | company_website: http://www.klinik-lindenhoehe.de | first_name: Mahnaz | last_name: Nadjie | full_name: Mahnaz Nadjie | role: Leitung Pflege- und Erziehungsdienst | role_category: operations | confidence: high | notes: Okenstraße quality report names her nursing and education service lead.
+8. batch_id: batch_001 | company_name: MediClin Klinik an der Lindenhöhe, Standort Okenstraße in Offenburg | company_website: http://www.klinik-lindenhoehe.de | first_name: Karlheinz | last_name: Schneiderchen | full_name: Karlheinz Schneiderchen | role: Kaufmännischer Direktor | role_category: other_management | confidence: high | notes: Okenstraße quality report names him Kaufmännischer Direktor.
+9. batch_id: batch_001 | company_name: MediClin Klinik an der Lindenhöhe, Standort Okenstraße in Offenburg | company_website: http://www.klinik-lindenhoehe.de | first_name: Christian | last_name: Meier | full_name: Christian Meier | role: Stellvertretung der Pflegedienstleitung KJPP | role_category: operations | confidence: high | notes: Official Tagesklinik Offenburg page names him deputy nursing lead for KJPP.
+10. batch_id: batch_001 | company_name: MediClin Klinik an der Lindenhöhe (Standort Rastatt) | company_website: http://www.klinik-lindenhoehe.de | first_name: Mahnaz | last_name: Nadjie | full_name: Mahnaz Nadjie | role: Leitung Pflege- und Erziehungsdienst | role_category: operations | confidence: medium | notes: Official Impressum names her responsible for Pflege- und Erziehungsdienst.
+11. batch_id: batch_001 | company_name: MediClin Klinik an der Lindenhöhe (Standort Rastatt) | company_website: http://www.klinik-lindenhoehe.de | first_name: Reta | last_name: Pelz | full_name: Dr. Reta Pelz | role: Chefärztin Kinder- und Jugendpsychiatrie | role_category: other_management | confidence: medium | notes: Official Impressum names her Chefärztin KJPP for Lindenhöhe.
+12. batch_id: batch_001 | company_name: MediClin Klinik an der Lindenhöhe (Standort Rastatt) | company_website: http://www.klinik-lindenhoehe.de | first_name: Karlheinz | last_name: Schneiderchen | full_name: Karlheinz Schneiderchen | role: Kaufmännischer Direktor | role_category: other_management | confidence: medium | notes: Official Impressum names him Kaufmännischer Direktor; site-specific Rastatt person not found.
+13. batch_id: batch_001 | company_name: Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie Tagesklinik Albstadt | company_website: http://www.kjp-mariaberg.de | first_name: Thomas | last_name: Pfeil | full_name: Thomas Pfeil | role: Stationsdienstleitung und Sozialdienst | role_category: operations | confidence: high | notes: 2024 Albstadt quality report names him Stationsdienstleitung and Sozialdienst.
+14. batch_id: batch_001 | company_name: Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie Tagesklinik Albstadt | company_website: http://www.kjp-mariaberg.de | first_name: Ulrike | last_name: Scheid | full_name: Dr. Ulrike Scheid | role: Chefärztin | role_category: other_management | confidence: high | notes: 2024 Albstadt quality report names her Chefärztin.
+15. batch_id: batch_001 | company_name: Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie Tagesklinik Albstadt | company_website: http://www.kjp-mariaberg.de | first_name: Melanie | last_name: Ziegler | full_name: Melanie Ziegler | role: Verwaltungsleitung | role_category: other_management | confidence: high | notes: 2024 Albstadt quality report names her Verwaltungsleitung.
+16. batch_id: batch_001 | company_name: Universitätsklinikum Ulm - Strahlentherapie am Krankenhaus Ehingen | company_website: http://www.uniklinik-ulm.de/ | first_name: Robert | last_name: Jeske | full_name: Robert Jeske | role: Pflegedirektor | role_category: operations | confidence: high | notes: 2024 Ehingen quality report names him Pflegedirektor.
+17. batch_id: batch_001 | company_name: Universitätsklinikum Ulm - Strahlentherapie am Krankenhaus Ehingen | company_website: http://www.uniklinik-ulm.de/ | first_name: Christa | last_name: Hohner | full_name: Christa Hohner | role: Kaufmännische Direktorin | role_category: other_management | confidence: high | notes: 2024 Ehingen quality report names her Kaufmännische Direktorin from October 2024.
+18. batch_id: batch_001 | company_name: Universitätsklinikum Ulm - Strahlentherapie am Krankenhaus Ehingen | company_website: http://www.uniklinik-ulm.de/ | first_name: Udo X. | last_name: Kaisers | full_name: Prof. Dr. Udo X. Kaisers | role: Leitender Ärztlicher Direktor und Vorstandsvorsitzender | role_category: other_management | confidence: high | notes: 2024 Ehingen quality report names him leading medical director and board chair.
+19. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Bad Mergentheim | company_website: http://www.khtbb.de/khtbb/index.php | first_name: Holger | last_name: Kraft | full_name: Holger Kraft | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official contact page names him Pflegedirektor.
+20. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Bad Mergentheim | company_website: http://www.khtbb.de/khtbb/index.php | first_name: Mathias | last_name: Jähnel | full_name: Dr. Mathias Jähnel | role: Chefarzt Psychiatrie und Psychotherapie | role_category: other_management | confidence: high | notes: Official department page names him Chefarzt.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_031_20260605T191504Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
