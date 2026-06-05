@@ -1,0 +1,89 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260605T233212Z_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_023_20260605T233213Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_023_20260605T233213Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260605T233212Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260605T233212Z_batch_001_stage_01_people_discovery
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260605T233212Z/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Tagesklinik Warendorf | company_website: https://www.lwl-uk-hamm.de/de/fuer-patienten-angehoerige/die-klinik/tageskliniken/ | city: Warendorf | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-warendorf | pflegekraefte: 2.0
+2. company_name: LWL-Tagesklinik Paderborn | company_website: https://www.lwl-jugendpsychiatrie-marsberg.de/de/fur-patienteninnen/teilstat_behandlung/tagesklinik_paderb/ | city: Paderborn | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-tagesklinik-paderborn | pflegekraefte: 4.0
+3. company_name: PNZ der Kinderklinik Siegen | company_website: https://www.drk-kinderklinik.de/home/ | city: Siegen | country: Germany | source_url: https://klinikradar.de/kliniken/pnz-der-kinderklinik-siegen | pflegekraefte: 25.0
+4. company_name: Tagesklinik Gütersloh | company_website: https://www.lwl-uk-hamm.de/de/fuer-patienten-angehoerige/die-klinik/tageskliniken/ | city: Gütersloh | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-guetersloh | pflegekraefte: 2.0
+5. company_name: Tagesklinik Rheda-Wiedenbrück | company_website: https://www.lwl-uk-hamm.de/de/fuer-patienten-angehoerige/die-klinik/tageskliniken/ | city: Rheda-Wiedenbrück | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-rheda-wiedenbrueck | pflegekraefte: 4.0
+6. company_name: LWL-Tagesklinik Höxter | company_website: https://www.lwl.org/LWL/Gesundheit/psychiatrieverbund/K/klinik_marsberg_ki_u_ju_psychiatrie/teilstat_behandlung/tagesklinik_hoexter | city: Höxter | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-tagesklinik-hoexter | pflegekraefte: 4.0
+7. company_name: Klinikum Lippe Tagesklinik Herford-Schweicheln in Hiddenhausen | company_website: http://www.klinikum-lippe.de | city: Hiddenhausen | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-lippe-tagesklinik-herford-schweicheln | pflegekraefte: 3.0
+8. company_name: LWL-Tagesklinik Meschede | company_website: https://www.lwl-jugendpsychiatrie-marsberg.de/de/fur-patienteninnen/teilstat_behandlung/tagesklinik_mesch/ | city: Meschede | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-tagesklinik-meschede | pflegekraefte: 5.0
+9. company_name: Klinik für Nuklearmedizin am Bethesda Krankenhaus Duisburg | company_website: https://www.uk-essen.de | city: Duisburg | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-fuer-nuklearmedizin-am-bethesda-krankenhaus-duisburg | pflegekraefte: 7.0
+10. company_name: LVR-Klinik Bonn - Kinderneurologisches Zentrum | company_website: http://www.klinik-bonn.lvr.de | city: Bonn | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-bonn-kinderneurologisches-zentrum | pflegekraefte: 15.0
+11. company_name: Gerontopsychiatrische und psychiatrische Tageskliniken Wuppertal-Elberfeld | company_website: http://www.stiftung-tannenhof.de | city: Wuppertal | country: Germany | source_url: https://klinikradar.de/kliniken/gerontopsychiatrische-und-psychiatrische-tageskliniken-wuppertal-elberfeld | pflegekraefte: 8.0
+12. company_name: Psychiatrische Tagesklinik Wuppertal - Elberfeld | company_website: http://www.stiftung-tannenhof.de | city: Wuppertal | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-wuppertal-elberfeld | pflegekraefte: 8.0
+13. company_name: LWL Klinik Marl-Sinsen Tagesklinik Herne | company_website: https://www.lwl-klinik-marl.de/de/fuer-patienten-angehoerige/die-klinik/unsere-tageskliniken/ | city: Herne | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-marl-sinsen-tagesklinik-herne | pflegekraefte: 5.0
+14. company_name: LWL Klinik Marl-Sinsen Tagesklinik Recklinghausen | company_website: https://www.lwl-klinik-marl.de/de/fuer-patienten-angehoerige/die-klinik/unsere-tageskliniken/ | city: Recklinghausen | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-marl-sinsen-tagesklinik-recklinghausen | pflegekraefte: 5.0
+15. company_name: LWL Klinik Marl-Sinsen Tagesklinik Bottrop | company_website: https://www.haardklinik.lwl.org/de/therapie-behandlung/tageskliniken/tagesklinik-bottrop/ | city: Bottrop | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-marl-sinsen-tagesklinik-bottrop | pflegekraefte: 5.0
+16. company_name: Tagesklinik Psychiatrie Lippstadt | company_website: http://www.lwl-klinik-lippstadt.de/de/ | city: Lippstadt | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-psychiatrie-lippstadt | pflegekraefte: 4.0
+17. company_name: Psychiatrische Tagesklinik Remscheid | company_website: http://www.stiftung-tannenhof.de | city: Remscheid | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-remscheid | pflegekraefte: 4.0
+18. company_name: Psychiatrische Tagesklinik Wuppertal - Barmen | city: Wuppertal | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-wuppertal-barmen | pflegekraefte: 5.0
+19. company_name: LWL Klinik Marl-Sinsen Tagesklinik Borken | company_website: https://www.haardklinik.lwl.org/de/therapie-behandlung/tageskliniken/tagesklinik-borken/ | city: Borken | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-marl-sinsen-tagesklinik-borken | pflegekraefte: 5.0
+20. company_name: Tagesklinik Kinder- und Jugendpsychiatrie Gummersbach | company_website: http://www.klinikum-oberberg.de | city: Gummersbach | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-kinder-und-jugendpsychiatrie-gummersbach | pflegekraefte: 4.0
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_023_20260605T233213Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
