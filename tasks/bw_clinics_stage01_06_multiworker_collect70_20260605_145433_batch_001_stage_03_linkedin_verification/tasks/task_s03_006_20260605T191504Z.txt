@@ -1,0 +1,84 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_006_20260605T191504Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_006_20260605T191504Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_collect70_20260605_145433/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Ortenau Klinikum Lahr | company_website: https://lahr.ortenau-klinikum.de/ | first_name: Stefan | last_name: Ries | full_name: Stefan Ries | role: Pflegedirektor Lahr und Wolfach | role_category: operations | confidence: high | notes: Official page verifies role.
+2. batch_id: batch_001 | company_name: Ortenau Klinikum Lahr | company_website: https://lahr.ortenau-klinikum.de/ | first_name: Monika | last_name: Bach | full_name: Monika Bach | role: Stv. Pflegedirektorin der Betriebsstelle Lahr | role_category: operations | confidence: high | notes: Official page verifies role.
+3. batch_id: batch_001 | company_name: Ortenau Klinikum Lahr | company_website: https://lahr.ortenau-klinikum.de/ | first_name: Georg | last_name: Mols | full_name: Prof. Dr. Georg Mols | role: Ärztlicher Direktor | role_category: other_management | confidence: medium | notes: Fallback management contact on official page.
+4. batch_id: batch_001 | company_name: Sana Klinikum Biberach | company_website: https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach | first_name: Udo | last_name: Wihlenda | full_name: Udo Wihlenda | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official page verifies role.
+5. batch_id: batch_001 | company_name: Sana Klinikum Biberach | company_website: https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach | first_name: Beate | last_name: Jörißen | full_name: Beate Jörißen | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official page verifies role.
+6. batch_id: batch_001 | company_name: Sana Klinikum Biberach | company_website: https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach | first_name: Thomas | last_name: Schmidt | full_name: Dr. Thomas Schmidt | role: Ärztlicher Direktor | role_category: other_management | confidence: medium | notes: Fallback management contact on official page.
+7. batch_id: batch_001 | company_name: ZfP Klinikum Schloß Winnenden, Standort Winnenden | company_website: http://www.zfp-winnenden.de/ | first_name: Klaus | last_name: Kaiser | full_name: Klaus Kaiser | role: Pflegedirektor/Medizindirektion | role_category: operations | confidence: high | notes: Official page verifies role.
+8. batch_id: batch_001 | company_name: ZfP Klinikum Schloß Winnenden, Standort Winnenden | company_website: http://www.zfp-winnenden.de/ | first_name: Romana | last_name: Weissert | full_name: Romana Weissert | role: Personaldirektorin | role_category: hr_recruiting | confidence: high | notes: Official page verifies role.
+9. batch_id: batch_001 | company_name: ZfP Klinikum Schloß Winnenden, Standort Winnenden | company_website: http://www.zfp-winnenden.de/ | first_name: Anett | last_name: Rose-Losert | full_name: Anett Rose-Losert | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official page verifies role.
+10. batch_id: batch_001 | company_name: SRH Klinikum Karlsbad-Langensteinbach | company_website: http://www.klinikum-karlsbad.de | first_name: Markus | last_name: Links | full_name: Markus Links | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official page verifies role.
+11. batch_id: batch_001 | company_name: SRH Klinikum Karlsbad-Langensteinbach | company_website: http://www.klinikum-karlsbad.de | first_name: Petra | last_name: Schneider | full_name: Petra Schneider | role: Personalleiterin | role_category: hr_recruiting | confidence: high | notes: Official page verifies role.
+12. batch_id: batch_001 | company_name: SRH Klinikum Karlsbad-Langensteinbach | company_website: http://www.klinikum-karlsbad.de | first_name: Jörg | last_name: Schwarzer | full_name: Jörg Schwarzer | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official page verifies role.
+13. batch_id: batch_001 | company_name: Krankenhaus Bietigheim in Bietigheim-Bissingen | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/krankenhaus-bietigheim-vaihingen/ | first_name: Barbara | last_name: Yokota | full_name: Barbara Yokota | role: Direktorin Pflege-, Prozessmanagement | role_category: operations | confidence: high | notes: Official page verifies role.
+14. batch_id: batch_001 | company_name: Krankenhaus Bietigheim in Bietigheim-Bissingen | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/krankenhaus-bietigheim-vaihingen/ | first_name: Manfred | last_name: Müller | full_name: Manfred Müller | role: Pflegerische Klinikleitung | role_category: operations | confidence: high | notes: Official page verifies role.
+15. batch_id: batch_001 | company_name: Krankenhaus Bietigheim in Bietigheim-Bissingen | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/krankenhaus-bietigheim-vaihingen/ | first_name: Janina | last_name: Oehrle | full_name: Janina Oehrle | role: Klinikleitung | role_category: other_management | confidence: medium | notes: Quality report verifies clinic leadership.
+16. batch_id: batch_001 | company_name: Diako Mannheim | company_website: https://www.bk-julia-lanz.de/ | first_name: Andrea | last_name: Albrecht | full_name: Andrea Albrecht | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Listed in clinic directorium
+17. batch_id: batch_001 | company_name: Diako Mannheim | company_website: https://www.bk-julia-lanz.de/ | first_name: Anette | last_name: Buhles | full_name: Anette Buhles | role: Stellvertretende Pflegedirektorin | role_category: operations | confidence: high | notes: Listed in clinic directorium
+18. batch_id: batch_001 | company_name: Diako Mannheim | company_website: https://www.bk-julia-lanz.de/ | first_name: Julia | last_name: Bergmann | full_name: Julia Bergmann | role: Kaufmännische Direktorin | role_category: other_management | confidence: high | notes: Clinic management contact
+19. batch_id: batch_001 | company_name: Stauferklinikum Schwäbisch-Gmünd in Mutlangen | company_website: http://www.kliniken-ostalb.de | first_name: Franz Xaver | last_name: Pretzel | full_name: Franz Xaver Pretzel | role: Pflegedirektor | role_category: operations | confidence: medium | notes: Public city contact directory
+20. batch_id: batch_001 | company_name: Stauferklinikum Schwäbisch-Gmünd in Mutlangen | company_website: http://www.kliniken-ostalb.de | first_name: Alexander | last_name: Kuhn | full_name: Alexander Kuhn | role: Personalleiter | role_category: hr_recruiting | confidence: medium | notes: Public city contact directory
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_006_20260605T191504Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
