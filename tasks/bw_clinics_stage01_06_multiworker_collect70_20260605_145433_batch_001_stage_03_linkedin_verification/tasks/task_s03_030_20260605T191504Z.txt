@@ -1,0 +1,84 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_030_20260605T191504Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_030_20260605T191504Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_collect70_20260605_145433/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: InTakT Tagesklinik für Kinder- und Jugendpsychiatrie und Psychotherapie Pforzheim | company_website: https://www.kize.de/intakt-pf/ | first_name: Dirk | last_name: Berner | full_name: Dirk Berner | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official Impressum names him Geschäftsführer.
+2. batch_id: batch_001 | company_name: InTakT Tagesklinik für Kinder- und Jugendpsychiatrie und Psychotherapie Pforzheim | company_website: https://www.kize.de/intakt-pf/ | first_name: Jochen | last_name: Erath | full_name: Jochen Erath | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official Impressum names him Geschäftsführer.
+3. batch_id: batch_001 | company_name: InTakT Tagesklinik für Kinder- und Jugendpsychiatrie und Psychotherapie Pforzheim | company_website: https://www.kize.de/intakt-pf/ | first_name: Janina | last_name: Jakubik | full_name: Dr. Janina Jakubik | role: Oberärztliche Leitung | role_category: other_management | confidence: high | notes: Official Impressum names her oberärztliche Leitung.
+4. batch_id: batch_001 | company_name: Tagesklinik Vaihingen | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/ | first_name: Manfred | last_name: Müller | full_name: Manfred Müller | role: Pflegerische Klinikleitung Bietigheim | role_category: operations | confidence: medium | notes: RKH Bietigheim-Vaihingen quality report names him pflegerische Klinikleitung.
+5. batch_id: batch_001 | company_name: Tagesklinik Vaihingen | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/ | first_name: Marcus | last_name: Herbst | full_name: Marcus Herbst | role: Klinikgeschäftsführer | role_category: other_management | confidence: high | notes: Official RKH leadership page names him Klinikgeschäftsführer for Ludwigsburg-Bietigheim.
+6. batch_id: batch_001 | company_name: Tagesklinik Vaihingen | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/ | first_name: Janina | last_name: Oehrle | full_name: Janina Oehrle | role: Klinikleitung | role_category: other_management | confidence: medium | notes: RKH Bietigheim-Vaihingen quality report names her Klinikleitung.
+7. batch_id: batch_001 | company_name: St. Elisabethen-Krankenhaus, Kinder- und Jugendpsychiatrie in Lörrach | company_website: https://klinloe.de | first_name: Dubravka | last_name: Kavur | full_name: Dubravka Kavur | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official nursing page names her Pflegedirektorin.
+8. batch_id: batch_001 | company_name: St. Elisabethen-Krankenhaus, Kinder- und Jugendpsychiatrie in Lörrach | company_website: https://klinloe.de | first_name: Clemens | last_name: Keutler | full_name: Dr. Clemens Keutler | role: Chefarzt KJPP Lörrach und Lauchringen | role_category: other_management | confidence: high | notes: KJPP quality report names him Chefarzt for Lörrach and Lauchringen.
+9. batch_id: batch_001 | company_name: St. Elisabethen-Krankenhaus, Kinder- und Jugendpsychiatrie in Lörrach | company_website: https://klinloe.de | first_name: Udo | last_name: Lavendel | full_name: Udo Lavendel | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: KJPP quality report names him Geschäftsführer.
+10. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Stockach | company_website: http://zfp-reichenau.de | first_name: Tobias | last_name: Flemming | full_name: Tobias Flemming | role: Pflegedienstleitung Klinik für Sozialpsychiatrie | role_category: operations | confidence: high | notes: 2024 quality report names him Pflegedienstleitung for Klinik für Sozialpsychiatrie.
+11. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Stockach | company_website: http://zfp-reichenau.de | first_name: Simon | last_name: Senner | full_name: Dr. Simon Senner | role: Chefarzt Klinik für Sozialpsychiatrie | role_category: other_management | confidence: high | notes: 2024 quality report names him Chefarzt for Klinik für Sozialpsychiatrie.
+12. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Stockach | company_website: http://zfp-reichenau.de | first_name: Jochen | last_name: Reutter | full_name: Jochen Reutter | role: Betriebsdirektor | role_category: other_management | confidence: high | notes: 2024 quality report names him Betriebsdirektor.
+13. batch_id: batch_001 | company_name: Tagesklinik Lauchringen | company_website: https://klinloe.de | first_name: Dubravka | last_name: Kavur | full_name: Dubravka Kavur | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Tagesklinik Lauchringen quality report names her Pflegedirektorin.
+14. batch_id: batch_001 | company_name: Tagesklinik Lauchringen | company_website: https://klinloe.de | first_name: Clemens | last_name: Keutler | full_name: Dr. Clemens Keutler | role: Chefarzt KJPP Lörrach und Lauchringen | role_category: other_management | confidence: high | notes: Tagesklinik Lauchringen quality report names him Chefarzt.
+15. batch_id: batch_001 | company_name: Tagesklinik Lauchringen | company_website: https://klinloe.de | first_name: Miguel | last_name: Hoffmann | full_name: Miguel Hoffmann | role: Leitender Oberarzt KJPP Lauchringen | role_category: other_management | confidence: high | notes: Quality report names him leading senior physician for Lauchringen.
+16. batch_id: batch_001 | company_name: Klinik im Kronprinzenbau in Reutlingen | company_website: http://www.kronprinzenbau-klinik.de | first_name: Dirk | last_name: Albrecht | full_name: Dr. Dirk Albrecht | role: Ärztlicher Geschäftsführer / Chefarzt | role_category: other_management | confidence: medium | notes: Public physician profile names him Chefarzt and ärztlicher Geschäftsführer.
+17. batch_id: batch_001 | company_name: ZfP Südwürttemberg Zwiefalten Tagesklinik Riedlingen | company_website: http://www.zfp-web.de | first_name: Simone | last_name: Ersing | full_name: Simone Ersing | role: Pflegerische Leitung | role_category: operations | confidence: high | notes: Riedlingen quality report names her pflegerische Leitung.
+18. batch_id: batch_001 | company_name: ZfP Südwürttemberg Zwiefalten Tagesklinik Riedlingen | company_website: http://www.zfp-web.de | first_name: Anja | last_name: Fey | full_name: Dipl. Psych. Anja Fey | role: Ärztliche / Therapeutische Leitung | role_category: other_management | confidence: high | notes: Riedlingen quality report names her therapeutic leadership.
+19. batch_id: batch_001 | company_name: ZfP Südwürttemberg Zwiefalten Tagesklinik Riedlingen | company_website: http://www.zfp-web.de | first_name: Dieter | last_name: Haug | full_name: Dieter Haug | role: Betriebsdirektor / Verwaltungsleitung | role_category: other_management | confidence: high | notes: Quality report names him Betriebsdirektor and Verwaltungsleitung.
+20. batch_id: batch_001 | company_name: ZfP Südwürttemberg Weissenau, TAZ Aulendorf | company_website: http://www.zfp-web.de | first_name: Frank | last_name: Happich | full_name: Frank Happich | role: Pflegeleitung | role_category: operations | confidence: high | notes: TAZ Aulendorf quality report names him Pflegeleitung.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_030_20260605T191504Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
