@@ -1,0 +1,1296 @@
+TASK_ID: stage05_task_0008
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|evangelisches diakoniekrankenhaus freiburg|http://www.diakoniekrankenhaus.de|freiburg im breisgau|germany",
+    "company_name": "Evangelisches Diakoniekrankenhaus Freiburg",
+    "full_name": "Daniel Kienzler",
+    "message_target_id": "stage05_task_0008::person_daniel_kienzler_f5d5c4f37a::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_daniel_kienzler_f5d5c4f37a",
+    "recipient_value": "daniel.kienzler@diak-fr.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|evangelisches diakoniekrankenhaus freiburg|http://www.diakoniekrankenhaus.de|freiburg im breisgau|germany",
+    "company_name": "Evangelisches Diakoniekrankenhaus Freiburg",
+    "full_name": "Elisabeth Barié",
+    "message_target_id": "stage05_task_0008::person_elisabeth_bari_af6e9ae197::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_elisabeth_bari_af6e9ae197",
+    "recipient_value": "elisabeth.barie@diak-fr.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|evangelisches diakoniekrankenhaus freiburg|http://www.diakoniekrankenhaus.de|freiburg im breisgau|germany",
+    "company_name": "Evangelisches Diakoniekrankenhaus Freiburg",
+    "full_name": "Michael Decker",
+    "message_target_id": "stage05_task_0008::person_michael_decker_0104660be7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_michael_decker_0104660be7",
+    "recipient_value": "michael.decker@diak-fr.de",
+    "role_title": "Kaufmännischer Direktor Vorstandsvorsitzender",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|evangelisches diakoniekrankenhaus freiburg|http://www.diakoniekrankenhaus.de|freiburg im breisgau|germany",
+    "company_name": "Evangelisches Diakoniekrankenhaus Freiburg",
+    "full_name": "Steffen Feldt",
+    "message_target_id": "stage05_task_0008::person_steffen_feldt_1107df5b0c::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_steffen_feldt_1107df5b0c",
+    "recipient_value": "steffen.feldt@diak-fr.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik dres. denzel in heilbronn|http://www.klinik-denzel.de|heilbronn|germany",
+    "company_name": "Fachklinik Dres. Denzel in Heilbronn",
+    "full_name": "Andreas Vogt",
+    "message_target_id": "stage05_task_0008::person_andreas_vogt_9e948c0542::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_andreas_vogt_9e948c0542",
+    "recipient_value": "Andreas.Vogt@klinik-denzel.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik dres. denzel in heilbronn|http://www.klinik-denzel.de|heilbronn|germany",
+    "company_name": "Fachklinik Dres. Denzel in Heilbronn",
+    "full_name": "Andreas Vogt",
+    "message_target_id": "stage05_task_0008::person_andreas_vogt_9e948c0542::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_vogt_9e948c0542",
+    "recipient_value": "https://de.linkedin.com/in/andreas-vogt-36818713a",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik dres. denzel in heilbronn|http://www.klinik-denzel.de|heilbronn|germany",
+    "company_name": "Fachklinik Dres. Denzel in Heilbronn",
+    "full_name": "Andreas Vogt",
+    "message_target_id": "stage05_task_0008::person_andreas_vogt_9e948c0542::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_vogt_9e948c0542",
+    "recipient_value": "https://de.linkedin.com/in/andreas-vogt-36818713a",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik dres. denzel in heilbronn|http://www.klinik-denzel.de|heilbronn|germany",
+    "company_name": "Fachklinik Dres. Denzel in Heilbronn",
+    "full_name": "Eva Back",
+    "message_target_id": "stage05_task_0008::person_eva_back_af4dbfb126::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_eva_back_af4dbfb126",
+    "recipient_value": "Eva.Back@klinik-denzel.de",
+    "role_title": "Verwaltungsleiterin",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik löwenstein|http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein|löwenstein|germany",
+    "company_name": "Fachklinik Löwenstein",
+    "full_name": "Antje Hemmann",
+    "message_target_id": "stage05_task_0008::person_antje_hemmann_02b23314cb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_antje_hemmann_02b23314cb",
+    "recipient_value": "antje.hemmann@slk-kliniken.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik löwenstein|http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein|löwenstein|germany",
+    "company_name": "Fachklinik Löwenstein",
+    "full_name": "Antje Hemmann",
+    "message_target_id": "stage05_task_0008::person_antje_hemmann_02b23314cb::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_antje_hemmann_02b23314cb",
+    "recipient_value": "https://de.linkedin.com/in/antje-hemmann-78a255287",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik löwenstein|http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein|löwenstein|germany",
+    "company_name": "Fachklinik Löwenstein",
+    "full_name": "Antje Hemmann",
+    "message_target_id": "stage05_task_0008::person_antje_hemmann_02b23314cb::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_antje_hemmann_02b23314cb",
+    "recipient_value": "https://de.linkedin.com/in/antje-hemmann-78a255287",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik löwenstein|http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein|löwenstein|germany",
+    "company_name": "Fachklinik Löwenstein",
+    "full_name": "Georg Schmidt",
+    "message_target_id": "stage05_task_0008::person_georg_schmidt_667ea170fa::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_georg_schmidt_667ea170fa",
+    "recipient_value": "georg.schmidt@slk-kliniken.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik löwenstein|http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein|löwenstein|germany",
+    "company_name": "Fachklinik Löwenstein",
+    "full_name": "Georg Schmidt",
+    "message_target_id": "stage05_task_0008::person_georg_schmidt_667ea170fa::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_georg_schmidt_667ea170fa",
+    "recipient_value": "https://de.linkedin.com/in/georg-b-schmidt-141ba126b",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik löwenstein|http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein|löwenstein|germany",
+    "company_name": "Fachklinik Löwenstein",
+    "full_name": "Georg Schmidt",
+    "message_target_id": "stage05_task_0008::person_georg_schmidt_667ea170fa::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_georg_schmidt_667ea170fa",
+    "recipient_value": "https://de.linkedin.com/in/georg-b-schmidt-141ba126b",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik löwenstein|http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein|löwenstein|germany",
+    "company_name": "Fachklinik Löwenstein",
+    "full_name": "Marika Bihlmayer",
+    "message_target_id": "stage05_task_0008::person_marika_bihlmayer_9437c771b4::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_marika_bihlmayer_9437c771b4",
+    "recipient_value": "marika.bihlmayer@slk-kliniken.de",
+    "role_title": "Pflegedienstleitung Fachklinik Löwenstein",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken hohenurach in bad urach|http://fachkliniken-hohenurach.de|bad urach|germany",
+    "company_name": "Fachkliniken Hohenurach in Bad Urach",
+    "full_name": "Gerd Bächle",
+    "message_target_id": "stage05_task_0008::person_gerd_b_chle_4705d9831f::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_gerd_b_chle_4705d9831f",
+    "recipient_value": "gerd.baechle@fachkliniken-hohenurach.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken hohenurach in bad urach|http://fachkliniken-hohenurach.de|bad urach|germany",
+    "company_name": "Fachkliniken Hohenurach in Bad Urach",
+    "full_name": "Uli Wüstner",
+    "message_target_id": "stage05_task_0008::person_uli_w_stner_ce1362c27d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_uli_w_stner_ce1362c27d",
+    "recipient_value": "uli.wuestner@fachkliniken-hohenurach.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken hohenurach in bad urach|http://fachkliniken-hohenurach.de|bad urach|germany",
+    "company_name": "Fachkliniken Hohenurach in Bad Urach",
+    "full_name": "Uli Wüstner",
+    "message_target_id": "stage05_task_0008::person_uli_w_stner_ce1362c27d::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_uli_w_stner_ce1362c27d",
+    "recipient_value": "https://de.linkedin.com/in/uli-w%C3%BCstner-66b610229",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0008"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken hohenurach in bad urach|http://fachkliniken-hohenurach.de|bad urach|germany",
+    "company_name": "Fachkliniken Hohenurach in Bad Urach",
+    "full_name": "Uli Wüstner",
+    "message_target_id": "stage05_task_0008::person_uli_w_stner_ce1362c27d::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_uli_w_stner_ce1362c27d",
+    "recipient_value": "https://de.linkedin.com/in/uli-w%C3%BCstner-66b610229",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0008"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 3,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Freiburg im Breisgau",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|evangelisches diakoniekrankenhaus freiburg|http://www.diakoniekrankenhaus.de|freiburg im breisgau|germany",
+    "company_name": "Evangelisches Diakoniekrankenhaus Freiburg",
+    "company_website": "http://www.diakoniekrankenhaus.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Daniel Kienzler",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Elisabeth Barié",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Steffen Feldt",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "daniel.kienzler@diak-fr.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Daniel Kienzler",
+        "hypothesis_email": "daniel.kienzler@diak-fr.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_daniel_kienzler_f5d5c4f37a",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/pflege/ansprechpartner-der-pflege",
+          "https://www.bundestag.de/resource/blob/998844/Anlagen-VorschaltKH.pdf",
+          "https://www.pj-portal.de/index_fb.php?KRANKENHAUS_ID=1303&PAGE_ID=41&UNIVERSITAET_ID=13"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "elisabeth.barie@diak-fr.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Elisabeth Barié",
+        "hypothesis_email": "elisabeth.barie@diak-fr.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_elisabeth_bari_af6e9ae197",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/pflege/ansprechpartner-der-pflege",
+          "https://www.bundestag.de/resource/blob/998844/Anlagen-VorschaltKH.pdf",
+          "https://www.pj-portal.de/index_fb.php?KRANKENHAUS_ID=1303&PAGE_ID=41&UNIVERSITAET_ID=13"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "michael.decker@diak-fr.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michael Decker",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_decker_0104660be7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Direktor Vorstandsvorsitzender",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bundestag.de/resource/blob/998844/Anlagen-VorschaltKH.pdf",
+          "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/krankenhausleitung",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260830026-771430000-2024-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "steffen.feldt@diak-fr.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Steffen Feldt",
+        "hypothesis_email": "steffen.feldt@diak-fr.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_steffen_feldt_1107df5b0c",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/pflege/ansprechpartner-der-pflege",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260830026-771430000-2024-xml.pdf",
+          "https://www.bundestag.de/resource/blob/998844/Anlagen-VorschaltKH.pdf",
+          "https://www.pj-portal.de/index_fb.php?KRANKENHAUS_ID=1303&PAGE_ID=41&UNIVERSITAET_ID=13",
+          "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/krankenhausleitung"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Kaufmännischer Direktor Vorstandsvorsitzender",
+        "Pflegedirektor"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/pflege/ansprechpartner-der-pflege",
+      "https://www.bundestag.de/resource/blob/998844/Anlagen-VorschaltKH.pdf",
+      "https://www.pj-portal.de/index_fb.php?KRANKENHAUS_ID=1303&PAGE_ID=41&UNIVERSITAET_ID=13",
+      "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/krankenhausleitung",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260830026-771430000-2024-xml.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heilbronn",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik dres. denzel in heilbronn|http://www.klinik-denzel.de|heilbronn|germany",
+    "company_name": "Fachklinik Dres. Denzel in Heilbronn",
+    "company_website": "http://www.klinik-denzel.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Andreas Vogt",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Andreas.Vogt@klinik-denzel.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Vogt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andreas-vogt-36818713a",
+        "person_key": "person_andreas_vogt_9e948c0542",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10109.pdf",
+          "https://de.linkedin.com/in/andreas-vogt-36818713a",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/531fe11a5259f955/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "Eva.Back@klinik-denzel.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Eva Back",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_eva_back_af4dbfb126",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleiterin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10109.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/531fe11a5259f955/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Verwaltungsleiterin"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10109.pdf",
+      "https://de.linkedin.com/in/andreas-vogt-36818713a",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/531fe11a5259f955/start"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Löwenstein",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik löwenstein|http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein|löwenstein|germany",
+    "company_name": "Fachklinik Löwenstein",
+    "company_website": "http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Antje Hemmann",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Marika Bihlmayer",
+          "person_key": "",
+          "role": "Pflegedienstleitung Fachklinik Löwenstein"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "antje.hemmann@slk-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Antje Hemmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/antje-hemmann-78a255287",
+        "person_key": "person_antje_hemmann_02b23314cb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein/klinikleitung",
+          "https://www.slk-kliniken.de/pflege-beratung/pflege-funktionsdienst/unser-leitungsteam",
+          "https://de.linkedin.com/posts/antje-hemmann-78a255287_herzlichen-gl%C3%BCckwunsch-unseren-absolventinnen-activity-7311171408322031616-1bTh",
+          "https://de.linkedin.com/in/antje-hemmann-78a255287"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "georg.schmidt@slk-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Georg Schmidt",
+        "hypothesis_email": "georg.schmidt@slk-kliniken.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/georg-b-schmidt-141ba126b",
+        "person_key": "person_georg_schmidt_667ea170fa",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein/klinikleitung",
+          "https://www.slk-kliniken.de/ueber-uns/unternehmensleitung-organisation/unternehmensleitung",
+          "https://www.slk-kliniken.de/slk-service-gmbh",
+          "https://de.linkedin.com/posts/georg-b-schmidt-141ba126b_georg-b-schmidt-wird-gesch%C3%A4ftsf%C3%BChrer-der-activity-7344702620315385857-ap-4",
+          "https://de.linkedin.com/in/georg-b-schmidt-141ba126b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "marika.bihlmayer@slk-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marika Bihlmayer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_marika_bihlmayer_9437c771b4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Fachklinik Löwenstein",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein/klinikleitung",
+          "https://www.slk-kliniken.de/pflege-beratung/pflege-funktionsdienst/unser-leitungsteam"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Geschäftsführer",
+        "Pflegedienstleitung Fachklinik Löwenstein"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein/klinikleitung",
+      "https://www.slk-kliniken.de/pflege-beratung/pflege-funktionsdienst/unser-leitungsteam",
+      "https://de.linkedin.com/posts/antje-hemmann-78a255287_herzlichen-gl%C3%BCckwunsch-unseren-absolventinnen-activity-7311171408322031616-1bTh",
+      "https://de.linkedin.com/in/antje-hemmann-78a255287",
+      "https://www.slk-kliniken.de/ueber-uns/unternehmensleitung-organisation/unternehmensleitung",
+      "https://www.slk-kliniken.de/slk-service-gmbh",
+      "https://de.linkedin.com/posts/georg-b-schmidt-141ba126b_georg-b-schmidt-wird-gesch%C3%A4ftsf%C3%BChrer-der-activity-7344702620315385857-ap-4",
+      "https://de.linkedin.com/in/georg-b-schmidt-141ba126b"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Urach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken hohenurach in bad urach|http://fachkliniken-hohenurach.de|bad urach|germany",
+    "company_name": "Fachkliniken Hohenurach in Bad Urach",
+    "company_website": "http://fachkliniken-hohenurach.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Gerd Bächle",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "gerd.baechle@fachkliniken-hohenurach.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Gerd Bächle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_gerd_b_chle_4705d9831f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.fachkliniken-hohenurach.de/content/files/artikel/die-klinik/khu-qualitaetsbericht-2024.pdf",
+          "https://www.fachkliniken-hohenurach.de/ueber-uns/ihre-ansprechpartner"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "uli.wuestner@fachkliniken-hohenurach.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Uli Wüstner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/uli-w%C3%BCstner-66b610229",
+        "person_key": "person_uli_w_stner_ce1362c27d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.fachkliniken-hohenurach.de/content/files/artikel/die-klinik/khu-qualitaetsbericht-2024.pdf",
+          "https://www.fachkliniken-hohenurach.de/ueber-uns/ihre-ansprechpartner",
+          "https://de.linkedin.com/in/uli-w%C3%BCstner-66b610229"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Geschäftsführer"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.fachkliniken-hohenurach.de/content/files/artikel/die-klinik/khu-qualitaetsbericht-2024.pdf",
+      "https://www.fachkliniken-hohenurach.de/ueber-uns/ihre-ansprechpartner",
+      "https://de.linkedin.com/in/uli-w%C3%BCstner-66b610229"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 3,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Freiburg im Breisgau",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|evangelisches diakoniekrankenhaus freiburg|http://www.diakoniekrankenhaus.de|freiburg im breisgau|germany",
+    "company_name": "Evangelisches Diakoniekrankenhaus Freiburg",
+    "company_website": "http://www.diakoniekrankenhaus.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Daniel Kienzler",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Elisabeth Barié",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Steffen Feldt",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "daniel.kienzler@diak-fr.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Daniel Kienzler",
+        "hypothesis_email": "daniel.kienzler@diak-fr.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_daniel_kienzler_f5d5c4f37a",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/pflege/ansprechpartner-der-pflege",
+          "https://www.bundestag.de/resource/blob/998844/Anlagen-VorschaltKH.pdf",
+          "https://www.pj-portal.de/index_fb.php?KRANKENHAUS_ID=1303&PAGE_ID=41&UNIVERSITAET_ID=13"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "elisabeth.barie@diak-fr.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Elisabeth Barié",
+        "hypothesis_email": "elisabeth.barie@diak-fr.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_elisabeth_bari_af6e9ae197",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/pflege/ansprechpartner-der-pflege",
+          "https://www.bundestag.de/resource/blob/998844/Anlagen-VorschaltKH.pdf",
+          "https://www.pj-portal.de/index_fb.php?KRANKENHAUS_ID=1303&PAGE_ID=41&UNIVERSITAET_ID=13"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "michael.decker@diak-fr.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michael Decker",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_decker_0104660be7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Direktor Vorstandsvorsitzender",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bundestag.de/resource/blob/998844/Anlagen-VorschaltKH.pdf",
+          "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/krankenhausleitung",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260830026-771430000-2024-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "steffen.feldt@diak-fr.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Steffen Feldt",
+        "hypothesis_email": "steffen.feldt@diak-fr.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_steffen_feldt_1107df5b0c",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/pflege/ansprechpartner-der-pflege",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260830026-771430000-2024-xml.pdf",
+          "https://www.bundestag.de/resource/blob/998844/Anlagen-VorschaltKH.pdf",
+          "https://www.pj-portal.de/index_fb.php?KRANKENHAUS_ID=1303&PAGE_ID=41&UNIVERSITAET_ID=13",
+          "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/krankenhausleitung"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Kaufmännischer Direktor Vorstandsvorsitzender",
+        "Pflegedirektor"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/pflege/ansprechpartner-der-pflege",
+      "https://www.bundestag.de/resource/blob/998844/Anlagen-VorschaltKH.pdf",
+      "https://www.pj-portal.de/index_fb.php?KRANKENHAUS_ID=1303&PAGE_ID=41&UNIVERSITAET_ID=13",
+      "https://www.diakoniekrankenhaus-freiburg.de/de/ueber-uns/krankenhausleitung",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260830026-771430000-2024-xml.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heilbronn",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik dres. denzel in heilbronn|http://www.klinik-denzel.de|heilbronn|germany",
+    "company_name": "Fachklinik Dres. Denzel in Heilbronn",
+    "company_website": "http://www.klinik-denzel.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Andreas Vogt",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Andreas.Vogt@klinik-denzel.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Vogt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andreas-vogt-36818713a",
+        "person_key": "person_andreas_vogt_9e948c0542",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10109.pdf",
+          "https://de.linkedin.com/in/andreas-vogt-36818713a",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/531fe11a5259f955/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "Eva.Back@klinik-denzel.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Eva Back",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_eva_back_af4dbfb126",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleiterin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10109.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/531fe11a5259f955/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Verwaltungsleiterin"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10109.pdf",
+      "https://de.linkedin.com/in/andreas-vogt-36818713a",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/531fe11a5259f955/start"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Löwenstein",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachklinik löwenstein|http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein|löwenstein|germany",
+    "company_name": "Fachklinik Löwenstein",
+    "company_website": "http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Antje Hemmann",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Marika Bihlmayer",
+          "person_key": "",
+          "role": "Pflegedienstleitung Fachklinik Löwenstein"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "antje.hemmann@slk-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Antje Hemmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/antje-hemmann-78a255287",
+        "person_key": "person_antje_hemmann_02b23314cb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein/klinikleitung",
+          "https://www.slk-kliniken.de/pflege-beratung/pflege-funktionsdienst/unser-leitungsteam",
+          "https://de.linkedin.com/posts/antje-hemmann-78a255287_herzlichen-gl%C3%BCckwunsch-unseren-absolventinnen-activity-7311171408322031616-1bTh",
+          "https://de.linkedin.com/in/antje-hemmann-78a255287"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "georg.schmidt@slk-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Georg Schmidt",
+        "hypothesis_email": "georg.schmidt@slk-kliniken.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/georg-b-schmidt-141ba126b",
+        "person_key": "person_georg_schmidt_667ea170fa",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein/klinikleitung",
+          "https://www.slk-kliniken.de/ueber-uns/unternehmensleitung-organisation/unternehmensleitung",
+          "https://www.slk-kliniken.de/slk-service-gmbh",
+          "https://de.linkedin.com/posts/georg-b-schmidt-141ba126b_georg-b-schmidt-wird-gesch%C3%A4ftsf%C3%BChrer-der-activity-7344702620315385857-ap-4",
+          "https://de.linkedin.com/in/georg-b-schmidt-141ba126b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "marika.bihlmayer@slk-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marika Bihlmayer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_marika_bihlmayer_9437c771b4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Fachklinik Löwenstein",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein/klinikleitung",
+          "https://www.slk-kliniken.de/pflege-beratung/pflege-funktionsdienst/unser-leitungsteam"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Geschäftsführer",
+        "Pflegedienstleitung Fachklinik Löwenstein"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein/klinikleitung",
+      "https://www.slk-kliniken.de/pflege-beratung/pflege-funktionsdienst/unser-leitungsteam",
+      "https://de.linkedin.com/posts/antje-hemmann-78a255287_herzlichen-gl%C3%BCckwunsch-unseren-absolventinnen-activity-7311171408322031616-1bTh",
+      "https://de.linkedin.com/in/antje-hemmann-78a255287",
+      "https://www.slk-kliniken.de/ueber-uns/unternehmensleitung-organisation/unternehmensleitung",
+      "https://www.slk-kliniken.de/slk-service-gmbh",
+      "https://de.linkedin.com/posts/georg-b-schmidt-141ba126b_georg-b-schmidt-wird-gesch%C3%A4ftsf%C3%BChrer-der-activity-7344702620315385857-ap-4",
+      "https://de.linkedin.com/in/georg-b-schmidt-141ba126b"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Urach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken hohenurach in bad urach|http://fachkliniken-hohenurach.de|bad urach|germany",
+    "company_name": "Fachkliniken Hohenurach in Bad Urach",
+    "company_website": "http://fachkliniken-hohenurach.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Gerd Bächle",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "gerd.baechle@fachkliniken-hohenurach.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Gerd Bächle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_gerd_b_chle_4705d9831f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.fachkliniken-hohenurach.de/content/files/artikel/die-klinik/khu-qualitaetsbericht-2024.pdf",
+          "https://www.fachkliniken-hohenurach.de/ueber-uns/ihre-ansprechpartner"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "uli.wuestner@fachkliniken-hohenurach.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Uli Wüstner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/uli-w%C3%BCstner-66b610229",
+        "person_key": "person_uli_w_stner_ce1362c27d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.fachkliniken-hohenurach.de/content/files/artikel/die-klinik/khu-qualitaetsbericht-2024.pdf",
+          "https://www.fachkliniken-hohenurach.de/ueber-uns/ihre-ansprechpartner",
+          "https://de.linkedin.com/in/uli-w%C3%BCstner-66b610229"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Geschäftsführer"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.fachkliniken-hohenurach.de/content/files/artikel/die-klinik/khu-qualitaetsbericht-2024.pdf",
+      "https://www.fachkliniken-hohenurach.de/ueber-uns/ihre-ansprechpartner",
+      "https://de.linkedin.com/in/uli-w%C3%BCstner-66b610229"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
