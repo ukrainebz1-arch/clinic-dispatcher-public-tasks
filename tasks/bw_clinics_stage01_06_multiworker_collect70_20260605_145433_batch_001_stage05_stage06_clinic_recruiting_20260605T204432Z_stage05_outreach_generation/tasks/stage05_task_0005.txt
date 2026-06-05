@@ -1,0 +1,1605 @@
+TASK_ID: stage05_task_0005
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|charlottenklinik für augenheilkunde in stuttgart|https://www.charlottenklinik.de/|stuttgart|germany",
+    "company_name": "Charlottenklinik für Augenheilkunde in Stuttgart",
+    "full_name": "Marie Schäfer",
+    "message_target_id": "stage05_task_0005::person_marie_sch_fer_28728fea1c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_marie_sch_fer_28728fea1c",
+    "recipient_value": "marie.schaefer@charlottenklinik.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|charlottenklinik für augenheilkunde in stuttgart|https://www.charlottenklinik.de/|stuttgart|germany",
+    "company_name": "Charlottenklinik für Augenheilkunde in Stuttgart",
+    "full_name": "Marie Schäfer",
+    "message_target_id": "stage05_task_0005::person_marie_sch_fer_28728fea1c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marie_sch_fer_28728fea1c",
+    "recipient_value": "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|charlottenklinik für augenheilkunde in stuttgart|https://www.charlottenklinik.de/|stuttgart|germany",
+    "company_name": "Charlottenklinik für Augenheilkunde in Stuttgart",
+    "full_name": "Marie Schäfer",
+    "message_target_id": "stage05_task_0005::person_marie_sch_fer_28728fea1c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marie_sch_fer_28728fea1c",
+    "recipient_value": "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|charlottenklinik für augenheilkunde in stuttgart|https://www.charlottenklinik.de/|stuttgart|germany",
+    "company_name": "Charlottenklinik für Augenheilkunde in Stuttgart",
+    "full_name": "Marie Schäfer",
+    "message_target_id": "stage05_task_0005::person_marie_sch_fer_b7abed4720::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_marie_sch_fer_b7abed4720",
+    "recipient_value": "marie.schaefer@charlottenklinik.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|charlottenklinik für augenheilkunde in stuttgart|https://www.charlottenklinik.de/|stuttgart|germany",
+    "company_name": "Charlottenklinik für Augenheilkunde in Stuttgart",
+    "full_name": "Marie Schäfer",
+    "message_target_id": "stage05_task_0005::person_marie_sch_fer_b7abed4720::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marie_sch_fer_b7abed4720",
+    "recipient_value": "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|charlottenklinik für augenheilkunde in stuttgart|https://www.charlottenklinik.de/|stuttgart|germany",
+    "company_name": "Charlottenklinik für Augenheilkunde in Stuttgart",
+    "full_name": "Marie Schäfer",
+    "message_target_id": "stage05_task_0005::person_marie_sch_fer_b7abed4720::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marie_sch_fer_b7abed4720",
+    "recipient_value": "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|charlottenklinik für augenheilkunde in stuttgart|https://www.charlottenklinik.de/|stuttgart|germany",
+    "company_name": "Charlottenklinik für Augenheilkunde in Stuttgart",
+    "full_name": "Prof. Dr. Gangolf Sauder",
+    "message_target_id": "stage05_task_0005::person_prof_dr_gangolf_sauder_ee29dc697f::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_prof_dr_gangolf_sauder_ee29dc697f",
+    "recipient_value": "gangolf.sauder@charlottenklinik.de",
+    "role_title": "Chefarzt",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|charlottenklinik für augenheilkunde in stuttgart|https://www.charlottenklinik.de/|stuttgart|germany",
+    "company_name": "Charlottenklinik für Augenheilkunde in Stuttgart",
+    "full_name": "Prof. Dr. Gangolf Sauder",
+    "message_target_id": "stage05_task_0005::person_prof_dr_gangolf_sauder_51e68348fb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_prof_dr_gangolf_sauder_51e68348fb",
+    "recipient_value": "gangolf.sauder@charlottenklinik.de",
+    "role_title": "Chefarzt",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "full_name": "Klaus Rotter",
+    "message_target_id": "stage05_task_0005::person_klaus_rotter_6d1f773ef9::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_klaus_rotter_6d1f773ef9",
+    "recipient_value": "rotter@diabetes-zentrum.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "full_name": "Klaus Rotter",
+    "message_target_id": "stage05_task_0005::person_klaus_rotter_6d1f773ef9::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_klaus_rotter_6d1f773ef9",
+    "recipient_value": "https://de.linkedin.com/in/klaus-rotter-19aa58243",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "full_name": "Klaus Rotter",
+    "message_target_id": "stage05_task_0005::person_klaus_rotter_6d1f773ef9::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_klaus_rotter_6d1f773ef9",
+    "recipient_value": "https://de.linkedin.com/in/klaus-rotter-19aa58243",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "full_name": "Martin Schabert",
+    "message_target_id": "stage05_task_0005::person_martin_schabert_367a157f7c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_martin_schabert_367a157f7c",
+    "recipient_value": "schabert@diabetes-zentrum.de",
+    "role_title": "Verwaltungsleitung",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "full_name": "Stephanie Teumer",
+    "message_target_id": "stage05_task_0005::person_stephanie_teumer_611bb490e6::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stephanie_teumer_611bb490e6",
+    "recipient_value": "teumer.stephanie@diabetes-zentrum.de",
+    "role_title": "Bereichsleitung Personal",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "full_name": "Stephanie Teumer",
+    "message_target_id": "stage05_task_0005::person_stephanie_teumer_611bb490e6::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stephanie_teumer_611bb490e6",
+    "recipient_value": "https://de.linkedin.com/in/stephanie-teumer-2547b6364",
+    "role_title": "Bereichsleitung Personal",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "full_name": "Stephanie Teumer",
+    "message_target_id": "stage05_task_0005::person_stephanie_teumer_611bb490e6::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stephanie_teumer_611bb490e6",
+    "recipient_value": "https://de.linkedin.com/in/stephanie-teumer-2547b6364",
+    "role_title": "Bereichsleitung Personal",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "full_name": "Thomas Böer",
+    "message_target_id": "stage05_task_0005::person_thomas_b_er_15face502e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_thomas_b_er_15face502e",
+    "recipient_value": "thomas.boeer@diabetes-zentrum.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "full_name": "Thomas Böer",
+    "message_target_id": "stage05_task_0005::person_thomas_b_er_15face502e::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_thomas_b_er_15face502e",
+    "recipient_value": "https://de.linkedin.com/in/thomas-b%C3%B6er-2b8b51157",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "full_name": "Thomas Böer",
+    "message_target_id": "stage05_task_0005::person_thomas_b_er_15face502e::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_thomas_b_er_15face502e",
+    "recipient_value": "https://de.linkedin.com/in/thomas-b%C3%B6er-2b8b51157",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "full_name": "Andrea Albrecht",
+    "message_target_id": "stage05_task_0005::person_andrea_albrecht_d8c01c128a::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andrea_albrecht_d8c01c128a",
+    "recipient_value": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "full_name": "Andrea Albrecht",
+    "message_target_id": "stage05_task_0005::person_andrea_albrecht_d8c01c128a::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andrea_albrecht_d8c01c128a",
+    "recipient_value": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "full_name": "Andrea Albrecht",
+    "message_target_id": "stage05_task_0005::person_andrea_albrecht_e16ac3f3a2::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andrea_albrecht_e16ac3f3a2",
+    "recipient_value": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "full_name": "Andrea Albrecht",
+    "message_target_id": "stage05_task_0005::person_andrea_albrecht_e16ac3f3a2::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andrea_albrecht_e16ac3f3a2",
+    "recipient_value": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "full_name": "Julia Bergmann",
+    "message_target_id": "stage05_task_0005::person_julia_bergmann_e24007eb9f::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_julia_bergmann_e24007eb9f",
+    "recipient_value": "ju.bergmann@bbtgruppe.de",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "full_name": "Julia Bergmann",
+    "message_target_id": "stage05_task_0005::person_julia_bergmann_e24007eb9f::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_julia_bergmann_e24007eb9f",
+    "recipient_value": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "full_name": "Julia Bergmann",
+    "message_target_id": "stage05_task_0005::person_julia_bergmann_e24007eb9f::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_julia_bergmann_e24007eb9f",
+    "recipient_value": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "full_name": "Julia Bergmann",
+    "message_target_id": "stage05_task_0005::person_julia_bergmann_697866b229::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_julia_bergmann_697866b229",
+    "recipient_value": "ju.bergmann@bbtgruppe.de",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "full_name": "Julia Bergmann",
+    "message_target_id": "stage05_task_0005::person_julia_bergmann_697866b229::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_julia_bergmann_697866b229",
+    "recipient_value": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "full_name": "Julia Bergmann",
+    "message_target_id": "stage05_task_0005::person_julia_bergmann_697866b229::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_julia_bergmann_697866b229",
+    "recipient_value": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinik mosbach, standort tauberbischofsheim|http://www.diakonie-klinik-mosbach.de|tauberbischofsheim|germany",
+    "company_name": "Diakonie-Klinik Mosbach, Standort Tauberbischofsheim",
+    "full_name": "Wolfgang Schweikert",
+    "message_target_id": "stage05_task_0005::person_wolfgang_schweikert_7391e8132c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_wolfgang_schweikert_7391e8132c",
+    "recipient_value": "wolfgang.schweikert@johannes-diakonie.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinik mosbach, standort tauberbischofsheim|http://www.diakonie-klinik-mosbach.de|tauberbischofsheim|germany",
+    "company_name": "Diakonie-Klinik Mosbach, Standort Tauberbischofsheim",
+    "full_name": "Wolfgang Schweikert",
+    "message_target_id": "stage05_task_0005::person_wolfgang_schweikert_7391e8132c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_wolfgang_schweikert_7391e8132c",
+    "recipient_value": "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0005"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinik mosbach, standort tauberbischofsheim|http://www.diakonie-klinik-mosbach.de|tauberbischofsheim|germany",
+    "company_name": "Diakonie-Klinik Mosbach, Standort Tauberbischofsheim",
+    "full_name": "Wolfgang Schweikert",
+    "message_target_id": "stage05_task_0005::person_wolfgang_schweikert_7391e8132c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_wolfgang_schweikert_7391e8132c",
+    "recipient_value": "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0005"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|charlottenklinik für augenheilkunde in stuttgart|https://www.charlottenklinik.de/|stuttgart|germany",
+    "company_name": "Charlottenklinik für Augenheilkunde in Stuttgart",
+    "company_website": "https://www.charlottenklinik.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 0,
+      "decision_makers": []
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marie.schaefer@charlottenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marie Schäfer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333",
+        "person_key": "person_marie_sch_fer_28728fea1c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260810259-771546000-2024-xml.pdf",
+          "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marie.schaefer@charlottenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marie Schäfer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333",
+        "person_key": "person_marie_sch_fer_b7abed4720",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260810259-771546000-2024-xml.pdf",
+          "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "gangolf.sauder@charlottenklinik.de",
+        "confirmed_email": "gangolf.sauder@charlottenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Prof. Dr. Gangolf Sauder",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_prof_dr_gangolf_sauder_ee29dc697f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefarzt",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.charlottenklinik.de/klinikleitung.html",
+          "https://crstodayeurope.com/articles/june-2018/a-new-contender/",
+          "https://bva.dog/krc/einzelanwender.php?sortierer=ort",
+          "https://www.charlottenklinik.de/files/charlottenklinik/pdf/Qualit%C3%A4tsbericht%202023.pdf",
+          "https://www.charlottenklinik.de/files/charlottenklinik/aktuelles/Qualit%C3%A4tsbericht%202018.pdf",
+          "https://www.krankenhaeuser-stuttgart.de/die-krankenhaeuser/charlottenklinik-fuer-augenheilkunde/kurz-und-buendig"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "gangolf.sauder@charlottenklinik.de",
+        "confirmed_email": "gangolf.sauder@charlottenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Prof. Dr. Gangolf Sauder",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_prof_dr_gangolf_sauder_51e68348fb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefarzt",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.charlottenklinik.de/klinikleitung.html",
+          "https://crstodayeurope.com/articles/june-2018/a-new-contender/",
+          "https://bva.dog/krc/einzelanwender.php?sortierer=ort",
+          "https://www.charlottenklinik.de/files/charlottenklinik/pdf/Qualit%C3%A4tsbericht%202023.pdf",
+          "https://www.charlottenklinik.de/files/charlottenklinik/aktuelles/Qualit%C3%A4tsbericht%202018.pdf",
+          "https://www.krankenhaeuser-stuttgart.de/die-krankenhaeuser/charlottenklinik-fuer-augenheilkunde/kurz-und-buendig"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "other_management"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Chefarzt"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260810259-771546000-2024-xml.pdf",
+      "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333",
+      "https://www.charlottenklinik.de/klinikleitung.html",
+      "https://crstodayeurope.com/articles/june-2018/a-new-contender/",
+      "https://bva.dog/krc/einzelanwender.php?sortierer=ort",
+      "https://www.charlottenklinik.de/files/charlottenklinik/pdf/Qualit%C3%A4tsbericht%202023.pdf",
+      "https://www.charlottenklinik.de/files/charlottenklinik/aktuelles/Qualit%C3%A4tsbericht%202018.pdf",
+      "https://www.krankenhaeuser-stuttgart.de/die-krankenhaeuser/charlottenklinik-fuer-augenheilkunde/kurz-und-buendig"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Mergentheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "company_website": "http://www.diabetes-zentrum.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Klaus Rotter",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "rotter@diabetes-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Klaus Rotter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/klaus-rotter-19aa58243",
+        "person_key": "person_klaus_rotter_6d1f773ef9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diabetes-klinik-mergentheim.de/kontakt/ansprechpartner-bereiche",
+          "https://de.linkedin.com/in/klaus-rotter-19aa58243"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "schabert@diabetes-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martin Schabert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_martin_schabert_367a157f7c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.diabetes-klinik-mergentheim.de/kontakt/ansprechpartner-bereiche"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "teumer.stephanie@diabetes-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stephanie Teumer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stephanie-teumer-2547b6364",
+        "person_key": "person_stephanie_teumer_611bb490e6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Bereichsleitung Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.diabetes-klinik-mergentheim.de/kontakt/ansprechpartner-bereiche",
+          "https://de.linkedin.com/in/stephanie-teumer-2547b6364"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "thomas.boeer@diabetes-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Böer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/thomas-b%C3%B6er-2b8b51157",
+        "person_key": "person_thomas_b_er_15face502e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.diabetes-klinik-mergentheim.de/kontakt/ansprechpartner-bereiche",
+          "https://de.linkedin.com/in/thomas-b%C3%B6er-2b8b51157"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "hr_recruiting",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Verwaltungsleitung",
+        "Bereichsleitung Personal",
+        "Geschäftsführer"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.diabetes-klinik-mergentheim.de/kontakt/ansprechpartner-bereiche",
+      "https://de.linkedin.com/in/klaus-rotter-19aa58243",
+      "https://de.linkedin.com/in/stephanie-teumer-2547b6364",
+      "https://de.linkedin.com/in/thomas-b%C3%B6er-2b8b51157"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 4,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Mannheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "company_website": "https://www.bk-julia-lanz.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Andrea Albrecht",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Andrea Albrecht",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Anette Buhles",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Anette Buhles",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Andrea Albrecht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+        "person_key": "person_andrea_albrecht_d8c01c128a",
+        "primary_channel": "LINKEDIN",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+          "https://de.linkedin.com/posts/hc-s-ag_pflegedirektorin-pflege-erfahrung-activity-7445349358394388482-jspI",
+          "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Andrea Albrecht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+        "person_key": "person_andrea_albrecht_e16ac3f3a2",
+        "primary_channel": "LINKEDIN",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+          "https://de.linkedin.com/posts/hc-s-ag_pflegedirektorin-pflege-erfahrung-activity-7445349358394388482-jspI",
+          "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Anette Buhles",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anette_buhles_b1df5d40f3",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+          "https://www.bbtgruppe.de/zentrale/gruppenweit/LEBEN/Mannheim/pflege-wird-gebraucht.php",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Anette Buhles",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anette_buhles_27473d4d2c",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+          "https://www.bbtgruppe.de/zentrale/gruppenweit/LEBEN/Mannheim/pflege-wird-gebraucht.php",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "ju.bergmann@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Julia Bergmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+        "person_key": "person_julia_bergmann_e24007eb9f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+          "https://bk-julia-lanz.de/bkjl/aktuelles/meldungen/2025/Neue-Kaufmaennische-Direktorin.php",
+          "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "ju.bergmann@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Julia Bergmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+        "person_key": "person_julia_bergmann_697866b229",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+          "https://bk-julia-lanz.de/bkjl/aktuelles/meldungen/2025/Neue-Kaufmaennische-Direktorin.php",
+          "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Stellvertretende Pflegedirektorin",
+        "Kaufmännische Direktorin"
+      ],
+      "total_people": 6
+    },
+    "source_urls": [
+      "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+      "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+      "https://de.linkedin.com/posts/hc-s-ag_pflegedirektorin-pflege-erfahrung-activity-7445349358394388482-jspI",
+      "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+      "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+      "https://www.bbtgruppe.de/zentrale/gruppenweit/LEBEN/Mannheim/pflege-wird-gebraucht.php",
+      "https://bk-julia-lanz.de/bkjl/aktuelles/meldungen/2025/Neue-Kaufmaennische-Direktorin.php",
+      "https://de.linkedin.com/in/julia-bergmann-143b9b1b6"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Tauberbischofsheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinik mosbach, standort tauberbischofsheim|http://www.diakonie-klinik-mosbach.de|tauberbischofsheim|germany",
+    "company_name": "Diakonie-Klinik Mosbach, Standort Tauberbischofsheim",
+    "company_website": "http://www.diakonie-klinik-mosbach.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Wolfgang Schweikert",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "wolfgang.schweikert@johannes-diakonie.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Wolfgang Schweikert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+        "person_key": "person_wolfgang_schweikert_7391e8132c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakonie-klinik-mosbach.de/fileadmin/user_upload/diakonie-klinik-mosbach/PDF/Referenzbericht_TBB_260822275-771414000-2024-xml.pdf",
+          "https://www.bundesfreiwilligendienst.de/bundesfreiwilligendienst/platz-einsatzstellensuche/platzangebot-suchen/1597",
+          "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/a8be2b568ded5adc/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.diakonie-klinik-mosbach.de/fileadmin/user_upload/diakonie-klinik-mosbach/PDF/Referenzbericht_TBB_260822275-771414000-2024-xml.pdf",
+      "https://www.bundesfreiwilligendienst.de/bundesfreiwilligendienst/platz-einsatzstellensuche/platzangebot-suchen/1597",
+      "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/a8be2b568ded5adc/start"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|charlottenklinik für augenheilkunde in stuttgart|https://www.charlottenklinik.de/|stuttgart|germany",
+    "company_name": "Charlottenklinik für Augenheilkunde in Stuttgart",
+    "company_website": "https://www.charlottenklinik.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 0,
+      "decision_makers": []
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marie.schaefer@charlottenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marie Schäfer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333",
+        "person_key": "person_marie_sch_fer_28728fea1c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260810259-771546000-2024-xml.pdf",
+          "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marie.schaefer@charlottenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marie Schäfer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333",
+        "person_key": "person_marie_sch_fer_b7abed4720",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260810259-771546000-2024-xml.pdf",
+          "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "gangolf.sauder@charlottenklinik.de",
+        "confirmed_email": "gangolf.sauder@charlottenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Prof. Dr. Gangolf Sauder",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_prof_dr_gangolf_sauder_ee29dc697f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefarzt",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.charlottenklinik.de/klinikleitung.html",
+          "https://crstodayeurope.com/articles/june-2018/a-new-contender/",
+          "https://bva.dog/krc/einzelanwender.php?sortierer=ort",
+          "https://www.charlottenklinik.de/files/charlottenklinik/pdf/Qualit%C3%A4tsbericht%202023.pdf",
+          "https://www.charlottenklinik.de/files/charlottenklinik/aktuelles/Qualit%C3%A4tsbericht%202018.pdf",
+          "https://www.krankenhaeuser-stuttgart.de/die-krankenhaeuser/charlottenklinik-fuer-augenheilkunde/kurz-und-buendig"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "gangolf.sauder@charlottenklinik.de",
+        "confirmed_email": "gangolf.sauder@charlottenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Prof. Dr. Gangolf Sauder",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_prof_dr_gangolf_sauder_51e68348fb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefarzt",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.charlottenklinik.de/klinikleitung.html",
+          "https://crstodayeurope.com/articles/june-2018/a-new-contender/",
+          "https://bva.dog/krc/einzelanwender.php?sortierer=ort",
+          "https://www.charlottenklinik.de/files/charlottenklinik/pdf/Qualit%C3%A4tsbericht%202023.pdf",
+          "https://www.charlottenklinik.de/files/charlottenklinik/aktuelles/Qualit%C3%A4tsbericht%202018.pdf",
+          "https://www.krankenhaeuser-stuttgart.de/die-krankenhaeuser/charlottenklinik-fuer-augenheilkunde/kurz-und-buendig"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "other_management"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Chefarzt"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260810259-771546000-2024-xml.pdf",
+      "https://de.linkedin.com/in/marie-sch%C3%A4fer-092617333",
+      "https://www.charlottenklinik.de/klinikleitung.html",
+      "https://crstodayeurope.com/articles/june-2018/a-new-contender/",
+      "https://bva.dog/krc/einzelanwender.php?sortierer=ort",
+      "https://www.charlottenklinik.de/files/charlottenklinik/pdf/Qualit%C3%A4tsbericht%202023.pdf",
+      "https://www.charlottenklinik.de/files/charlottenklinik/aktuelles/Qualit%C3%A4tsbericht%202018.pdf",
+      "https://www.krankenhaeuser-stuttgart.de/die-krankenhaeuser/charlottenklinik-fuer-augenheilkunde/kurz-und-buendig"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Mergentheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diabetes klinik in bad mergentheim|http://www.diabetes-zentrum.de|bad mergentheim|germany",
+    "company_name": "Diabetes Klinik in Bad Mergentheim",
+    "company_website": "http://www.diabetes-zentrum.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Klaus Rotter",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "rotter@diabetes-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Klaus Rotter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/klaus-rotter-19aa58243",
+        "person_key": "person_klaus_rotter_6d1f773ef9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diabetes-klinik-mergentheim.de/kontakt/ansprechpartner-bereiche",
+          "https://de.linkedin.com/in/klaus-rotter-19aa58243"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "schabert@diabetes-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martin Schabert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_martin_schabert_367a157f7c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.diabetes-klinik-mergentheim.de/kontakt/ansprechpartner-bereiche"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "teumer.stephanie@diabetes-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stephanie Teumer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stephanie-teumer-2547b6364",
+        "person_key": "person_stephanie_teumer_611bb490e6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Bereichsleitung Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.diabetes-klinik-mergentheim.de/kontakt/ansprechpartner-bereiche",
+          "https://de.linkedin.com/in/stephanie-teumer-2547b6364"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "thomas.boeer@diabetes-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Böer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/thomas-b%C3%B6er-2b8b51157",
+        "person_key": "person_thomas_b_er_15face502e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.diabetes-klinik-mergentheim.de/kontakt/ansprechpartner-bereiche",
+          "https://de.linkedin.com/in/thomas-b%C3%B6er-2b8b51157"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "hr_recruiting",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Verwaltungsleitung",
+        "Bereichsleitung Personal",
+        "Geschäftsführer"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.diabetes-klinik-mergentheim.de/kontakt/ansprechpartner-bereiche",
+      "https://de.linkedin.com/in/klaus-rotter-19aa58243",
+      "https://de.linkedin.com/in/stephanie-teumer-2547b6364",
+      "https://de.linkedin.com/in/thomas-b%C3%B6er-2b8b51157"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 4,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Mannheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diako mannheim|https://www.bk-julia-lanz.de/|mannheim|germany",
+    "company_name": "Diako Mannheim",
+    "company_website": "https://www.bk-julia-lanz.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Andrea Albrecht",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Andrea Albrecht",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Anette Buhles",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Anette Buhles",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Andrea Albrecht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+        "person_key": "person_andrea_albrecht_d8c01c128a",
+        "primary_channel": "LINKEDIN",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+          "https://de.linkedin.com/posts/hc-s-ag_pflegedirektorin-pflege-erfahrung-activity-7445349358394388482-jspI",
+          "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Andrea Albrecht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+        "person_key": "person_andrea_albrecht_e16ac3f3a2",
+        "primary_channel": "LINKEDIN",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+          "https://de.linkedin.com/posts/hc-s-ag_pflegedirektorin-pflege-erfahrung-activity-7445349358394388482-jspI",
+          "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Anette Buhles",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anette_buhles_b1df5d40f3",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+          "https://www.bbtgruppe.de/zentrale/gruppenweit/LEBEN/Mannheim/pflege-wird-gebraucht.php",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Anette Buhles",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anette_buhles_27473d4d2c",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+          "https://www.bbtgruppe.de/zentrale/gruppenweit/LEBEN/Mannheim/pflege-wird-gebraucht.php",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "ju.bergmann@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Julia Bergmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+        "person_key": "person_julia_bergmann_e24007eb9f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+          "https://bk-julia-lanz.de/bkjl/aktuelles/meldungen/2025/Neue-Kaufmaennische-Direktorin.php",
+          "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "ju.bergmann@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Julia Bergmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+        "person_key": "person_julia_bergmann_697866b229",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+          "https://bk-julia-lanz.de/bkjl/aktuelles/meldungen/2025/Neue-Kaufmaennische-Direktorin.php",
+          "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+          "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Stellvertretende Pflegedirektorin",
+        "Kaufmännische Direktorin"
+      ],
+      "total_people": 6
+    },
+    "source_urls": [
+      "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+      "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+      "https://de.linkedin.com/posts/hc-s-ag_pflegedirektorin-pflege-erfahrung-activity-7445349358394388482-jspI",
+      "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+      "https://www.bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+      "https://www.bbtgruppe.de/zentrale/gruppenweit/LEBEN/Mannheim/pflege-wird-gebraucht.php",
+      "https://bk-julia-lanz.de/bkjl/aktuelles/meldungen/2025/Neue-Kaufmaennische-Direktorin.php",
+      "https://de.linkedin.com/in/julia-bergmann-143b9b1b6"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Tauberbischofsheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinik mosbach, standort tauberbischofsheim|http://www.diakonie-klinik-mosbach.de|tauberbischofsheim|germany",
+    "company_name": "Diakonie-Klinik Mosbach, Standort Tauberbischofsheim",
+    "company_website": "http://www.diakonie-klinik-mosbach.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Wolfgang Schweikert",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "wolfgang.schweikert@johannes-diakonie.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Wolfgang Schweikert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+        "person_key": "person_wolfgang_schweikert_7391e8132c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakonie-klinik-mosbach.de/fileadmin/user_upload/diakonie-klinik-mosbach/PDF/Referenzbericht_TBB_260822275-771414000-2024-xml.pdf",
+          "https://www.bundesfreiwilligendienst.de/bundesfreiwilligendienst/platz-einsatzstellensuche/platzangebot-suchen/1597",
+          "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/a8be2b568ded5adc/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.diakonie-klinik-mosbach.de/fileadmin/user_upload/diakonie-klinik-mosbach/PDF/Referenzbericht_TBB_260822275-771414000-2024-xml.pdf",
+      "https://www.bundesfreiwilligendienst.de/bundesfreiwilligendienst/platz-einsatzstellensuche/platzangebot-suchen/1597",
+      "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/a8be2b568ded5adc/start"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
