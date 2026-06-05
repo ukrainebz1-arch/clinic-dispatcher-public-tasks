@@ -1,0 +1,89 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_012_20260605T144317Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_012_20260605T144317Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317_batch_001_stage_01_people_discovery
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Kliniken Schmieder - Satellitenstation Z2N im Katharinenhospital in Stuttgart | company_website: http://www.kliniken-schmieder.de | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/kliniken-schmieder-satellitenstation-z2n-im-katharinenhospital | pflegekraefte: 36
+2. company_name: Luisenklinik Tagesklinik Radolfzell | company_website: http://www.luisenklinik.de | city: Radolfzell am Bodensee | country: Germany | source_url: https://klinikradar.de/kliniken/luisenklinik-tagesklinik-radolfzell | pflegekraefte: 4
+3. company_name: Psychiatrische Tagesklinik Bad Krozingen | company_website: https://www.zfp-emmendingen.de | city: Bad Krozingen | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-bad-krozingen | pflegekraefte: 5
+4. company_name: Sankt Rochus Kliniken in Bad Schönborn | company_website: https://www.sankt-rochus-kliniken.de | city: Bad Schönborn | country: Germany | source_url: https://klinikradar.de/kliniken/sankt-rochus-kliniken | pflegekraefte: 27
+5. company_name: Tagesklinik Bernsteinstraße in Stuttgart | company_website: http://www.kjp-bernsteinstrasse.de | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-bernsteinstrasse | pflegekraefte: 10
+6. company_name: Psychiatrische Tagesklinik Lahr | company_website: https://www.zfp-emmendingen.de/psychiatrische-tagesklinik-lahr | city: Lahr | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-lahr | pflegekraefte: 6
+7. company_name: Tagesklinik Friedrichshafen | company_website: http://www.tagesklinik-fn.de | city: Friedrichshafen | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-friedrichshafen | pflegekraefte: 3
+8. company_name: Tagesklinik Singen | company_website: https://www.zfp-reichenau.de | city: Singen | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-singen | pflegekraefte: 4
+9. company_name: Psychiatrische Tagesklinik Bad Säckingen | company_website: https://www.psychiatrische-tagesklinik-saeckingen.de | city: Bad Säckingen | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-bad-saeckingen | pflegekraefte: 3
+10. company_name: BlausteinKLINIK | company_website: http://www.blausteinklinik.de | city: Blaustein | country: Germany | source_url: https://klinikradar.de/kliniken/blausteinklinik | pflegekraefte: 6
+11. company_name: Suchtmedizinische Tagesklinik Pforzheim | company_website: https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim | city: Pforzheim | country: Germany | source_url: https://klinikradar.de/kliniken/suchtmedizinische-tagesklinik-pforzheim | pflegekraefte: 4
+12. company_name: Psychiatrische Tagesklinik Lörrach | company_website: http://www.zfp-emmendingen.de | city: Lörrach | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-loerrach | pflegekraefte: 6
+13. company_name: Psychiatrische Tagesklinik Geislingen | company_website: http://www.christophsbad.de | city: Geislingen an der Steige | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-geislingen | pflegekraefte: 3
+14. company_name: Tagesklinik Künzelsau | company_website: http://www.klinikum-weissenhof.de/ | city: Künzelsau | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-kuenzelsau | pflegekraefte: 6
+15. company_name: Klinik am Doniswald in Königsfeld im Schwarzwald | company_website: https://doniswaldklinik.de/ | city: Königsfeld im Schwarzwald | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-am-doniswald | pflegekraefte: 6
+16. company_name: Neurochirurgisches Zentrum Ludwigsburg-Heilbronn / Standort Heilbronn / Klinikum am Gesundbrunnen | company_website: https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/ | city: Heilbronn | country: Germany | source_url: https://klinikradar.de/kliniken/neurochirurgisches-zentrum-ludwigsburg-heilbronn-standort-heilbronn-klinikum-am-gesundbrunnen | pflegekraefte: 24
+17. company_name: Urologische Klinik am Lerchenberg in Heilbronn | company_website: http://www.klinik-lerchenberg.de | city: Heilbronn | country: Germany | source_url: https://klinikradar.de/kliniken/urologische-klinik-am-lerchenberg | pflegekraefte: 9
+18. company_name: Suchtmedizinische Tagesklinik Freiburg | company_website: https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg | city: Freiburg im Breisgau | country: Germany | source_url: https://klinikradar.de/kliniken/suchtmedizinische-tagesklinik-freiburg | pflegekraefte: 4
+19. company_name: Waiblinger Zentralklinik in Waiblingen | company_website: http://wn-zentralklinik.de | city: Waiblingen | country: Germany | source_url: https://klinikradar.de/kliniken/waiblinger-zentralklinik | pflegekraefte: 48
+20. company_name: Tagesklinik Ludwigsburg | company_website: http://www.klinikum-weissenhof.de/ | city: Ludwigsburg | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-ludwigsburg | pflegekraefte: 6
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_012_20260605T144317Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
