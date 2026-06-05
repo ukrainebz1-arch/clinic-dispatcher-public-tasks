@@ -1,0 +1,84 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_010_20260605T191504Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_010_20260605T191504Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_collect70_20260605_145433/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Gesundheitszentrum Tuttlingen | company_website: http://www.klinikum-tut.de/ | first_name: Oliver | last_name: Butsch | full_name: Oliver Butsch | role: Personaldirektor / Prokurist | role_category: hr_recruiting | confidence: high | notes: Clinic contact page
+2. batch_id: batch_001 | company_name: Gesundheitszentrum Tuttlingen | company_website: http://www.klinikum-tut.de/ | first_name: Sebastian | last_name: Freytag | full_name: Dr. Sebastian Freytag | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Clinic contact page
+3. batch_id: batch_001 | company_name: Gesundheitszentrum Tuttlingen | company_website: http://www.klinikum-tut.de/ | first_name: Natalia | last_name: Schöner | full_name: Natalia Schöner | role: Verwaltungsdirektorin / Prokuristin | role_category: other_management | confidence: high | notes: Clinic contact page
+4. batch_id: batch_001 | company_name: Klinikum Heidenheim | company_website: http://www.kliniken-heidenheim.de | first_name: Boris | last_name: Mai | full_name: Boris Mai | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official nursing directorate team page.
+5. batch_id: batch_001 | company_name: St. Elisabethen-Klinikum in Ravensburg | company_website: http://www.oberschwabenklinik.de | first_name: Matthias | last_name: Schäfer | full_name: Matthias Schäfer | role: Leitung Pflege und Prozessmanagement | role_category: operations | confidence: high | notes: Official page lists local Pflege and process management.
+6. batch_id: batch_001 | company_name: St. Elisabethen-Klinikum in Ravensburg | company_website: http://www.oberschwabenklinik.de | first_name: Klaus | last_name: Sonntag | full_name: Klaus Sonntag | role: Leitung Pflege und Prozessmanagement | role_category: operations | confidence: high | notes: Official page lists local Pflege and process management.
+7. batch_id: batch_001 | company_name: St. Elisabethen-Klinikum in Ravensburg | company_website: http://www.oberschwabenklinik.de | first_name: Raimund | last_name: Alker | full_name: Raimund Alker | role: Personalleiter | role_category: hr_recruiting | confidence: medium | notes: Official article names him personnel head.
+8. batch_id: batch_001 | company_name: Theresienkrankenhaus in Mannheim | company_website: https://www.bk-julia-lanz.de/bkjl/ | first_name: Thomas | last_name: Schaefer | full_name: Thomas Schaefer | role: Klinikübergreifende Leitung Personal | role_category: hr_recruiting | confidence: high | notes: Official person page lists cross-clinic HR leadership.
+9. batch_id: batch_001 | company_name: Theresienkrankenhaus in Mannheim | company_website: https://www.bk-julia-lanz.de/bkjl/ | first_name: Julia | last_name: Bergmann | full_name: Julia Bergmann | role: Kaufmännische Direktorin | role_category: other_management | confidence: high | notes: Official directorate page lists commercial director.
+10. batch_id: batch_001 | company_name: SRH Krankenhaus Sigmaringen | company_website: https://www.kliniken-sigmaringen.de/ | first_name: Heidi-Maria | last_name: Brückl | full_name: Heidi-Maria Brückl | role: Departmentleitung Pflege- und Funktionsdienst Konservative Medizin | role_category: operations | confidence: high | notes: Quality report lists nursing department leadership.
+11. batch_id: batch_001 | company_name: SRH Krankenhaus Sigmaringen | company_website: https://www.kliniken-sigmaringen.de/ | first_name: Letta | last_name: Hellebrand-Lache | full_name: Letta Hellebrand-Lache | role: Departmentleitung Pflege- und Funktionsdienst Operative Medizin | role_category: operations | confidence: high | notes: Quality report lists nursing department leadership.
+12. batch_id: batch_001 | company_name: SRH Krankenhaus Sigmaringen | company_website: https://www.kliniken-sigmaringen.de/ | first_name: Kim Saskia | last_name: Schilling | full_name: Kim Saskia Schilling | role: Personalreferentin | role_category: hr_recruiting | confidence: medium | notes: Official profile lists HR contact.
+13. batch_id: batch_001 | company_name: Zentrum für Psychiatrie Emmendingen | company_website: https://www.zfp-emmendingen.de | first_name: Michael | last_name: Eichhorst | full_name: Michael Eichhorst | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists managing director.
+14. batch_id: batch_001 | company_name: Diakonie-Klinikum Schwäbisch Hall | company_website: https://www.diak-klinikum.de/ | first_name: Dorothea | last_name: Lehmann | full_name: Dorothea Lehmann | role: Pflegedirektorin | role_category: operations | confidence: medium | notes: Official job page lists Pflegedirektorin contact.
+15. batch_id: batch_001 | company_name: Diakonie-Klinikum Schwäbisch Hall | company_website: https://www.diak-klinikum.de/ | first_name: Sofia | last_name: Kreuzberger | full_name: Sofia Kreuzberger | role: Pflegedienstleitung | role_category: operations | confidence: medium | notes: Official article names nursing service leadership.
+16. batch_id: batch_001 | company_name: Medius Klinik Kirchheim | company_website: http://www.medius-kliniken.de | first_name: Tanja | last_name: Franz | full_name: Tanja Franz | role: Pflegedienstleitung | role_category: operations | confidence: medium | notes: Official Pflege careers page lists nursing service leadership.
+17. batch_id: batch_001 | company_name: Medius Klinik Kirchheim | company_website: http://www.medius-kliniken.de | first_name: Michael | last_name: Grubwinkler | full_name: Michael Grubwinkler | role: Leitung Personalmanagement / Prokurist | role_category: hr_recruiting | confidence: high | notes: Official business areas page lists HR leadership.
+18. batch_id: batch_001 | company_name: Medius Klinik Kirchheim | company_website: http://www.medius-kliniken.de | first_name: Katharina | last_name: Weber | full_name: Katharina Weber | role: Leitung Personalmarketing und Recruiting | role_category: hr_recruiting | confidence: high | notes: Official recruiting page lists recruiting lead.
+19. batch_id: batch_001 | company_name: Vinzenz von Paul Hospital in Rottweil | company_website: http://www.VvPH.de | first_name: Andrea | last_name: Nlemibe | full_name: Andrea Nlemibe | role: Pflegedienstleitung Klinikbereich | role_category: operations | confidence: high | notes: Official leadership page lists nursing service lead.
+20. batch_id: batch_001 | company_name: Vinzenz von Paul Hospital in Rottweil | company_website: http://www.VvPH.de | first_name: Elmar | last_name: Hugger | full_name: Elmar Hugger | role: Abteilungsleitung Pflege Abhängigkeitserkrankungen | role_category: operations | confidence: high | notes: Official leadership page lists nursing department lead.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_010_20260605T191504Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
