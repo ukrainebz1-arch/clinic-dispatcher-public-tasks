@@ -1,0 +1,1423 @@
+TASK_ID: stage05_task_0019
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder allensbach|http://www.kliniken-schmieder.de|allensbach|germany",
+    "company_name": "Kliniken Schmieder Allensbach",
+    "full_name": "Carmen Ritzi",
+    "message_target_id": "stage05_task_0019::person_carmen_ritzi_79f410bc96::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_carmen_ritzi_79f410bc96",
+    "recipient_value": "c.ritzi@kliniken-schmieder.de",
+    "role_title": "Personalreferentin",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder allensbach|http://www.kliniken-schmieder.de|allensbach|germany",
+    "company_name": "Kliniken Schmieder Allensbach",
+    "full_name": "Roman Dieudonné",
+    "message_target_id": "stage05_task_0019::person_roman_dieudonn_5bf2e9fbba::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_roman_dieudonn_5bf2e9fbba",
+    "recipient_value": "r.dieudonne@kliniken-schmieder.de",
+    "role_title": "Pflegedienstleitung Allensbach",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder allensbach|http://www.kliniken-schmieder.de|allensbach|germany",
+    "company_name": "Kliniken Schmieder Allensbach",
+    "full_name": "Roman Dieudonné",
+    "message_target_id": "stage05_task_0019::person_roman_dieudonn_5bf2e9fbba::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_roman_dieudonn_5bf2e9fbba",
+    "recipient_value": "https://de.linkedin.com/in/roman-dieudonn%C3%A9-5508a1125",
+    "role_title": "Pflegedienstleitung Allensbach",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder allensbach|http://www.kliniken-schmieder.de|allensbach|germany",
+    "company_name": "Kliniken Schmieder Allensbach",
+    "full_name": "Roman Dieudonné",
+    "message_target_id": "stage05_task_0019::person_roman_dieudonn_5bf2e9fbba::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_roman_dieudonn_5bf2e9fbba",
+    "recipient_value": "https://de.linkedin.com/in/roman-dieudonn%C3%A9-5508a1125",
+    "role_title": "Pflegedienstleitung Allensbach",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder allensbach|http://www.kliniken-schmieder.de|allensbach|germany",
+    "company_name": "Kliniken Schmieder Allensbach",
+    "full_name": "Sabine Schwörer",
+    "message_target_id": "stage05_task_0019::person_sabine_schw_rer_f9efebb633::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sabine_schw_rer_f9efebb633",
+    "recipient_value": "s.schwoerer@kliniken-schmieder.de",
+    "role_title": "Geschäftsleitung Allensbach",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder heidelberg|http://www.kliniken-schmieder.de|heidelberg|germany",
+    "company_name": "Kliniken Schmieder Heidelberg",
+    "full_name": "Stefan Seilnacht",
+    "message_target_id": "stage05_task_0019::person_stefan_seilnacht_d1e0aee441::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefan_seilnacht_d1e0aee441",
+    "recipient_value": "s.seilnacht@kliniken-schmieder.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder stuttgart-gerlingen|http://www.kliniken-schmieder.de|gerlingen|germany",
+    "company_name": "Kliniken Schmieder Stuttgart-Gerlingen",
+    "full_name": "Katja Weis",
+    "message_target_id": "stage05_task_0019::person_katja_weis_8db78f0088::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_katja_weis_8db78f0088",
+    "recipient_value": "k.weis@kliniken-schmieder.de",
+    "role_title": "Pflegedienstleitung Gerlingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder stuttgart-gerlingen|http://www.kliniken-schmieder.de|gerlingen|germany",
+    "company_name": "Kliniken Schmieder Stuttgart-Gerlingen",
+    "full_name": "Miriam Thiel",
+    "message_target_id": "stage05_task_0019::person_miriam_thiel_8dc2687e92::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_miriam_thiel_8dc2687e92",
+    "recipient_value": "m.thiel@kliniken-schmieder.de",
+    "role_title": "Klinikmanagerin Stuttgart/Gerlingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Danilo Sonntag",
+    "message_target_id": "stage05_task_0019::person_danilo_sonntag_a418dab973::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_danilo_sonntag_a418dab973",
+    "recipient_value": "d.sonntag@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Kathrin Bahnmüller",
+    "message_target_id": "stage05_task_0019::person_kathrin_bahnm_ller_d41fd88d32::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_kathrin_bahnm_ller_d41fd88d32",
+    "recipient_value": "K.Bahnmueller@klinikverbund-suedwest.de",
+    "role_title": "Ressortleiterin Personal & Bildung",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0019::person_nicolai_stolzenberger_18016552d5::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_nicolai_stolzenberger_18016552d5",
+    "recipient_value": "n.stolzenberger@klinikverbund-suedwest.de",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0019::person_nicolai_stolzenberger_18016552d5::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_nicolai_stolzenberger_18016552d5",
+    "recipient_value": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0019::person_nicolai_stolzenberger_18016552d5::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_nicolai_stolzenberger_18016552d5",
+    "recipient_value": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0019::person_nicolai_stolzenberger_cdfe96f6c3::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_nicolai_stolzenberger_cdfe96f6c3",
+    "recipient_value": "n.stolzenberger@klinikverbund-suedwest.de",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0019::person_nicolai_stolzenberger_cdfe96f6c3::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_nicolai_stolzenberger_cdfe96f6c3",
+    "recipient_value": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0019::person_nicolai_stolzenberger_cdfe96f6c3::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_nicolai_stolzenberger_cdfe96f6c3",
+    "recipient_value": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Tobias Bock-Viessmann",
+    "message_target_id": "stage05_task_0019::person_tobias_bock_viessmann_05b96ec752::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_tobias_bock_viessmann_05b96ec752",
+    "recipient_value": "t.bock-viessmann@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Tobias Bock-Viessmann",
+    "message_target_id": "stage05_task_0019::person_tobias_bock_viessmann_8634a48c77::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_tobias_bock_viessmann_8634a48c77",
+    "recipient_value": "t.bock-viessmann@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Volker Seelmann",
+    "message_target_id": "stage05_task_0019::person_volker_seelmann_21bb5e8c18::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_volker_seelmann_21bb5e8c18",
+    "recipient_value": "v.seelmann@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0019"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "full_name": "Volker Seelmann",
+    "message_target_id": "stage05_task_0019::person_volker_seelmann_1b6e7d4dae::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_volker_seelmann_1b6e7d4dae",
+    "recipient_value": "v.seelmann@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0019"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Allensbach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder allensbach|http://www.kliniken-schmieder.de|allensbach|germany",
+    "company_name": "Kliniken Schmieder Allensbach",
+    "company_website": "http://www.kliniken-schmieder.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Roman Dieudonné",
+          "person_key": "",
+          "role": "Pflegedienstleitung Allensbach"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "c.ritzi@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Carmen Ritzi",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_carmen_ritzi_79f410bc96",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalreferentin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/karriere.html",
+          "https://www.kliniken-schmieder.de/karriere/ausbildung-studium.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "r.dieudonne@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Roman Dieudonné",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/roman-dieudonn%C3%A9-5508a1125",
+        "person_key": "person_roman_dieudonn_5bf2e9fbba",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Allensbach",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/allensbach/fuehrungsteam.html",
+          "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html",
+          "https://de.linkedin.com/in/roman-dieudonn%C3%A9-5508a1125"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "s.schwoerer@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Schwörer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sabine_schw_rer_f9efebb633",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsleitung Allensbach",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/allensbach/fuehrungsteam.html",
+          "https://www.kliniken-schmieder.de/fileadmin/Medizin/Folder_Kliniken/folder_allensbach_WEB.pdf",
+          "https://de.linkedin.com/posts/kliniken-schmieder_klinikenschmieder-unternehmen-mitarbeiter-activity-6775689822603395072-xg1H"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Personalreferentin",
+        "Pflegedienstleitung Allensbach",
+        "Geschäftsleitung Allensbach"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kliniken-schmieder.de/karriere.html",
+      "https://www.kliniken-schmieder.de/karriere/ausbildung-studium.html",
+      "https://www.kliniken-schmieder.de/kliniken-und-standorte/allensbach/fuehrungsteam.html",
+      "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html",
+      "https://de.linkedin.com/in/roman-dieudonn%C3%A9-5508a1125",
+      "https://www.kliniken-schmieder.de/fileadmin/Medizin/Folder_Kliniken/folder_allensbach_WEB.pdf",
+      "https://de.linkedin.com/posts/kliniken-schmieder_klinikenschmieder-unternehmen-mitarbeiter-activity-6775689822603395072-xg1H"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heidelberg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder heidelberg|http://www.kliniken-schmieder.de|heidelberg|germany",
+    "company_name": "Kliniken Schmieder Heidelberg",
+    "company_website": "http://www.kliniken-schmieder.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Stefan Seilnacht",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "s.seilnacht@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Seilnacht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefan_seilnacht_d1e0aee441",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/heidelberg/fuehrungsteam.html",
+          "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html",
+          "https://de.linkedin.com/posts/kliniken-schmieder_flexibelarbeiten-familyflexpool-worklifebalance-activity-7301203857542434816-z37j"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.kliniken-schmieder.de/kliniken-und-standorte/heidelberg/fuehrungsteam.html",
+      "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html",
+      "https://de.linkedin.com/posts/kliniken-schmieder_flexibelarbeiten-familyflexpool-worklifebalance-activity-7301203857542434816-z37j"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Gerlingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder stuttgart-gerlingen|http://www.kliniken-schmieder.de|gerlingen|germany",
+    "company_name": "Kliniken Schmieder Stuttgart-Gerlingen",
+    "company_website": "http://www.kliniken-schmieder.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Katja Weis",
+          "person_key": "",
+          "role": "Pflegedienstleitung Gerlingen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "k.weis@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Katja Weis",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_katja_weis_8db78f0088",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Gerlingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/gerlingen/fuehrungsteam.html",
+          "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.thiel@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Miriam Thiel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_miriam_thiel_8dc2687e92",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikmanagerin Stuttgart/Gerlingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/gerlingen/fuehrungsteam.html"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung Gerlingen",
+        "Klinikmanagerin Stuttgart/Gerlingen"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.kliniken-schmieder.de/kliniken-und-standorte/gerlingen/fuehrungsteam.html",
+      "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 8,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Sindelfingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "company_website": "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 5,
+      "decision_makers": [
+        {
+          "full_name": "Danilo Sonntag",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Tobias Bock-Viessmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Tobias Bock-Viessmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Volker Seelmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Volker Seelmann",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "d.sonntag@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Danilo Sonntag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_danilo_sonntag_a418dab973",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "K.Bahnmueller@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kathrin Bahnmüller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_kathrin_bahnm_ller_d41fd88d32",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ressortleiterin Personal & Bildung",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/human-resources/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "n.stolzenberger@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicolai Stolzenberger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+        "person_key": "person_nicolai_stolzenberger_18016552d5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260810431-771318000-2023-xml.pdf",
+          "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "n.stolzenberger@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicolai Stolzenberger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+        "person_key": "person_nicolai_stolzenberger_cdfe96f6c3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260810431-771318000-2023-xml.pdf",
+          "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.bock-viessmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tobias Bock-Viessmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_tobias_bock_viessmann_05b96ec752",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+          "https://de.linkedin.com/posts/medconweb_tobias-bock-viessmann-neuer-pflegedirektor-activity-7292819372102877184-QtDO"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.bock-viessmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tobias Bock-Viessmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_tobias_bock_viessmann_8634a48c77",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+          "https://de.linkedin.com/posts/medconweb_tobias-bock-viessmann-neuer-pflegedirektor-activity-7292819372102877184-QtDO"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "v.seelmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Volker Seelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_volker_seelmann_21bb5e8c18",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "v.seelmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Volker Seelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_volker_seelmann_1b6e7d4dae",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "Ressortleiterin Personal & Bildung",
+        "Krankenhausdirektor Sindelfingen-Böblingen",
+        "Pflegedirektor"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/human-resources/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+      "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260810431-771318000-2023-xml.pdf",
+      "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+      "https://de.linkedin.com/posts/medconweb_tobias-bock-viessmann-neuer-pflegedirektor-activity-7292819372102877184-QtDO",
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Allensbach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder allensbach|http://www.kliniken-schmieder.de|allensbach|germany",
+    "company_name": "Kliniken Schmieder Allensbach",
+    "company_website": "http://www.kliniken-schmieder.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Roman Dieudonné",
+          "person_key": "",
+          "role": "Pflegedienstleitung Allensbach"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "c.ritzi@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Carmen Ritzi",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_carmen_ritzi_79f410bc96",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalreferentin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/karriere.html",
+          "https://www.kliniken-schmieder.de/karriere/ausbildung-studium.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "r.dieudonne@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Roman Dieudonné",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/roman-dieudonn%C3%A9-5508a1125",
+        "person_key": "person_roman_dieudonn_5bf2e9fbba",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Allensbach",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/allensbach/fuehrungsteam.html",
+          "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html",
+          "https://de.linkedin.com/in/roman-dieudonn%C3%A9-5508a1125"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "s.schwoerer@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Schwörer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sabine_schw_rer_f9efebb633",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsleitung Allensbach",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/allensbach/fuehrungsteam.html",
+          "https://www.kliniken-schmieder.de/fileadmin/Medizin/Folder_Kliniken/folder_allensbach_WEB.pdf",
+          "https://de.linkedin.com/posts/kliniken-schmieder_klinikenschmieder-unternehmen-mitarbeiter-activity-6775689822603395072-xg1H"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Personalreferentin",
+        "Pflegedienstleitung Allensbach",
+        "Geschäftsleitung Allensbach"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kliniken-schmieder.de/karriere.html",
+      "https://www.kliniken-schmieder.de/karriere/ausbildung-studium.html",
+      "https://www.kliniken-schmieder.de/kliniken-und-standorte/allensbach/fuehrungsteam.html",
+      "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html",
+      "https://de.linkedin.com/in/roman-dieudonn%C3%A9-5508a1125",
+      "https://www.kliniken-schmieder.de/fileadmin/Medizin/Folder_Kliniken/folder_allensbach_WEB.pdf",
+      "https://de.linkedin.com/posts/kliniken-schmieder_klinikenschmieder-unternehmen-mitarbeiter-activity-6775689822603395072-xg1H"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heidelberg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder heidelberg|http://www.kliniken-schmieder.de|heidelberg|germany",
+    "company_name": "Kliniken Schmieder Heidelberg",
+    "company_website": "http://www.kliniken-schmieder.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Stefan Seilnacht",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "s.seilnacht@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Seilnacht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefan_seilnacht_d1e0aee441",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/heidelberg/fuehrungsteam.html",
+          "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html",
+          "https://de.linkedin.com/posts/kliniken-schmieder_flexibelarbeiten-familyflexpool-worklifebalance-activity-7301203857542434816-z37j"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.kliniken-schmieder.de/kliniken-und-standorte/heidelberg/fuehrungsteam.html",
+      "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html",
+      "https://de.linkedin.com/posts/kliniken-schmieder_flexibelarbeiten-familyflexpool-worklifebalance-activity-7301203857542434816-z37j"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Gerlingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder stuttgart-gerlingen|http://www.kliniken-schmieder.de|gerlingen|germany",
+    "company_name": "Kliniken Schmieder Stuttgart-Gerlingen",
+    "company_website": "http://www.kliniken-schmieder.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Katja Weis",
+          "person_key": "",
+          "role": "Pflegedienstleitung Gerlingen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "k.weis@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Katja Weis",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_katja_weis_8db78f0088",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Gerlingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/gerlingen/fuehrungsteam.html",
+          "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.thiel@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Miriam Thiel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_miriam_thiel_8dc2687e92",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikmanagerin Stuttgart/Gerlingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/gerlingen/fuehrungsteam.html"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung Gerlingen",
+        "Klinikmanagerin Stuttgart/Gerlingen"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.kliniken-schmieder.de/kliniken-und-standorte/gerlingen/fuehrungsteam.html",
+      "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 8,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Sindelfingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken sindelfingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/|sindelfingen|germany",
+    "company_name": "Kliniken Sindelfingen",
+    "company_website": "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 5,
+      "decision_makers": [
+        {
+          "full_name": "Danilo Sonntag",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Tobias Bock-Viessmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Tobias Bock-Viessmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Volker Seelmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Volker Seelmann",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "d.sonntag@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Danilo Sonntag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_danilo_sonntag_a418dab973",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "K.Bahnmueller@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kathrin Bahnmüller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_kathrin_bahnm_ller_d41fd88d32",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ressortleiterin Personal & Bildung",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/human-resources/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "n.stolzenberger@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicolai Stolzenberger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+        "person_key": "person_nicolai_stolzenberger_18016552d5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260810431-771318000-2023-xml.pdf",
+          "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "n.stolzenberger@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicolai Stolzenberger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+        "person_key": "person_nicolai_stolzenberger_cdfe96f6c3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260810431-771318000-2023-xml.pdf",
+          "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.bock-viessmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tobias Bock-Viessmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_tobias_bock_viessmann_05b96ec752",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+          "https://de.linkedin.com/posts/medconweb_tobias-bock-viessmann-neuer-pflegedirektor-activity-7292819372102877184-QtDO"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.bock-viessmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tobias Bock-Viessmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_tobias_bock_viessmann_8634a48c77",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+          "https://de.linkedin.com/posts/medconweb_tobias-bock-viessmann-neuer-pflegedirektor-activity-7292819372102877184-QtDO"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "v.seelmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Volker Seelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_volker_seelmann_21bb5e8c18",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "v.seelmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Volker Seelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_volker_seelmann_1b6e7d4dae",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "Ressortleiterin Personal & Bildung",
+        "Krankenhausdirektor Sindelfingen-Böblingen",
+        "Pflegedirektor"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/human-resources/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+      "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260810431-771318000-2023-xml.pdf",
+      "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+      "https://de.linkedin.com/posts/medconweb_tobias-bock-viessmann-neuer-pflegedirektor-activity-7292819372102877184-QtDO",
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
