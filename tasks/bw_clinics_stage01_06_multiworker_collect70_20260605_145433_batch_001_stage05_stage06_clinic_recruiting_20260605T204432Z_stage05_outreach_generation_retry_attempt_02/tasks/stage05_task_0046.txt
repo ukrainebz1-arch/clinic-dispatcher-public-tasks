@@ -1,0 +1,1866 @@
+TASK_ID: stage05_task_0046
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Jörg Schwarzer",
+    "message_target_id": "stage05_task_0046::person_j_rg_schwarzer_cd3935d3d9::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_j_rg_schwarzer_cd3935d3d9",
+    "recipient_value": "joerg.schwarzer@srh.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Jörg Schwarzer",
+    "message_target_id": "stage05_task_0046::person_j_rg_schwarzer_cd3935d3d9::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_j_rg_schwarzer_cd3935d3d9",
+    "recipient_value": "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Jörg Schwarzer",
+    "message_target_id": "stage05_task_0046::person_j_rg_schwarzer_cd3935d3d9::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_j_rg_schwarzer_cd3935d3d9",
+    "recipient_value": "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Jörg Schwarzer",
+    "message_target_id": "stage05_task_0046::person_j_rg_schwarzer_f8184aa6b7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_j_rg_schwarzer_f8184aa6b7",
+    "recipient_value": "joerg.schwarzer@srh.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Jörg Schwarzer",
+    "message_target_id": "stage05_task_0046::person_j_rg_schwarzer_f8184aa6b7::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_j_rg_schwarzer_f8184aa6b7",
+    "recipient_value": "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Jörg Schwarzer",
+    "message_target_id": "stage05_task_0046::person_j_rg_schwarzer_f8184aa6b7::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_j_rg_schwarzer_f8184aa6b7",
+    "recipient_value": "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Markus Links",
+    "message_target_id": "stage05_task_0046::person_markus_links_c6ec714eb8::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_markus_links_c6ec714eb8",
+    "recipient_value": "Markus.Links@srh.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Markus Links",
+    "message_target_id": "stage05_task_0046::person_markus_links_c6ec714eb8::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_markus_links_c6ec714eb8",
+    "recipient_value": "https://de.linkedin.com/in/markus-links-729999267",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Markus Links",
+    "message_target_id": "stage05_task_0046::person_markus_links_c6ec714eb8::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_markus_links_c6ec714eb8",
+    "recipient_value": "https://de.linkedin.com/in/markus-links-729999267",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Markus Links",
+    "message_target_id": "stage05_task_0046::person_markus_links_9ccdb33890::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_markus_links_9ccdb33890",
+    "recipient_value": "Markus.Links@srh.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Markus Links",
+    "message_target_id": "stage05_task_0046::person_markus_links_9ccdb33890::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_markus_links_9ccdb33890",
+    "recipient_value": "https://de.linkedin.com/in/markus-links-729999267",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Markus Links",
+    "message_target_id": "stage05_task_0046::person_markus_links_9ccdb33890::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_markus_links_9ccdb33890",
+    "recipient_value": "https://de.linkedin.com/in/markus-links-729999267",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Petra Schneider",
+    "message_target_id": "stage05_task_0046::person_petra_schneider_06ea592205::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_petra_schneider_06ea592205",
+    "recipient_value": "Petra.Schneider@srh.de",
+    "role_title": "Personalleiterin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "full_name": "Petra Schneider",
+    "message_target_id": "stage05_task_0046::person_petra_schneider_7037fec8da::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_petra_schneider_7037fec8da",
+    "recipient_value": "Petra.Schneider@srh.de",
+    "role_title": "Personalleiterin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus oberndorf a.n.|http://www.krankenhaus-oberndorf.de|oberndorf am neckar|germany",
+    "company_name": "SRH Krankenhaus Oberndorf a.N.",
+    "full_name": "Blerta Muqaku",
+    "message_target_id": "stage05_task_0046::person_blerta_muqaku_4cc2003cdc::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_blerta_muqaku_4cc2003cdc",
+    "recipient_value": "blerta.muqaku@srh.de",
+    "role_title": "Geschäftsführung Pflegedienstleitung",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus oberndorf a.n.|http://www.krankenhaus-oberndorf.de|oberndorf am neckar|germany",
+    "company_name": "SRH Krankenhaus Oberndorf a.N.",
+    "full_name": "Blerta Muqaku",
+    "message_target_id": "stage05_task_0046::person_blerta_muqaku_4cc2003cdc::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_blerta_muqaku_4cc2003cdc",
+    "recipient_value": "https://de.linkedin.com/in/blerta-muqaku-80713a1a9",
+    "role_title": "Geschäftsführung Pflegedienstleitung",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus oberndorf a.n.|http://www.krankenhaus-oberndorf.de|oberndorf am neckar|germany",
+    "company_name": "SRH Krankenhaus Oberndorf a.N.",
+    "full_name": "Blerta Muqaku",
+    "message_target_id": "stage05_task_0046::person_blerta_muqaku_4cc2003cdc::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_blerta_muqaku_4cc2003cdc",
+    "recipient_value": "https://de.linkedin.com/in/blerta-muqaku-80713a1a9",
+    "role_title": "Geschäftsführung Pflegedienstleitung",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Hannah Leicht",
+    "message_target_id": "stage05_task_0046::person_hannah_leicht_4afdfd5c5f::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_hannah_leicht_4afdfd5c5f",
+    "recipient_value": "hannah.leicht@srh.de",
+    "role_title": "Personalreferentin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Hannah Leicht",
+    "message_target_id": "stage05_task_0046::person_hannah_leicht_4afdfd5c5f::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_hannah_leicht_4afdfd5c5f",
+    "recipient_value": "https://de.linkedin.com/in/hannah-leicht-karlstorz",
+    "role_title": "Personalreferentin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Hannah Leicht",
+    "message_target_id": "stage05_task_0046::person_hannah_leicht_4afdfd5c5f::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_hannah_leicht_4afdfd5c5f",
+    "recipient_value": "https://de.linkedin.com/in/hannah-leicht-karlstorz",
+    "role_title": "Personalreferentin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Heidi-Maria Brückl",
+    "message_target_id": "stage05_task_0046::person_heidi_maria_br_ckl_1907d40161::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_heidi_maria_br_ckl_1907d40161",
+    "recipient_value": "Heidi.Brueckl@srh.de",
+    "role_title": "Departmentleitung Pflege- und Funktionsdienst Konservative Medizin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Heidi-Maria Brückl",
+    "message_target_id": "stage05_task_0046::person_heidi_maria_br_ckl_1907d40161::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_heidi_maria_br_ckl_1907d40161",
+    "recipient_value": "https://de.linkedin.com/in/heidi-maria-br%C3%BCckl-4a4431382",
+    "role_title": "Departmentleitung Pflege- und Funktionsdienst Konservative Medizin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Heidi-Maria Brückl",
+    "message_target_id": "stage05_task_0046::person_heidi_maria_br_ckl_1907d40161::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_heidi_maria_br_ckl_1907d40161",
+    "recipient_value": "https://de.linkedin.com/in/heidi-maria-br%C3%BCckl-4a4431382",
+    "role_title": "Departmentleitung Pflege- und Funktionsdienst Konservative Medizin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Kim Saskia Schilling",
+    "message_target_id": "stage05_task_0046::person_kim_saskia_schilling_ebae095277::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_kim_saskia_schilling_ebae095277",
+    "recipient_value": "kimsaskia.schilling@srh.de",
+    "role_title": "Personalreferentin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Kim Saskia Schilling",
+    "message_target_id": "stage05_task_0046::person_kim_saskia_schilling_ebae095277::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_kim_saskia_schilling_ebae095277",
+    "recipient_value": "https://de.linkedin.com/in/kim-saskia-schilling-3559182b2",
+    "role_title": "Personalreferentin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Kim Saskia Schilling",
+    "message_target_id": "stage05_task_0046::person_kim_saskia_schilling_ebae095277::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_kim_saskia_schilling_ebae095277",
+    "recipient_value": "https://de.linkedin.com/in/kim-saskia-schilling-3559182b2",
+    "role_title": "Personalreferentin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Letta Hellebrand-Lache",
+    "message_target_id": "stage05_task_0046::person_letta_hellebrand_lache_dd02880cf1::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_letta_hellebrand_lache_dd02880cf1",
+    "recipient_value": "Letta.Hellebrand-Lache@srh.de",
+    "role_title": "Departmentleitung Pflege- und Funktionsdienst Operative Medizin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Stefan Ries",
+    "message_target_id": "stage05_task_0046::person_stefan_ries_c73265b628::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefan_ries_c73265b628",
+    "recipient_value": "stefan.ries@srh.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Sven Schönfeld",
+    "message_target_id": "stage05_task_0046::person_sven_sch_nfeld_0cae7aae3d::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sven_sch_nfeld_0cae7aae3d",
+    "recipient_value": "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Sven Schönfeld",
+    "message_target_id": "stage05_task_0046::person_sven_sch_nfeld_0cae7aae3d::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sven_sch_nfeld_0cae7aae3d",
+    "recipient_value": "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Sven Schönfeld",
+    "message_target_id": "stage05_task_0046::person_sven_sch_nfeld_2e4c617ec8::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sven_sch_nfeld_2e4c617ec8",
+    "recipient_value": "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262",
+    "role_title": "Geschäftsführer SRH Kliniken",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "full_name": "Sven Schönfeld",
+    "message_target_id": "stage05_task_0046::person_sven_sch_nfeld_2e4c617ec8::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sven_sch_nfeld_2e4c617ec8",
+    "recipient_value": "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262",
+    "role_title": "Geschäftsführer SRH Kliniken",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "full_name": "Dr. Stefanie Höger",
+    "message_target_id": "stage05_task_0046::person_dr_stefanie_h_ger_6d3abad14a::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_stefanie_h_ger_6d3abad14a",
+    "recipient_value": "stefanie.hoeger@srh.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "full_name": "Dr. Stefanie Höger",
+    "message_target_id": "stage05_task_0046::person_dr_stefanie_h_ger_6d3abad14a::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_stefanie_h_ger_6d3abad14a",
+    "recipient_value": "https://de.linkedin.com/in/stefanie-h%C3%B6ger-24b389112",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "full_name": "Dr. Stefanie Höger",
+    "message_target_id": "stage05_task_0046::person_dr_stefanie_h_ger_6d3abad14a::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_stefanie_h_ger_6d3abad14a",
+    "recipient_value": "https://de.linkedin.com/in/stefanie-h%C3%B6ger-24b389112",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "full_name": "Mirjam Augustin",
+    "message_target_id": "stage05_task_0046::person_mirjam_augustin_fc4a50cf0a::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_mirjam_augustin_fc4a50cf0a",
+    "recipient_value": "mirjam.augustin@srh.de",
+    "role_title": "Stellvertretende Pflegedienstleitung",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "full_name": "Mirjam Augustin",
+    "message_target_id": "stage05_task_0046::person_mirjam_augustin_fc4a50cf0a::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_mirjam_augustin_fc4a50cf0a",
+    "recipient_value": "https://de.linkedin.com/in/mirjam-augustin-b2960b319",
+    "role_title": "Stellvertretende Pflegedienstleitung",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "full_name": "Mirjam Augustin",
+    "message_target_id": "stage05_task_0046::person_mirjam_augustin_fc4a50cf0a::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_mirjam_augustin_fc4a50cf0a",
+    "recipient_value": "https://de.linkedin.com/in/mirjam-augustin-b2960b319",
+    "role_title": "Stellvertretende Pflegedienstleitung",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "full_name": "Thorsten Käfer-Holecek",
+    "message_target_id": "stage05_task_0046::person_thorsten_k_fer_holecek_559dab34ed::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_thorsten_k_fer_holecek_559dab34ed",
+    "recipient_value": "thorsten.kaefer-holecek@srh.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "full_name": "Thorsten Käfer-Holecek",
+    "message_target_id": "stage05_task_0046::person_thorsten_k_fer_holecek_559dab34ed::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_thorsten_k_fer_holecek_559dab34ed",
+    "recipient_value": "https://de.linkedin.com/in/thorsten-k%C3%A4fer-m-a-m-a-7a1b6b145",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0046"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "full_name": "Thorsten Käfer-Holecek",
+    "message_target_id": "stage05_task_0046::person_thorsten_k_fer_holecek_559dab34ed::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_thorsten_k_fer_holecek_559dab34ed",
+    "recipient_value": "https://de.linkedin.com/in/thorsten-k%C3%A4fer-m-a-m-a-7a1b6b145",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0046"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Karlsbad",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "company_website": "http://www.klinikum-karlsbad.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Markus Links",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Markus Links",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "joerg.schwarzer@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jörg Schwarzer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b",
+        "person_key": "person_j_rg_schwarzer_cd3935d3d9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/joerg-schwarzer/",
+          "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "joerg.schwarzer@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jörg Schwarzer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b",
+        "person_key": "person_j_rg_schwarzer_f8184aa6b7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/joerg-schwarzer/",
+          "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "markus.links@srh.de",
+        "confirmed_email": "Markus.Links@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Markus Links",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/markus-links-729999267",
+        "person_key": "person_markus_links_c6ec714eb8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/markus-links/",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/jens-albat/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.srh-karriere.de/alle-jobs/stellenangebot/kinderkrankenpflegefachkraft-wmd-karlsbad",
+          "https://de.linkedin.com/posts/srh-kkl_srh-gesundheit-leidenschaftf%C3%BCrsleben-activity-7181957494926127105-_qfS",
+          "https://de.linkedin.com/in/markus-links-729999267"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "markus.links@srh.de",
+        "confirmed_email": "Markus.Links@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Markus Links",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/markus-links-729999267",
+        "person_key": "person_markus_links_9ccdb33890",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/markus-links/",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/jens-albat/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.srh-karriere.de/alle-jobs/stellenangebot/kinderkrankenpflegefachkraft-wmd-karlsbad",
+          "https://de.linkedin.com/posts/srh-kkl_srh-gesundheit-leidenschaftf%C3%BCrsleben-activity-7181957494926127105-_qfS",
+          "https://de.linkedin.com/in/markus-links-729999267"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "petra.schneider@srh.de",
+        "confirmed_email": "Petra.Schneider@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Petra Schneider",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_petra_schneider_06ea592205",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleiterin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/schneider-petra/",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/jens-albat/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.srh-karriere.de/alle-jobs/stellenangebot/personalreferent-stellvertretender-personalleiter-wmd-karlsbad"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "petra.schneider@srh.de",
+        "confirmed_email": "Petra.Schneider@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Petra Schneider",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_petra_schneider_7037fec8da",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleiterin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/schneider-petra/",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/jens-albat/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.srh-karriere.de/alle-jobs/stellenangebot/personalreferent-stellvertretender-personalleiter-wmd-karlsbad"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedirektor",
+        "Personalleiterin"
+      ],
+      "total_people": 6
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+      "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/joerg-schwarzer/",
+      "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b",
+      "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/markus-links/",
+      "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/jens-albat/",
+      "https://www.srh-karriere.de/alle-jobs/stellenangebot/kinderkrankenpflegefachkraft-wmd-karlsbad",
+      "https://de.linkedin.com/posts/srh-kkl_srh-gesundheit-leidenschaftf%C3%BCrsleben-activity-7181957494926127105-_qfS",
+      "https://de.linkedin.com/in/markus-links-729999267",
+      "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/schneider-petra/",
+      "https://www.srh-karriere.de/alle-jobs/stellenangebot/personalreferent-stellvertretender-personalleiter-wmd-karlsbad"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Oberndorf am Neckar",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus oberndorf a.n.|http://www.krankenhaus-oberndorf.de|oberndorf am neckar|germany",
+    "company_name": "SRH Krankenhaus Oberndorf a.N.",
+    "company_website": "http://www.krankenhaus-oberndorf.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Blerta Muqaku",
+          "person_key": "",
+          "role": "Geschäftsführung Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "blerta.muqaku@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Blerta Muqaku",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/blerta-muqaku-80713a1a9",
+        "person_key": "person_blerta_muqaku_4cc2003cdc",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260831049-773281000-2023-xml.pdf",
+          "https://www.krankenhaus-oberndorf.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/blerta-muqaku/",
+          "https://de.linkedin.com/in/blerta-muqaku-80713a1a9"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführung Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260831049-773281000-2023-xml.pdf",
+      "https://www.krankenhaus-oberndorf.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/blerta-muqaku/",
+      "https://de.linkedin.com/in/blerta-muqaku-80713a1a9"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 5,
+      "generic_route_count": 2,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 5,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Sigmaringen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "company_website": "https://www.kliniken-sigmaringen.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Heidi-Maria Brückl",
+          "person_key": "",
+          "role": "Departmentleitung Pflege- und Funktionsdienst Konservative Medizin"
+        },
+        {
+          "full_name": "Letta Hellebrand-Lache",
+          "person_key": "",
+          "role": "Departmentleitung Pflege- und Funktionsdienst Operative Medizin"
+        },
+        {
+          "full_name": "Stefan Ries",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "hannah.leicht@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Hannah Leicht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/hannah-leicht-karlstorz",
+        "person_key": "person_hannah_leicht_4afdfd5c5f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalreferentin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/karriere/fsj-und-praktika/",
+          "https://de.linkedin.com/in/hannah-leicht-karlstorz",
+          "https://www.kliniken-sigmaringen.de/karriere/ausbildung-und-studium/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Heidi.Brueckl@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heidi-Maria Brückl",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/heidi-maria-br%C3%BCckl-4a4431382",
+        "person_key": "person_heidi_maria_br_ckl_1907d40161",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Departmentleitung Pflege- und Funktionsdienst Konservative Medizin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/fileadmin/user_upload/Qualitaetsbericht_QB-Sigmaringen-2024_30_01_2026.pdf",
+          "https://de.linkedin.com/in/heidi-maria-br%C3%BCckl-4a4431382"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "kimsaskia.schilling@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kim Saskia Schilling",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/kim-saskia-schilling-3559182b2",
+        "person_key": "person_kim_saskia_schilling_ebae095277",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalreferentin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/default-0d126d70b0-3/",
+          "https://karriere.srh.de/job-personalreferent-m-w-d-de-j9613.html",
+          "https://de.linkedin.com/in/kim-saskia-schilling-3559182b2"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "Letta.Hellebrand-Lache@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Letta Hellebrand-Lache",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_letta_hellebrand_lache_dd02880cf1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Departmentleitung Pflege- und Funktionsdienst Operative Medizin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/fileadmin/user_upload/Qualitaetsbericht_QB-Sigmaringen-2024_30_01_2026.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "stefan.ries@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Ries",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefan_ries_c73265b628",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/karriere/fsj-und-praktika/",
+          "false",
+          "https://www.kliniken-sigmaringen.de/karriere/ausbildung-und-studium/"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Sven Schönfeld",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262",
+        "person_key": "person_sven_sch_nfeld_0cae7aae3d",
+        "primary_channel": "LINKEDIN",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/fileadmin/user_upload/Qualitaetsbericht_QB-Sigmaringen-2024_30_01_2026.pdf",
+          "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/sven-schoenfeld",
+          "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/default-01e7d498e5/",
+          "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Sven Schönfeld",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262",
+        "person_key": "person_sven_sch_nfeld_2e4c617ec8",
+        "primary_channel": "LINKEDIN",
+        "role": "Geschäftsführer SRH Kliniken",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/fileadmin/user_upload/Qualitaetsbericht_QB-Sigmaringen-2024_30_01_2026.pdf",
+          "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/sven-schoenfeld",
+          "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/default-01e7d498e5/",
+          "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Personalreferentin",
+        "Departmentleitung Pflege- und Funktionsdienst Konservative Medizin",
+        "Departmentleitung Pflege- und Funktionsdienst Operative Medizin",
+        "Pflegedirektor",
+        "Geschäftsführung",
+        "Geschäftsführer SRH Kliniken"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.kliniken-sigmaringen.de/karriere/fsj-und-praktika/",
+      "https://de.linkedin.com/in/hannah-leicht-karlstorz",
+      "https://www.kliniken-sigmaringen.de/karriere/ausbildung-und-studium/",
+      "https://www.kliniken-sigmaringen.de/fileadmin/user_upload/Qualitaetsbericht_QB-Sigmaringen-2024_30_01_2026.pdf",
+      "https://de.linkedin.com/in/heidi-maria-br%C3%BCckl-4a4431382",
+      "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/default-0d126d70b0-3/",
+      "https://karriere.srh.de/job-personalreferent-m-w-d-de-j9613.html",
+      "https://de.linkedin.com/in/kim-saskia-schilling-3559182b2",
+      "false",
+      "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/sven-schoenfeld",
+      "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/default-01e7d498e5/",
+      "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heidelberg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "company_website": "http://www.kurpfalzkrankenhaus.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Mirjam Augustin",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedienstleitung"
+        },
+        {
+          "full_name": "Thorsten Käfer-Holecek",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "stefanie.hoeger@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Stefanie Höger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefanie-h%C3%B6ger-24b389112",
+        "person_key": "person_dr_stefanie_h_ger_6d3abad14a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/dr-stefanie-hoeger/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820536-773569000-2023-xml.pdf",
+          "https://de.linkedin.com/in/stefanie-h%C3%B6ger-24b389112"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "mirjam.augustin@srh.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Mirjam Augustin",
+        "hypothesis_email": "mirjam.augustin@srh.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/mirjam-augustin-b2960b319",
+        "person_key": "person_mirjam_augustin_fc4a50cf0a",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Stellvertretende Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/mirjam-augustin/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820536-773569000-2023-xml.pdf",
+          "https://de.linkedin.com/in/mirjam-augustin-b2960b319"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "thorsten.kaefer-holecek@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thorsten Käfer-Holecek",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/thorsten-k%C3%A4fer-m-a-m-a-7a1b6b145",
+        "person_key": "person_thorsten_k_fer_holecek_559dab34ed",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/thorsten-kaefer/",
+          "https://de.linkedin.com/jobs/view/stv-pflegerische-stationsleitung-w-m-d-neurologische-intensivstation-in-voll-oder-teilzeit-at-srh-kurpfalzkrankenhaus-heidelberg-4344747749",
+          "https://de.linkedin.com/in/thorsten-k%C3%A4fer-m-a-m-a-7a1b6b145"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Stellvertretende Pflegedienstleitung",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/dr-stefanie-hoeger/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260820536-773569000-2023-xml.pdf",
+      "https://de.linkedin.com/in/stefanie-h%C3%B6ger-24b389112",
+      "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/mirjam-augustin/",
+      "https://de.linkedin.com/in/mirjam-augustin-b2960b319",
+      "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/thorsten-kaefer/",
+      "https://de.linkedin.com/jobs/view/stv-pflegerische-stationsleitung-w-m-d-neurologische-intensivstation-in-voll-oder-teilzeit-at-srh-kurpfalzkrankenhaus-heidelberg-4344747749",
+      "https://de.linkedin.com/in/thorsten-k%C3%A4fer-m-a-m-a-7a1b6b145"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Karlsbad",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh klinikum karlsbad-langensteinbach|http://www.klinikum-karlsbad.de|karlsbad|germany",
+    "company_name": "SRH Klinikum Karlsbad-Langensteinbach",
+    "company_website": "http://www.klinikum-karlsbad.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Markus Links",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Markus Links",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "joerg.schwarzer@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jörg Schwarzer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b",
+        "person_key": "person_j_rg_schwarzer_cd3935d3d9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/joerg-schwarzer/",
+          "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "joerg.schwarzer@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jörg Schwarzer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b",
+        "person_key": "person_j_rg_schwarzer_f8184aa6b7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/joerg-schwarzer/",
+          "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "markus.links@srh.de",
+        "confirmed_email": "Markus.Links@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Markus Links",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/markus-links-729999267",
+        "person_key": "person_markus_links_c6ec714eb8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/markus-links/",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/jens-albat/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.srh-karriere.de/alle-jobs/stellenangebot/kinderkrankenpflegefachkraft-wmd-karlsbad",
+          "https://de.linkedin.com/posts/srh-kkl_srh-gesundheit-leidenschaftf%C3%BCrsleben-activity-7181957494926127105-_qfS",
+          "https://de.linkedin.com/in/markus-links-729999267"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "markus.links@srh.de",
+        "confirmed_email": "Markus.Links@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Markus Links",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/markus-links-729999267",
+        "person_key": "person_markus_links_9ccdb33890",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/markus-links/",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/jens-albat/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.srh-karriere.de/alle-jobs/stellenangebot/kinderkrankenpflegefachkraft-wmd-karlsbad",
+          "https://de.linkedin.com/posts/srh-kkl_srh-gesundheit-leidenschaftf%C3%BCrsleben-activity-7181957494926127105-_qfS",
+          "https://de.linkedin.com/in/markus-links-729999267"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "petra.schneider@srh.de",
+        "confirmed_email": "Petra.Schneider@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Petra Schneider",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_petra_schneider_06ea592205",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleiterin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/schneider-petra/",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/jens-albat/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.srh-karriere.de/alle-jobs/stellenangebot/personalreferent-stellvertretender-personalleiter-wmd-karlsbad"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "petra.schneider@srh.de",
+        "confirmed_email": "Petra.Schneider@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Petra Schneider",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_petra_schneider_7037fec8da",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleiterin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/schneider-petra/",
+          "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/jens-albat/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+          "https://www.srh-karriere.de/alle-jobs/stellenangebot/personalreferent-stellvertretender-personalleiter-wmd-karlsbad"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedirektor",
+        "Personalleiterin"
+      ],
+      "total_people": 6
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260820319-771604000-2024-xml.pdf",
+      "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/joerg-schwarzer/",
+      "https://de.linkedin.com/in/j%C3%B6rg-schwarzer-03a4949b",
+      "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/markus-links/",
+      "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/jens-albat/",
+      "https://www.srh-karriere.de/alle-jobs/stellenangebot/kinderkrankenpflegefachkraft-wmd-karlsbad",
+      "https://de.linkedin.com/posts/srh-kkl_srh-gesundheit-leidenschaftf%C3%BCrsleben-activity-7181957494926127105-_qfS",
+      "https://de.linkedin.com/in/markus-links-729999267",
+      "https://www.klinikum-karlsbad.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/schneider-petra/",
+      "https://www.srh-karriere.de/alle-jobs/stellenangebot/personalreferent-stellvertretender-personalleiter-wmd-karlsbad"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Oberndorf am Neckar",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus oberndorf a.n.|http://www.krankenhaus-oberndorf.de|oberndorf am neckar|germany",
+    "company_name": "SRH Krankenhaus Oberndorf a.N.",
+    "company_website": "http://www.krankenhaus-oberndorf.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Blerta Muqaku",
+          "person_key": "",
+          "role": "Geschäftsführung Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "blerta.muqaku@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Blerta Muqaku",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/blerta-muqaku-80713a1a9",
+        "person_key": "person_blerta_muqaku_4cc2003cdc",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260831049-773281000-2023-xml.pdf",
+          "https://www.krankenhaus-oberndorf.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/blerta-muqaku/",
+          "https://de.linkedin.com/in/blerta-muqaku-80713a1a9"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführung Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260831049-773281000-2023-xml.pdf",
+      "https://www.krankenhaus-oberndorf.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/blerta-muqaku/",
+      "https://de.linkedin.com/in/blerta-muqaku-80713a1a9"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 5,
+      "generic_route_count": 2,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 5,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Sigmaringen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh krankenhaus sigmaringen|https://www.kliniken-sigmaringen.de/|sigmaringen|germany",
+    "company_name": "SRH Krankenhaus Sigmaringen",
+    "company_website": "https://www.kliniken-sigmaringen.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Heidi-Maria Brückl",
+          "person_key": "",
+          "role": "Departmentleitung Pflege- und Funktionsdienst Konservative Medizin"
+        },
+        {
+          "full_name": "Letta Hellebrand-Lache",
+          "person_key": "",
+          "role": "Departmentleitung Pflege- und Funktionsdienst Operative Medizin"
+        },
+        {
+          "full_name": "Stefan Ries",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "hannah.leicht@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Hannah Leicht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/hannah-leicht-karlstorz",
+        "person_key": "person_hannah_leicht_4afdfd5c5f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalreferentin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/karriere/fsj-und-praktika/",
+          "https://de.linkedin.com/in/hannah-leicht-karlstorz",
+          "https://www.kliniken-sigmaringen.de/karriere/ausbildung-und-studium/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Heidi.Brueckl@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heidi-Maria Brückl",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/heidi-maria-br%C3%BCckl-4a4431382",
+        "person_key": "person_heidi_maria_br_ckl_1907d40161",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Departmentleitung Pflege- und Funktionsdienst Konservative Medizin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/fileadmin/user_upload/Qualitaetsbericht_QB-Sigmaringen-2024_30_01_2026.pdf",
+          "https://de.linkedin.com/in/heidi-maria-br%C3%BCckl-4a4431382"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "kimsaskia.schilling@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kim Saskia Schilling",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/kim-saskia-schilling-3559182b2",
+        "person_key": "person_kim_saskia_schilling_ebae095277",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalreferentin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/default-0d126d70b0-3/",
+          "https://karriere.srh.de/job-personalreferent-m-w-d-de-j9613.html",
+          "https://de.linkedin.com/in/kim-saskia-schilling-3559182b2"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "Letta.Hellebrand-Lache@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Letta Hellebrand-Lache",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_letta_hellebrand_lache_dd02880cf1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Departmentleitung Pflege- und Funktionsdienst Operative Medizin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/fileadmin/user_upload/Qualitaetsbericht_QB-Sigmaringen-2024_30_01_2026.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "stefan.ries@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Ries",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefan_ries_c73265b628",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/karriere/fsj-und-praktika/",
+          "false",
+          "https://www.kliniken-sigmaringen.de/karriere/ausbildung-und-studium/"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Sven Schönfeld",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262",
+        "person_key": "person_sven_sch_nfeld_0cae7aae3d",
+        "primary_channel": "LINKEDIN",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/fileadmin/user_upload/Qualitaetsbericht_QB-Sigmaringen-2024_30_01_2026.pdf",
+          "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/sven-schoenfeld",
+          "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/default-01e7d498e5/",
+          "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Sven Schönfeld",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262",
+        "person_key": "person_sven_sch_nfeld_2e4c617ec8",
+        "primary_channel": "LINKEDIN",
+        "role": "Geschäftsführer SRH Kliniken",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.kliniken-sigmaringen.de/fileadmin/user_upload/Qualitaetsbericht_QB-Sigmaringen-2024_30_01_2026.pdf",
+          "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/sven-schoenfeld",
+          "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/default-01e7d498e5/",
+          "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Personalreferentin",
+        "Departmentleitung Pflege- und Funktionsdienst Konservative Medizin",
+        "Departmentleitung Pflege- und Funktionsdienst Operative Medizin",
+        "Pflegedirektor",
+        "Geschäftsführung",
+        "Geschäftsführer SRH Kliniken"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.kliniken-sigmaringen.de/karriere/fsj-und-praktika/",
+      "https://de.linkedin.com/in/hannah-leicht-karlstorz",
+      "https://www.kliniken-sigmaringen.de/karriere/ausbildung-und-studium/",
+      "https://www.kliniken-sigmaringen.de/fileadmin/user_upload/Qualitaetsbericht_QB-Sigmaringen-2024_30_01_2026.pdf",
+      "https://de.linkedin.com/in/heidi-maria-br%C3%BCckl-4a4431382",
+      "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/default-0d126d70b0-3/",
+      "https://karriere.srh.de/job-personalreferent-m-w-d-de-j9613.html",
+      "https://de.linkedin.com/in/kim-saskia-schilling-3559182b2",
+      "false",
+      "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/sven-schoenfeld",
+      "https://www.kliniken-sigmaringen.de/unser-klinikum/unsere-mitarbeiterinnen-mitarbeiter/default-01e7d498e5/",
+      "https://de.linkedin.com/in/sven-sch%C3%B6nfeld-8860b3262"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heidelberg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|srh kurpfalzkrankenhaus heidelberg|http://www.kurpfalzkrankenhaus.de/|heidelberg|germany",
+    "company_name": "SRH Kurpfalzkrankenhaus Heidelberg",
+    "company_website": "http://www.kurpfalzkrankenhaus.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Mirjam Augustin",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedienstleitung"
+        },
+        {
+          "full_name": "Thorsten Käfer-Holecek",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "stefanie.hoeger@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Stefanie Höger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefanie-h%C3%B6ger-24b389112",
+        "person_key": "person_dr_stefanie_h_ger_6d3abad14a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/dr-stefanie-hoeger/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820536-773569000-2023-xml.pdf",
+          "https://de.linkedin.com/in/stefanie-h%C3%B6ger-24b389112"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "mirjam.augustin@srh.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Mirjam Augustin",
+        "hypothesis_email": "mirjam.augustin@srh.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/mirjam-augustin-b2960b319",
+        "person_key": "person_mirjam_augustin_fc4a50cf0a",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Stellvertretende Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/mirjam-augustin/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820536-773569000-2023-xml.pdf",
+          "https://de.linkedin.com/in/mirjam-augustin-b2960b319"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "thorsten.kaefer-holecek@srh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thorsten Käfer-Holecek",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/thorsten-k%C3%A4fer-m-a-m-a-7a1b6b145",
+        "person_key": "person_thorsten_k_fer_holecek_559dab34ed",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/thorsten-kaefer/",
+          "https://de.linkedin.com/jobs/view/stv-pflegerische-stationsleitung-w-m-d-neurologische-intensivstation-in-voll-oder-teilzeit-at-srh-kurpfalzkrankenhaus-heidelberg-4344747749",
+          "https://de.linkedin.com/in/thorsten-k%C3%A4fer-m-a-m-a-7a1b6b145"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Stellvertretende Pflegedienstleitung",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/dr-stefanie-hoeger/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260820536-773569000-2023-xml.pdf",
+      "https://de.linkedin.com/in/stefanie-h%C3%B6ger-24b389112",
+      "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/mirjam-augustin/",
+      "https://de.linkedin.com/in/mirjam-augustin-b2960b319",
+      "https://www.kurpfalzkrankenhaus.de/unser-klinikum/unsere-mitarbeiterinnen-und-mitarbeiter/thorsten-kaefer/",
+      "https://de.linkedin.com/jobs/view/stv-pflegerische-stationsleitung-w-m-d-neurologische-intensivstation-in-voll-oder-teilzeit-at-srh-kurpfalzkrankenhaus-heidelberg-4344747749",
+      "https://de.linkedin.com/in/thorsten-k%C3%A4fer-m-a-m-a-7a1b6b145"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
