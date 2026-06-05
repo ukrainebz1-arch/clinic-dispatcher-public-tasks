@@ -1,0 +1,89 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_urlfix_20260605_144923_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_007_20260605T144923Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_007_20260605T144923Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_urlfix_20260605_144923
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_urlfix_20260605_144923_batch_001_stage_01_people_discovery
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_urlfix_20260605_144923/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Furtbachkrankenhaus Stuttgart | company_website: http://www.fbkh.org/ | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/furtbachkrankenhaus-stuttgart | pflegekraefte: 72
+2. company_name: Helios Rosmann Klinik Breisach | company_website: https://www.helios-gesundheit.de/kliniken/breisach/ | city: Breisach am Rhein | country: Germany | source_url: https://klinikradar.de/kliniken/helios-rosmann-klinik-breisach | pflegekraefte: 85
+3. company_name: Ortenau Klinikum Kehl | company_website: http://offenburg-kehl.ortenau-klinikum.de/ | city: Kehl | country: Germany | source_url: https://klinikradar.de/kliniken/ortenau-klinikum-kehl | pflegekraefte: 91
+4. company_name: Epilepsiezentrum Kork in Kehl | company_website: http://www.epilepsiezentrum.de/ | city: Kehl | country: Germany | source_url: https://klinikradar.de/kliniken/epilepsiezentrum-kork | pflegekraefte: 100
+5. company_name: Kreiskrankenhaus Rheinfelden | company_website: https://klinloe.de | city: Rheinfelden | country: Germany | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-rheinfelden | pflegekraefte: 78
+6. company_name: Rechbergklinik Bretten | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/rechbergklinik-bretten/ | city: Bretten | country: Germany | source_url: https://klinikradar.de/kliniken/rechbergklinik-bretten | pflegekraefte: 145
+7. company_name: SRH Krankenhaus Oberndorf a.N. | company_website: http://www.krankenhaus-oberndorf.de | city: Oberndorf am Neckar | country: Germany | source_url: https://klinikradar.de/kliniken/srh-krankenhaus-oberndorf-an | pflegekraefte: 91
+8. company_name: Alb-Donau Klinikum (Blaubeuren) | company_website: http://www.adk-gmbh.de | city: Blaubeuren | country: Germany | source_url: https://klinikradar.de/kliniken/alb-donau-klinikum-blaubeuren | pflegekraefte: 133
+9. company_name: Vulpius Klinik in Bad Rappenau | company_website: http://www.vulpiusklinik.de | city: Bad Rappenau | country: Germany | source_url: https://klinikradar.de/kliniken/vulpius-klinik | pflegekraefte: 146
+10. company_name: Median Klinik St. Georg Bad Dürrheim | company_website: https://www.median-kliniken.de//de/standorte/median-klinik-st-georg-bad-duerrheim/klinikprofil/ | city: Bad Dürrheim | country: Germany | source_url: https://klinikradar.de/kliniken/median-klinik-st-georg-bad-duerrheim | pflegekraefte: 23
+11. company_name: Neurologische Klinik Selzer in Baiersbronn | company_website: http://www.selzer.de | city: Baiersbronn | country: Germany | source_url: https://klinikradar.de/kliniken/neurologische-klinik-selzer | pflegekraefte: 32
+12. company_name: Klinikum Mittelbaden Bühl | company_website: http://www.klinikum-mittelbaden.de | city: Bühl | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-mittelbaden-buehl | pflegekraefte: 130
+13. company_name: Kliniken Schmieder Heidelberg | company_website: http://www.kliniken-schmieder.de | city: Heidelberg | country: Germany | source_url: https://klinikradar.de/kliniken/kliniken-schmieder-heidelberg | pflegekraefte: 149
+14. company_name: Diakonie-Klinik Mosbach | company_website: http://www.diakonie-klinik-mosbach.de | city: Mosbach | country: Germany | source_url: https://klinikradar.de/kliniken/diakonie-klinik-mosbach | pflegekraefte: 57
+15. company_name: Diakonie-Klinik Mosbach, Standort Tauberbischofsheim | company_website: http://www.diakonie-klinik-mosbach.de | city: Tauberbischofsheim | country: Germany | source_url: https://klinikradar.de/kliniken/diakonie-klinik-mosbach-standort-tauberbischofsheim | pflegekraefte: 5
+16. company_name: Arcus Klinik in Pforzheim | company_website: http://www.arcus-klinik.de | city: Pforzheim | country: Germany | source_url: https://klinikradar.de/kliniken/arcus-klinik | pflegekraefte: 111
+17. company_name: Agaplesion Bethanien Krankenhaus Heidelberg | company_website: https://www.bethanien-heidelberg.de/start | city: Heidelberg | country: Germany | source_url: https://klinikradar.de/kliniken/agaplesion-bethanien-krankenhaus-heidelberg | pflegekraefte: 60
+18. company_name: Friedrich-Husemann-Klinik in Buchenbach (Breisgau) | company_website: https://www.friedrich-husemann-klinik.de | city: Buchenbach | country: Germany | source_url: https://klinikradar.de/kliniken/friedrich-husemann-klinik | pflegekraefte: 52
+19. company_name: Sonnenberg Klinik in Stuttgart | company_website: http://www.sonnenbergklinik.de | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/sonnenberg-klinik | pflegekraefte: 32
+20. company_name: BDH-Klinik Waldkirch | company_website: https://www.bdh-klinik-waldkirch.de/bdh-klinik-waldkirch/ | city: Waldkirch | country: Germany | source_url: https://klinikradar.de/kliniken/bdh-klinik-waldkirch | pflegekraefte: 72
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_007_20260605T144923Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
