@@ -1,0 +1,1546 @@
+TASK_ID: stage05_task_0055
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thure von uexküll-klinik in glottertal|http://www.uexkuell-klinik.de|glottertal|germany",
+    "company_name": "Thure von Uexküll-Klinik in Glottertal",
+    "full_name": "Vicky Pfirsig",
+    "message_target_id": "stage05_task_0055::person_vicky_pfirsig_1b5ffc0b43::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_vicky_pfirsig_1b5ffc0b43",
+    "recipient_value": "vicky.pfirsig@kur.org",
+    "role_title": "Klinikleiterin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thure von uexküll-klinik in glottertal|http://www.uexkuell-klinik.de|glottertal|germany",
+    "company_name": "Thure von Uexküll-Klinik in Glottertal",
+    "full_name": "Vicky Pfirsig",
+    "message_target_id": "stage05_task_0055::person_vicky_pfirsig_1b5ffc0b43::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_vicky_pfirsig_1b5ffc0b43",
+    "recipient_value": "https://de.linkedin.com/in/vicky-pfirsig-ab2173119",
+    "role_title": "Klinikleiterin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thure von uexküll-klinik in glottertal|http://www.uexkuell-klinik.de|glottertal|germany",
+    "company_name": "Thure von Uexküll-Klinik in Glottertal",
+    "full_name": "Vicky Pfirsig",
+    "message_target_id": "stage05_task_0055::person_vicky_pfirsig_1b5ffc0b43::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_vicky_pfirsig_1b5ffc0b43",
+    "recipient_value": "https://de.linkedin.com/in/vicky-pfirsig-ab2173119",
+    "role_title": "Klinikleiterin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thure von uexküll-klinik in glottertal|http://www.uexkuell-klinik.de|glottertal|germany",
+    "company_name": "Thure von Uexküll-Klinik in Glottertal",
+    "full_name": "Vicky Pfirsig",
+    "message_target_id": "stage05_task_0055::person_vicky_pfirsig_e65f2146a4::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_vicky_pfirsig_e65f2146a4",
+    "recipient_value": "vicky.pfirsig@kur.org",
+    "role_title": "Klinikleiterin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thure von uexküll-klinik in glottertal|http://www.uexkuell-klinik.de|glottertal|germany",
+    "company_name": "Thure von Uexküll-Klinik in Glottertal",
+    "full_name": "Vicky Pfirsig",
+    "message_target_id": "stage05_task_0055::person_vicky_pfirsig_e65f2146a4::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_vicky_pfirsig_e65f2146a4",
+    "recipient_value": "https://de.linkedin.com/in/vicky-pfirsig-ab2173119",
+    "role_title": "Klinikleiterin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thure von uexküll-klinik in glottertal|http://www.uexkuell-klinik.de|glottertal|germany",
+    "company_name": "Thure von Uexküll-Klinik in Glottertal",
+    "full_name": "Vicky Pfirsig",
+    "message_target_id": "stage05_task_0055::person_vicky_pfirsig_e65f2146a4::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_vicky_pfirsig_e65f2146a4",
+    "recipient_value": "https://de.linkedin.com/in/vicky-pfirsig-ab2173119",
+    "role_title": "Klinikleiterin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tropenklinik paul-lechler-krankenhaus in tübingen|https://www.tropenklinik.de|tübingen|germany",
+    "company_name": "Tropenklinik Paul-Lechler-Krankenhaus in Tübingen",
+    "full_name": "Dipl.-Kfm. Wolfgang Stäbler",
+    "message_target_id": "stage05_task_0055::person_dipl_kfm_wolfgang_st_bler_47c467e044::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dipl_kfm_wolfgang_st_bler_47c467e044",
+    "recipient_value": "staebler@tropenklinik.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tropenklinik paul-lechler-krankenhaus in tübingen|https://www.tropenklinik.de|tübingen|germany",
+    "company_name": "Tropenklinik Paul-Lechler-Krankenhaus in Tübingen",
+    "full_name": "Dipl.-Kfm. Wolfgang Stäbler",
+    "message_target_id": "stage05_task_0055::person_dipl_kfm_wolfgang_st_bler_47c467e044::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dipl_kfm_wolfgang_st_bler_47c467e044",
+    "recipient_value": "https://de.linkedin.com/in/wolfgang-st%C3%A4bler-54050623a",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tropenklinik paul-lechler-krankenhaus in tübingen|https://www.tropenklinik.de|tübingen|germany",
+    "company_name": "Tropenklinik Paul-Lechler-Krankenhaus in Tübingen",
+    "full_name": "Dipl.-Kfm. Wolfgang Stäbler",
+    "message_target_id": "stage05_task_0055::person_dipl_kfm_wolfgang_st_bler_47c467e044::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dipl_kfm_wolfgang_st_bler_47c467e044",
+    "recipient_value": "https://de.linkedin.com/in/wolfgang-st%C3%A4bler-54050623a",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tropenklinik paul-lechler-krankenhaus in tübingen|https://www.tropenklinik.de|tübingen|germany",
+    "company_name": "Tropenklinik Paul-Lechler-Krankenhaus in Tübingen",
+    "full_name": "Samuel Hahn",
+    "message_target_id": "stage05_task_0055::person_samuel_hahn_33547edb2c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_samuel_hahn_33547edb2c",
+    "recipient_value": "samuelhahn@tropenklinik.de",
+    "role_title": "Stellvertretender Pflegedirektor",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tropenklinik paul-lechler-krankenhaus in tübingen|https://www.tropenklinik.de|tübingen|germany",
+    "company_name": "Tropenklinik Paul-Lechler-Krankenhaus in Tübingen",
+    "full_name": "Sven Braun",
+    "message_target_id": "stage05_task_0055::person_sven_braun_d577f4fc7c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sven_braun_d577f4fc7c",
+    "recipient_value": "braun@tropenklinik.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tropenklinik paul-lechler-krankenhaus in tübingen|https://www.tropenklinik.de|tübingen|germany",
+    "company_name": "Tropenklinik Paul-Lechler-Krankenhaus in Tübingen",
+    "full_name": "Sven Braun",
+    "message_target_id": "stage05_task_0055::person_sven_braun_d577f4fc7c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sven_braun_d577f4fc7c",
+    "recipient_value": "https://de.linkedin.com/in/sven-braun-68b30623a",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tropenklinik paul-lechler-krankenhaus in tübingen|https://www.tropenklinik.de|tübingen|germany",
+    "company_name": "Tropenklinik Paul-Lechler-Krankenhaus in Tübingen",
+    "full_name": "Sven Braun",
+    "message_target_id": "stage05_task_0055::person_sven_braun_d577f4fc7c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sven_braun_d577f4fc7c",
+    "recipient_value": "https://de.linkedin.com/in/sven-braun-68b30623a",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "André Doherr",
+    "message_target_id": "stage05_task_0055::person_andr_doherr_cc6efcd602::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_andr_doherr_cc6efcd602",
+    "recipient_value": "andre.doherr@uniklinik-freiburg.de",
+    "role_title": "Stellvertretender Pflegedirektor Universitätsklinikum Freiburg",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "André Doherr",
+    "message_target_id": "stage05_task_0055::person_andr_doherr_cc6efcd602::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andr_doherr_cc6efcd602",
+    "recipient_value": "https://de.linkedin.com/in/andr%C3%A9-doherr-43254528a",
+    "role_title": "Stellvertretender Pflegedirektor Universitätsklinikum Freiburg",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "André Doherr",
+    "message_target_id": "stage05_task_0055::person_andr_doherr_cc6efcd602::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andr_doherr_cc6efcd602",
+    "recipient_value": "https://de.linkedin.com/in/andr%C3%A9-doherr-43254528a",
+    "role_title": "Stellvertretender Pflegedirektor Universitätsklinikum Freiburg",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "Barbara Nikolaus",
+    "message_target_id": "stage05_task_0055::person_barbara_nikolaus_bd8af525d1::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_barbara_nikolaus_bd8af525d1",
+    "recipient_value": "barbara.nikolaus@uniklinik-freiburg.de",
+    "role_title": "Stellvertretende Pflegedienstleiterin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "Barbara Nikolaus",
+    "message_target_id": "stage05_task_0055::person_barbara_nikolaus_bd8af525d1::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_barbara_nikolaus_bd8af525d1",
+    "recipient_value": "https://de.linkedin.com/in/barbara-nikolaus-550993226",
+    "role_title": "Stellvertretende Pflegedienstleiterin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "Barbara Nikolaus",
+    "message_target_id": "stage05_task_0055::person_barbara_nikolaus_bd8af525d1::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_barbara_nikolaus_bd8af525d1",
+    "recipient_value": "https://de.linkedin.com/in/barbara-nikolaus-550993226",
+    "role_title": "Stellvertretende Pflegedienstleiterin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "Stefan Brade",
+    "message_target_id": "stage05_task_0055::person_stefan_brade_993d28dc18::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefan_brade_993d28dc18",
+    "recipient_value": "stefan.brade@uniklinik-freiburg.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "Stefan Brade",
+    "message_target_id": "stage05_task_0055::person_stefan_brade_993d28dc18::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefan_brade_993d28dc18",
+    "recipient_value": "https://de.linkedin.com/in/stefan-brade-uhz",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "Stefan Brade",
+    "message_target_id": "stage05_task_0055::person_stefan_brade_993d28dc18::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefan_brade_993d28dc18",
+    "recipient_value": "https://de.linkedin.com/in/stefan-brade-uhz",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "Stefanie Bieberstein",
+    "message_target_id": "stage05_task_0055::person_stefanie_bieberstein_2df23ff6af::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefanie_bieberstein_2df23ff6af",
+    "recipient_value": "stefanie.bieberstein@uniklinik-freiburg.de",
+    "role_title": "Pflegedirektorin Universitätsklinikum Freiburg",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "Stefanie Bieberstein",
+    "message_target_id": "stage05_task_0055::person_stefanie_bieberstein_2df23ff6af::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefanie_bieberstein_2df23ff6af",
+    "recipient_value": "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382",
+    "role_title": "Pflegedirektorin Universitätsklinikum Freiburg",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "full_name": "Stefanie Bieberstein",
+    "message_target_id": "stage05_task_0055::person_stefanie_bieberstein_2df23ff6af::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefanie_bieberstein_2df23ff6af",
+    "recipient_value": "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382",
+    "role_title": "Pflegedirektorin Universitätsklinikum Freiburg",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitätsklinikum freiburg: klinik für dermatologie und venerologie|https://www.uniklinik-freiburg.de/de.html|freiburg im breisgau|germany",
+    "company_name": "Universitätsklinikum Freiburg: Klinik für Dermatologie und Venerologie",
+    "full_name": "Kathrin Hammacher-Huber",
+    "message_target_id": "stage05_task_0055::person_kathrin_hammacher_huber_15b09bc14d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_kathrin_hammacher_huber_15b09bc14d",
+    "recipient_value": "kathrin.hammacher-huber@uniklinik-freiburg.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitätsklinikum freiburg: klinik für dermatologie und venerologie|https://www.uniklinik-freiburg.de/de.html|freiburg im breisgau|germany",
+    "company_name": "Universitätsklinikum Freiburg: Klinik für Dermatologie und Venerologie",
+    "full_name": "Stefanie Bieberstein",
+    "message_target_id": "stage05_task_0055::person_stefanie_bieberstein_960371de55::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefanie_bieberstein_960371de55",
+    "recipient_value": "stefanie.bieberstein@uniklinik-freiburg.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitätsklinikum freiburg: klinik für dermatologie und venerologie|https://www.uniklinik-freiburg.de/de.html|freiburg im breisgau|germany",
+    "company_name": "Universitätsklinikum Freiburg: Klinik für Dermatologie und Venerologie",
+    "full_name": "Stefanie Bieberstein",
+    "message_target_id": "stage05_task_0055::person_stefanie_bieberstein_960371de55::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefanie_bieberstein_960371de55",
+    "recipient_value": "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0055"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitätsklinikum freiburg: klinik für dermatologie und venerologie|https://www.uniklinik-freiburg.de/de.html|freiburg im breisgau|germany",
+    "company_name": "Universitätsklinikum Freiburg: Klinik für Dermatologie und Venerologie",
+    "full_name": "Stefanie Bieberstein",
+    "message_target_id": "stage05_task_0055::person_stefanie_bieberstein_960371de55::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefanie_bieberstein_960371de55",
+    "recipient_value": "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0055"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 2,
+      "phone_route_count": 0
+    },
+    "city": "Glottertal",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thure von uexküll-klinik in glottertal|http://www.uexkuell-klinik.de|glottertal|germany",
+    "company_name": "Thure von Uexküll-Klinik in Glottertal",
+    "company_website": "http://www.uexkuell-klinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Teresa Löbbert",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Teresa Löbbert",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "NONE",
+        "candidate_email": "Teresa.Loebbert@kur.org",
+        "confirmed_email": "",
+        "contact_evidence_status": "no_channel",
+        "email_status": "UNVERIFIED_PROVIDER_EMAIL",
+        "full_name": "Teresa Löbbert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_teresa_l_bbert_351989062f",
+        "primary_channel": "NONE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e4c4321916d17c1a/start",
+          "https://www.uexkuell-klinik.de/fileadmin/Redakteure/pdf/260833063-771969000-2023-xml.pdf",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260833063-771969000-2023-xml.pdf",
+          "https://www.uexkuell-klinik.de/kontakt/"
+        ]
+      },
+      {
+        "available_channels": "NONE",
+        "candidate_email": "Teresa.Loebbert@kur.org",
+        "confirmed_email": "",
+        "contact_evidence_status": "no_channel",
+        "email_status": "UNVERIFIED_PROVIDER_EMAIL",
+        "full_name": "Teresa Löbbert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_teresa_l_bbert_41045d6b27",
+        "primary_channel": "NONE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e4c4321916d17c1a/start",
+          "https://www.uexkuell-klinik.de/fileadmin/Redakteure/pdf/260833063-771969000-2023-xml.pdf",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260833063-771969000-2023-xml.pdf",
+          "https://www.uexkuell-klinik.de/kontakt/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "vicky.pfirsig@kur.org",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Vicky Pfirsig",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/vicky-pfirsig-ab2173119",
+        "person_key": "person_vicky_pfirsig_1b5ffc0b43",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleiterin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.uexkuell-klinik.de/kontakt/",
+          "https://www.uexkuell-klinik.de/fileadmin/Redakteure/pdf/260833063-771969000-2023-xml.pdf",
+          "https://de.linkedin.com/in/vicky-pfirsig-ab2173119"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "vicky.pfirsig@kur.org",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Vicky Pfirsig",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/vicky-pfirsig-ab2173119",
+        "person_key": "person_vicky_pfirsig_e65f2146a4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleiterin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.uexkuell-klinik.de/kontakt/",
+          "https://www.uexkuell-klinik.de/fileadmin/Redakteure/pdf/260833063-771969000-2023-xml.pdf",
+          "https://de.linkedin.com/in/vicky-pfirsig-ab2173119"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Klinikleiterin"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e4c4321916d17c1a/start",
+      "https://www.uexkuell-klinik.de/fileadmin/Redakteure/pdf/260833063-771969000-2023-xml.pdf",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260833063-771969000-2023-xml.pdf",
+      "https://www.uexkuell-klinik.de/kontakt/",
+      "https://de.linkedin.com/in/vicky-pfirsig-ab2173119"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Tübingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tropenklinik paul-lechler-krankenhaus in tübingen|https://www.tropenklinik.de|tübingen|germany",
+    "company_name": "Tropenklinik Paul-Lechler-Krankenhaus in Tübingen",
+    "company_website": "https://www.tropenklinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Samuel Hahn",
+          "person_key": "",
+          "role": "Stellvertretender Pflegedirektor"
+        },
+        {
+          "full_name": "Sven Braun",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "staebler@tropenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dipl.-Kfm. Wolfgang Stäbler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/wolfgang-st%C3%A4bler-54050623a",
+        "person_key": "person_dipl_kfm_wolfgang_st_bler_47c467e044",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.tropenklinik.de/unser-haus/krankenhausleitung/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840120-771778000-2023-xml.pdf",
+          "https://www.linkedin.com/posts/wolfgang-st%C3%A4bler-54050623a_1-jahr-hospiz-t%C3%BCbingen-menschen-in-w%C3%BCrde-activity-6985281148423675905-_w7Y",
+          "https://de.linkedin.com/in/wolfgang-st%C3%A4bler-54050623a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "samuelhahn@tropenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Samuel Hahn",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_samuel_hahn_33547edb2c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretender Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.tropenklinik.de/unser-haus/leitendes-pflegeteam/",
+          "https://de.linkedin.com/posts/tropenklinik-paul-lechler-krankenhaus_tropenklinik-t%C3%BCbingen-activity-6973956027406807040-__q6"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "braun@tropenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sven Braun",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sven-braun-68b30623a",
+        "person_key": "person_sven_braun_d577f4fc7c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.tropenklinik.de/beruf-und-karriere/stellenboerse/detail/pflegefachfrau-mann-m-w-d-als-dauernachtwachen-50-100/",
+          "https://www.tropenklinik.de/unser-haus/krankenhausleitung/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840120-771778000-2023-xml.pdf",
+          "https://de.linkedin.com/in/sven-braun-68b30623a",
+          "https://www.tropenklinik.de/unser-haus/leitendes-pflegeteam/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Stellvertretender Pflegedirektor",
+        "Pflegedirektor"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.tropenklinik.de/unser-haus/krankenhausleitung/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260840120-771778000-2023-xml.pdf",
+      "https://www.linkedin.com/posts/wolfgang-st%C3%A4bler-54050623a_1-jahr-hospiz-t%C3%BCbingen-menschen-in-w%C3%BCrde-activity-6985281148423675905-_w7Y",
+      "https://de.linkedin.com/in/wolfgang-st%C3%A4bler-54050623a",
+      "https://www.tropenklinik.de/unser-haus/leitendes-pflegeteam/",
+      "https://de.linkedin.com/posts/tropenklinik-paul-lechler-krankenhaus_tropenklinik-t%C3%BCbingen-activity-6973956027406807040-__q6",
+      "https://www.tropenklinik.de/beruf-und-karriere/stellenboerse/detail/pflegefachfrau-mann-m-w-d-als-dauernachtwachen-50-100/",
+      "https://de.linkedin.com/in/sven-braun-68b30623a"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Krozingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "company_website": "https://www.uniklinik-freiburg.de/de.html",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "André Doherr",
+          "person_key": "",
+          "role": "Stellvertretender Pflegedirektor Universitätsklinikum Freiburg"
+        },
+        {
+          "full_name": "Barbara Nikolaus",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedienstleiterin"
+        },
+        {
+          "full_name": "Stefan Brade",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Stefanie Bieberstein",
+          "person_key": "",
+          "role": "Pflegedirektorin Universitätsklinikum Freiburg"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "andre.doherr@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "André Doherr",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andr%C3%A9-doherr-43254528a",
+        "person_key": "person_andr_doherr_cc6efcd602",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretender Pflegedirektor Universitätsklinikum Freiburg",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/uniklinikum/pflege.html",
+          "https://www.uniklinik-freiburg.de/uniklinikum/pflege/wir-ueber-uns.html",
+          "https://de.linkedin.com/in/andr%C3%A9-doherr-43254528a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "barbara.nikolaus@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Nikolaus",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/barbara-nikolaus-550993226",
+        "person_key": "person_barbara_nikolaus_bd8af525d1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedienstleiterin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/herzzentrum/team.html",
+          "https://www.uniklinik-freiburg.de/herz-und-gefaesschirurgie/team-1.html",
+          "https://de.linkedin.com/in/barbara-nikolaus-550993226"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "stefan.brade@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Brade",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefan-brade-uhz",
+        "person_key": "person_stefan_brade_993d28dc18",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/herzzentrum/team.html",
+          "https://www.uniklinik-freiburg.de/herz-und-gefaesschirurgie/team-1.html",
+          "https://de.linkedin.com/in/stefan-brade-uhz"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "stefanie.bieberstein@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefanie Bieberstein",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382",
+        "person_key": "person_stefanie_bieberstein_2df23ff6af",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Universitätsklinikum Freiburg",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/pflegedirektion.html",
+          "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/vorstand.html",
+          "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Stellvertretender Pflegedirektor Universitätsklinikum Freiburg",
+        "Stellvertretende Pflegedienstleiterin",
+        "Pflegedienstleitung",
+        "Pflegedirektorin Universitätsklinikum Freiburg"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.uniklinik-freiburg.de/uniklinikum/pflege.html",
+      "https://www.uniklinik-freiburg.de/uniklinikum/pflege/wir-ueber-uns.html",
+      "https://de.linkedin.com/in/andr%C3%A9-doherr-43254528a",
+      "https://www.uniklinik-freiburg.de/herzzentrum/team.html",
+      "https://www.uniklinik-freiburg.de/herz-und-gefaesschirurgie/team-1.html",
+      "https://de.linkedin.com/in/barbara-nikolaus-550993226",
+      "https://de.linkedin.com/in/stefan-brade-uhz",
+      "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/pflegedirektion.html",
+      "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/vorstand.html",
+      "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Freiburg im Breisgau",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitätsklinikum freiburg: klinik für dermatologie und venerologie|https://www.uniklinik-freiburg.de/de.html|freiburg im breisgau|germany",
+    "company_name": "Universitätsklinikum Freiburg: Klinik für Dermatologie und Venerologie",
+    "company_website": "https://www.uniklinik-freiburg.de/de.html",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Kathrin Hammacher-Huber",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Stefanie Bieberstein",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "kathrin.hammacher-huber@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kathrin Hammacher-Huber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_kathrin_hammacher_huber_15b09bc14d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/hautklinik/team.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "stefanie.bieberstein@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefanie Bieberstein",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382",
+        "person_key": "person_stefanie_bieberstein_960371de55",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/pflegedirektion.html",
+          "https://de.linkedin.com/posts/uniklinikfr_uniklinikfreiburg-pflege-f%C3%BChrung-activity-7356368313490309123-YkCS",
+          "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Pflegedirektorin"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.uniklinik-freiburg.de/hautklinik/team.html",
+      "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/pflegedirektion.html",
+      "https://de.linkedin.com/posts/uniklinikfr_uniklinikfreiburg-pflege-f%C3%BChrung-activity-7356368313490309123-YkCS",
+      "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 2,
+      "phone_route_count": 0
+    },
+    "city": "Glottertal",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thure von uexküll-klinik in glottertal|http://www.uexkuell-klinik.de|glottertal|germany",
+    "company_name": "Thure von Uexküll-Klinik in Glottertal",
+    "company_website": "http://www.uexkuell-klinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Teresa Löbbert",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Teresa Löbbert",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "NONE",
+        "candidate_email": "Teresa.Loebbert@kur.org",
+        "confirmed_email": "",
+        "contact_evidence_status": "no_channel",
+        "email_status": "UNVERIFIED_PROVIDER_EMAIL",
+        "full_name": "Teresa Löbbert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_teresa_l_bbert_351989062f",
+        "primary_channel": "NONE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e4c4321916d17c1a/start",
+          "https://www.uexkuell-klinik.de/fileadmin/Redakteure/pdf/260833063-771969000-2023-xml.pdf",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260833063-771969000-2023-xml.pdf",
+          "https://www.uexkuell-klinik.de/kontakt/"
+        ]
+      },
+      {
+        "available_channels": "NONE",
+        "candidate_email": "Teresa.Loebbert@kur.org",
+        "confirmed_email": "",
+        "contact_evidence_status": "no_channel",
+        "email_status": "UNVERIFIED_PROVIDER_EMAIL",
+        "full_name": "Teresa Löbbert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_teresa_l_bbert_41045d6b27",
+        "primary_channel": "NONE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e4c4321916d17c1a/start",
+          "https://www.uexkuell-klinik.de/fileadmin/Redakteure/pdf/260833063-771969000-2023-xml.pdf",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260833063-771969000-2023-xml.pdf",
+          "https://www.uexkuell-klinik.de/kontakt/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "vicky.pfirsig@kur.org",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Vicky Pfirsig",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/vicky-pfirsig-ab2173119",
+        "person_key": "person_vicky_pfirsig_1b5ffc0b43",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleiterin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.uexkuell-klinik.de/kontakt/",
+          "https://www.uexkuell-klinik.de/fileadmin/Redakteure/pdf/260833063-771969000-2023-xml.pdf",
+          "https://de.linkedin.com/in/vicky-pfirsig-ab2173119"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "vicky.pfirsig@kur.org",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Vicky Pfirsig",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/vicky-pfirsig-ab2173119",
+        "person_key": "person_vicky_pfirsig_e65f2146a4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleiterin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.uexkuell-klinik.de/kontakt/",
+          "https://www.uexkuell-klinik.de/fileadmin/Redakteure/pdf/260833063-771969000-2023-xml.pdf",
+          "https://de.linkedin.com/in/vicky-pfirsig-ab2173119"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Klinikleiterin"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e4c4321916d17c1a/start",
+      "https://www.uexkuell-klinik.de/fileadmin/Redakteure/pdf/260833063-771969000-2023-xml.pdf",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260833063-771969000-2023-xml.pdf",
+      "https://www.uexkuell-klinik.de/kontakt/",
+      "https://de.linkedin.com/in/vicky-pfirsig-ab2173119"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Tübingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tropenklinik paul-lechler-krankenhaus in tübingen|https://www.tropenklinik.de|tübingen|germany",
+    "company_name": "Tropenklinik Paul-Lechler-Krankenhaus in Tübingen",
+    "company_website": "https://www.tropenklinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Samuel Hahn",
+          "person_key": "",
+          "role": "Stellvertretender Pflegedirektor"
+        },
+        {
+          "full_name": "Sven Braun",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "staebler@tropenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dipl.-Kfm. Wolfgang Stäbler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/wolfgang-st%C3%A4bler-54050623a",
+        "person_key": "person_dipl_kfm_wolfgang_st_bler_47c467e044",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.tropenklinik.de/unser-haus/krankenhausleitung/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840120-771778000-2023-xml.pdf",
+          "https://www.linkedin.com/posts/wolfgang-st%C3%A4bler-54050623a_1-jahr-hospiz-t%C3%BCbingen-menschen-in-w%C3%BCrde-activity-6985281148423675905-_w7Y",
+          "https://de.linkedin.com/in/wolfgang-st%C3%A4bler-54050623a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "samuelhahn@tropenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Samuel Hahn",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_samuel_hahn_33547edb2c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretender Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.tropenklinik.de/unser-haus/leitendes-pflegeteam/",
+          "https://de.linkedin.com/posts/tropenklinik-paul-lechler-krankenhaus_tropenklinik-t%C3%BCbingen-activity-6973956027406807040-__q6"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "braun@tropenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sven Braun",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sven-braun-68b30623a",
+        "person_key": "person_sven_braun_d577f4fc7c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.tropenklinik.de/beruf-und-karriere/stellenboerse/detail/pflegefachfrau-mann-m-w-d-als-dauernachtwachen-50-100/",
+          "https://www.tropenklinik.de/unser-haus/krankenhausleitung/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840120-771778000-2023-xml.pdf",
+          "https://de.linkedin.com/in/sven-braun-68b30623a",
+          "https://www.tropenklinik.de/unser-haus/leitendes-pflegeteam/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Stellvertretender Pflegedirektor",
+        "Pflegedirektor"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.tropenklinik.de/unser-haus/krankenhausleitung/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260840120-771778000-2023-xml.pdf",
+      "https://www.linkedin.com/posts/wolfgang-st%C3%A4bler-54050623a_1-jahr-hospiz-t%C3%BCbingen-menschen-in-w%C3%BCrde-activity-6985281148423675905-_w7Y",
+      "https://de.linkedin.com/in/wolfgang-st%C3%A4bler-54050623a",
+      "https://www.tropenklinik.de/unser-haus/leitendes-pflegeteam/",
+      "https://de.linkedin.com/posts/tropenklinik-paul-lechler-krankenhaus_tropenklinik-t%C3%BCbingen-activity-6973956027406807040-__q6",
+      "https://www.tropenklinik.de/beruf-und-karriere/stellenboerse/detail/pflegefachfrau-mann-m-w-d-als-dauernachtwachen-50-100/",
+      "https://de.linkedin.com/in/sven-braun-68b30623a"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Krozingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitäts-herzzentrum freiburg (bad krozingen)|https://www.uniklinik-freiburg.de/de.html|bad krozingen|germany",
+    "company_name": "Universitäts-Herzzentrum Freiburg (Bad Krozingen)",
+    "company_website": "https://www.uniklinik-freiburg.de/de.html",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "André Doherr",
+          "person_key": "",
+          "role": "Stellvertretender Pflegedirektor Universitätsklinikum Freiburg"
+        },
+        {
+          "full_name": "Barbara Nikolaus",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedienstleiterin"
+        },
+        {
+          "full_name": "Stefan Brade",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Stefanie Bieberstein",
+          "person_key": "",
+          "role": "Pflegedirektorin Universitätsklinikum Freiburg"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "andre.doherr@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "André Doherr",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andr%C3%A9-doherr-43254528a",
+        "person_key": "person_andr_doherr_cc6efcd602",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretender Pflegedirektor Universitätsklinikum Freiburg",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/uniklinikum/pflege.html",
+          "https://www.uniklinik-freiburg.de/uniklinikum/pflege/wir-ueber-uns.html",
+          "https://de.linkedin.com/in/andr%C3%A9-doherr-43254528a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "barbara.nikolaus@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Nikolaus",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/barbara-nikolaus-550993226",
+        "person_key": "person_barbara_nikolaus_bd8af525d1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedienstleiterin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/herzzentrum/team.html",
+          "https://www.uniklinik-freiburg.de/herz-und-gefaesschirurgie/team-1.html",
+          "https://de.linkedin.com/in/barbara-nikolaus-550993226"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "stefan.brade@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Brade",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefan-brade-uhz",
+        "person_key": "person_stefan_brade_993d28dc18",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/herzzentrum/team.html",
+          "https://www.uniklinik-freiburg.de/herz-und-gefaesschirurgie/team-1.html",
+          "https://de.linkedin.com/in/stefan-brade-uhz"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "stefanie.bieberstein@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefanie Bieberstein",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382",
+        "person_key": "person_stefanie_bieberstein_2df23ff6af",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Universitätsklinikum Freiburg",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/pflegedirektion.html",
+          "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/vorstand.html",
+          "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Stellvertretender Pflegedirektor Universitätsklinikum Freiburg",
+        "Stellvertretende Pflegedienstleiterin",
+        "Pflegedienstleitung",
+        "Pflegedirektorin Universitätsklinikum Freiburg"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.uniklinik-freiburg.de/uniklinikum/pflege.html",
+      "https://www.uniklinik-freiburg.de/uniklinikum/pflege/wir-ueber-uns.html",
+      "https://de.linkedin.com/in/andr%C3%A9-doherr-43254528a",
+      "https://www.uniklinik-freiburg.de/herzzentrum/team.html",
+      "https://www.uniklinik-freiburg.de/herz-und-gefaesschirurgie/team-1.html",
+      "https://de.linkedin.com/in/barbara-nikolaus-550993226",
+      "https://de.linkedin.com/in/stefan-brade-uhz",
+      "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/pflegedirektion.html",
+      "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/vorstand.html",
+      "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Freiburg im Breisgau",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|universitätsklinikum freiburg: klinik für dermatologie und venerologie|https://www.uniklinik-freiburg.de/de.html|freiburg im breisgau|germany",
+    "company_name": "Universitätsklinikum Freiburg: Klinik für Dermatologie und Venerologie",
+    "company_website": "https://www.uniklinik-freiburg.de/de.html",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Kathrin Hammacher-Huber",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Stefanie Bieberstein",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "kathrin.hammacher-huber@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kathrin Hammacher-Huber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_kathrin_hammacher_huber_15b09bc14d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/hautklinik/team.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "stefanie.bieberstein@uniklinik-freiburg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefanie Bieberstein",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382",
+        "person_key": "person_stefanie_bieberstein_960371de55",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/pflegedirektion.html",
+          "https://de.linkedin.com/posts/uniklinikfr_uniklinikfreiburg-pflege-f%C3%BChrung-activity-7356368313490309123-YkCS",
+          "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Pflegedirektorin"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.uniklinik-freiburg.de/hautklinik/team.html",
+      "https://www.uniklinik-freiburg.de/uniklinikum/klinikumsleitung/pflegedirektion.html",
+      "https://de.linkedin.com/posts/uniklinikfr_uniklinikfreiburg-pflege-f%C3%BChrung-activity-7356368313490309123-YkCS",
+      "https://de.linkedin.com/in/stefanie-bieberstein-36b9b3382"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
