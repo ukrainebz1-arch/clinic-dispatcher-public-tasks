@@ -1,0 +1,1258 @@
+TASK_ID: stage05_task_0009
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken wangen|http://www.fachkliniken-wangen.de|wangen im allgäu|germany",
+    "company_name": "Fachkliniken Wangen",
+    "full_name": "Florian Ihler",
+    "message_target_id": "stage05_task_0009::person_florian_ihler_3971399e8a::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_florian_ihler_3971399e8a",
+    "recipient_value": "florian.ihler@wz-kliniken.de",
+    "role_title": "Leitung Pflege-, Therapie- und Patientenmanagement",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken wangen|http://www.fachkliniken-wangen.de|wangen im allgäu|germany",
+    "company_name": "Fachkliniken Wangen",
+    "full_name": "Nicole Baumann",
+    "message_target_id": "stage05_task_0009::person_nicole_baumann_ea8d83f333::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_nicole_baumann_ea8d83f333",
+    "recipient_value": "nicole.baumann@wz-kliniken.de",
+    "role_title": "Personalreferentin",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken wangen|http://www.fachkliniken-wangen.de|wangen im allgäu|germany",
+    "company_name": "Fachkliniken Wangen",
+    "full_name": "Stefan Richter",
+    "message_target_id": "stage05_task_0009::person_stefan_richter_ede389a325::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefan_richter_ede389a325",
+    "recipient_value": "stefan.richter@wz-kliniken.de",
+    "role_title": "Klinikdirektor",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken wangen|http://www.fachkliniken-wangen.de|wangen im allgäu|germany",
+    "company_name": "Fachkliniken Wangen",
+    "full_name": "Stefan Richter",
+    "message_target_id": "stage05_task_0009::person_stefan_richter_ede389a325::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefan_richter_ede389a325",
+    "recipient_value": "https://de.linkedin.com/in/stefan-richter-0b9740150",
+    "role_title": "Klinikdirektor",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken wangen|http://www.fachkliniken-wangen.de|wangen im allgäu|germany",
+    "company_name": "Fachkliniken Wangen",
+    "full_name": "Stefan Richter",
+    "message_target_id": "stage05_task_0009::person_stefan_richter_ede389a325::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefan_richter_ede389a325",
+    "recipient_value": "https://de.linkedin.com/in/stefan-richter-0b9740150",
+    "role_title": "Klinikdirektor",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken wangen|http://www.fachkliniken-wangen.de|wangen im allgäu|germany",
+    "company_name": "Fachkliniken Wangen",
+    "full_name": "Walter Binder",
+    "message_target_id": "stage05_task_0009::person_walter_binder_d4cb1f6349::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_walter_binder_d4cb1f6349",
+    "recipient_value": "walter.binder@wz-kliniken.de",
+    "role_title": "Kaufmännische Leitung Kinderkliniken",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken wangen|http://www.fachkliniken-wangen.de|wangen im allgäu|germany",
+    "company_name": "Fachkliniken Wangen",
+    "full_name": "Walter Binder",
+    "message_target_id": "stage05_task_0009::person_walter_binder_d4cb1f6349::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_walter_binder_d4cb1f6349",
+    "recipient_value": "https://de.linkedin.com/in/walter-binder-75785b15b",
+    "role_title": "Kaufmännische Leitung Kinderkliniken",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken wangen|http://www.fachkliniken-wangen.de|wangen im allgäu|germany",
+    "company_name": "Fachkliniken Wangen",
+    "full_name": "Walter Binder",
+    "message_target_id": "stage05_task_0009::person_walter_binder_d4cb1f6349::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_walter_binder_d4cb1f6349",
+    "recipient_value": "https://de.linkedin.com/in/walter-binder-75785b15b",
+    "role_title": "Kaufmännische Leitung Kinderkliniken",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|friedrich-husemann-klinik in buchenbach (breisgau)|https://www.friedrich-husemann-klinik.de|buchenbach|germany",
+    "company_name": "Friedrich-Husemann-Klinik in Buchenbach (Breisgau)",
+    "full_name": "Thomas Pöschl",
+    "message_target_id": "stage05_task_0009::person_thomas_p_schl_ff251b38ce::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_thomas_p_schl_ff251b38ce",
+    "recipient_value": "poeschl@friedrich-husemann-klinik.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|furtbachkrankenhaus stuttgart|http://www.fbkh.org/|stuttgart|germany",
+    "company_name": "Furtbachkrankenhaus Stuttgart",
+    "full_name": "Ronny Winzler",
+    "message_target_id": "stage05_task_0009::person_ronny_winzler_e1f4985a56::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ronny_winzler_e1f4985a56",
+    "recipient_value": "winzler@fbkh.org",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Lisa Müller",
+    "message_target_id": "stage05_task_0009::person_lisa_m_ller_c637fd810e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_lisa_m_ller_c637fd810e",
+    "recipient_value": "lisa.mueller@rkh-gesundheit.de",
+    "role_title": "Direktorin für Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Lisa Müller",
+    "message_target_id": "stage05_task_0009::person_lisa_m_ller_c637fd810e::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_lisa_m_ller_c637fd810e",
+    "recipient_value": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+    "role_title": "Direktorin für Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Lisa Müller",
+    "message_target_id": "stage05_task_0009::person_lisa_m_ller_c637fd810e::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_lisa_m_ller_c637fd810e",
+    "recipient_value": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+    "role_title": "Direktorin für Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Lisa Müller",
+    "message_target_id": "stage05_task_0009::person_lisa_m_ller_a1ea2dfe49::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_lisa_m_ller_a1ea2dfe49",
+    "recipient_value": "lisa.mueller@rkh-gesundheit.de",
+    "role_title": "Direktorin für Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Lisa Müller",
+    "message_target_id": "stage05_task_0009::person_lisa_m_ller_a1ea2dfe49::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_lisa_m_ller_a1ea2dfe49",
+    "recipient_value": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+    "role_title": "Direktorin für Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Lisa Müller",
+    "message_target_id": "stage05_task_0009::person_lisa_m_ller_a1ea2dfe49::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_lisa_m_ller_a1ea2dfe49",
+    "recipient_value": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+    "role_title": "Direktorin für Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Roland Walther",
+    "message_target_id": "stage05_task_0009::person_roland_walther_ac27a4994c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_roland_walther_ac27a4994c",
+    "recipient_value": "roland.walther@rkh-gesundheit.de",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Roland Walther",
+    "message_target_id": "stage05_task_0009::person_roland_walther_ac27a4994c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_roland_walther_ac27a4994c",
+    "recipient_value": "https://de.linkedin.com/in/roland-walther-2bb2862a8",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Roland Walther",
+    "message_target_id": "stage05_task_0009::person_roland_walther_ac27a4994c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_roland_walther_ac27a4994c",
+    "recipient_value": "https://de.linkedin.com/in/roland-walther-2bb2862a8",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Roland Walther",
+    "message_target_id": "stage05_task_0009::person_roland_walther_92087c8931::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_roland_walther_92087c8931",
+    "recipient_value": "roland.walther@rkh-gesundheit.de",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Roland Walther",
+    "message_target_id": "stage05_task_0009::person_roland_walther_92087c8931::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_roland_walther_92087c8931",
+    "recipient_value": "https://de.linkedin.com/in/roland-walther-2bb2862a8",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0009"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "full_name": "Roland Walther",
+    "message_target_id": "stage05_task_0009::person_roland_walther_92087c8931::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_roland_walther_92087c8931",
+    "recipient_value": "https://de.linkedin.com/in/roland-walther-2bb2862a8",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0009"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Wangen im Allgäu",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken wangen|http://www.fachkliniken-wangen.de|wangen im allgäu|germany",
+    "company_name": "Fachkliniken Wangen",
+    "company_website": "http://www.fachkliniken-wangen.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Florian Ihler",
+          "person_key": "",
+          "role": "Leitung Pflege-, Therapie- und Patientenmanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "florian.ihler@wz-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Florian Ihler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_florian_ihler_3971399e8a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Pflege-, Therapie- und Patientenmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.wz-kliniken.de/fachkliniken-wangen/ueber-uns/fachkliniken-wangen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "nicole.baumann@wz-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicole Baumann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nicole_baumann_ea8d83f333",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalreferentin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.wz-kliniken.de/fachkliniken-wangen/ueber-uns/fachkliniken-wangen/ansprechpartner/",
+          "https://www.wz-kliniken.de/fachkliniken-wangen/karriere/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "stefan.richter@wz-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Richter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefan-richter-0b9740150",
+        "person_key": "person_stefan_richter_ede389a325",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikdirektor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.wz-kliniken.de/fachkliniken-wangen/ueber-uns/fachkliniken-wangen/ansprechpartner/",
+          "https://de.linkedin.com/in/stefan-richter-0b9740150"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "walter.binder@wz-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Walter Binder",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/walter-binder-75785b15b",
+        "person_key": "person_walter_binder_d4cb1f6349",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Leitung Kinderkliniken",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.wz-kliniken.de/fachkliniken-wangen/ueber-uns/fachkliniken-wangen/ansprechpartner/",
+          "https://de.linkedin.com/in/walter-binder-75785b15b"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting",
+        "other_management"
+      ],
+      "roles": [
+        "Leitung Pflege-, Therapie- und Patientenmanagement",
+        "Personalreferentin",
+        "Klinikdirektor",
+        "Kaufmännische Leitung Kinderkliniken"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.wz-kliniken.de/fachkliniken-wangen/ueber-uns/fachkliniken-wangen/ansprechpartner/",
+      "https://www.wz-kliniken.de/fachkliniken-wangen/karriere/",
+      "https://de.linkedin.com/in/stefan-richter-0b9740150",
+      "https://de.linkedin.com/in/walter-binder-75785b15b"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Buchenbach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|friedrich-husemann-klinik in buchenbach (breisgau)|https://www.friedrich-husemann-klinik.de|buchenbach|germany",
+    "company_name": "Friedrich-Husemann-Klinik in Buchenbach (Breisgau)",
+    "company_website": "https://www.friedrich-husemann-klinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Thomas Pöschl",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "poeschl@friedrich-husemann-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Pöschl",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_p_schl_ff251b38ce",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.friedrich-husemann-klinik.de/heilerzieher-m-w-d/",
+          "https://klinikfuehrer.tk.de/Friedrich-Husemann-Klinik-in-79256-Buchenbach/barrierefreiheit/krankenhaus/26083041300",
+          "https://www.friedrich-husemann-klinik.de/pflegefachkraft-m-w-d-fuer-den-nachtdienst/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.friedrich-husemann-klinik.de/heilerzieher-m-w-d/",
+      "https://klinikfuehrer.tk.de/Friedrich-Husemann-Klinik-in-79256-Buchenbach/barrierefreiheit/krankenhaus/26083041300",
+      "https://www.friedrich-husemann-klinik.de/pflegefachkraft-m-w-d-fuer-den-nachtdienst/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|furtbachkrankenhaus stuttgart|http://www.fbkh.org/|stuttgart|germany",
+    "company_name": "Furtbachkrankenhaus Stuttgart",
+    "company_website": "http://www.fbkh.org/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Ronny Winzler",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "winzler@fbkh.org",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ronny Winzler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ronny_winzler_e1f4985a56",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/276e28eb8500bde7/start",
+          "https://www.krankenhaeuser-stuttgart.de/die-krankenhaeuser/furtbachkrankenhaus-klinik-fuer-psychiatrie-und-psychotherapie/",
+          "https://www.fbkh.org/stellenanzeige/pflegekraft-m/w/d-voll-oder-teilzeit/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/276e28eb8500bde7/start",
+      "https://www.krankenhaeuser-stuttgart.de/die-krankenhaeuser/furtbachkrankenhaus-klinik-fuer-psychiatrie-und-psychotherapie/",
+      "https://www.fbkh.org/stellenanzeige/pflegekraft-m/w/d-voll-oder-teilzeit/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bruchsal",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "company_website": "https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Lisa Müller",
+          "person_key": "",
+          "role": "Direktorin für Pflege- und Prozessmanagement"
+        },
+        {
+          "full_name": "Lisa Müller",
+          "person_key": "",
+          "role": "Direktorin für Pflege- und Prozessmanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "lisa.mueller@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lisa Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+        "person_key": "person_lisa_m_ller_c637fd810e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktorin für Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bruchsal_2024.pdf",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Informationen/Patienten-und-Mitarbeiterzeitung/KLK/rkhaktuell-2025-04_KLK.pdf",
+          "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "lisa.mueller@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lisa Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+        "person_key": "person_lisa_m_ller_a1ea2dfe49",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktorin für Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bruchsal_2024.pdf",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Informationen/Patienten-und-Mitarbeiterzeitung/KLK/rkhaktuell-2025-04_KLK.pdf",
+          "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "roland.walther@rkh-gesundheit.de",
+        "confirmed_email": "roland.walther@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Roland Walther",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/roland-walther-2bb2862a8",
+        "person_key": "person_roland_walther_ac27a4994c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikgeschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bruchsal_2024.pdf",
+          "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/",
+          "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+          "https://www.rkh-karriere.de/rkh-akademie/kongresse/ludwigsburger-fachpflegesymposium/jubilaeumssymposium-2025/",
+          "https://de.linkedin.com/in/roland-walther-2bb2862a8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "roland.walther@rkh-gesundheit.de",
+        "confirmed_email": "roland.walther@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Roland Walther",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/roland-walther-2bb2862a8",
+        "person_key": "person_roland_walther_92087c8931",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikgeschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bruchsal_2024.pdf",
+          "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/",
+          "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+          "https://www.rkh-karriere.de/rkh-akademie/kongresse/ludwigsburger-fachpflegesymposium/jubilaeumssymposium-2025/",
+          "https://de.linkedin.com/in/roland-walther-2bb2862a8"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Direktorin für Pflege- und Prozessmanagement",
+        "Klinikgeschäftsführer"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bruchsal_2024.pdf",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Informationen/Patienten-und-Mitarbeiterzeitung/KLK/rkhaktuell-2025-04_KLK.pdf",
+      "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+      "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/",
+      "https://www.rkh-karriere.de/rkh-akademie/kongresse/ludwigsburger-fachpflegesymposium/jubilaeumssymposium-2025/",
+      "https://de.linkedin.com/in/roland-walther-2bb2862a8"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Wangen im Allgäu",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fachkliniken wangen|http://www.fachkliniken-wangen.de|wangen im allgäu|germany",
+    "company_name": "Fachkliniken Wangen",
+    "company_website": "http://www.fachkliniken-wangen.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Florian Ihler",
+          "person_key": "",
+          "role": "Leitung Pflege-, Therapie- und Patientenmanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "florian.ihler@wz-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Florian Ihler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_florian_ihler_3971399e8a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Pflege-, Therapie- und Patientenmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.wz-kliniken.de/fachkliniken-wangen/ueber-uns/fachkliniken-wangen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "nicole.baumann@wz-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicole Baumann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nicole_baumann_ea8d83f333",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalreferentin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.wz-kliniken.de/fachkliniken-wangen/ueber-uns/fachkliniken-wangen/ansprechpartner/",
+          "https://www.wz-kliniken.de/fachkliniken-wangen/karriere/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "stefan.richter@wz-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Richter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefan-richter-0b9740150",
+        "person_key": "person_stefan_richter_ede389a325",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikdirektor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.wz-kliniken.de/fachkliniken-wangen/ueber-uns/fachkliniken-wangen/ansprechpartner/",
+          "https://de.linkedin.com/in/stefan-richter-0b9740150"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "walter.binder@wz-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Walter Binder",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/walter-binder-75785b15b",
+        "person_key": "person_walter_binder_d4cb1f6349",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Leitung Kinderkliniken",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.wz-kliniken.de/fachkliniken-wangen/ueber-uns/fachkliniken-wangen/ansprechpartner/",
+          "https://de.linkedin.com/in/walter-binder-75785b15b"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting",
+        "other_management"
+      ],
+      "roles": [
+        "Leitung Pflege-, Therapie- und Patientenmanagement",
+        "Personalreferentin",
+        "Klinikdirektor",
+        "Kaufmännische Leitung Kinderkliniken"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.wz-kliniken.de/fachkliniken-wangen/ueber-uns/fachkliniken-wangen/ansprechpartner/",
+      "https://www.wz-kliniken.de/fachkliniken-wangen/karriere/",
+      "https://de.linkedin.com/in/stefan-richter-0b9740150",
+      "https://de.linkedin.com/in/walter-binder-75785b15b"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Buchenbach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|friedrich-husemann-klinik in buchenbach (breisgau)|https://www.friedrich-husemann-klinik.de|buchenbach|germany",
+    "company_name": "Friedrich-Husemann-Klinik in Buchenbach (Breisgau)",
+    "company_website": "https://www.friedrich-husemann-klinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Thomas Pöschl",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "poeschl@friedrich-husemann-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Pöschl",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_p_schl_ff251b38ce",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.friedrich-husemann-klinik.de/heilerzieher-m-w-d/",
+          "https://klinikfuehrer.tk.de/Friedrich-Husemann-Klinik-in-79256-Buchenbach/barrierefreiheit/krankenhaus/26083041300",
+          "https://www.friedrich-husemann-klinik.de/pflegefachkraft-m-w-d-fuer-den-nachtdienst/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.friedrich-husemann-klinik.de/heilerzieher-m-w-d/",
+      "https://klinikfuehrer.tk.de/Friedrich-Husemann-Klinik-in-79256-Buchenbach/barrierefreiheit/krankenhaus/26083041300",
+      "https://www.friedrich-husemann-klinik.de/pflegefachkraft-m-w-d-fuer-den-nachtdienst/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|furtbachkrankenhaus stuttgart|http://www.fbkh.org/|stuttgart|germany",
+    "company_name": "Furtbachkrankenhaus Stuttgart",
+    "company_website": "http://www.fbkh.org/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Ronny Winzler",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "winzler@fbkh.org",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ronny Winzler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ronny_winzler_e1f4985a56",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/276e28eb8500bde7/start",
+          "https://www.krankenhaeuser-stuttgart.de/die-krankenhaeuser/furtbachkrankenhaus-klinik-fuer-psychiatrie-und-psychotherapie/",
+          "https://www.fbkh.org/stellenanzeige/pflegekraft-m/w/d-voll-oder-teilzeit/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/276e28eb8500bde7/start",
+      "https://www.krankenhaeuser-stuttgart.de/die-krankenhaeuser/furtbachkrankenhaus-klinik-fuer-psychiatrie-und-psychotherapie/",
+      "https://www.fbkh.org/stellenanzeige/pflegekraft-m/w/d-voll-oder-teilzeit/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bruchsal",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|fürst-stirum-klinik bruchsal|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/|bruchsal|germany",
+    "company_name": "Fürst-Stirum-Klinik Bruchsal",
+    "company_website": "https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Lisa Müller",
+          "person_key": "",
+          "role": "Direktorin für Pflege- und Prozessmanagement"
+        },
+        {
+          "full_name": "Lisa Müller",
+          "person_key": "",
+          "role": "Direktorin für Pflege- und Prozessmanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "lisa.mueller@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lisa Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+        "person_key": "person_lisa_m_ller_c637fd810e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktorin für Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bruchsal_2024.pdf",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Informationen/Patienten-und-Mitarbeiterzeitung/KLK/rkhaktuell-2025-04_KLK.pdf",
+          "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "lisa.mueller@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lisa Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+        "person_key": "person_lisa_m_ller_a1ea2dfe49",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktorin für Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bruchsal_2024.pdf",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Informationen/Patienten-und-Mitarbeiterzeitung/KLK/rkhaktuell-2025-04_KLK.pdf",
+          "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "roland.walther@rkh-gesundheit.de",
+        "confirmed_email": "roland.walther@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Roland Walther",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/roland-walther-2bb2862a8",
+        "person_key": "person_roland_walther_ac27a4994c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikgeschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bruchsal_2024.pdf",
+          "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/",
+          "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+          "https://www.rkh-karriere.de/rkh-akademie/kongresse/ludwigsburger-fachpflegesymposium/jubilaeumssymposium-2025/",
+          "https://de.linkedin.com/in/roland-walther-2bb2862a8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "roland.walther@rkh-gesundheit.de",
+        "confirmed_email": "roland.walther@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Roland Walther",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/roland-walther-2bb2862a8",
+        "person_key": "person_roland_walther_92087c8931",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikgeschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bruchsal_2024.pdf",
+          "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/",
+          "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+          "https://www.rkh-karriere.de/rkh-akademie/kongresse/ludwigsburger-fachpflegesymposium/jubilaeumssymposium-2025/",
+          "https://de.linkedin.com/in/roland-walther-2bb2862a8"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Direktorin für Pflege- und Prozessmanagement",
+        "Klinikgeschäftsführer"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bruchsal_2024.pdf",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Informationen/Patienten-und-Mitarbeiterzeitung/KLK/rkhaktuell-2025-04_KLK.pdf",
+      "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+      "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/",
+      "https://www.rkh-karriere.de/rkh-akademie/kongresse/ludwigsburger-fachpflegesymposium/jubilaeumssymposium-2025/",
+      "https://de.linkedin.com/in/roland-walther-2bb2862a8"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
