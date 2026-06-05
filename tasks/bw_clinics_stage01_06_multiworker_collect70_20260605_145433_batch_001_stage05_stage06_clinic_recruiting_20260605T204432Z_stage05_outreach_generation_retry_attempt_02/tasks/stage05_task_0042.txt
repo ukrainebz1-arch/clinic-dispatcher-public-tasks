@@ -1,0 +1,1806 @@
+TASK_ID: stage05_task_0042
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "full_name": "André Mertel",
+    "message_target_id": "stage05_task_0042::person_andr_mertel_2207717082::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_andr_mertel_2207717082",
+    "recipient_value": "andre.mertel@rems-murr-kliniken.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "full_name": "Dr. med. Christoph Ulmer",
+    "message_target_id": "stage05_task_0042::person_dr_med_christoph_ulmer_442f515d32::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_med_christoph_ulmer_442f515d32",
+    "recipient_value": "christoph.ulmer@rems-murr-kliniken.de",
+    "role_title": "Ärztlicher Direktor Schorndorf",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "full_name": "Dr. med. Christoph Ulmer",
+    "message_target_id": "stage05_task_0042::person_dr_med_christoph_ulmer_442f515d32::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_med_christoph_ulmer_442f515d32",
+    "recipient_value": "https://de.linkedin.com/in/christoph-ulmer-3569672a2",
+    "role_title": "Ärztlicher Direktor Schorndorf",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "full_name": "Dr. med. Christoph Ulmer",
+    "message_target_id": "stage05_task_0042::person_dr_med_christoph_ulmer_442f515d32::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_med_christoph_ulmer_442f515d32",
+    "recipient_value": "https://de.linkedin.com/in/christoph-ulmer-3569672a2",
+    "role_title": "Ärztlicher Direktor Schorndorf",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "full_name": "Dr. med. Rainer Pfrommer",
+    "message_target_id": "stage05_task_0042::person_dr_med_rainer_pfrommer_f0f327698b::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_med_rainer_pfrommer_f0f327698b",
+    "recipient_value": "rainer.pfrommer@rems-murr-kliniken.de",
+    "role_title": "Klinikleitung Schorndorf / Prokurist",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "full_name": "Dr. med. Rainer Pfrommer",
+    "message_target_id": "stage05_task_0042::person_dr_med_rainer_pfrommer_f0f327698b::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_med_rainer_pfrommer_f0f327698b",
+    "recipient_value": "https://de.linkedin.com/in/rainer-pfrommer-a8554aba",
+    "role_title": "Klinikleitung Schorndorf / Prokurist",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "full_name": "Dr. med. Rainer Pfrommer",
+    "message_target_id": "stage05_task_0042::person_dr_med_rainer_pfrommer_f0f327698b::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_med_rainer_pfrommer_f0f327698b",
+    "recipient_value": "https://de.linkedin.com/in/rainer-pfrommer-a8554aba",
+    "role_title": "Klinikleitung Schorndorf / Prokurist",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "full_name": "Giancarlo Cannavò",
+    "message_target_id": "stage05_task_0042::person_giancarlo_cannav_d1bd3592d6::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_giancarlo_cannav_d1bd3592d6",
+    "recipient_value": "giancarlo.cannavo@rems-murr-kliniken.de",
+    "role_title": "Standortübergreifender Pflegedirektor / Mitglied der Geschäftsleitung",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "full_name": "Sabrina Barschtipan",
+    "message_target_id": "stage05_task_0042::person_sabrina_barschtipan_0ffee814e5::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sabrina_barschtipan_0ffee814e5",
+    "recipient_value": "sabrina.barschtipan@rems-murr-kliniken.de",
+    "role_title": "Pflegerische Standortleitung Schorndorf",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinikum winnenden|http://www.rems-murr-kliniken.de|winnenden|germany",
+    "company_name": "Rems-Murr-Klinikum Winnenden",
+    "full_name": "Anja Krehahn",
+    "message_target_id": "stage05_task_0042::person_anja_krehahn_d052931f35::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_anja_krehahn_d052931f35",
+    "recipient_value": "anja.krehahn@rems-murr-kliniken.de",
+    "role_title": "Leitung Personal und Recht",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinikum winnenden|http://www.rems-murr-kliniken.de|winnenden|germany",
+    "company_name": "Rems-Murr-Klinikum Winnenden",
+    "full_name": "Dr. Christian Schliep",
+    "message_target_id": "stage05_task_0042::person_dr_christian_schliep_c6b051b5e5::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_christian_schliep_c6b051b5e5",
+    "recipient_value": "christian.schliep@rems-murr-kliniken.de",
+    "role_title": "Klinikleitung Winnenden",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinikum winnenden|http://www.rems-murr-kliniken.de|winnenden|germany",
+    "company_name": "Rems-Murr-Klinikum Winnenden",
+    "full_name": "Dr. Christian Schliep",
+    "message_target_id": "stage05_task_0042::person_dr_christian_schliep_c6b051b5e5::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_christian_schliep_c6b051b5e5",
+    "recipient_value": "https://de.linkedin.com/in/dr-christian-schliep-330017b4",
+    "role_title": "Klinikleitung Winnenden",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinikum winnenden|http://www.rems-murr-kliniken.de|winnenden|germany",
+    "company_name": "Rems-Murr-Klinikum Winnenden",
+    "full_name": "Dr. Christian Schliep",
+    "message_target_id": "stage05_task_0042::person_dr_christian_schliep_c6b051b5e5::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_christian_schliep_c6b051b5e5",
+    "recipient_value": "https://de.linkedin.com/in/dr-christian-schliep-330017b4",
+    "role_title": "Klinikleitung Winnenden",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinikum winnenden|http://www.rems-murr-kliniken.de|winnenden|germany",
+    "company_name": "Rems-Murr-Klinikum Winnenden",
+    "full_name": "Giancarlo Cannavò",
+    "message_target_id": "stage05_task_0042::person_giancarlo_cannav_08489f4de6::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_giancarlo_cannav_08489f4de6",
+    "recipient_value": "giancarlo.cannavo@rems-murr-kliniken.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "full_name": "Catharina Bothner",
+    "message_target_id": "stage05_task_0042::person_catharina_bothner_af274c2657::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_catharina_bothner_af274c2657",
+    "recipient_value": "catharina.bothner@rku.de",
+    "role_title": "Vice President of Magnet Nursing / Pflegedirektorin RKU",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "full_name": "Helene Maucher",
+    "message_target_id": "stage05_task_0042::person_helene_maucher_d1fb72cc7e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_helene_maucher_d1fb72cc7e",
+    "recipient_value": "helene.maucher@rku.de",
+    "role_title": "Pflegedirektorin / Magnet Chief Nursing Officer Campus Nord",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "full_name": "Helene Maucher",
+    "message_target_id": "stage05_task_0042::person_helene_maucher_d1fb72cc7e::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_helene_maucher_d1fb72cc7e",
+    "recipient_value": "https://de.linkedin.com/in/dr-rer-cur-helene-maucher-70949b108",
+    "role_title": "Pflegedirektorin / Magnet Chief Nursing Officer Campus Nord",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "full_name": "Helene Maucher",
+    "message_target_id": "stage05_task_0042::person_helene_maucher_d1fb72cc7e::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_helene_maucher_d1fb72cc7e",
+    "recipient_value": "https://de.linkedin.com/in/dr-rer-cur-helene-maucher-70949b108",
+    "role_title": "Pflegedirektorin / Magnet Chief Nursing Officer Campus Nord",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "full_name": "Jelena Kunecki",
+    "message_target_id": "stage05_task_0042::person_jelena_kunecki_9b75984896::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_jelena_kunecki_9b75984896",
+    "recipient_value": "jelena.kunecki@uniklinik-ulm.de",
+    "role_title": "Stellvertretende Pflegedirektorin Universitätsklinikum Ulm",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "full_name": "Jelena Kunecki",
+    "message_target_id": "stage05_task_0042::person_jelena_kunecki_9b75984896::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_jelena_kunecki_9b75984896",
+    "recipient_value": "https://de.linkedin.com/in/jelena-kunecki-98178a115",
+    "role_title": "Stellvertretende Pflegedirektorin Universitätsklinikum Ulm",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "full_name": "Jelena Kunecki",
+    "message_target_id": "stage05_task_0042::person_jelena_kunecki_9b75984896::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_jelena_kunecki_9b75984896",
+    "recipient_value": "https://de.linkedin.com/in/jelena-kunecki-98178a115",
+    "role_title": "Stellvertretende Pflegedirektorin Universitätsklinikum Ulm",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "full_name": "Robert Jeske",
+    "message_target_id": "stage05_task_0042::person_robert_jeske_37dae0c208::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_robert_jeske_37dae0c208",
+    "recipient_value": "https://de.linkedin.com/in/robert-jeske",
+    "role_title": "Pflegedirektor Universitätsklinikum Ulm",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "full_name": "Robert Jeske",
+    "message_target_id": "stage05_task_0042::person_robert_jeske_37dae0c208::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_robert_jeske_37dae0c208",
+    "recipient_value": "https://de.linkedin.com/in/robert-jeske",
+    "role_title": "Pflegedirektor Universitätsklinikum Ulm",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "full_name": "Annika Kurz",
+    "message_target_id": "stage05_task_0042::person_annika_kurz_f215167374::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_annika_kurz_f215167374",
+    "recipient_value": "annika.kurz@rbk.de",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "full_name": "Annika Kurz",
+    "message_target_id": "stage05_task_0042::person_annika_kurz_f215167374::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_annika_kurz_f215167374",
+    "recipient_value": "https://de.linkedin.com/in/annika-kurz-841026319",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "full_name": "Annika Kurz",
+    "message_target_id": "stage05_task_0042::person_annika_kurz_f215167374::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_annika_kurz_f215167374",
+    "recipient_value": "https://de.linkedin.com/in/annika-kurz-841026319",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "full_name": "Christel Idler",
+    "message_target_id": "stage05_task_0042::person_christel_idler_04850c9aa1::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_christel_idler_04850c9aa1",
+    "recipient_value": "christel.idler@rbk.de",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "full_name": "Christel Idler",
+    "message_target_id": "stage05_task_0042::person_christel_idler_04850c9aa1::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christel_idler_04850c9aa1",
+    "recipient_value": "https://de.linkedin.com/in/christel-idler-8036711a1",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "full_name": "Christel Idler",
+    "message_target_id": "stage05_task_0042::person_christel_idler_04850c9aa1::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christel_idler_04850c9aa1",
+    "recipient_value": "https://de.linkedin.com/in/christel-idler-8036711a1",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "full_name": "Ralf Busse",
+    "message_target_id": "stage05_task_0042::person_ralf_busse_f8057bceeb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ralf_busse_f8057bceeb",
+    "recipient_value": "ralf.busse@rbk.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "full_name": "Ralf Busse",
+    "message_target_id": "stage05_task_0042::person_ralf_busse_f8057bceeb::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ralf_busse_f8057bceeb",
+    "recipient_value": "https://de.linkedin.com/in/ralf-busse-25464b122",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "full_name": "Ralf Busse",
+    "message_target_id": "stage05_task_0042::person_ralf_busse_f8057bceeb::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ralf_busse_f8057bceeb",
+    "recipient_value": "https://de.linkedin.com/in/ralf-busse-25464b122",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0042"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "full_name": "Sabine Velte",
+    "message_target_id": "stage05_task_0042::person_sabine_velte_ba6b319594::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sabine_velte_ba6b319594",
+    "recipient_value": "sabine.velte@rbk.de",
+    "role_title": "Personaldirektorin",
+    "task_id": "stage05_task_0042"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 5,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Schorndorf",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "company_website": "https://www.rems-murr-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Giancarlo Cannavò",
+          "person_key": "",
+          "role": "Standortübergreifender Pflegedirektor / Mitglied der Geschäftsleitung"
+        },
+        {
+          "full_name": "Sabrina Barschtipan",
+          "person_key": "",
+          "role": "Pflegerische Standortleitung Schorndorf"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "andre.mertel@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "André Mertel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_andr_mertel_2207717082",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://recruitingapp-5335.de.umantis.com/Vacancies/2032/Description/1",
+          "https://de.linkedin.com/posts/fuw-krankenhaus_personalie-andr%C3%A9-mertel-wird-kommunaler-activity-7085171728619823105-mSI7",
+          "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "christoph.ulmer@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. med. Christoph Ulmer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christoph-ulmer-3569672a2",
+        "person_key": "person_dr_med_christoph_ulmer_442f515d32",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztlicher Direktor Schorndorf",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.deutsches-schilddruesenzentrum.de/listing/dr-med-christoph-ulmer/",
+          "https://de.linkedin.com/in/christoph-ulmer-3569672a2",
+          "https://rems-murr-kliniken.de/ueber-uns/rems-murr-klinik-schorndorf/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "rainer.pfrommer@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. med. Rainer Pfrommer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/rainer-pfrommer-a8554aba",
+        "person_key": "person_dr_med_rainer_pfrommer_f0f327698b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleitung Schorndorf / Prokurist",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://recruitingapp-5335.de.umantis.com/Vacancies/2182/Description/1",
+          "https://de.linkedin.com/in/rainer-pfrommer-a8554aba",
+          "https://rems-murr-kliniken.de/ueber-uns/rems-murr-klinik-schorndorf/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "giancarlo.cannavo@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Giancarlo Cannavò",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_giancarlo_cannav_d1bd3592d6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Standortübergreifender Pflegedirektor / Mitglied der Geschäftsleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://rems-murr-kliniken.de/kliniknews/giancarlo-cannavo-wird-standortuebergreifender-pflegedirektor/",
+          "https://rems-murr-kliniken.de/medizin-pflege/pflege/",
+          "https://www.valmedi.de/job/hebamme-entbindungspfleger-m-w-d-139500/schorndorf",
+          "https://de.linkedin.com/posts/michael-thieme-a7b6b323_rmk-giancarlo-cannav%C3%B2-wird-standort%C3%BCbergreifender-activity-7313822310971432961--8Eq"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sabrina.barschtipan@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabrina Barschtipan",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sabrina_barschtipan_0ffee814e5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Standortleitung Schorndorf",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.strahlemann-stiftung.de/wp-content/uploads/2025/06/20250519_Rems-Murr-Kliniken-GmbH_5mm_web.pdf",
+          "https://www.xing.com/profile/Sabrina_Barschtipan",
+          "https://recruitingapp-5335.de.umantis.com/Vacancies/1540/Description/1"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Ärztlicher Direktor Schorndorf",
+        "Klinikleitung Schorndorf / Prokurist",
+        "Standortübergreifender Pflegedirektor / Mitglied der Geschäftsleitung",
+        "Pflegerische Standortleitung Schorndorf"
+      ],
+      "total_people": 5
+    },
+    "source_urls": [
+      "https://recruitingapp-5335.de.umantis.com/Vacancies/2032/Description/1",
+      "https://de.linkedin.com/posts/fuw-krankenhaus_personalie-andr%C3%A9-mertel-wird-kommunaler-activity-7085171728619823105-mSI7",
+      "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/",
+      "https://www.deutsches-schilddruesenzentrum.de/listing/dr-med-christoph-ulmer/",
+      "https://de.linkedin.com/in/christoph-ulmer-3569672a2",
+      "https://rems-murr-kliniken.de/ueber-uns/rems-murr-klinik-schorndorf/",
+      "https://recruitingapp-5335.de.umantis.com/Vacancies/2182/Description/1",
+      "https://de.linkedin.com/in/rainer-pfrommer-a8554aba",
+      "https://rems-murr-kliniken.de/kliniknews/giancarlo-cannavo-wird-standortuebergreifender-pflegedirektor/",
+      "https://rems-murr-kliniken.de/medizin-pflege/pflege/",
+      "https://www.valmedi.de/job/hebamme-entbindungspfleger-m-w-d-139500/schorndorf",
+      "https://de.linkedin.com/posts/michael-thieme-a7b6b323_rmk-giancarlo-cannav%C3%B2-wird-standort%C3%BCbergreifender-activity-7313822310971432961--8Eq",
+      "https://www.strahlemann-stiftung.de/wp-content/uploads/2025/06/20250519_Rems-Murr-Kliniken-GmbH_5mm_web.pdf",
+      "https://www.xing.com/profile/Sabrina_Barschtipan",
+      "https://recruitingapp-5335.de.umantis.com/Vacancies/1540/Description/1"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Winnenden",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinikum winnenden|http://www.rems-murr-kliniken.de|winnenden|germany",
+    "company_name": "Rems-Murr-Klinikum Winnenden",
+    "company_website": "http://www.rems-murr-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Giancarlo Cannavò",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "anja.krehahn@rems-murr-kliniken.de",
+        "confirmed_email": "anja.krehahn@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anja Krehahn",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anja_krehahn_d052931f35",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Personal und Recht",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.glassdoor.de/job-listing/medizinische-fachangestellte-m-w-d-gyn%C3%A4kologie-im-mvz-rems-murr-kliniken-JV_IC2754558_KO0%2C53_KE54%2C72.htm?jl=1010030579522",
+          "https://de.indeed.com/viewjob?jk=84599521c5a47599",
+          "https://rems-murr-kliniken.de/karriere/kontakt/",
+          "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/",
+          "https://www.facebook.com/100071608607029/posts/bewerber-tage-pflege-am-11-18-oktober-2025mut-zum-wechsel-komm-vorbei-wir-warten/826553009741645/",
+          "https://eva-mayr-stihl-stiftung.de/news/herzzentrum-klinikum-stuttgart-innovative-spitzenmedizin-und-teamwork-neuem-hybrid-op",
+          "https://rems-murr-kliniken.de/wp-content/uploads/2024/10/flyer-onkologische-fachpflege-2024-web.pdf",
+          "https://de.linkedin.com/jobs/view/entgeltreferent-m-w-d-at-rems-murr-kliniken-ggmbh-4392868176",
+          "https://rems-murr-kliniken.de/karriere/verwaltung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "christian.schliep@rems-murr-kliniken.de",
+        "confirmed_email": "christian.schliep@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Christian Schliep",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-christian-schliep-330017b4",
+        "person_key": "person_dr_christian_schliep_c6b051b5e5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleitung Winnenden",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.mydrg.de/myDRG_archives/stellenanzeigen/klinische-kodierfachkraft-mwd-rems-murr-kliniken-ggmbh-winnenden-3.html",
+          "https://medinfoweb.de/stellenangebot/klinische-kodierfachkraft-m-w-d-am-standort-winnenden-2/",
+          "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/",
+          "https://rems-murr-kliniken.de/wp-content/uploads/2024/10/referenzbericht-rems-murr-klinikum-winnenden-2024-web.pdf",
+          "https://www.facebook.com/100071608607029/posts/bewerber-tage-pflege-am-11-18-oktober-2025mut-zum-wechsel-komm-vorbei-wir-warten/826553009741645/",
+          "https://eva-mayr-stihl-stiftung.de/news/herzzentrum-klinikum-stuttgart-innovative-spitzenmedizin-und-teamwork-neuem-hybrid-op",
+          "https://rems-murr-kliniken.de/wp-content/uploads/2024/10/flyer-onkologische-fachpflege-2024-web.pdf",
+          "https://de.linkedin.com/in/dr-christian-schliep-330017b4"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "giancarlo.cannavo@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Giancarlo Cannavò",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_giancarlo_cannav_08489f4de6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.facebook.com/100071608607029/posts/bewerber-tage-pflege-am-11-18-oktober-2025mut-zum-wechsel-komm-vorbei-wir-warten/826553009741645/",
+          "https://rems-murr-kliniken.de/medizin-pflege/pflege/",
+          "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/",
+          "https://de.linkedin.com/posts/michael-thieme-a7b6b323_rmk-giancarlo-cannav%C3%B2-wird-standort%C3%BCbergreifender-activity-7313822310971432961--8Eq"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Leitung Personal und Recht",
+        "Klinikleitung Winnenden",
+        "Pflegedirektor"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.glassdoor.de/job-listing/medizinische-fachangestellte-m-w-d-gyn%C3%A4kologie-im-mvz-rems-murr-kliniken-JV_IC2754558_KO0%2C53_KE54%2C72.htm?jl=1010030579522",
+      "https://de.indeed.com/viewjob?jk=84599521c5a47599",
+      "https://rems-murr-kliniken.de/karriere/kontakt/",
+      "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/",
+      "https://www.facebook.com/100071608607029/posts/bewerber-tage-pflege-am-11-18-oktober-2025mut-zum-wechsel-komm-vorbei-wir-warten/826553009741645/",
+      "https://eva-mayr-stihl-stiftung.de/news/herzzentrum-klinikum-stuttgart-innovative-spitzenmedizin-und-teamwork-neuem-hybrid-op",
+      "https://rems-murr-kliniken.de/wp-content/uploads/2024/10/flyer-onkologische-fachpflege-2024-web.pdf",
+      "https://de.linkedin.com/jobs/view/entgeltreferent-m-w-d-at-rems-murr-kliniken-ggmbh-4392868176",
+      "https://rems-murr-kliniken.de/karriere/verwaltung/",
+      "https://www.mydrg.de/myDRG_archives/stellenanzeigen/klinische-kodierfachkraft-mwd-rems-murr-kliniken-ggmbh-winnenden-3.html",
+      "https://medinfoweb.de/stellenangebot/klinische-kodierfachkraft-m-w-d-am-standort-winnenden-2/",
+      "https://rems-murr-kliniken.de/wp-content/uploads/2024/10/referenzbericht-rems-murr-klinikum-winnenden-2024-web.pdf",
+      "https://de.linkedin.com/in/dr-christian-schliep-330017b4",
+      "https://rems-murr-kliniken.de/medizin-pflege/pflege/",
+      "https://de.linkedin.com/posts/michael-thieme-a7b6b323_rmk-giancarlo-cannav%C3%B2-wird-standort%C3%BCbergreifender-activity-7313822310971432961--8Eq"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 1,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ulm",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "company_website": "http://www.rku.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Catharina Bothner",
+          "person_key": "",
+          "role": "Vice President of Magnet Nursing / Pflegedirektorin RKU"
+        },
+        {
+          "full_name": "Helene Maucher",
+          "person_key": "",
+          "role": "Pflegedirektorin / Magnet Chief Nursing Officer Campus Nord"
+        },
+        {
+          "full_name": "Jelena Kunecki",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin Universitätsklinikum Ulm"
+        },
+        {
+          "full_name": "Robert Jeske",
+          "person_key": "",
+          "role": "Pflegedirektor Universitätsklinikum Ulm"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "catharina.bothner@rku.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Catharina Bothner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_catharina_bothner_af274c2657",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Vice President of Magnet Nursing / Pflegedirektorin RKU",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841564-771676000-2023-xml.pdf",
+          "https://www.bibliomed-pflege.de/autor/5550-catharina-bothner",
+          "https://de.linkedin.com/posts/klinikenrku_nursing-activity-7021065394870198272-w4hk",
+          "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflege-am-campus-nord/team.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "helene.maucher@rku.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Helene Maucher",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-rer-cur-helene-maucher-70949b108",
+        "person_key": "person_helene_maucher_d1fb72cc7e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin / Magnet Chief Nursing Officer Campus Nord",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841564-771676000-2023-xml.pdf",
+          "https://www.bibliomed-pflege.de/autor/1767-helene-maucher",
+          "https://de.linkedin.com/in/dr-rer-cur-helene-maucher-70949b108",
+          "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflege-am-campus-nord/team.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "jelena.kunecki@uniklinik-ulm.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jelena Kunecki",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/jelena-kunecki-98178a115",
+        "person_key": "person_jelena_kunecki_9b75984896",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin Universitätsklinikum Ulm",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflegedirektion.html",
+          "https://demenzversorgung-forschungsnetzwerk.de/standorte/standort/ulm",
+          "https://de.linkedin.com/in/jelena-kunecki-98178a115"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Robert Jeske",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/robert-jeske",
+        "person_key": "person_robert_jeske_37dae0c208",
+        "primary_channel": "LINKEDIN",
+        "role": "Pflegedirektor Universitätsklinikum Ulm",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflegedirektion.html",
+          "https://www.uniklinik-ulm.de/aktuelles/detailansicht/pflegedirektor-und-vorstandsmitglied-robert-jeske-am-uku-vorzeitig-wiederbestellt.html",
+          "https://www.uniklinik-ulm.de/ueber-uns/management.html",
+          "https://de.linkedin.com/in/robert-jeske"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Vice President of Magnet Nursing / Pflegedirektorin RKU",
+        "Pflegedirektorin / Magnet Chief Nursing Officer Campus Nord",
+        "Stellvertretende Pflegedirektorin Universitätsklinikum Ulm",
+        "Pflegedirektor Universitätsklinikum Ulm"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260841564-771676000-2023-xml.pdf",
+      "https://www.bibliomed-pflege.de/autor/5550-catharina-bothner",
+      "https://de.linkedin.com/posts/klinikenrku_nursing-activity-7021065394870198272-w4hk",
+      "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflege-am-campus-nord/team.html",
+      "https://www.bibliomed-pflege.de/autor/1767-helene-maucher",
+      "https://de.linkedin.com/in/dr-rer-cur-helene-maucher-70949b108",
+      "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflegedirektion.html",
+      "https://demenzversorgung-forschungsnetzwerk.de/standorte/standort/ulm",
+      "https://de.linkedin.com/in/jelena-kunecki-98178a115",
+      "https://www.uniklinik-ulm.de/aktuelles/detailansicht/pflegedirektor-und-vorstandsmitglied-robert-jeske-am-uku-vorzeitig-wiederbestellt.html",
+      "https://www.uniklinik-ulm.de/ueber-uns/management.html",
+      "https://de.linkedin.com/in/robert-jeske"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "company_website": "http://www.rbk.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Annika Kurz",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Christel Idler",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Ralf Busse",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "annika.kurz@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Annika Kurz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/annika-kurz-841026319",
+        "person_key": "person_annika_kurz_f215167374",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/behandlung/abteilungen/haematologie-onkologie-und-palliativmedizin/team",
+          "https://www.rbk.de/behandlung/abteilungen/psychosomatische-medizin/team",
+          "https://de.linkedin.com/in/annika-kurz-841026319",
+          "https://www.rbk.de/behandlung/pflege/team"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "christel.idler@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Christel Idler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christel-idler-8036711a1",
+        "person_key": "person_christel_idler_04850c9aa1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/behandlung/pflege/team",
+          "https://www.rbk.de/behandlung/abteilungen/innere-medizin-und-altersmedizin/team",
+          "https://de.linkedin.com/in/christel-idler-8036711a1"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "ralf.busse@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ralf Busse",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/ralf-busse-25464b122",
+        "person_key": "person_ralf_busse_f8057bceeb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+          "https://de.linkedin.com/in/ralf-busse-25464b122",
+          "https://www.rbk.de/behandlung/pflege/team"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sabine.velte@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Velte",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sabine_velte_ba6b319594",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektorin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+          "https://www.rbk.de/ueber-uns/organisation/administration",
+          "https://www.bosch-health-campus.de/de/rbk"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin",
+        "Pflegedirektor",
+        "Personaldirektorin"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.rbk.de/behandlung/abteilungen/haematologie-onkologie-und-palliativmedizin/team",
+      "https://www.rbk.de/behandlung/abteilungen/psychosomatische-medizin/team",
+      "https://de.linkedin.com/in/annika-kurz-841026319",
+      "https://www.rbk.de/behandlung/pflege/team",
+      "https://www.rbk.de/behandlung/abteilungen/innere-medizin-und-altersmedizin/team",
+      "https://de.linkedin.com/in/christel-idler-8036711a1",
+      "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+      "https://de.linkedin.com/in/ralf-busse-25464b122",
+      "https://www.rbk.de/ueber-uns/organisation/administration",
+      "https://www.bosch-health-campus.de/de/rbk"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 5,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Schorndorf",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinik schorndorf|https://www.rems-murr-kliniken.de|schorndorf|germany",
+    "company_name": "Rems-Murr-Klinik Schorndorf",
+    "company_website": "https://www.rems-murr-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Giancarlo Cannavò",
+          "person_key": "",
+          "role": "Standortübergreifender Pflegedirektor / Mitglied der Geschäftsleitung"
+        },
+        {
+          "full_name": "Sabrina Barschtipan",
+          "person_key": "",
+          "role": "Pflegerische Standortleitung Schorndorf"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "andre.mertel@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "André Mertel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_andr_mertel_2207717082",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://recruitingapp-5335.de.umantis.com/Vacancies/2032/Description/1",
+          "https://de.linkedin.com/posts/fuw-krankenhaus_personalie-andr%C3%A9-mertel-wird-kommunaler-activity-7085171728619823105-mSI7",
+          "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "christoph.ulmer@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. med. Christoph Ulmer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christoph-ulmer-3569672a2",
+        "person_key": "person_dr_med_christoph_ulmer_442f515d32",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztlicher Direktor Schorndorf",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.deutsches-schilddruesenzentrum.de/listing/dr-med-christoph-ulmer/",
+          "https://de.linkedin.com/in/christoph-ulmer-3569672a2",
+          "https://rems-murr-kliniken.de/ueber-uns/rems-murr-klinik-schorndorf/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "rainer.pfrommer@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. med. Rainer Pfrommer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/rainer-pfrommer-a8554aba",
+        "person_key": "person_dr_med_rainer_pfrommer_f0f327698b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleitung Schorndorf / Prokurist",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://recruitingapp-5335.de.umantis.com/Vacancies/2182/Description/1",
+          "https://de.linkedin.com/in/rainer-pfrommer-a8554aba",
+          "https://rems-murr-kliniken.de/ueber-uns/rems-murr-klinik-schorndorf/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "giancarlo.cannavo@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Giancarlo Cannavò",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_giancarlo_cannav_d1bd3592d6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Standortübergreifender Pflegedirektor / Mitglied der Geschäftsleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://rems-murr-kliniken.de/kliniknews/giancarlo-cannavo-wird-standortuebergreifender-pflegedirektor/",
+          "https://rems-murr-kliniken.de/medizin-pflege/pflege/",
+          "https://www.valmedi.de/job/hebamme-entbindungspfleger-m-w-d-139500/schorndorf",
+          "https://de.linkedin.com/posts/michael-thieme-a7b6b323_rmk-giancarlo-cannav%C3%B2-wird-standort%C3%BCbergreifender-activity-7313822310971432961--8Eq"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sabrina.barschtipan@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabrina Barschtipan",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sabrina_barschtipan_0ffee814e5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Standortleitung Schorndorf",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.strahlemann-stiftung.de/wp-content/uploads/2025/06/20250519_Rems-Murr-Kliniken-GmbH_5mm_web.pdf",
+          "https://www.xing.com/profile/Sabrina_Barschtipan",
+          "https://recruitingapp-5335.de.umantis.com/Vacancies/1540/Description/1"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Ärztlicher Direktor Schorndorf",
+        "Klinikleitung Schorndorf / Prokurist",
+        "Standortübergreifender Pflegedirektor / Mitglied der Geschäftsleitung",
+        "Pflegerische Standortleitung Schorndorf"
+      ],
+      "total_people": 5
+    },
+    "source_urls": [
+      "https://recruitingapp-5335.de.umantis.com/Vacancies/2032/Description/1",
+      "https://de.linkedin.com/posts/fuw-krankenhaus_personalie-andr%C3%A9-mertel-wird-kommunaler-activity-7085171728619823105-mSI7",
+      "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/",
+      "https://www.deutsches-schilddruesenzentrum.de/listing/dr-med-christoph-ulmer/",
+      "https://de.linkedin.com/in/christoph-ulmer-3569672a2",
+      "https://rems-murr-kliniken.de/ueber-uns/rems-murr-klinik-schorndorf/",
+      "https://recruitingapp-5335.de.umantis.com/Vacancies/2182/Description/1",
+      "https://de.linkedin.com/in/rainer-pfrommer-a8554aba",
+      "https://rems-murr-kliniken.de/kliniknews/giancarlo-cannavo-wird-standortuebergreifender-pflegedirektor/",
+      "https://rems-murr-kliniken.de/medizin-pflege/pflege/",
+      "https://www.valmedi.de/job/hebamme-entbindungspfleger-m-w-d-139500/schorndorf",
+      "https://de.linkedin.com/posts/michael-thieme-a7b6b323_rmk-giancarlo-cannav%C3%B2-wird-standort%C3%BCbergreifender-activity-7313822310971432961--8Eq",
+      "https://www.strahlemann-stiftung.de/wp-content/uploads/2025/06/20250519_Rems-Murr-Kliniken-GmbH_5mm_web.pdf",
+      "https://www.xing.com/profile/Sabrina_Barschtipan",
+      "https://recruitingapp-5335.de.umantis.com/Vacancies/1540/Description/1"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Winnenden",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rems-murr-klinikum winnenden|http://www.rems-murr-kliniken.de|winnenden|germany",
+    "company_name": "Rems-Murr-Klinikum Winnenden",
+    "company_website": "http://www.rems-murr-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Giancarlo Cannavò",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "anja.krehahn@rems-murr-kliniken.de",
+        "confirmed_email": "anja.krehahn@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anja Krehahn",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anja_krehahn_d052931f35",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Personal und Recht",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.glassdoor.de/job-listing/medizinische-fachangestellte-m-w-d-gyn%C3%A4kologie-im-mvz-rems-murr-kliniken-JV_IC2754558_KO0%2C53_KE54%2C72.htm?jl=1010030579522",
+          "https://de.indeed.com/viewjob?jk=84599521c5a47599",
+          "https://rems-murr-kliniken.de/karriere/kontakt/",
+          "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/",
+          "https://www.facebook.com/100071608607029/posts/bewerber-tage-pflege-am-11-18-oktober-2025mut-zum-wechsel-komm-vorbei-wir-warten/826553009741645/",
+          "https://eva-mayr-stihl-stiftung.de/news/herzzentrum-klinikum-stuttgart-innovative-spitzenmedizin-und-teamwork-neuem-hybrid-op",
+          "https://rems-murr-kliniken.de/wp-content/uploads/2024/10/flyer-onkologische-fachpflege-2024-web.pdf",
+          "https://de.linkedin.com/jobs/view/entgeltreferent-m-w-d-at-rems-murr-kliniken-ggmbh-4392868176",
+          "https://rems-murr-kliniken.de/karriere/verwaltung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "christian.schliep@rems-murr-kliniken.de",
+        "confirmed_email": "christian.schliep@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Christian Schliep",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-christian-schliep-330017b4",
+        "person_key": "person_dr_christian_schliep_c6b051b5e5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleitung Winnenden",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.mydrg.de/myDRG_archives/stellenanzeigen/klinische-kodierfachkraft-mwd-rems-murr-kliniken-ggmbh-winnenden-3.html",
+          "https://medinfoweb.de/stellenangebot/klinische-kodierfachkraft-m-w-d-am-standort-winnenden-2/",
+          "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/",
+          "https://rems-murr-kliniken.de/wp-content/uploads/2024/10/referenzbericht-rems-murr-klinikum-winnenden-2024-web.pdf",
+          "https://www.facebook.com/100071608607029/posts/bewerber-tage-pflege-am-11-18-oktober-2025mut-zum-wechsel-komm-vorbei-wir-warten/826553009741645/",
+          "https://eva-mayr-stihl-stiftung.de/news/herzzentrum-klinikum-stuttgart-innovative-spitzenmedizin-und-teamwork-neuem-hybrid-op",
+          "https://rems-murr-kliniken.de/wp-content/uploads/2024/10/flyer-onkologische-fachpflege-2024-web.pdf",
+          "https://de.linkedin.com/in/dr-christian-schliep-330017b4"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "giancarlo.cannavo@rems-murr-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Giancarlo Cannavò",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_giancarlo_cannav_08489f4de6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.facebook.com/100071608607029/posts/bewerber-tage-pflege-am-11-18-oktober-2025mut-zum-wechsel-komm-vorbei-wir-warten/826553009741645/",
+          "https://rems-murr-kliniken.de/medizin-pflege/pflege/",
+          "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/",
+          "https://de.linkedin.com/posts/michael-thieme-a7b6b323_rmk-giancarlo-cannav%C3%B2-wird-standort%C3%BCbergreifender-activity-7313822310971432961--8Eq"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Leitung Personal und Recht",
+        "Klinikleitung Winnenden",
+        "Pflegedirektor"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.glassdoor.de/job-listing/medizinische-fachangestellte-m-w-d-gyn%C3%A4kologie-im-mvz-rems-murr-kliniken-JV_IC2754558_KO0%2C53_KE54%2C72.htm?jl=1010030579522",
+      "https://de.indeed.com/viewjob?jk=84599521c5a47599",
+      "https://rems-murr-kliniken.de/karriere/kontakt/",
+      "https://rems-murr-kliniken.de/ueber-uns/management-und-organisation/",
+      "https://www.facebook.com/100071608607029/posts/bewerber-tage-pflege-am-11-18-oktober-2025mut-zum-wechsel-komm-vorbei-wir-warten/826553009741645/",
+      "https://eva-mayr-stihl-stiftung.de/news/herzzentrum-klinikum-stuttgart-innovative-spitzenmedizin-und-teamwork-neuem-hybrid-op",
+      "https://rems-murr-kliniken.de/wp-content/uploads/2024/10/flyer-onkologische-fachpflege-2024-web.pdf",
+      "https://de.linkedin.com/jobs/view/entgeltreferent-m-w-d-at-rems-murr-kliniken-ggmbh-4392868176",
+      "https://rems-murr-kliniken.de/karriere/verwaltung/",
+      "https://www.mydrg.de/myDRG_archives/stellenanzeigen/klinische-kodierfachkraft-mwd-rems-murr-kliniken-ggmbh-winnenden-3.html",
+      "https://medinfoweb.de/stellenangebot/klinische-kodierfachkraft-m-w-d-am-standort-winnenden-2/",
+      "https://rems-murr-kliniken.de/wp-content/uploads/2024/10/referenzbericht-rems-murr-klinikum-winnenden-2024-web.pdf",
+      "https://de.linkedin.com/in/dr-christian-schliep-330017b4",
+      "https://rems-murr-kliniken.de/medizin-pflege/pflege/",
+      "https://de.linkedin.com/posts/michael-thieme-a7b6b323_rmk-giancarlo-cannav%C3%B2-wird-standort%C3%BCbergreifender-activity-7313822310971432961--8Eq"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 1,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ulm",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rku - universitäts- und rehabilitationskliniken ulm|http://www.rku.de|ulm|germany",
+    "company_name": "RKU - Universitäts- und Rehabilitationskliniken Ulm",
+    "company_website": "http://www.rku.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Catharina Bothner",
+          "person_key": "",
+          "role": "Vice President of Magnet Nursing / Pflegedirektorin RKU"
+        },
+        {
+          "full_name": "Helene Maucher",
+          "person_key": "",
+          "role": "Pflegedirektorin / Magnet Chief Nursing Officer Campus Nord"
+        },
+        {
+          "full_name": "Jelena Kunecki",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin Universitätsklinikum Ulm"
+        },
+        {
+          "full_name": "Robert Jeske",
+          "person_key": "",
+          "role": "Pflegedirektor Universitätsklinikum Ulm"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "catharina.bothner@rku.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Catharina Bothner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_catharina_bothner_af274c2657",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Vice President of Magnet Nursing / Pflegedirektorin RKU",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841564-771676000-2023-xml.pdf",
+          "https://www.bibliomed-pflege.de/autor/5550-catharina-bothner",
+          "https://de.linkedin.com/posts/klinikenrku_nursing-activity-7021065394870198272-w4hk",
+          "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflege-am-campus-nord/team.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "helene.maucher@rku.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Helene Maucher",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-rer-cur-helene-maucher-70949b108",
+        "person_key": "person_helene_maucher_d1fb72cc7e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin / Magnet Chief Nursing Officer Campus Nord",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841564-771676000-2023-xml.pdf",
+          "https://www.bibliomed-pflege.de/autor/1767-helene-maucher",
+          "https://de.linkedin.com/in/dr-rer-cur-helene-maucher-70949b108",
+          "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflege-am-campus-nord/team.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "jelena.kunecki@uniklinik-ulm.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jelena Kunecki",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/jelena-kunecki-98178a115",
+        "person_key": "person_jelena_kunecki_9b75984896",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin Universitätsklinikum Ulm",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflegedirektion.html",
+          "https://demenzversorgung-forschungsnetzwerk.de/standorte/standort/ulm",
+          "https://de.linkedin.com/in/jelena-kunecki-98178a115"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Robert Jeske",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/robert-jeske",
+        "person_key": "person_robert_jeske_37dae0c208",
+        "primary_channel": "LINKEDIN",
+        "role": "Pflegedirektor Universitätsklinikum Ulm",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflegedirektion.html",
+          "https://www.uniklinik-ulm.de/aktuelles/detailansicht/pflegedirektor-und-vorstandsmitglied-robert-jeske-am-uku-vorzeitig-wiederbestellt.html",
+          "https://www.uniklinik-ulm.de/ueber-uns/management.html",
+          "https://de.linkedin.com/in/robert-jeske"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Vice President of Magnet Nursing / Pflegedirektorin RKU",
+        "Pflegedirektorin / Magnet Chief Nursing Officer Campus Nord",
+        "Stellvertretende Pflegedirektorin Universitätsklinikum Ulm",
+        "Pflegedirektor Universitätsklinikum Ulm"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260841564-771676000-2023-xml.pdf",
+      "https://www.bibliomed-pflege.de/autor/5550-catharina-bothner",
+      "https://de.linkedin.com/posts/klinikenrku_nursing-activity-7021065394870198272-w4hk",
+      "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflege-am-campus-nord/team.html",
+      "https://www.bibliomed-pflege.de/autor/1767-helene-maucher",
+      "https://de.linkedin.com/in/dr-rer-cur-helene-maucher-70949b108",
+      "https://www.uniklinik-ulm.de/ueber-uns/pflege-am-uku/pflegedirektion.html",
+      "https://demenzversorgung-forschungsnetzwerk.de/standorte/standort/ulm",
+      "https://de.linkedin.com/in/jelena-kunecki-98178a115",
+      "https://www.uniklinik-ulm.de/aktuelles/detailansicht/pflegedirektor-und-vorstandsmitglied-robert-jeske-am-uku-vorzeitig-wiederbestellt.html",
+      "https://www.uniklinik-ulm.de/ueber-uns/management.html",
+      "https://de.linkedin.com/in/robert-jeske"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus in Stuttgart",
+    "company_website": "http://www.rbk.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Annika Kurz",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Christel Idler",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Ralf Busse",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "annika.kurz@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Annika Kurz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/annika-kurz-841026319",
+        "person_key": "person_annika_kurz_f215167374",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/behandlung/abteilungen/haematologie-onkologie-und-palliativmedizin/team",
+          "https://www.rbk.de/behandlung/abteilungen/psychosomatische-medizin/team",
+          "https://de.linkedin.com/in/annika-kurz-841026319",
+          "https://www.rbk.de/behandlung/pflege/team"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "christel.idler@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Christel Idler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christel-idler-8036711a1",
+        "person_key": "person_christel_idler_04850c9aa1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/behandlung/pflege/team",
+          "https://www.rbk.de/behandlung/abteilungen/innere-medizin-und-altersmedizin/team",
+          "https://de.linkedin.com/in/christel-idler-8036711a1"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "ralf.busse@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ralf Busse",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/ralf-busse-25464b122",
+        "person_key": "person_ralf_busse_f8057bceeb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+          "https://de.linkedin.com/in/ralf-busse-25464b122",
+          "https://www.rbk.de/behandlung/pflege/team"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sabine.velte@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Velte",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sabine_velte_ba6b319594",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektorin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+          "https://www.rbk.de/ueber-uns/organisation/administration",
+          "https://www.bosch-health-campus.de/de/rbk"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin",
+        "Pflegedirektor",
+        "Personaldirektorin"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.rbk.de/behandlung/abteilungen/haematologie-onkologie-und-palliativmedizin/team",
+      "https://www.rbk.de/behandlung/abteilungen/psychosomatische-medizin/team",
+      "https://de.linkedin.com/in/annika-kurz-841026319",
+      "https://www.rbk.de/behandlung/pflege/team",
+      "https://www.rbk.de/behandlung/abteilungen/innere-medizin-und-altersmedizin/team",
+      "https://de.linkedin.com/in/christel-idler-8036711a1",
+      "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+      "https://de.linkedin.com/in/ralf-busse-25464b122",
+      "https://www.rbk.de/ueber-uns/organisation/administration",
+      "https://www.bosch-health-campus.de/de/rbk"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
