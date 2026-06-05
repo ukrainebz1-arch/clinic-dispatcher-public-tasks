@@ -1,0 +1,156 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_02_public_email_lookup_send1
+TASK_ID: task_stage_007_20260605T162858Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_007_20260605T162858Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / SEND 1: email-first deep search for B2B email enrichment.
+
+Role:
+You are a senior B2B sales intelligence researcher. Your task is to find real person-company email evidence or useful email candidates for each input person.
+
+Primary goal for every input person:
+1. Find a person-company email if it is available.
+2. If exact email is not found, preserve only email-useful evidence: candidate_email, alternative_emails, company_email_examples, pattern_examples_found.
+3. Do NOT spend search budget finding contact routes, booking pages, profile pages, generic contact forms, LinkedIn/Xing routes, or named routes. Routes are not useful output for this campaign.
+4. If no exact email, no candidate email, and no strong pattern evidence exists, return NOT_FOUND_EMAIL.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Core rules:
+- Generated or pattern-only emails are NOT FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found.
+- Strong pattern hypotheses are useful, but must remain separate from confirmed person-company emails.
+- Do not add a philosophical/publicity filter. If email/source evidence is found through search/web/source_url, that is enough for audit. Focus on the 3 criteria above.
+- Preserve one output row per input person.
+- Email yield is the priority. Do not return a route just because a contact page or profile exists.
+
+Identity preservation rules:
+- Copy these fields exactly from the input row: campaign_id, batch_id, input_row_id, person_key, company_key.
+- Do not invent, normalize, shorten, translate, regenerate, or renumber these fields.
+- Do not use the numbered list index as input_row_id.
+- If an identity field is present in the input, the same exact value must appear in the output row.
+
+Search deeply before finalizing each row, but keep the search email-first:
+- quoted exact email-style searches for likely formats;
+- person name + company domain;
+- person name + company name + email;
+- company domain + email examples;
+- official company pages only when they may expose email addresses;
+- PDFs and public documents;
+- event/speaker pages;
+- association/member directories;
+- partner pages, newsletters, press pages, old pages, and visible snippets;
+- source snippets that expose emails or pattern examples.
+
+Useful candidate variants to check or preserve:
+- firstname.lastname@domain
+- firstinitial.lastname@domain
+- firstname@domain
+- lastname@domain
+- firstname_lastname@domain
+- firstname-lastname@domain
+- formal-name variants such as Nick/Nicolas/Nicholas, Ben/Benjamin, Chris/Christopher
+- German character variants such as ä/ae, ö/oe, ü/ue, ß/ss
+- hyphen and compound surname variants
+
+Route suppression:
+- Do not search for named routes as a goal.
+- Do not return FOUND_NAMED_COMPANY_ROUTE for ordinary contact forms, booking buttons, team profiles, LinkedIn/Xing pages, or contact pages.
+- route_url and route_label should normally stay blank.
+- Use FOUND_NAMED_COMPANY_ROUTE only as a compatibility fallback if a previous row already contains a named route that must be preserved and no email/candidate/pattern evidence exists. In SEND 1 this should almost never happen.
+- Prefer NOT_FOUND_EMAIL over a route-only result.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Status meaning:
+- FOUND_PERSON_COMPANY_EMAIL: exact person-level email found and matches person/company/domain criteria.
+- FOUND_NAMED_COMPANY_ROUTE: compatibility-only route status; do not actively search for it.
+- FOUND_GENERIC_COMPANY_EMAIL: only a concrete company-level email such as info@, kontakt@, hallo@, sales@, office@ is available. Do not spend extra time looking for generic emails.
+- STRONG_PATTERN_HYPOTHESIS: exact email is not found, but candidate is supported by 3+ concrete same-domain person emails following the same format.
+- UNVERIFIED_GENERATED_EMAIL: likely email generated from pattern, but exact email itself has not been found.
+- UNVERIFIED_PROVIDER_EMAIL: email appears only in provider/database-style source and needs stronger confirmation.
+- NOT_FOUND_EMAIL / NOT_FOUND: no useful person email result; use NOT_FOUND_EMAIL when the person-email search was exhausted.
+
+Allowed next_recovery_action values:
+close_as_found_person_email
+keep_named_route
+keep_generic_route
+send_to_exact_candidate_verification
+send_to_pattern_decision
+send_to_technical_source_extraction
+keep_as_unverified_candidate
+close_as_not_found_email
+
+Input format:
+You will receive CURRENT CHUNK INPUT as numbered rows generated by the dispatcher. Use the row fields as the input people. Do not require placeholder blocks.
+
+Output CSV only. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- email_status: one allowed status.
+- email: only exact found confirmed person email or generic company email. Do not put generated emails here.
+- candidate_email: generated/provider/pattern candidate only.
+- company_email_examples or pattern_examples_found: pipe-separated concrete same-domain examples if used.
+- source_urls: pipe-separated URLs when several sources exist.
+- email_source_url: strongest URL supporting the exact email result, candidate, or pattern evidence.
+- route_url / route_label: normally blank; do not fill route fields unless preserving unavoidable compatibility evidence.
+- email_confidence: high / medium / low / unknown.
+- cascade_pass: SEND_1_DEEP_ROUTE_SEARCH.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true only for FOUND_GENERIC_COMPANY_EMAIL; false for FOUND_NAMED_COMPANY_ROUTE.
+- notes: short audit note focused on email search, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Zentralinstitut für Seelische Gesundheit in Mannheim | company_website: http://www.zi-mannheim.de/ | first_name: Doris | last_name: Borgwedel | full_name: Doris Borgwedel | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: ZI nursing leadership page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::zentralinstitutfrseelischegesundheitinmannheim::zimannheimde::doris::borgwedel | person_key: batch001::zentralinstitutfrseelischegesundheitinmannheim::zimannheimde::doris::borgwedel | company_key: batch001::zentralinstitutfrseelischegesundheitinmannheim::zimannheimde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+2. batch_id: batch_001 | company_name: Zentralinstitut für Seelische Gesundheit in Mannheim | company_website: http://www.zi-mannheim.de/ | first_name: Gerda | last_name: Rensch | full_name: Gerda Rensch | role: Leitung Geschäftsbereich Personal | role_category: hr_recruiting | email_type: not_found | confidence: high | notes: ZI personnel department page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::zentralinstitutfrseelischegesundheitinmannheim::zimannheimde::gerda::rensch | person_key: batch001::zentralinstitutfrseelischegesundheitinmannheim::zimannheimde::gerda::rensch | company_key: batch001::zentralinstitutfrseelischegesundheitinmannheim::zimannheimde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+3. batch_id: batch_001 | company_name: Zentralinstitut für Seelische Gesundheit in Mannheim | company_website: http://www.zi-mannheim.de/ | first_name: Sabrina | last_name: Janta | full_name: Sabrina Janta | role: Personalgewinnung | role_category: hr_recruiting | email_type: not_found | confidence: high | notes: ZI personnel recruitment contact | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::zentralinstitutfrseelischegesundheitinmannheim::zimannheimde::sabrina::janta | person_key: batch001::zentralinstitutfrseelischegesundheitinmannheim::zimannheimde::sabrina::janta | company_key: batch001::zentralinstitutfrseelischegesundheitinmannheim::zimannheimde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+4. batch_id: batch_001 | company_name: Klinikum Stuttgart - Olgahospital / Frauenklinik | company_website: https://www.klinikum-stuttgart.de/ | first_name: Yvonne | last_name: Hammerschmidt | full_name: Yvonne Hammerschmidt | role: Pflegerische Zentrumsleitung Zentrum für Kinder- Jugend- und Frauenmedizin | role_category: operations | email_type: not_found | confidence: high | notes: Relevant center nursing leader | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde::yvonne::hammerschmidt | person_key: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde::yvonne::hammerschmidt | company_key: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+5. batch_id: batch_001 | company_name: Klinikum Stuttgart - Olgahospital / Frauenklinik | company_website: https://www.klinikum-stuttgart.de/ | first_name: Andrea | last_name: Boese | full_name: Andrea Boese | role: Stellvertretende pflegerische Zentrumsleitung Zentrum für Kinder- Jugend- und Frauenmedizin | role_category: operations | email_type: not_found | confidence: high | notes: Relevant center nursing deputy | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde::andrea::boese | person_key: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde::andrea::boese | company_key: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+6. batch_id: batch_001 | company_name: Klinikum Stuttgart - Olgahospital / Frauenklinik | company_website: https://www.klinikum-stuttgart.de/ | first_name: Oliver | last_name: Hommel | full_name: Oliver Hommel | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official 2026 clinic news | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde::oliver::hommel | person_key: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde::oliver::hommel | company_key: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+7. batch_id: batch_001 | company_name: Klinikum Stuttgart - Olgahospital / Frauenklinik | company_website: https://www.klinikum-stuttgart.de/ | first_name: Holger | last_name: Holzwart | full_name: Dr. Holger Holzwart | role: Personaldirektor | role_category: hr_recruiting | email_type: not_found | confidence: high | notes: Hospital leadership page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde::holger::holzwart | person_key: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde::holger::holzwart | company_key: batch001::klinikumstuttgartolgahospitalfrauenklinik::klinikumstuttgartde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+8. batch_id: batch_001 | company_name: Ostalb-Klinikum Aalen | company_website: http://www.ostalbklinikum.de | first_name: Tobias | last_name: Kinzl | full_name: Tobias Kinzl | role: Pflegedienstleitung | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/tobias-kinzl-423145347 | email_type: not_found | confidence: high | notes: Official career contact | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::ostalbklinikumaalen::ostalbklinikumde::tobias::kinzl | person_key: batch001::ostalbklinikumaalen::ostalbklinikumde::tobias::kinzl | company_key: batch001::ostalbklinikumaalen::ostalbklinikumde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+9. batch_id: batch_001 | company_name: Fürst-Stirum-Klinik Bruchsal | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/ | first_name: Lisa | last_name: Müller | full_name: Lisa Müller | role: Direktorin für Pflege- und Prozessmanagement | role_category: operations | email_type: not_found | confidence: high | notes: Current quality report source | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::frststirumklinikbruchsal::rkhgesundheitde::lisa::mller | person_key: batch001::frststirumklinikbruchsal::rkhgesundheitde::lisa::mller | company_key: batch001::frststirumklinikbruchsal::rkhgesundheitde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+10. batch_id: batch_001 | company_name: Fürst-Stirum-Klinik Bruchsal | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/fuerst-stirum-klinik-bruchsal/ | first_name: Roland | last_name: Walther | full_name: Roland Walther | role: Klinikgeschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: RKH management page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::frststirumklinikbruchsal::rkhgesundheitde::roland::walther | person_key: batch001::frststirumklinikbruchsal::rkhgesundheitde::roland::walther | company_key: batch001::frststirumklinikbruchsal::rkhgesundheitde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+11. batch_id: batch_001 | company_name: Klinikum am Plattenwald in Bad Friedrichshall | company_website: http://www.slk-kliniken.de/home/ | first_name: Antje | last_name: Hemmann | full_name: Antje Hemmann | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Clinic leadership page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumamplattenwaldinbadfriedrichshall::slkklinikende::antje::hemmann | person_key: batch001::klinikumamplattenwaldinbadfriedrichshall::slkklinikende::antje::hemmann | company_key: batch001::klinikumamplattenwaldinbadfriedrichshall::slkklinikende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+12. batch_id: batch_001 | company_name: Klinikum am Plattenwald in Bad Friedrichshall | company_website: http://www.slk-kliniken.de/home/ | first_name: Heike | last_name: Koboldt | full_name: Heike Koboldt | role: Pflegedienstleitung Klinikum am Plattenwald | role_category: operations | email_type: not_found | confidence: high | notes: Clinic leadership page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumamplattenwaldinbadfriedrichshall::slkklinikende::heike::koboldt | person_key: batch001::klinikumamplattenwaldinbadfriedrichshall::slkklinikende::heike::koboldt | company_key: batch001::klinikumamplattenwaldinbadfriedrichshall::slkklinikende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+13. batch_id: batch_001 | company_name: Klinikum am Plattenwald in Bad Friedrichshall | company_website: http://www.slk-kliniken.de/home/ | first_name: Michael | last_name: Haake | full_name: Prof. Michael Haake | role: Klinikdirektor | role_category: other_management | email_type: not_found | confidence: high | notes: Clinic leadership page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumamplattenwaldinbadfriedrichshall::slkklinikende::michael::haake | person_key: batch001::klinikumamplattenwaldinbadfriedrichshall::slkklinikende::michael::haake | company_key: batch001::klinikumamplattenwaldinbadfriedrichshall::slkklinikende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+14. batch_id: batch_001 | company_name: Klinikum Konstanz | company_website: https://www.glkn.de | first_name: Sabine | last_name: Proksch | full_name: Dr. rer. cur. Sabine Proksch | role: Pflegedirektorin Klinikum Konstanz | role_category: operations | email_type: not_found | confidence: high | notes: GLKN nursing director page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumkonstanz::glknde::sabine::proksch | person_key: batch001::klinikumkonstanz::glknde::sabine::proksch | company_key: batch001::klinikumkonstanz::glknde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+15. batch_id: batch_001 | company_name: Klinikum Konstanz | company_website: https://www.glkn.de | first_name: Jennifer | last_name: Neumaier | full_name: Jennifer Neumaier | role: Stellvertretende Pflegedirektorin / Bereichsleitung Zentrum operative Medizin | role_category: operations | email_type: not_found | confidence: high | notes: Konstanz nursing team page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumkonstanz::glknde::jennifer::neumaier | person_key: batch001::klinikumkonstanz::glknde::jennifer::neumaier | company_key: batch001::klinikumkonstanz::glknde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+16. batch_id: batch_001 | company_name: Klinikum Konstanz | company_website: https://www.glkn.de | first_name: Sabine | last_name: Gaag | full_name: Sabine Gaag | role: Personalleitung Klinikum Konstanz | role_category: hr_recruiting | email_type: not_found | confidence: high | notes: Recruiting contact page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumkonstanz::glknde::sabine::gaag | person_key: batch001::klinikumkonstanz::glknde::sabine::gaag | company_key: batch001::klinikumkonstanz::glknde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+17. batch_id: batch_001 | company_name: Klinikum Konstanz | company_website: https://www.glkn.de | first_name: Bernd | last_name: Sieber | full_name: Bernd Sieber | role: Geschäftsführung | role_category: founder_ceo | email_type: not_found | confidence: high | notes: GLKN contact page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumkonstanz::glknde::bernd::sieber | person_key: batch001::klinikumkonstanz::glknde::bernd::sieber | company_key: batch001::klinikumkonstanz::glknde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+18. batch_id: batch_001 | company_name: Bundeswehrkrankenhaus Ulm | company_website: https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm | first_name: Jens | last_name: Voderberg | full_name: Jens Voderberg | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official Pflegedirektion page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::bundeswehrkrankenhausulm::bwkrankenhausde::jens::voderberg | person_key: batch001::bundeswehrkrankenhausulm::bwkrankenhausde::jens::voderberg | company_key: batch001::bundeswehrkrankenhausulm::bwkrankenhausde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+19. batch_id: batch_001 | company_name: Bundeswehrkrankenhaus Ulm | company_website: https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm | first_name: Christina | last_name: Raab | full_name: Christina Raab | role: Stellvertretende Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official Pflegedirektion page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::bundeswehrkrankenhausulm::bwkrankenhausde::christina::raab | person_key: batch001::bundeswehrkrankenhausulm::bwkrankenhausde::christina::raab | company_key: batch001::bundeswehrkrankenhausulm::bwkrankenhausde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+20. batch_id: batch_001 | company_name: Klinikum Friedrichshafen | company_website: http://www.medizin-campus-bodensee.de | first_name: Claudia | last_name: Keller | full_name: Claudia Keller | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: MCB nursing team page | campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433 | input_row_id: batch001::klinikumfriedrichshafen::medizincampusbodenseede::claudia::keller | person_key: batch001::klinikumfriedrichshafen::medizincampusbodenseede::claudia::keller | company_key: batch001::klinikumfriedrichshafen::medizincampusbodenseede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_007_20260605T162858Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
