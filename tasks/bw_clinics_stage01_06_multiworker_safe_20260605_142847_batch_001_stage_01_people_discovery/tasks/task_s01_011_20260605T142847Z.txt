@@ -1,0 +1,89 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_safe_20260605_142847_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_011_20260605T142847Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_011_20260605T142847Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_safe_20260605_142847
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_safe_20260605_142847_batch_001_stage_01_people_discovery
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_safe_20260605_142847/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: ZfP Südwürttemberg Weissenau Satellit Wangen | company_website: https://www.zfp-web.de/ | city: Wangen im Allgäu | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-weissenau-satellit-wangen | pflegekraefte: 18
+2. company_name: Tagesklinik Schwäbisch Hall | company_website: http://www.klinikum-weissenhof.de/ | city: Schwäbisch Hall | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-schwaebisch-hall | pflegekraefte: 10
+3. company_name: Median Franz-Alexander-Klinik Nordrach | company_website: https://www.median-kliniken.de//de/standorte/median-franz-alexander-klinik-nordrach/klinikprofil/ | city: Nordrach | country: Germany | source_url: https://klinikradar.de/kliniken/median-franz-alexander-klinik-nordrach | pflegekraefte: 10
+4. company_name: Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie in Gammertingen | company_website: http://www.kjp-mariaberg.de | city: Gammertingen | country: Germany | source_url: https://klinikradar.de/kliniken/mariaberg-fachkrankenhaus-kinder-und-jugendpsychiatrie | pflegekraefte: 8
+5. company_name: Fachklinik Dres. Denzel in Heilbronn | company_website: http://www.klinik-denzel.de | city: Heilbronn | country: Germany | source_url: https://klinikradar.de/kliniken/fachklinik-dres-denzel | pflegekraefte: 20
+6. company_name: Psychiatrische Tagesklinik Pforzheim | company_website: https://www.kn-calw.de/psychiatrische-tagesklinik-pforzheim | city: Pforzheim | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-pforzheim | pflegekraefte: 4
+7. company_name: Herz-Zentrum Bodensee in Konstanz | company_website: http://www.herz-zentrum.com | city: Konstanz | country: Germany | source_url: https://klinikradar.de/kliniken/herz-zentrum-bodensee | pflegekraefte: 74
+8. company_name: Klinik Dr. Becker in Bad Krozingen | company_website: http://www.beckerklinik.de | city: Bad Krozingen | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-dr-becker | pflegekraefte: 16
+9. company_name: Winghofer Medicum in Rottenburg am Neckar | company_website: http://www.winghofermedicum.de | city: Rottenburg am Neckar | country: Germany | source_url: https://klinikradar.de/kliniken/winghofer-medicum | pflegekraefte: 68
+10. company_name: Klinik Dr. Schwarz in Ulm | company_website: http://www.klinik-schwarz.de | city: Ulm | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-dr-schwarz | pflegekraefte: 13
+11. company_name: Fachkliniken Hohenurach in Bad Urach | company_website: http://fachkliniken-hohenurach.de | city: Bad Urach | country: Germany | source_url: https://klinikradar.de/kliniken/fachkliniken-hohenurach | pflegekraefte: 29
+12. company_name: Klinikum für Psychiatrie, Psychotherapie und Psychosomatik des Rudolf-Sophien-Stifts in Stuttgart | company_website: http://www.rrss.de | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-fuer-psychiatrie-psychotherapie-und-psychosomatik-des-rudolf-sophien-stifts | pflegekraefte: 11
+13. company_name: Panoramaklinik Esslingen | city: Esslingen am Neckar | country: Germany | source_url: https://klinikradar.de/kliniken/panoramaklinik-esslingen | pflegekraefte: 5
+14. company_name: Tagesklinik im Schlössle in Nürtingen | company_website: https://www.samariterstiftung.de/standorte/sozialpsychiatrie/esslingen/tagesklinik-im-schloessle-nuertingen.html | city: Nürtingen | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-im-schloessle | pflegekraefte: 4
+15. company_name: Tagesklinik für Psychiatrie und Psychotherapie Zollernalbkreis in Balingen | company_website: http://www.VvPH.de | city: Balingen | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-zollernalbkreis | pflegekraefte: 4
+16. company_name: Tagesklinik für Psychiatrie und Psychotherapie Landkreis Tuttlingen in Spaichingen | company_website: http://www.VvPH.de | city: Spaichingen | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-landkreis-tuttlingen | pflegekraefte: 2
+17. company_name: Tagesklinik für Psychiatrie und Psychotherapie Schwarzwald-Baar-Kreis in Villingen-Schwenningen | company_website: http://www.VvPH.de | city: Villingen-Schwenningen | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-schwarzwald-baar-kreis | pflegekraefte: 4
+18. company_name: Klinik für Psychosomatische Medizin in Heilbronn | company_website: http://www.klinikum-weissenhof.de/ | city: Heilbronn | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-fuer-psychosomatische-medizin | pflegekraefte: 11
+19. company_name: ZfP Reichenau Satellit (TAZ) Konstanz | company_website: http://zfp-reichenau.de | city: Konstanz | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-reichenau-satellit-taz-konstanz | pflegekraefte: 5
+20. company_name: SINOVA Klinik für Psychosomatik und Psychotherapie Aulendorf | company_website: http://www.zfp-web.de | city: Aulendorf | country: Germany | source_url: https://klinikradar.de/kliniken/sinova-klinik-fuer-psychosomatik-und-psychotherapie-aulendorf | pflegekraefte: 10
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_011_20260605T142847Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
