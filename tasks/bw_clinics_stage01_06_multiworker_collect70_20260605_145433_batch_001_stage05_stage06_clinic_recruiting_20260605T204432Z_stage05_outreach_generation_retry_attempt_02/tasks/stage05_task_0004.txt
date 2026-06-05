@@ -1,0 +1,2063 @@
+TASK_ID: stage05_task_0004
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Gerd Hauffe",
+    "message_target_id": "stage05_task_0004::person_gerd_hauffe_5469a56b69::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_gerd_hauffe_5469a56b69",
+    "recipient_value": "ghauffe@bgu-tuebingen.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Gerd Hauffe",
+    "message_target_id": "stage05_task_0004::person_gerd_hauffe_5469a56b69::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_gerd_hauffe_5469a56b69",
+    "recipient_value": "https://de.linkedin.com/in/gerd-hauffe-83011037a",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Gerd Hauffe",
+    "message_target_id": "stage05_task_0004::person_gerd_hauffe_5469a56b69::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_gerd_hauffe_5469a56b69",
+    "recipient_value": "https://de.linkedin.com/in/gerd-hauffe-83011037a",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Simon Krämer",
+    "message_target_id": "stage05_task_0004::person_simon_kr_mer_d036d6d1e5::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_simon_kr_mer_d036d6d1e5",
+    "recipient_value": "skraemer@bgu-tuebingen.de",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Simon Krämer",
+    "message_target_id": "stage05_task_0004::person_simon_kr_mer_d036d6d1e5::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_simon_kr_mer_d036d6d1e5",
+    "recipient_value": "https://de.linkedin.com/in/simon-kr%C3%A4mer-1b891a34a",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Simon Krämer",
+    "message_target_id": "stage05_task_0004::person_simon_kr_mer_d036d6d1e5::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_simon_kr_mer_d036d6d1e5",
+    "recipient_value": "https://de.linkedin.com/in/simon-kr%C3%A4mer-1b891a34a",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Susanne Dieffenbach",
+    "message_target_id": "stage05_task_0004::person_susanne_dieffenbach_6b0d71968e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_susanne_dieffenbach_6b0d71968e",
+    "recipient_value": "susanne.dieffenbach@bgkliniken-lu-tue.de",
+    "role_title": "Vorsitzende der Geschäftsführung",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Susanne Dieffenbach",
+    "message_target_id": "stage05_task_0004::person_susanne_dieffenbach_6b0d71968e::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_susanne_dieffenbach_6b0d71968e",
+    "recipient_value": "https://de.linkedin.com/in/susanne-dieffenbach-9a7135256",
+    "role_title": "Vorsitzende der Geschäftsführung",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Susanne Dieffenbach",
+    "message_target_id": "stage05_task_0004::person_susanne_dieffenbach_6b0d71968e::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_susanne_dieffenbach_6b0d71968e",
+    "recipient_value": "https://de.linkedin.com/in/susanne-dieffenbach-9a7135256",
+    "role_title": "Vorsitzende der Geschäftsführung",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Sylvia Pansow",
+    "message_target_id": "stage05_task_0004::person_sylvia_pansow_c211c00a7d::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_sylvia_pansow_c211c00a7d",
+    "recipient_value": "spansow@bgu-tuebingen.de",
+    "role_title": "Geschäftsführung Standort Tübingen",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Sylvia Pansow",
+    "message_target_id": "stage05_task_0004::person_sylvia_pansow_c211c00a7d::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sylvia_pansow_c211c00a7d",
+    "recipient_value": "https://de.linkedin.com/in/sylvia-pansow-21a859152",
+    "role_title": "Geschäftsführung Standort Tübingen",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Sylvia Pansow",
+    "message_target_id": "stage05_task_0004::person_sylvia_pansow_c211c00a7d::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sylvia_pansow_c211c00a7d",
+    "recipient_value": "https://de.linkedin.com/in/sylvia-pansow-21a859152",
+    "role_title": "Geschäftsführung Standort Tübingen",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Tina Histing",
+    "message_target_id": "stage05_task_0004::person_tina_histing_3823d5922c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_tina_histing_3823d5922c",
+    "recipient_value": "thisting@bgu-tuebingen.de",
+    "role_title": "Ärztliche Direktorin",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Tina Histing",
+    "message_target_id": "stage05_task_0004::person_tina_histing_3823d5922c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tina_histing_3823d5922c",
+    "recipient_value": "https://de.linkedin.com/in/prof-dr-med-tina-histing-161270149",
+    "role_title": "Ärztliche Direktorin",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "full_name": "Tina Histing",
+    "message_target_id": "stage05_task_0004::person_tina_histing_3823d5922c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tina_histing_3823d5922c",
+    "recipient_value": "https://de.linkedin.com/in/prof-dr-med-tina-histing-161270149",
+    "role_title": "Ärztliche Direktorin",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|blausteinklinik|http://www.blausteinklinik.de|blaustein|germany",
+    "company_name": "BlausteinKLINIK",
+    "full_name": "Nadine Dirner",
+    "message_target_id": "stage05_task_0004::person_nadine_dirner_2b4566ef56::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_nadine_dirner_2b4566ef56",
+    "recipient_value": "dirner@blausteinklinik.de",
+    "role_title": "Verwaltungsleitung",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|blausteinklinik|http://www.blausteinklinik.de|blaustein|germany",
+    "company_name": "BlausteinKLINIK",
+    "full_name": "Sabine Sailer",
+    "message_target_id": "stage05_task_0004::person_sabine_sailer_8833aebe23::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sabine_sailer_8833aebe23",
+    "recipient_value": "sailer@blausteinklinik.de",
+    "role_title": "Pflegeleitung",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|blausteinklinik|http://www.blausteinklinik.de|blaustein|germany",
+    "company_name": "BlausteinKLINIK",
+    "full_name": "Sabine Sailer",
+    "message_target_id": "stage05_task_0004::person_sabine_sailer_8833aebe23::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sabine_sailer_8833aebe23",
+    "recipient_value": "https://de.linkedin.com/in/sabine-sailer-037abb3b3",
+    "role_title": "Pflegeleitung",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|blausteinklinik|http://www.blausteinklinik.de|blaustein|germany",
+    "company_name": "BlausteinKLINIK",
+    "full_name": "Sabine Sailer",
+    "message_target_id": "stage05_task_0004::person_sabine_sailer_8833aebe23::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sabine_sailer_8833aebe23",
+    "recipient_value": "https://de.linkedin.com/in/sabine-sailer-037abb3b3",
+    "role_title": "Pflegeleitung",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|blausteinklinik|http://www.blausteinklinik.de|blaustein|germany",
+    "company_name": "BlausteinKLINIK",
+    "full_name": "Simon Astfäller",
+    "message_target_id": "stage05_task_0004::person_simon_astf_ller_de84ed25a9::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_simon_astf_ller_de84ed25a9",
+    "recipient_value": "astfaeller@blausteinklinik.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bundeswehrkrankenhaus ulm|https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm|ulm|germany",
+    "company_name": "Bundeswehrkrankenhaus Ulm",
+    "full_name": "Christina Raab",
+    "message_target_id": "stage05_task_0004::person_christina_raab_77701a2986::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christina_raab_77701a2986",
+    "recipient_value": "https://de.linkedin.com/in/christina-raab-mba-2a52a8297",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bundeswehrkrankenhaus ulm|https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm|ulm|germany",
+    "company_name": "Bundeswehrkrankenhaus Ulm",
+    "full_name": "Christina Raab",
+    "message_target_id": "stage05_task_0004::person_christina_raab_77701a2986::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christina_raab_77701a2986",
+    "recipient_value": "https://de.linkedin.com/in/christina-raab-mba-2a52a8297",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bundeswehrkrankenhaus ulm|https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm|ulm|germany",
+    "company_name": "Bundeswehrkrankenhaus Ulm",
+    "full_name": "Christina Raab",
+    "message_target_id": "stage05_task_0004::person_christina_raab_cce361e005::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christina_raab_cce361e005",
+    "recipient_value": "https://de.linkedin.com/in/christina-raab-mba-2a52a8297",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bundeswehrkrankenhaus ulm|https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm|ulm|germany",
+    "company_name": "Bundeswehrkrankenhaus Ulm",
+    "full_name": "Christina Raab",
+    "message_target_id": "stage05_task_0004::person_christina_raab_cce361e005::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christina_raab_cce361e005",
+    "recipient_value": "https://de.linkedin.com/in/christina-raab-mba-2a52a8297",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Dr. Frank Zils",
+    "message_target_id": "stage05_task_0004::person_dr_frank_zils_084f220ccb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_frank_zils_084f220ccb",
+    "recipient_value": "f.zils@bbtgruppe.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Dr. Frank Zils",
+    "message_target_id": "stage05_task_0004::person_dr_frank_zils_084f220ccb::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_frank_zils_084f220ccb",
+    "recipient_value": "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Dr. Frank Zils",
+    "message_target_id": "stage05_task_0004::person_dr_frank_zils_084f220ccb::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_frank_zils_084f220ccb",
+    "recipient_value": "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Frank Feinauer",
+    "message_target_id": "stage05_task_0004::person_frank_feinauer_9eec417f1f::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_frank_feinauer_9eec417f1f",
+    "recipient_value": "f.feinauer@bbtgruppe.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Frank Feinauer",
+    "message_target_id": "stage05_task_0004::person_frank_feinauer_9eec417f1f::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_frank_feinauer_9eec417f1f",
+    "recipient_value": "https://de.linkedin.com/in/frank-feinauer-10b968286",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Frank Feinauer",
+    "message_target_id": "stage05_task_0004::person_frank_feinauer_9eec417f1f::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_frank_feinauer_9eec417f1f",
+    "recipient_value": "https://de.linkedin.com/in/frank-feinauer-10b968286",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Frank Feinauer",
+    "message_target_id": "stage05_task_0004::person_frank_feinauer_54b8a41537::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_frank_feinauer_54b8a41537",
+    "recipient_value": "f.feinauer@bbtgruppe.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Frank Feinauer",
+    "message_target_id": "stage05_task_0004::person_frank_feinauer_54b8a41537::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_frank_feinauer_54b8a41537",
+    "recipient_value": "https://de.linkedin.com/in/frank-feinauer-10b968286",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Frank Feinauer",
+    "message_target_id": "stage05_task_0004::person_frank_feinauer_54b8a41537::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_frank_feinauer_54b8a41537",
+    "recipient_value": "https://de.linkedin.com/in/frank-feinauer-10b968286",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Jan-Henning Stoffers",
+    "message_target_id": "stage05_task_0004::person_jan_henning_stoffers_c8b6447439::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_jan_henning_stoffers_c8b6447439",
+    "recipient_value": "h.stoffers@bbtgruppe.de",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Jan-Henning Stoffers",
+    "message_target_id": "stage05_task_0004::person_jan_henning_stoffers_c8b6447439::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_jan_henning_stoffers_c8b6447439",
+    "recipient_value": "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Jan-Henning Stoffers",
+    "message_target_id": "stage05_task_0004::person_jan_henning_stoffers_c8b6447439::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_jan_henning_stoffers_c8b6447439",
+    "recipient_value": "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Jan-Henning Stoffers",
+    "message_target_id": "stage05_task_0004::person_jan_henning_stoffers_92b1c6d0f1::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_jan_henning_stoffers_92b1c6d0f1",
+    "recipient_value": "h.stoffers@bbtgruppe.de",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Jan-Henning Stoffers",
+    "message_target_id": "stage05_task_0004::person_jan_henning_stoffers_92b1c6d0f1::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_jan_henning_stoffers_92b1c6d0f1",
+    "recipient_value": "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Jan-Henning Stoffers",
+    "message_target_id": "stage05_task_0004::person_jan_henning_stoffers_92b1c6d0f1::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_jan_henning_stoffers_92b1c6d0f1",
+    "recipient_value": "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Michael Raditsch",
+    "message_target_id": "stage05_task_0004::person_michael_raditsch_f8b06f0b7c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_michael_raditsch_f8b06f0b7c",
+    "recipient_value": "m.raditsch@bbtgruppe.de",
+    "role_title": "Direktor Unternehmenskultur",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Sabine Anspach",
+    "message_target_id": "stage05_task_0004::person_sabine_anspach_a65409e432::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sabine_anspach_a65409e432",
+    "recipient_value": "s.anspach@bbtgruppe.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Sabine Anspach",
+    "message_target_id": "stage05_task_0004::person_sabine_anspach_a65409e432::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sabine_anspach_a65409e432",
+    "recipient_value": "https://de.linkedin.com/in/sabine-anspach-10215724",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Sabine Anspach",
+    "message_target_id": "stage05_task_0004::person_sabine_anspach_a65409e432::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sabine_anspach_a65409e432",
+    "recipient_value": "https://de.linkedin.com/in/sabine-anspach-10215724",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0004"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "full_name": "Sven Bürthel",
+    "message_target_id": "stage05_task_0004::person_sven_b_rthel_af77838dfc::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sven_b_rthel_af77838dfc",
+    "recipient_value": "s.buerthel@bbtgruppe.de",
+    "role_title": "Teamleiter Personal",
+    "task_id": "stage05_task_0004"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 5,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Tübingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "company_website": "https://www.bg-kliniken.de/klinik-tuebingen/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Gerd Hauffe",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "ghauffe@bgu-tuebingen.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Gerd Hauffe",
+        "hypothesis_email": "ghauffe@bgu-tuebingen.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/gerd-hauffe-83011037a",
+        "person_key": "person_gerd_hauffe_5469a56b69",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/gerd-hauffe/9444/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/simon-kraemer/10354/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/ursula-weisshap/6315/",
+          "https://de.linkedin.com/in/gerd-hauffe-83011037a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "skraemer@bgu-tuebingen.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Simon Krämer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/simon-kr%C3%A4mer-1b891a34a",
+        "person_key": "person_simon_kr_mer_d036d6d1e5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/simon-kraemer/10354/",
+          "https://de.linkedin.com/in/simon-kr%C3%A4mer-1b891a34a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "susanne.dieffenbach@bgkliniken-lu-tue.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Susanne Dieffenbach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/susanne-dieffenbach-9a7135256",
+        "person_key": "person_susanne_dieffenbach_6b0d71968e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Vorsitzende der Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bg-kliniken.de/fileadmin/04_ludwigshafen/_content/PDFs/SQB_2024_BG_Klinik_Ludwigshafen.pdf",
+          "https://www.bg-kliniken.de/klinik-ludwigshafen/mitarbeiter/susanne-dieffenbach/",
+          "https://de.linkedin.com/posts/susanne-dieffenbach-9a7135256_spannende-vortr%C3%A4ge-interessante-gespr%C3%A4che-activity-7397633687040712704-IMY6",
+          "https://de.linkedin.com/in/susanne-dieffenbach-9a7135256",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/susanne-dieffenbach/10577/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "spansow@bgu-tuebingen.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Sylvia Pansow",
+        "hypothesis_email": "spansow@bgu-tuebingen.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sylvia-pansow-21a859152",
+        "person_key": "person_sylvia_pansow_c211c00a7d",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführung Standort Tübingen",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bg-kliniken.de/klinik-ludwigshafen/mitarbeiter/sylvia-pansow/11366/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/simon-kraemer/10354/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/ursula-weisshap/6315/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/sylvia-pansow/11366/",
+          "https://de.linkedin.com/posts/bg-klinik-t%C3%BCbingen_neues-mitglied-der-gesch%C3%A4ftsf%C3%BChrung-f%C3%BCr-die-activity-7458413433995292675-zB2q",
+          "https://de.linkedin.com/in/sylvia-pansow-21a859152"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "thisting@bgu-tuebingen.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tina Histing",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/prof-dr-med-tina-histing-161270149",
+        "person_key": "person_tina_histing_3823d5922c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://pubmed.ncbi.nlm.nih.gov/35922527/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/tina-histing/3436/",
+          "https://de.linkedin.com/in/prof-dr-med-tina-histing-161270149"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedirektor",
+        "Kaufmännischer Direktor",
+        "Vorsitzende der Geschäftsführung",
+        "Geschäftsführung Standort Tübingen",
+        "Ärztliche Direktorin"
+      ],
+      "total_people": 5
+    },
+    "source_urls": [
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/gerd-hauffe/9444/",
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/simon-kraemer/10354/",
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/ursula-weisshap/6315/",
+      "https://de.linkedin.com/in/gerd-hauffe-83011037a",
+      "https://de.linkedin.com/in/simon-kr%C3%A4mer-1b891a34a",
+      "https://www.bg-kliniken.de/fileadmin/04_ludwigshafen/_content/PDFs/SQB_2024_BG_Klinik_Ludwigshafen.pdf",
+      "https://www.bg-kliniken.de/klinik-ludwigshafen/mitarbeiter/susanne-dieffenbach/",
+      "https://de.linkedin.com/posts/susanne-dieffenbach-9a7135256_spannende-vortr%C3%A4ge-interessante-gespr%C3%A4che-activity-7397633687040712704-IMY6",
+      "https://de.linkedin.com/in/susanne-dieffenbach-9a7135256",
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/susanne-dieffenbach/10577/",
+      "https://www.bg-kliniken.de/klinik-ludwigshafen/mitarbeiter/sylvia-pansow/11366/",
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/sylvia-pansow/11366/",
+      "https://de.linkedin.com/posts/bg-klinik-t%C3%BCbingen_neues-mitglied-der-gesch%C3%A4ftsf%C3%BChrung-f%C3%BCr-die-activity-7458413433995292675-zB2q",
+      "https://de.linkedin.com/in/sylvia-pansow-21a859152",
+      "https://pubmed.ncbi.nlm.nih.gov/35922527/",
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/tina-histing/3436/",
+      "https://de.linkedin.com/in/prof-dr-med-tina-histing-161270149"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Blaustein",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|blausteinklinik|http://www.blausteinklinik.de|blaustein|germany",
+    "company_name": "BlausteinKLINIK",
+    "company_website": "http://www.blausteinklinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Sabine Sailer",
+          "person_key": "",
+          "role": "Pflegeleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "dirner@blausteinklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nadine Dirner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nadine_dirner_2b4566ef56",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/510840734-773335000-2022-xml.pdf",
+          "https://www.blausteinklinik.de/aerzte/",
+          "https://www.german-hospital-directory.com/app/portrait/2847008eefa7164a/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "sailer@blausteinklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Sailer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sabine-sailer-037abb3b3",
+        "person_key": "person_sabine_sailer_8833aebe23",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegeleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/510840734-773335000-2022-xml.pdf",
+          "https://www.blausteinklinik.de/aerzte/",
+          "https://de.linkedin.com/in/sabine-sailer-037abb3b3",
+          "https://www.german-hospital-directory.com/app/portrait/2847008eefa7164a/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "astfaeller@blausteinklinik.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Simon Astfäller",
+        "hypothesis_email": "astfaeller@blausteinklinik.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_simon_astf_ller_de84ed25a9",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/510840734-773335000-2022-xml.pdf",
+          "https://www.blausteinklinik.de/aerzte/",
+          "https://www.blausteinklinik.de/impressum/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Verwaltungsleitung",
+        "Pflegeleitung",
+        "Geschäftsführer"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/510840734-773335000-2022-xml.pdf",
+      "https://www.blausteinklinik.de/aerzte/",
+      "https://www.german-hospital-directory.com/app/portrait/2847008eefa7164a/start",
+      "https://de.linkedin.com/in/sabine-sailer-037abb3b3",
+      "https://www.blausteinklinik.de/impressum/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 4,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ulm",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bundeswehrkrankenhaus ulm|https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm|ulm|germany",
+    "company_name": "Bundeswehrkrankenhaus Ulm",
+    "company_website": "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Christina Raab",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Christina Raab",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Jens Voderberg",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Jens Voderberg",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Christina Raab",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christina-raab-mba-2a52a8297",
+        "person_key": "person_christina_raab_77701a2986",
+        "primary_channel": "LINKEDIN",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm/kliniken-und-medizinische-abteilungen-/pflegedirektion",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841928-771415000-2023-xml.pdf",
+          "https://de.linkedin.com/in/christina-raab-mba-2a52a8297"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Christina Raab",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christina-raab-mba-2a52a8297",
+        "person_key": "person_christina_raab_cce361e005",
+        "primary_channel": "LINKEDIN",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm/kliniken-und-medizinische-abteilungen-/pflegedirektion",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841928-771415000-2023-xml.pdf",
+          "https://de.linkedin.com/in/christina-raab-mba-2a52a8297"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Jens Voderberg",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jens_voderberg_46d5b73b04",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm/kliniken-und-medizinische-abteilungen-/pflegedirektion",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841928-771415000-2023-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Jens Voderberg",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jens_voderberg_8266954e6b",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm/kliniken-und-medizinische-abteilungen-/pflegedirektion",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841928-771415000-2023-xml.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin",
+        "Pflegedirektor"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm/kliniken-und-medizinische-abteilungen-/pflegedirektion",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260841928-771415000-2023-xml.pdf",
+      "https://de.linkedin.com/in/christina-raab-mba-2a52a8297"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 6,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Mergentheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "company_website": "https://www.ckbm.de/ckbm/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Frank Feinauer",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Frank Feinauer",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "f.zils@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Frank Zils",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+        "person_key": "person_dr_frank_zils_084f220ccb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://theologie-trier.de/fileadmin/theofak/Alumni/Textdokumente/Alumni_Zils.pdf",
+          "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Zils-Frank.php",
+          "https://www.ckbm.de/ckbm/impressum/",
+          "https://de.linkedin.com/in/dr-frank-zils-bab9618"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "f.feinauer@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Frank Feinauer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/frank-feinauer-10b968286",
+        "person_key": "person_frank_feinauer_9eec417f1f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+          "https://www.ckbm.de/ckbm/ansprechpartner/personen/feinauer-frank.php",
+          "https://de.linkedin.com/posts/frank-feinauer-10b968286_wir-sind-dabei-gerne-bei-mir-bewerben-wir-activity-7426690101407092736-xxZZ",
+          "https://de.linkedin.com/in/frank-feinauer-10b968286"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "f.feinauer@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Frank Feinauer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/frank-feinauer-10b968286",
+        "person_key": "person_frank_feinauer_54b8a41537",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+          "https://www.ckbm.de/ckbm/ansprechpartner/personen/feinauer-frank.php",
+          "https://de.linkedin.com/posts/frank-feinauer-10b968286_wir-sind-dabei-gerne-bei-mir-bewerben-wir-activity-7426690101407092736-xxZZ",
+          "https://de.linkedin.com/in/frank-feinauer-10b968286"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "h.stoffers@bbtgruppe.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Jan-Henning Stoffers",
+        "hypothesis_email": "h.stoffers@bbtgruppe.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224",
+        "person_key": "person_jan_henning_stoffers_c8b6447439",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Kaufmännischer Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.ckbm.de/ckbm/ueber-uns/direktorium-leitung/",
+          "https://www.caritasklinikum.de/artzte-zuweiser/ansprechpartner/direktorium/Jan-Henning-Stoffers%2C3040456",
+          "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+          "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "h.stoffers@bbtgruppe.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Jan-Henning Stoffers",
+        "hypothesis_email": "h.stoffers@bbtgruppe.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224",
+        "person_key": "person_jan_henning_stoffers_92b1c6d0f1",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Kaufmännischer Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.ckbm.de/ckbm/ueber-uns/direktorium-leitung/",
+          "https://www.caritasklinikum.de/artzte-zuweiser/ansprechpartner/direktorium/Jan-Henning-Stoffers%2C3040456",
+          "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+          "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.raditsch@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michael Raditsch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_raditsch_f8b06f0b7c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktor Unternehmenskultur",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+          "https://www.ckbm.de/ckbm/ansprechpartner/personen/Raditsch-Michael.php",
+          "https://www.ckbm.de/ckbm/aktuelles/meldungen/2021/Michael-raditsch-neuer-hausoberer.php",
+          "https://de.linkedin.com/posts/caritas-krankenhaus-bad-mergentheim_der-hausobere-michael-raditsch-dankte-drei-activity-7171526372522188800-MZcq",
+          "https://www.ckbm.de/ckbm/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.anspach@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Anspach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sabine-anspach-10215724",
+        "person_key": "person_sabine_anspach_a65409e432",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Anspach-Sabine.php",
+          "https://www.ckbm.de/ckbm/impressum/",
+          "https://www.bbtgruppe.de/zentrale/unsere-struktur/geschaeftsfuehrung/",
+          "https://de.linkedin.com/posts/barmherzige-br%C3%BCder-trier_wie-sichern-wir-die-gesundheitsversorgung-activity-7385317521324662784-ygJw",
+          "https://de.linkedin.com/in/sabine-anspach-10215724"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "s.buerthel@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sven Bürthel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sven_b_rthel_af77838dfc",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Teamleiter Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.ckbm.de/ckbm/ansprechpartner/personen/Buerthel-Sven.php",
+          "https://www.ckbm.de/ckbm/ansprechpartner/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "other_management",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedirektor",
+        "Kaufmännischer Direktor",
+        "Direktor Unternehmenskultur",
+        "Geschäftsführerin",
+        "Teamleiter Personal"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://theologie-trier.de/fileadmin/theofak/Alumni/Textdokumente/Alumni_Zils.pdf",
+      "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Zils-Frank.php",
+      "https://www.ckbm.de/ckbm/impressum/",
+      "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+      "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+      "https://www.ckbm.de/ckbm/ansprechpartner/personen/feinauer-frank.php",
+      "https://de.linkedin.com/posts/frank-feinauer-10b968286_wir-sind-dabei-gerne-bei-mir-bewerben-wir-activity-7426690101407092736-xxZZ",
+      "https://de.linkedin.com/in/frank-feinauer-10b968286",
+      "https://www.ckbm.de/ckbm/ueber-uns/direktorium-leitung/",
+      "https://www.caritasklinikum.de/artzte-zuweiser/ansprechpartner/direktorium/Jan-Henning-Stoffers%2C3040456",
+      "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224",
+      "https://www.ckbm.de/ckbm/ansprechpartner/personen/Raditsch-Michael.php",
+      "https://www.ckbm.de/ckbm/aktuelles/meldungen/2021/Michael-raditsch-neuer-hausoberer.php",
+      "https://de.linkedin.com/posts/caritas-krankenhaus-bad-mergentheim_der-hausobere-michael-raditsch-dankte-drei-activity-7171526372522188800-MZcq",
+      "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Anspach-Sabine.php",
+      "https://www.bbtgruppe.de/zentrale/unsere-struktur/geschaeftsfuehrung/",
+      "https://de.linkedin.com/posts/barmherzige-br%C3%BCder-trier_wie-sichern-wir-die-gesundheitsversorgung-activity-7385317521324662784-ygJw",
+      "https://de.linkedin.com/in/sabine-anspach-10215724",
+      "https://www.ckbm.de/ckbm/ansprechpartner/personen/Buerthel-Sven.php",
+      "https://www.ckbm.de/ckbm/ansprechpartner/"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 5,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Tübingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bg klinik tübingen|https://www.bg-kliniken.de/klinik-tuebingen/|tübingen|germany",
+    "company_name": "BG Klinik Tübingen",
+    "company_website": "https://www.bg-kliniken.de/klinik-tuebingen/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Gerd Hauffe",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "ghauffe@bgu-tuebingen.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Gerd Hauffe",
+        "hypothesis_email": "ghauffe@bgu-tuebingen.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/gerd-hauffe-83011037a",
+        "person_key": "person_gerd_hauffe_5469a56b69",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/gerd-hauffe/9444/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/simon-kraemer/10354/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/ursula-weisshap/6315/",
+          "https://de.linkedin.com/in/gerd-hauffe-83011037a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "skraemer@bgu-tuebingen.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Simon Krämer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/simon-kr%C3%A4mer-1b891a34a",
+        "person_key": "person_simon_kr_mer_d036d6d1e5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/simon-kraemer/10354/",
+          "https://de.linkedin.com/in/simon-kr%C3%A4mer-1b891a34a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "susanne.dieffenbach@bgkliniken-lu-tue.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Susanne Dieffenbach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/susanne-dieffenbach-9a7135256",
+        "person_key": "person_susanne_dieffenbach_6b0d71968e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Vorsitzende der Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bg-kliniken.de/fileadmin/04_ludwigshafen/_content/PDFs/SQB_2024_BG_Klinik_Ludwigshafen.pdf",
+          "https://www.bg-kliniken.de/klinik-ludwigshafen/mitarbeiter/susanne-dieffenbach/",
+          "https://de.linkedin.com/posts/susanne-dieffenbach-9a7135256_spannende-vortr%C3%A4ge-interessante-gespr%C3%A4che-activity-7397633687040712704-IMY6",
+          "https://de.linkedin.com/in/susanne-dieffenbach-9a7135256",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/susanne-dieffenbach/10577/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "spansow@bgu-tuebingen.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Sylvia Pansow",
+        "hypothesis_email": "spansow@bgu-tuebingen.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sylvia-pansow-21a859152",
+        "person_key": "person_sylvia_pansow_c211c00a7d",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführung Standort Tübingen",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bg-kliniken.de/klinik-ludwigshafen/mitarbeiter/sylvia-pansow/11366/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/simon-kraemer/10354/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/ursula-weisshap/6315/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/sylvia-pansow/11366/",
+          "https://de.linkedin.com/posts/bg-klinik-t%C3%BCbingen_neues-mitglied-der-gesch%C3%A4ftsf%C3%BChrung-f%C3%BCr-die-activity-7458413433995292675-zB2q",
+          "https://de.linkedin.com/in/sylvia-pansow-21a859152"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "thisting@bgu-tuebingen.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tina Histing",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/prof-dr-med-tina-histing-161270149",
+        "person_key": "person_tina_histing_3823d5922c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://pubmed.ncbi.nlm.nih.gov/35922527/",
+          "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/tina-histing/3436/",
+          "https://de.linkedin.com/in/prof-dr-med-tina-histing-161270149"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedirektor",
+        "Kaufmännischer Direktor",
+        "Vorsitzende der Geschäftsführung",
+        "Geschäftsführung Standort Tübingen",
+        "Ärztliche Direktorin"
+      ],
+      "total_people": 5
+    },
+    "source_urls": [
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/gerd-hauffe/9444/",
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/simon-kraemer/10354/",
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/ursula-weisshap/6315/",
+      "https://de.linkedin.com/in/gerd-hauffe-83011037a",
+      "https://de.linkedin.com/in/simon-kr%C3%A4mer-1b891a34a",
+      "https://www.bg-kliniken.de/fileadmin/04_ludwigshafen/_content/PDFs/SQB_2024_BG_Klinik_Ludwigshafen.pdf",
+      "https://www.bg-kliniken.de/klinik-ludwigshafen/mitarbeiter/susanne-dieffenbach/",
+      "https://de.linkedin.com/posts/susanne-dieffenbach-9a7135256_spannende-vortr%C3%A4ge-interessante-gespr%C3%A4che-activity-7397633687040712704-IMY6",
+      "https://de.linkedin.com/in/susanne-dieffenbach-9a7135256",
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/susanne-dieffenbach/10577/",
+      "https://www.bg-kliniken.de/klinik-ludwigshafen/mitarbeiter/sylvia-pansow/11366/",
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/sylvia-pansow/11366/",
+      "https://de.linkedin.com/posts/bg-klinik-t%C3%BCbingen_neues-mitglied-der-gesch%C3%A4ftsf%C3%BChrung-f%C3%BCr-die-activity-7458413433995292675-zB2q",
+      "https://de.linkedin.com/in/sylvia-pansow-21a859152",
+      "https://pubmed.ncbi.nlm.nih.gov/35922527/",
+      "https://www.bg-kliniken.de/klinik-tuebingen/mitarbeiter/tina-histing/3436/",
+      "https://de.linkedin.com/in/prof-dr-med-tina-histing-161270149"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Blaustein",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|blausteinklinik|http://www.blausteinklinik.de|blaustein|germany",
+    "company_name": "BlausteinKLINIK",
+    "company_website": "http://www.blausteinklinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Sabine Sailer",
+          "person_key": "",
+          "role": "Pflegeleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "dirner@blausteinklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nadine Dirner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nadine_dirner_2b4566ef56",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/510840734-773335000-2022-xml.pdf",
+          "https://www.blausteinklinik.de/aerzte/",
+          "https://www.german-hospital-directory.com/app/portrait/2847008eefa7164a/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "sailer@blausteinklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Sailer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sabine-sailer-037abb3b3",
+        "person_key": "person_sabine_sailer_8833aebe23",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegeleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/510840734-773335000-2022-xml.pdf",
+          "https://www.blausteinklinik.de/aerzte/",
+          "https://de.linkedin.com/in/sabine-sailer-037abb3b3",
+          "https://www.german-hospital-directory.com/app/portrait/2847008eefa7164a/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "astfaeller@blausteinklinik.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Simon Astfäller",
+        "hypothesis_email": "astfaeller@blausteinklinik.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_simon_astf_ller_de84ed25a9",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/510840734-773335000-2022-xml.pdf",
+          "https://www.blausteinklinik.de/aerzte/",
+          "https://www.blausteinklinik.de/impressum/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Verwaltungsleitung",
+        "Pflegeleitung",
+        "Geschäftsführer"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/510840734-773335000-2022-xml.pdf",
+      "https://www.blausteinklinik.de/aerzte/",
+      "https://www.german-hospital-directory.com/app/portrait/2847008eefa7164a/start",
+      "https://de.linkedin.com/in/sabine-sailer-037abb3b3",
+      "https://www.blausteinklinik.de/impressum/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 4,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ulm",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|bundeswehrkrankenhaus ulm|https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm|ulm|germany",
+    "company_name": "Bundeswehrkrankenhaus Ulm",
+    "company_website": "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Christina Raab",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Christina Raab",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Jens Voderberg",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Jens Voderberg",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Christina Raab",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christina-raab-mba-2a52a8297",
+        "person_key": "person_christina_raab_77701a2986",
+        "primary_channel": "LINKEDIN",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm/kliniken-und-medizinische-abteilungen-/pflegedirektion",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841928-771415000-2023-xml.pdf",
+          "https://de.linkedin.com/in/christina-raab-mba-2a52a8297"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Christina Raab",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christina-raab-mba-2a52a8297",
+        "person_key": "person_christina_raab_cce361e005",
+        "primary_channel": "LINKEDIN",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm/kliniken-und-medizinische-abteilungen-/pflegedirektion",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841928-771415000-2023-xml.pdf",
+          "https://de.linkedin.com/in/christina-raab-mba-2a52a8297"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Jens Voderberg",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jens_voderberg_46d5b73b04",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm/kliniken-und-medizinische-abteilungen-/pflegedirektion",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841928-771415000-2023-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Jens Voderberg",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jens_voderberg_8266954e6b",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm/kliniken-und-medizinische-abteilungen-/pflegedirektion",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260841928-771415000-2023-xml.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin",
+        "Pflegedirektor"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.bwkrankenhaus.de/de/bundeswehrkrankenhaus-ulm/kliniken-und-medizinische-abteilungen-/pflegedirektion",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260841928-771415000-2023-xml.pdf",
+      "https://de.linkedin.com/in/christina-raab-mba-2a52a8297"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 6,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Mergentheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|caritas-krankenhaus bad mergentheim|https://www.ckbm.de/ckbm/|bad mergentheim|germany",
+    "company_name": "Caritas-Krankenhaus Bad Mergentheim",
+    "company_website": "https://www.ckbm.de/ckbm/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Frank Feinauer",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Frank Feinauer",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "f.zils@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Frank Zils",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+        "person_key": "person_dr_frank_zils_084f220ccb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://theologie-trier.de/fileadmin/theofak/Alumni/Textdokumente/Alumni_Zils.pdf",
+          "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Zils-Frank.php",
+          "https://www.ckbm.de/ckbm/impressum/",
+          "https://de.linkedin.com/in/dr-frank-zils-bab9618"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "f.feinauer@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Frank Feinauer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/frank-feinauer-10b968286",
+        "person_key": "person_frank_feinauer_9eec417f1f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+          "https://www.ckbm.de/ckbm/ansprechpartner/personen/feinauer-frank.php",
+          "https://de.linkedin.com/posts/frank-feinauer-10b968286_wir-sind-dabei-gerne-bei-mir-bewerben-wir-activity-7426690101407092736-xxZZ",
+          "https://de.linkedin.com/in/frank-feinauer-10b968286"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "f.feinauer@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Frank Feinauer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/frank-feinauer-10b968286",
+        "person_key": "person_frank_feinauer_54b8a41537",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+          "https://www.ckbm.de/ckbm/ansprechpartner/personen/feinauer-frank.php",
+          "https://de.linkedin.com/posts/frank-feinauer-10b968286_wir-sind-dabei-gerne-bei-mir-bewerben-wir-activity-7426690101407092736-xxZZ",
+          "https://de.linkedin.com/in/frank-feinauer-10b968286"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "h.stoffers@bbtgruppe.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Jan-Henning Stoffers",
+        "hypothesis_email": "h.stoffers@bbtgruppe.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224",
+        "person_key": "person_jan_henning_stoffers_c8b6447439",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Kaufmännischer Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.ckbm.de/ckbm/ueber-uns/direktorium-leitung/",
+          "https://www.caritasklinikum.de/artzte-zuweiser/ansprechpartner/direktorium/Jan-Henning-Stoffers%2C3040456",
+          "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+          "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "h.stoffers@bbtgruppe.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Jan-Henning Stoffers",
+        "hypothesis_email": "h.stoffers@bbtgruppe.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224",
+        "person_key": "person_jan_henning_stoffers_92b1c6d0f1",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Kaufmännischer Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.ckbm.de/ckbm/ueber-uns/direktorium-leitung/",
+          "https://www.caritasklinikum.de/artzte-zuweiser/ansprechpartner/direktorium/Jan-Henning-Stoffers%2C3040456",
+          "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+          "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.raditsch@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michael Raditsch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_raditsch_f8b06f0b7c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktor Unternehmenskultur",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+          "https://www.ckbm.de/ckbm/ansprechpartner/personen/Raditsch-Michael.php",
+          "https://www.ckbm.de/ckbm/aktuelles/meldungen/2021/Michael-raditsch-neuer-hausoberer.php",
+          "https://de.linkedin.com/posts/caritas-krankenhaus-bad-mergentheim_der-hausobere-michael-raditsch-dankte-drei-activity-7171526372522188800-MZcq",
+          "https://www.ckbm.de/ckbm/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.anspach@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Anspach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sabine-anspach-10215724",
+        "person_key": "person_sabine_anspach_a65409e432",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Anspach-Sabine.php",
+          "https://www.ckbm.de/ckbm/impressum/",
+          "https://www.bbtgruppe.de/zentrale/unsere-struktur/geschaeftsfuehrung/",
+          "https://de.linkedin.com/posts/barmherzige-br%C3%BCder-trier_wie-sichern-wir-die-gesundheitsversorgung-activity-7385317521324662784-ygJw",
+          "https://de.linkedin.com/in/sabine-anspach-10215724"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "s.buerthel@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sven Bürthel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sven_b_rthel_af77838dfc",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Teamleiter Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.ckbm.de/ckbm/ansprechpartner/personen/Buerthel-Sven.php",
+          "https://www.ckbm.de/ckbm/ansprechpartner/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "other_management",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedirektor",
+        "Kaufmännischer Direktor",
+        "Direktor Unternehmenskultur",
+        "Geschäftsführerin",
+        "Teamleiter Personal"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://theologie-trier.de/fileadmin/theofak/Alumni/Textdokumente/Alumni_Zils.pdf",
+      "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Zils-Frank.php",
+      "https://www.ckbm.de/ckbm/impressum/",
+      "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+      "https://www.ckbm.de/media-ghtf/docs/QM/CKBM-2024.pdf",
+      "https://www.ckbm.de/ckbm/ansprechpartner/personen/feinauer-frank.php",
+      "https://de.linkedin.com/posts/frank-feinauer-10b968286_wir-sind-dabei-gerne-bei-mir-bewerben-wir-activity-7426690101407092736-xxZZ",
+      "https://de.linkedin.com/in/frank-feinauer-10b968286",
+      "https://www.ckbm.de/ckbm/ueber-uns/direktorium-leitung/",
+      "https://www.caritasklinikum.de/artzte-zuweiser/ansprechpartner/direktorium/Jan-Henning-Stoffers%2C3040456",
+      "https://de.linkedin.com/in/jan-henning-stoffers-32a56a224",
+      "https://www.ckbm.de/ckbm/ansprechpartner/personen/Raditsch-Michael.php",
+      "https://www.ckbm.de/ckbm/aktuelles/meldungen/2021/Michael-raditsch-neuer-hausoberer.php",
+      "https://de.linkedin.com/posts/caritas-krankenhaus-bad-mergentheim_der-hausobere-michael-raditsch-dankte-drei-activity-7171526372522188800-MZcq",
+      "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Anspach-Sabine.php",
+      "https://www.bbtgruppe.de/zentrale/unsere-struktur/geschaeftsfuehrung/",
+      "https://de.linkedin.com/posts/barmherzige-br%C3%BCder-trier_wie-sichern-wir-die-gesundheitsversorgung-activity-7385317521324662784-ygJw",
+      "https://de.linkedin.com/in/sabine-anspach-10215724",
+      "https://www.ckbm.de/ckbm/ansprechpartner/personen/Buerthel-Sven.php",
+      "https://www.ckbm.de/ckbm/ansprechpartner/"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
