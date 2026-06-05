@@ -1,0 +1,1327 @@
+TASK_ID: stage05_task_0035
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurochirurgisches zentrum ludwigsburg-heilbronn / standort heilbronn / klinikum am gesundbrunnen|https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/|heilbronn|germany",
+    "company_name": "Neurochirurgisches Zentrum Ludwigsburg-Heilbronn / Standort Heilbronn / Klinikum am Gesundbrunnen",
+    "full_name": "Dorothea Fischer",
+    "message_target_id": "stage05_task_0035::person_dorothea_fischer_971eca8f16::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dorothea_fischer_971eca8f16",
+    "recipient_value": "dorothea.fischer@slk-kliniken.de",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurochirurgisches zentrum ludwigsburg-heilbronn / standort heilbronn / klinikum am gesundbrunnen|https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/|heilbronn|germany",
+    "company_name": "Neurochirurgisches Zentrum Ludwigsburg-Heilbronn / Standort Heilbronn / Klinikum am Gesundbrunnen",
+    "full_name": "Georg Schmidt",
+    "message_target_id": "stage05_task_0035::person_georg_schmidt_461508ffbb::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_georg_schmidt_461508ffbb",
+    "recipient_value": "https://de.linkedin.com/in/georg-b-schmidt-141ba126b",
+    "role_title": "Geschäftsführer SLK-Kliniken Heilbronn",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurochirurgisches zentrum ludwigsburg-heilbronn / standort heilbronn / klinikum am gesundbrunnen|https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/|heilbronn|germany",
+    "company_name": "Neurochirurgisches Zentrum Ludwigsburg-Heilbronn / Standort Heilbronn / Klinikum am Gesundbrunnen",
+    "full_name": "Georg Schmidt",
+    "message_target_id": "stage05_task_0035::person_georg_schmidt_461508ffbb::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_georg_schmidt_461508ffbb",
+    "recipient_value": "https://de.linkedin.com/in/georg-b-schmidt-141ba126b",
+    "role_title": "Geschäftsführer SLK-Kliniken Heilbronn",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurochirurgisches zentrum ludwigsburg-heilbronn / standort heilbronn / klinikum am gesundbrunnen|https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/|heilbronn|germany",
+    "company_name": "Neurochirurgisches Zentrum Ludwigsburg-Heilbronn / Standort Heilbronn / Klinikum am Gesundbrunnen",
+    "full_name": "Oliver Sakowitz",
+    "message_target_id": "stage05_task_0035::person_oliver_sakowitz_753ebdb3e9::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_oliver_sakowitz_753ebdb3e9",
+    "recipient_value": "oliver.sakowitz@rkh-kliniken.de",
+    "role_title": "Ärztlicher Direktor Neurochirurgisches Zentrum",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurochirurgisches zentrum ludwigsburg-heilbronn / standort heilbronn / klinikum am gesundbrunnen|https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/|heilbronn|germany",
+    "company_name": "Neurochirurgisches Zentrum Ludwigsburg-Heilbronn / Standort Heilbronn / Klinikum am Gesundbrunnen",
+    "full_name": "Oliver Sakowitz",
+    "message_target_id": "stage05_task_0035::person_oliver_sakowitz_753ebdb3e9::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_oliver_sakowitz_753ebdb3e9",
+    "recipient_value": "https://de.linkedin.com/in/prof-dr-oliver-w-sakowitz-a0511430",
+    "role_title": "Ärztlicher Direktor Neurochirurgisches Zentrum",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurochirurgisches zentrum ludwigsburg-heilbronn / standort heilbronn / klinikum am gesundbrunnen|https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/|heilbronn|germany",
+    "company_name": "Neurochirurgisches Zentrum Ludwigsburg-Heilbronn / Standort Heilbronn / Klinikum am Gesundbrunnen",
+    "full_name": "Oliver Sakowitz",
+    "message_target_id": "stage05_task_0035::person_oliver_sakowitz_753ebdb3e9::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_oliver_sakowitz_753ebdb3e9",
+    "recipient_value": "https://de.linkedin.com/in/prof-dr-oliver-w-sakowitz-a0511430",
+    "role_title": "Ärztlicher Direktor Neurochirurgisches Zentrum",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurologische klinik selzer in baiersbronn|http://www.selzer.de|baiersbronn|germany",
+    "company_name": "Neurologische Klinik Selzer in Baiersbronn",
+    "full_name": "Constance Geisler",
+    "message_target_id": "stage05_task_0035::person_constance_geisler_e86dc31335::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_constance_geisler_e86dc31335",
+    "recipient_value": "c.geisler@selzer.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|nierenzentrum heidelberg|http://www.nierenzentrum-heidelberg.com|heidelberg|germany",
+    "company_name": "Nierenzentrum Heidelberg",
+    "full_name": "Prof. Dr. Julia Weinmann-Menke",
+    "message_target_id": "stage05_task_0035::person_prof_dr_julia_weinmann_menke_cb29da63db::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_prof_dr_julia_weinmann_menke_cb29da63db",
+    "recipient_value": "julia.weinmann-menke@med.uni-heidelberg.de",
+    "role_title": "Ärztliche Direktorin Klinik für Nephrologie",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|nierenzentrum heidelberg|http://www.nierenzentrum-heidelberg.com|heidelberg|germany",
+    "company_name": "Nierenzentrum Heidelberg",
+    "full_name": "Prof. Dr. Julia Weinmann-Menke",
+    "message_target_id": "stage05_task_0035::person_prof_dr_julia_weinmann_menke_cb29da63db::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_prof_dr_julia_weinmann_menke_cb29da63db",
+    "recipient_value": "https://de.linkedin.com/in/univ-prof-dr-med-julia-weinmann-menke-a6a1a6128",
+    "role_title": "Ärztliche Direktorin Klinik für Nephrologie",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|nierenzentrum heidelberg|http://www.nierenzentrum-heidelberg.com|heidelberg|germany",
+    "company_name": "Nierenzentrum Heidelberg",
+    "full_name": "Prof. Dr. Julia Weinmann-Menke",
+    "message_target_id": "stage05_task_0035::person_prof_dr_julia_weinmann_menke_cb29da63db::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_prof_dr_julia_weinmann_menke_cb29da63db",
+    "recipient_value": "https://de.linkedin.com/in/univ-prof-dr-med-julia-weinmann-menke-a6a1a6128",
+    "role_title": "Ärztliche Direktorin Klinik für Nephrologie",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum achern-oberkirch (achern)|https://achern.ortenau-klinikum.de/|achern|germany",
+    "company_name": "Ortenau Klinikum Achern-Oberkirch (Achern)",
+    "full_name": "Kathleen Messer",
+    "message_target_id": "stage05_task_0035::person_kathleen_messer_b3d6db0d5e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_kathleen_messer_b3d6db0d5e",
+    "recipient_value": "kathleen.messer@ortenau-klinikum.de",
+    "role_title": "Pflege-Vorständin Ortenau Klinikum",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum achern-oberkirch (achern)|https://achern.ortenau-klinikum.de/|achern|germany",
+    "company_name": "Ortenau Klinikum Achern-Oberkirch (Achern)",
+    "full_name": "Kathleen Messer",
+    "message_target_id": "stage05_task_0035::person_kathleen_messer_b3d6db0d5e::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_kathleen_messer_b3d6db0d5e",
+    "recipient_value": "https://de.linkedin.com/in/kathleen-messer-765312153",
+    "role_title": "Pflege-Vorständin Ortenau Klinikum",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum achern-oberkirch (achern)|https://achern.ortenau-klinikum.de/|achern|germany",
+    "company_name": "Ortenau Klinikum Achern-Oberkirch (Achern)",
+    "full_name": "Kathleen Messer",
+    "message_target_id": "stage05_task_0035::person_kathleen_messer_b3d6db0d5e::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_kathleen_messer_b3d6db0d5e",
+    "recipient_value": "https://de.linkedin.com/in/kathleen-messer-765312153",
+    "role_title": "Pflege-Vorständin Ortenau Klinikum",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum achern-oberkirch (achern)|https://achern.ortenau-klinikum.de/|achern|germany",
+    "company_name": "Ortenau Klinikum Achern-Oberkirch (Achern)",
+    "full_name": "Martina Hodapp",
+    "message_target_id": "stage05_task_0035::person_martina_hodapp_c534ce402b::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_martina_hodapp_c534ce402b",
+    "recipient_value": "martina.hodapp@ortenau-klinikum.de",
+    "role_title": "Bereichsleitung Pflegedirektion",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum achern-oberkirch (achern)|https://achern.ortenau-klinikum.de/|achern|germany",
+    "company_name": "Ortenau Klinikum Achern-Oberkirch (Achern)",
+    "full_name": "Sandra Schoor",
+    "message_target_id": "stage05_task_0035::person_sandra_schoor_dcf7549206::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sandra_schoor_dcf7549206",
+    "recipient_value": "sandra.schoor@ortenau-klinikum.de",
+    "role_title": "Bereichsleitung Pflegedirektion",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum achern-oberkirch (achern)|https://achern.ortenau-klinikum.de/|achern|germany",
+    "company_name": "Ortenau Klinikum Achern-Oberkirch (Achern)",
+    "full_name": "Svea Strohm",
+    "message_target_id": "stage05_task_0035::person_svea_strohm_d0d28631fb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_svea_strohm_d0d28631fb",
+    "recipient_value": "svea.strohm@ortenau-klinikum.de",
+    "role_title": "Bereichsleitung Pflegedirektion",
+    "task_id": "stage05_task_0035"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum achern-oberkirch (achern)|https://achern.ortenau-klinikum.de/|achern|germany",
+    "company_name": "Ortenau Klinikum Achern-Oberkirch (Achern)",
+    "full_name": "Ute Luhrenberg",
+    "message_target_id": "stage05_task_0035::person_ute_luhrenberg_c7ef9fcad1::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ute_luhrenberg_c7ef9fcad1",
+    "recipient_value": "ute.luhrenberg@ortenau-klinikum.de",
+    "role_title": "Pflegedirektorin Achern",
+    "task_id": "stage05_task_0035"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 1,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heilbronn",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurochirurgisches zentrum ludwigsburg-heilbronn / standort heilbronn / klinikum am gesundbrunnen|https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/|heilbronn|germany",
+    "company_name": "Neurochirurgisches Zentrum Ludwigsburg-Heilbronn / Standort Heilbronn / Klinikum am Gesundbrunnen",
+    "company_website": "https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Dorothea Fischer",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "dorothea.fischer@slk-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dorothea Fischer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dorothea_fischer_971eca8f16",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Neurochirurgisches_Zentrum_Ludwigsburg-Heilbronn_2023.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/eb7736d41ff1bd62/start"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Georg Schmidt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/georg-b-schmidt-141ba126b",
+        "person_key": "person_georg_schmidt_461508ffbb",
+        "primary_channel": "LINKEDIN",
+        "role": "Geschäftsführer SLK-Kliniken Heilbronn",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.slk-kliniken.de/ueber-uns/unternehmensleitung-organisation/unternehmensleitung",
+          "https://www.slk-kliniken.de/servicenavigation/impressum",
+          "https://de.linkedin.com/in/georg-b-schmidt-141ba126b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "oliver.sakowitz@rkh-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Oliver Sakowitz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/prof-dr-oliver-w-sakowitz-a0511430",
+        "person_key": "person_oliver_sakowitz_753ebdb3e9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztlicher Direktor Neurochirurgisches Zentrum",
+        "role_category": "unknown",
+        "source_urls": [
+          "https://www.g-ba.de/downloads/40-268-7332/2021-02-18_Zentrums-Regelungen_IDV-Zentren_ZD.pdf",
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/fachabteilungen/klinik-fuer-neurochirurgie/",
+          "https://de.linkedin.com/in/prof-dr-oliver-w-sakowitz-a0511430",
+          "https://www.slk-kliniken.de/kliniken-zentren-institute/kompetenzzentren/neurochirurgisches-zentrum-ludwigsburg-heilbronn/unser-profil"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo",
+        "unknown"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin",
+        "Geschäftsführer SLK-Kliniken Heilbronn",
+        "Ärztlicher Direktor Neurochirurgisches Zentrum"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Neurochirurgisches_Zentrum_Ludwigsburg-Heilbronn_2023.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/eb7736d41ff1bd62/start",
+      "https://www.slk-kliniken.de/ueber-uns/unternehmensleitung-organisation/unternehmensleitung",
+      "https://www.slk-kliniken.de/servicenavigation/impressum",
+      "https://de.linkedin.com/in/georg-b-schmidt-141ba126b",
+      "https://www.g-ba.de/downloads/40-268-7332/2021-02-18_Zentrums-Regelungen_IDV-Zentren_ZD.pdf",
+      "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/fachabteilungen/klinik-fuer-neurochirurgie/",
+      "https://de.linkedin.com/in/prof-dr-oliver-w-sakowitz-a0511430",
+      "https://www.slk-kliniken.de/kliniken-zentren-institute/kompetenzzentren/neurochirurgisches-zentrum-ludwigsburg-heilbronn/unser-profil"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Baiersbronn",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurologische klinik selzer in baiersbronn|http://www.selzer.de|baiersbronn|germany",
+    "company_name": "Neurologische Klinik Selzer in Baiersbronn",
+    "company_website": "http://www.selzer.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Constance Geisler",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "c.geisler@selzer.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Constance Geisler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_constance_geisler_e86dc31335",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://selzer.de/klinik/",
+          "https://selzer.de/wp-content/uploads/2022/04/260821332-00-2019-xml_GBA.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/33ad35fcd4da1786/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://selzer.de/klinik/",
+      "https://selzer.de/wp-content/uploads/2022/04/260821332-00-2019-xml_GBA.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/33ad35fcd4da1786/start"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 2,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heidelberg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|nierenzentrum heidelberg|http://www.nierenzentrum-heidelberg.com|heidelberg|germany",
+    "company_name": "Nierenzentrum Heidelberg",
+    "company_website": "http://www.nierenzentrum-heidelberg.com",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Hanna Hamm",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Eleonore Fritsch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_eleonore_fritsch_3ad3a8a28f",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.nierenzentrum-heidelberg.com/en/about-us/commercial-area/",
+          "https://www.nierenzentrum-heidelberg.com/",
+          "https://www.klinikum.uni-heidelberg.de/personen/dipl-kauffrau-eleonore-fritsch-14370/",
+          "https://www.klinikum.uni-heidelberg.de/newsroom/nierenzentrum-heidelberg-wird-zum-1-januar-2025-teil-des-universitaetsklinikums-heidelberg/",
+          "false",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b1f9652948d10f06/start"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Hanna Hamm",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_hanna_hamm_4e0e07d338",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.nierenzentrum-heidelberg.com/karriere/bewerbung/",
+          "https://www.nierenzentrum-heidelberg.com/",
+          "https://www.nierenzentrum-heidelberg.com/en/about-us/the-center/",
+          "https://www.nierenzentrum-heidelberg.com/en/for-patients/ward-and-care/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b1f9652948d10f06/start",
+          "false"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "julia.weinmann-menke@med.uni-heidelberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Prof. Dr. Julia Weinmann-Menke",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/univ-prof-dr-med-julia-weinmann-menke-a6a1a6128",
+        "person_key": "person_prof_dr_julia_weinmann_menke_cb29da63db",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Direktorin Klinik für Nephrologie",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikum.uni-heidelberg.de/newsroom/professorin-julia-weinmann-menke-ist-neue-aerztliche-direktorin-der-klinik-fuer-nephrologie-des-universitaetsklinikums-heidelberg/",
+          "https://de.linkedin.com/in/univ-prof-dr-med-julia-weinmann-menke-a6a1a6128",
+          "https://www.klinikum.uni-heidelberg.de/einrichtungen/klinik-fuer-nephrologie-nierenzentrum-heidelberg-653/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Kaufmännische Direktorin",
+        "Pflegedienstleitung",
+        "Ärztliche Direktorin Klinik für Nephrologie"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.nierenzentrum-heidelberg.com/en/about-us/commercial-area/",
+      "https://www.nierenzentrum-heidelberg.com/",
+      "https://www.klinikum.uni-heidelberg.de/personen/dipl-kauffrau-eleonore-fritsch-14370/",
+      "https://www.klinikum.uni-heidelberg.de/newsroom/nierenzentrum-heidelberg-wird-zum-1-januar-2025-teil-des-universitaetsklinikums-heidelberg/",
+      "false",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b1f9652948d10f06/start",
+      "https://www.nierenzentrum-heidelberg.com/karriere/bewerbung/",
+      "https://www.nierenzentrum-heidelberg.com/en/about-us/the-center/",
+      "https://www.nierenzentrum-heidelberg.com/en/for-patients/ward-and-care/",
+      "https://www.klinikum.uni-heidelberg.de/newsroom/professorin-julia-weinmann-menke-ist-neue-aerztliche-direktorin-der-klinik-fuer-nephrologie-des-universitaetsklinikums-heidelberg/",
+      "https://de.linkedin.com/in/univ-prof-dr-med-julia-weinmann-menke-a6a1a6128",
+      "https://www.klinikum.uni-heidelberg.de/einrichtungen/klinik-fuer-nephrologie-nierenzentrum-heidelberg-653/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 5,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Achern",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum achern-oberkirch (achern)|https://achern.ortenau-klinikum.de/|achern|germany",
+    "company_name": "Ortenau Klinikum Achern-Oberkirch (Achern)",
+    "company_website": "https://achern.ortenau-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 5,
+      "decision_makers": [
+        {
+          "full_name": "Kathleen Messer",
+          "person_key": "",
+          "role": "Pflege-Vorständin Ortenau Klinikum"
+        },
+        {
+          "full_name": "Martina Hodapp",
+          "person_key": "",
+          "role": "Bereichsleitung Pflegedirektion"
+        },
+        {
+          "full_name": "Sandra Schoor",
+          "person_key": "",
+          "role": "Bereichsleitung Pflegedirektion"
+        },
+        {
+          "full_name": "Svea Strohm",
+          "person_key": "",
+          "role": "Bereichsleitung Pflegedirektion"
+        },
+        {
+          "full_name": "Ute Luhrenberg",
+          "person_key": "",
+          "role": "Pflegedirektorin Achern"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "kathleen.messer@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kathleen Messer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/kathleen-messer-765312153",
+        "person_key": "person_kathleen_messer_b3d6db0d5e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflege-Vorständin Ortenau Klinikum",
+        "role_category": "operations",
+        "source_urls": [
+          "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://de.linkedin.com/in/kathleen-messer-765312153",
+          "https://offenburg-kehl.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "martina.hodapp@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martina Hodapp",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_martina_hodapp_c534ce402b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Bereichsleitung Pflegedirektion",
+        "role_category": "operations",
+        "source_urls": [
+          "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sandra.schoor@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sandra Schoor",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sandra_schoor_dcf7549206",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Bereichsleitung Pflegedirektion",
+        "role_category": "operations",
+        "source_urls": [
+          "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "svea.strohm@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Svea Strohm",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_svea_strohm_d0d28631fb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Bereichsleitung Pflegedirektion",
+        "role_category": "operations",
+        "source_urls": [
+          "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "ute.luhrenberg@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ute Luhrenberg",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ute_luhrenberg_c7ef9fcad1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Achern",
+        "role_category": "operations",
+        "source_urls": [
+          "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflege-Vorständin Ortenau Klinikum",
+        "Bereichsleitung Pflegedirektion",
+        "Pflegedirektorin Achern"
+      ],
+      "total_people": 5
+    },
+    "source_urls": [
+      "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+      "https://de.linkedin.com/in/kathleen-messer-765312153",
+      "https://offenburg-kehl.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+      "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/",
+      "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 1,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heilbronn",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurochirurgisches zentrum ludwigsburg-heilbronn / standort heilbronn / klinikum am gesundbrunnen|https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/|heilbronn|germany",
+    "company_name": "Neurochirurgisches Zentrum Ludwigsburg-Heilbronn / Standort Heilbronn / Klinikum am Gesundbrunnen",
+    "company_website": "https://www.rkh-kliniken.de/kliniken-zentren/standorte/klinikum-ludwigsburg/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Dorothea Fischer",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "dorothea.fischer@slk-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dorothea Fischer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dorothea_fischer_971eca8f16",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Neurochirurgisches_Zentrum_Ludwigsburg-Heilbronn_2023.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/eb7736d41ff1bd62/start"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Georg Schmidt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/georg-b-schmidt-141ba126b",
+        "person_key": "person_georg_schmidt_461508ffbb",
+        "primary_channel": "LINKEDIN",
+        "role": "Geschäftsführer SLK-Kliniken Heilbronn",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.slk-kliniken.de/ueber-uns/unternehmensleitung-organisation/unternehmensleitung",
+          "https://www.slk-kliniken.de/servicenavigation/impressum",
+          "https://de.linkedin.com/in/georg-b-schmidt-141ba126b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "oliver.sakowitz@rkh-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Oliver Sakowitz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/prof-dr-oliver-w-sakowitz-a0511430",
+        "person_key": "person_oliver_sakowitz_753ebdb3e9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztlicher Direktor Neurochirurgisches Zentrum",
+        "role_category": "unknown",
+        "source_urls": [
+          "https://www.g-ba.de/downloads/40-268-7332/2021-02-18_Zentrums-Regelungen_IDV-Zentren_ZD.pdf",
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/fachabteilungen/klinik-fuer-neurochirurgie/",
+          "https://de.linkedin.com/in/prof-dr-oliver-w-sakowitz-a0511430",
+          "https://www.slk-kliniken.de/kliniken-zentren-institute/kompetenzzentren/neurochirurgisches-zentrum-ludwigsburg-heilbronn/unser-profil"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo",
+        "unknown"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin",
+        "Geschäftsführer SLK-Kliniken Heilbronn",
+        "Ärztlicher Direktor Neurochirurgisches Zentrum"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Neurochirurgisches_Zentrum_Ludwigsburg-Heilbronn_2023.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/eb7736d41ff1bd62/start",
+      "https://www.slk-kliniken.de/ueber-uns/unternehmensleitung-organisation/unternehmensleitung",
+      "https://www.slk-kliniken.de/servicenavigation/impressum",
+      "https://de.linkedin.com/in/georg-b-schmidt-141ba126b",
+      "https://www.g-ba.de/downloads/40-268-7332/2021-02-18_Zentrums-Regelungen_IDV-Zentren_ZD.pdf",
+      "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/fachabteilungen/klinik-fuer-neurochirurgie/",
+      "https://de.linkedin.com/in/prof-dr-oliver-w-sakowitz-a0511430",
+      "https://www.slk-kliniken.de/kliniken-zentren-institute/kompetenzzentren/neurochirurgisches-zentrum-ludwigsburg-heilbronn/unser-profil"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Baiersbronn",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|neurologische klinik selzer in baiersbronn|http://www.selzer.de|baiersbronn|germany",
+    "company_name": "Neurologische Klinik Selzer in Baiersbronn",
+    "company_website": "http://www.selzer.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Constance Geisler",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "c.geisler@selzer.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Constance Geisler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_constance_geisler_e86dc31335",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://selzer.de/klinik/",
+          "https://selzer.de/wp-content/uploads/2022/04/260821332-00-2019-xml_GBA.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/33ad35fcd4da1786/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://selzer.de/klinik/",
+      "https://selzer.de/wp-content/uploads/2022/04/260821332-00-2019-xml_GBA.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/33ad35fcd4da1786/start"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 2,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heidelberg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|nierenzentrum heidelberg|http://www.nierenzentrum-heidelberg.com|heidelberg|germany",
+    "company_name": "Nierenzentrum Heidelberg",
+    "company_website": "http://www.nierenzentrum-heidelberg.com",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Hanna Hamm",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Eleonore Fritsch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_eleonore_fritsch_3ad3a8a28f",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.nierenzentrum-heidelberg.com/en/about-us/commercial-area/",
+          "https://www.nierenzentrum-heidelberg.com/",
+          "https://www.klinikum.uni-heidelberg.de/personen/dipl-kauffrau-eleonore-fritsch-14370/",
+          "https://www.klinikum.uni-heidelberg.de/newsroom/nierenzentrum-heidelberg-wird-zum-1-januar-2025-teil-des-universitaetsklinikums-heidelberg/",
+          "false",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b1f9652948d10f06/start"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Hanna Hamm",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_hanna_hamm_4e0e07d338",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.nierenzentrum-heidelberg.com/karriere/bewerbung/",
+          "https://www.nierenzentrum-heidelberg.com/",
+          "https://www.nierenzentrum-heidelberg.com/en/about-us/the-center/",
+          "https://www.nierenzentrum-heidelberg.com/en/for-patients/ward-and-care/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b1f9652948d10f06/start",
+          "false"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "julia.weinmann-menke@med.uni-heidelberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Prof. Dr. Julia Weinmann-Menke",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/univ-prof-dr-med-julia-weinmann-menke-a6a1a6128",
+        "person_key": "person_prof_dr_julia_weinmann_menke_cb29da63db",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Direktorin Klinik für Nephrologie",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikum.uni-heidelberg.de/newsroom/professorin-julia-weinmann-menke-ist-neue-aerztliche-direktorin-der-klinik-fuer-nephrologie-des-universitaetsklinikums-heidelberg/",
+          "https://de.linkedin.com/in/univ-prof-dr-med-julia-weinmann-menke-a6a1a6128",
+          "https://www.klinikum.uni-heidelberg.de/einrichtungen/klinik-fuer-nephrologie-nierenzentrum-heidelberg-653/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Kaufmännische Direktorin",
+        "Pflegedienstleitung",
+        "Ärztliche Direktorin Klinik für Nephrologie"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.nierenzentrum-heidelberg.com/en/about-us/commercial-area/",
+      "https://www.nierenzentrum-heidelberg.com/",
+      "https://www.klinikum.uni-heidelberg.de/personen/dipl-kauffrau-eleonore-fritsch-14370/",
+      "https://www.klinikum.uni-heidelberg.de/newsroom/nierenzentrum-heidelberg-wird-zum-1-januar-2025-teil-des-universitaetsklinikums-heidelberg/",
+      "false",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b1f9652948d10f06/start",
+      "https://www.nierenzentrum-heidelberg.com/karriere/bewerbung/",
+      "https://www.nierenzentrum-heidelberg.com/en/about-us/the-center/",
+      "https://www.nierenzentrum-heidelberg.com/en/for-patients/ward-and-care/",
+      "https://www.klinikum.uni-heidelberg.de/newsroom/professorin-julia-weinmann-menke-ist-neue-aerztliche-direktorin-der-klinik-fuer-nephrologie-des-universitaetsklinikums-heidelberg/",
+      "https://de.linkedin.com/in/univ-prof-dr-med-julia-weinmann-menke-a6a1a6128",
+      "https://www.klinikum.uni-heidelberg.de/einrichtungen/klinik-fuer-nephrologie-nierenzentrum-heidelberg-653/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 5,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Achern",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum achern-oberkirch (achern)|https://achern.ortenau-klinikum.de/|achern|germany",
+    "company_name": "Ortenau Klinikum Achern-Oberkirch (Achern)",
+    "company_website": "https://achern.ortenau-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 5,
+      "decision_makers": [
+        {
+          "full_name": "Kathleen Messer",
+          "person_key": "",
+          "role": "Pflege-Vorständin Ortenau Klinikum"
+        },
+        {
+          "full_name": "Martina Hodapp",
+          "person_key": "",
+          "role": "Bereichsleitung Pflegedirektion"
+        },
+        {
+          "full_name": "Sandra Schoor",
+          "person_key": "",
+          "role": "Bereichsleitung Pflegedirektion"
+        },
+        {
+          "full_name": "Svea Strohm",
+          "person_key": "",
+          "role": "Bereichsleitung Pflegedirektion"
+        },
+        {
+          "full_name": "Ute Luhrenberg",
+          "person_key": "",
+          "role": "Pflegedirektorin Achern"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "kathleen.messer@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kathleen Messer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/kathleen-messer-765312153",
+        "person_key": "person_kathleen_messer_b3d6db0d5e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflege-Vorständin Ortenau Klinikum",
+        "role_category": "operations",
+        "source_urls": [
+          "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://de.linkedin.com/in/kathleen-messer-765312153",
+          "https://offenburg-kehl.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "martina.hodapp@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martina Hodapp",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_martina_hodapp_c534ce402b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Bereichsleitung Pflegedirektion",
+        "role_category": "operations",
+        "source_urls": [
+          "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sandra.schoor@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sandra Schoor",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sandra_schoor_dcf7549206",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Bereichsleitung Pflegedirektion",
+        "role_category": "operations",
+        "source_urls": [
+          "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "svea.strohm@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Svea Strohm",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_svea_strohm_d0d28631fb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Bereichsleitung Pflegedirektion",
+        "role_category": "operations",
+        "source_urls": [
+          "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "ute.luhrenberg@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ute Luhrenberg",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ute_luhrenberg_c7ef9fcad1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Achern",
+        "role_category": "operations",
+        "source_urls": [
+          "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflege-Vorständin Ortenau Klinikum",
+        "Bereichsleitung Pflegedirektion",
+        "Pflegedirektorin Achern"
+      ],
+      "total_people": 5
+    },
+    "source_urls": [
+      "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+      "https://de.linkedin.com/in/kathleen-messer-765312153",
+      "https://offenburg-kehl.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+      "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/",
+      "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
