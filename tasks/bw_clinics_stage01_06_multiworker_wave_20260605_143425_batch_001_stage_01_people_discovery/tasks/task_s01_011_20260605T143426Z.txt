@@ -1,0 +1,80 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_wave_20260605_143425_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_011_20260605T143426Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_011_20260605T143426Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_wave_20260605_143425
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_wave_20260605_143425_batch_001_stage_01_people_discovery
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_wave_20260605_143425/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: ZfP Südwürttemberg Weissenau, TAZ Aulendorf | company_website: http://www.zfp-web.de | city: Aulendorf | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-weissenau-taz-aulendorf | pflegekraefte: 2
+2. company_name: MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik) | company_website: http://www.median-kliniken.de | city: Ottenhöfen im Schwarzwald | country: Germany | source_url: https://klinikradar.de/kliniken/median-achertal-klinik-ottenhoefen-psychiatrische-tagesklinik | pflegekraefte: 6
+3. company_name: EchTAZ in Reutlingen | company_website: https://medizin.uni-tuebingen.de | city: Reutlingen | country: Germany | source_url: https://klinikradar.de/kliniken/echtaz | pflegekraefte: 3
+4. company_name: MediClin Klinik an der Lindenhöhe, Standort Okenstraße in Offenburg | company_website: http://www.klinik-lindenhoehe.de | city: Offenburg | country: Germany | source_url: https://klinikradar.de/kliniken/mediclin-klinik-an-der-lindenhoehe-standort-okenstrasse | pflegekraefte: 5
+5. company_name: MediClin Klinik an der Lindenhöhe (Standort Rastatt) | company_website: http://www.klinik-lindenhoehe.de | city: Rastatt | country: Germany | source_url: https://klinikradar.de/kliniken/mediclin-klinik-an-der-lindenhoehe-standort-rastatt | pflegekraefte: 1
+6. company_name: Mariaberg - Fachkrankenhaus Kinder- und Jugendpsychiatrie Tagesklinik Albstadt | company_website: http://www.kjp-mariaberg.de | city: Albstadt | country: Germany | source_url: https://klinikradar.de/kliniken/mariaberg-fachkrankenhaus-kinder-und-jugendpsychiatrie-tagesklinik-albstadt | pflegekraefte: 3
+7. company_name: Universitätsklinikum Ulm - Strahlentherapie am Krankenhaus Ehingen | company_website: http://www.uniklinik-ulm.de/ | city: Ehingen | country: Germany | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-ulm-strahlentherapie-am-krankenhaus-ehingen | pflegekraefte: 1
+8. company_name: Psychiatrische Tagesklinik Bad Mergentheim | company_website: http://www.khtbb.de/khtbb/index.php | city: Bad Mergentheim | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-bad-mergentheim | pflegekraefte: 3
+9. company_name: Suchtmedizinische Tagesklinik Bad Säckingen | company_website: https://www.zfp-reichenau.de/ | city: Bad Säckingen | country: Germany | source_url: https://klinikradar.de/kliniken/suchtmedizinische-tagesklinik-bad-saeckingen
+10. company_name: Klinikum Mittelbaden Forbach | company_website: http://www.klinikum-mittelbaden.de | city: Forbach | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-mittelbaden-forbach
+11. company_name: Tagesklinik Bernhausen in Filderstadt | city: Filderstadt | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-bernhausen | pflegekraefte: 4
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_011_20260605T143426Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
