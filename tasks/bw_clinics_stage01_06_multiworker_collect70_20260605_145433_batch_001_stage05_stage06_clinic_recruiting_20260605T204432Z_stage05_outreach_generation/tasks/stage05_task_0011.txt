@@ -1,0 +1,1916 @@
+TASK_ID: stage05_task_0011
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hans carossa klinik stühlingen|http://www.carossa-klinik.de|stühlingen|germany",
+    "company_name": "Hans Carossa Klinik Stühlingen",
+    "full_name": "Marco Habbaba",
+    "message_target_id": "stage05_task_0011::person_marco_habbaba_2ea59fba51::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marco_habbaba_2ea59fba51",
+    "recipient_value": "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hans carossa klinik stühlingen|http://www.carossa-klinik.de|stühlingen|germany",
+    "company_name": "Hans Carossa Klinik Stühlingen",
+    "full_name": "Marco Habbaba",
+    "message_target_id": "stage05_task_0011::person_marco_habbaba_2ea59fba51::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marco_habbaba_2ea59fba51",
+    "recipient_value": "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hans carossa klinik stühlingen|http://www.carossa-klinik.de|stühlingen|germany",
+    "company_name": "Hans Carossa Klinik Stühlingen",
+    "full_name": "Marco Habbaba",
+    "message_target_id": "stage05_task_0011::person_marco_habbaba_d1b10c4236::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marco_habbaba_d1b10c4236",
+    "recipient_value": "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hans carossa klinik stühlingen|http://www.carossa-klinik.de|stühlingen|germany",
+    "company_name": "Hans Carossa Klinik Stühlingen",
+    "full_name": "Marco Habbaba",
+    "message_target_id": "stage05_task_0011::person_marco_habbaba_d1b10c4236::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marco_habbaba_d1b10c4236",
+    "recipient_value": "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Bernd Sieber",
+    "message_target_id": "stage05_task_0011::person_bernd_sieber_271e267fa7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_bernd_sieber_271e267fa7",
+    "recipient_value": "bernd.sieber@glkn.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Bernd Sieber",
+    "message_target_id": "stage05_task_0011::person_bernd_sieber_271e267fa7::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_bernd_sieber_271e267fa7",
+    "recipient_value": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Bernd Sieber",
+    "message_target_id": "stage05_task_0011::person_bernd_sieber_271e267fa7::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_bernd_sieber_271e267fa7",
+    "recipient_value": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Markus Schreiber",
+    "message_target_id": "stage05_task_0011::person_markus_schreiber_d6fd8068e1::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_markus_schreiber_d6fd8068e1",
+    "recipient_value": "markus.schreiber@glkn.de",
+    "role_title": "Personalleitung Hegau-Bodensee-Klinikum/Hegau-Jugendwerk Gailingen",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Rebecca Sellmann",
+    "message_target_id": "stage05_task_0011::person_rebecca_sellmann_d665ec6e94::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_rebecca_sellmann_d665ec6e94",
+    "recipient_value": "rebecca.sellmann@glkn.de",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Rebecca Sellmann",
+    "message_target_id": "stage05_task_0011::person_rebecca_sellmann_d665ec6e94::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_rebecca_sellmann_d665ec6e94",
+    "recipient_value": "https://de.linkedin.com/in/rebecca-sellmann-79679a269",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Rebecca Sellmann",
+    "message_target_id": "stage05_task_0011::person_rebecca_sellmann_d665ec6e94::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_rebecca_sellmann_d665ec6e94",
+    "recipient_value": "https://de.linkedin.com/in/rebecca-sellmann-79679a269",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Susanne Kern",
+    "message_target_id": "stage05_task_0011::person_susanne_kern_20fd65236b::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_susanne_kern_20fd65236b",
+    "recipient_value": "susanne.kern@glkn.de",
+    "role_title": "Personalleitung Hegau-Bodensee-Klinikum",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Susanne Kern",
+    "message_target_id": "stage05_task_0011::person_susanne_kern_20fd65236b::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_susanne_kern_20fd65236b",
+    "recipient_value": "https://de.linkedin.com/in/susanne-kern-aa2356228",
+    "role_title": "Personalleitung Hegau-Bodensee-Klinikum",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Susanne Kern",
+    "message_target_id": "stage05_task_0011::person_susanne_kern_20fd65236b::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_susanne_kern_20fd65236b",
+    "recipient_value": "https://de.linkedin.com/in/susanne-kern-aa2356228",
+    "role_title": "Personalleitung Hegau-Bodensee-Klinikum",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Susanne Kern",
+    "message_target_id": "stage05_task_0011::person_susanne_kern_32c0c966e1::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_susanne_kern_32c0c966e1",
+    "recipient_value": "susanne.kern@glkn.de",
+    "role_title": "Personalleitung Hegau-Bodensee-Klinikum",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Susanne Kern",
+    "message_target_id": "stage05_task_0011::person_susanne_kern_32c0c966e1::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_susanne_kern_32c0c966e1",
+    "recipient_value": "https://de.linkedin.com/in/susanne-kern-aa2356228",
+    "role_title": "Personalleitung Hegau-Bodensee-Klinikum",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Susanne Kern",
+    "message_target_id": "stage05_task_0011::person_susanne_kern_32c0c966e1::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_susanne_kern_32c0c966e1",
+    "recipient_value": "https://de.linkedin.com/in/susanne-kern-aa2356228",
+    "role_title": "Personalleitung Hegau-Bodensee-Klinikum",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Ursula Röder",
+    "message_target_id": "stage05_task_0011::person_ursula_r_der_4c888cb9f2::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ursula_r_der_4c888cb9f2",
+    "recipient_value": "ursula.roeder@glkn.de",
+    "role_title": "Pflegedirektorin Hegau-Bodensee-Klinikum",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Ursula Röder",
+    "message_target_id": "stage05_task_0011::person_ursula_r_der_4c888cb9f2::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ursula_r_der_4c888cb9f2",
+    "recipient_value": "https://de.linkedin.com/in/ursula-roeder-427a06a7",
+    "role_title": "Pflegedirektorin Hegau-Bodensee-Klinikum",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Ursula Röder",
+    "message_target_id": "stage05_task_0011::person_ursula_r_der_4c888cb9f2::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ursula_r_der_4c888cb9f2",
+    "recipient_value": "https://de.linkedin.com/in/ursula-roeder-427a06a7",
+    "role_title": "Pflegedirektorin Hegau-Bodensee-Klinikum",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Ursula Röder",
+    "message_target_id": "stage05_task_0011::person_ursula_r_der_078873e663::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ursula_r_der_078873e663",
+    "recipient_value": "ursula.roeder@glkn.de",
+    "role_title": "Pflegedirektion Singen",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Ursula Röder",
+    "message_target_id": "stage05_task_0011::person_ursula_r_der_078873e663::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ursula_r_der_078873e663",
+    "recipient_value": "https://de.linkedin.com/in/ursula-roeder-427a06a7",
+    "role_title": "Pflegedirektion Singen",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "full_name": "Ursula Röder",
+    "message_target_id": "stage05_task_0011::person_ursula_r_der_078873e663::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ursula_r_der_078873e663",
+    "recipient_value": "https://de.linkedin.com/in/ursula-roeder-427a06a7",
+    "role_title": "Pflegedirektion Singen",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Barbara Martetschläger",
+    "message_target_id": "stage05_task_0011::person_barbara_martetschl_ger_398eb3a80c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_barbara_martetschl_ger_398eb3a80c",
+    "recipient_value": "barbara.martetschlaeger@glkn.de",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Barbara Martetschläger",
+    "message_target_id": "stage05_task_0011::person_barbara_martetschl_ger_398eb3a80c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_barbara_martetschl_ger_398eb3a80c",
+    "recipient_value": "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Barbara Martetschläger",
+    "message_target_id": "stage05_task_0011::person_barbara_martetschl_ger_398eb3a80c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_barbara_martetschl_ger_398eb3a80c",
+    "recipient_value": "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Barbara Martetschläger",
+    "message_target_id": "stage05_task_0011::person_barbara_martetschl_ger_f821bac423::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_barbara_martetschl_ger_f821bac423",
+    "recipient_value": "barbara.martetschlaeger@glkn.de",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Barbara Martetschläger",
+    "message_target_id": "stage05_task_0011::person_barbara_martetschl_ger_f821bac423::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_barbara_martetschl_ger_f821bac423",
+    "recipient_value": "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Barbara Martetschläger",
+    "message_target_id": "stage05_task_0011::person_barbara_martetschl_ger_f821bac423::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_barbara_martetschl_ger_f821bac423",
+    "recipient_value": "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Petra Wirth",
+    "message_target_id": "stage05_task_0011::person_petra_wirth_431f2c51b7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_petra_wirth_431f2c51b7",
+    "recipient_value": "petra.wirth@hegau-jugendwerk.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Petra Wirth",
+    "message_target_id": "stage05_task_0011::person_petra_wirth_431f2c51b7::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_petra_wirth_431f2c51b7",
+    "recipient_value": "https://de.linkedin.com/in/petra-wirth-3646a0374",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Petra Wirth",
+    "message_target_id": "stage05_task_0011::person_petra_wirth_431f2c51b7::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_petra_wirth_431f2c51b7",
+    "recipient_value": "https://de.linkedin.com/in/petra-wirth-3646a0374",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Petra Wirth",
+    "message_target_id": "stage05_task_0011::person_petra_wirth_b7ab52bd63::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_petra_wirth_b7ab52bd63",
+    "recipient_value": "petra.wirth@hegau-jugendwerk.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Petra Wirth",
+    "message_target_id": "stage05_task_0011::person_petra_wirth_b7ab52bd63::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_petra_wirth_b7ab52bd63",
+    "recipient_value": "https://de.linkedin.com/in/petra-wirth-3646a0374",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "full_name": "Petra Wirth",
+    "message_target_id": "stage05_task_0011::person_petra_wirth_b7ab52bd63::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_petra_wirth_b7ab52bd63",
+    "recipient_value": "https://de.linkedin.com/in/petra-wirth-3646a0374",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|helios klinik für herzchirurgie karlsruhe|https://www.helios-gesundheit.de/kliniken/karlsruhe-herzchirurgie/|karlsruhe|germany",
+    "company_name": "Helios Klinik für Herzchirurgie Karlsruhe",
+    "full_name": "Emre Nazli",
+    "message_target_id": "stage05_task_0011::person_emre_nazli_bc11295b1a::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_emre_nazli_bc11295b1a",
+    "recipient_value": "emre.nazli@helios-gesundheit.de",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|helios klinik für herzchirurgie karlsruhe|https://www.helios-gesundheit.de/kliniken/karlsruhe-herzchirurgie/|karlsruhe|germany",
+    "company_name": "Helios Klinik für Herzchirurgie Karlsruhe",
+    "full_name": "Emre Nazli",
+    "message_target_id": "stage05_task_0011::person_emre_nazli_bc11295b1a::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_emre_nazli_bc11295b1a",
+    "recipient_value": "https://de.linkedin.com/in/emre-nazli-655932175",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|helios klinik für herzchirurgie karlsruhe|https://www.helios-gesundheit.de/kliniken/karlsruhe-herzchirurgie/|karlsruhe|germany",
+    "company_name": "Helios Klinik für Herzchirurgie Karlsruhe",
+    "full_name": "Emre Nazli",
+    "message_target_id": "stage05_task_0011::person_emre_nazli_bc11295b1a::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_emre_nazli_bc11295b1a",
+    "recipient_value": "https://de.linkedin.com/in/emre-nazli-655932175",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|helios klinik für herzchirurgie karlsruhe|https://www.helios-gesundheit.de/kliniken/karlsruhe-herzchirurgie/|karlsruhe|germany",
+    "company_name": "Helios Klinik für Herzchirurgie Karlsruhe",
+    "full_name": "Ralf Levy",
+    "message_target_id": "stage05_task_0011::person_ralf_levy_77b1a6e7f4::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ralf_levy_77b1a6e7f4",
+    "recipient_value": "ralf.levy@helios-gesundheit.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0011"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|helios klinik für herzchirurgie karlsruhe|https://www.helios-gesundheit.de/kliniken/karlsruhe-herzchirurgie/|karlsruhe|germany",
+    "company_name": "Helios Klinik für Herzchirurgie Karlsruhe",
+    "full_name": "Sandra Pfau",
+    "message_target_id": "stage05_task_0011::person_sandra_pfau_9c31e34b3f::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sandra_pfau_9c31e34b3f",
+    "recipient_value": "sandra.pfau2@helios-gesundheit.de",
+    "role_title": "Stellvertretende Personalleiterin",
+    "task_id": "stage05_task_0011"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 4,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stühlingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hans carossa klinik stühlingen|http://www.carossa-klinik.de|stühlingen|germany",
+    "company_name": "Hans Carossa Klinik Stühlingen",
+    "company_website": "http://www.carossa-klinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Sigrid Seifermann",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Sigrid Seifermann",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Marco Habbaba",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+        "person_key": "person_marco_habbaba_2ea59fba51",
+        "primary_channel": "LINKEDIN",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://carossa-klinik.de/impressum/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832643-773178000-2023-xml.pdf",
+          "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/725dbe4ba1f33d83/start"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Marco Habbaba",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+        "person_key": "person_marco_habbaba_d1b10c4236",
+        "primary_channel": "LINKEDIN",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://carossa-klinik.de/impressum/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832643-773178000-2023-xml.pdf",
+          "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/725dbe4ba1f33d83/start"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Sigrid Seifermann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sigrid_seifermann_3ff4cf1282",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832643-773178000-2023-xml.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/725dbe4ba1f33d83/start"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Sigrid Seifermann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sigrid_seifermann_9b144c7e77",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832643-773178000-2023-xml.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/725dbe4ba1f33d83/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://carossa-klinik.de/impressum/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260832643-773178000-2023-xml.pdf",
+      "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/725dbe4ba1f33d83/start"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 6,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Singen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "company_website": "http://www.glkn.de/glkn/index.php",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Ursula Röder",
+          "person_key": "",
+          "role": "Pflegedirektorin Hegau-Bodensee-Klinikum"
+        },
+        {
+          "full_name": "Ursula Röder",
+          "person_key": "",
+          "role": "Pflegedirektion Singen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "bernd.sieber@glkn.de",
+        "confirmed_email": "bernd.sieber@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Bernd Sieber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+        "person_key": "person_bernd_sieber_271e267fa7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsfuehrung.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.glkn.de/wLayout-glkn/wGlobal/scripts/accessDocument.php?document=%2Fmedia-glkn%2Fdocs%2FKonstanz%2FKlinikum-Konstanz%2Fmedizinische-bereiche%2Finnere-medizin%2Ffortbildungen%2FHCV_Frei.pdf&forceDownload=0",
+          "https://mvz-konstanz.de/kontakt/",
+          "https://www.vlkkd.de/de/kontakt/",
+          "https://search.proquest.com/openview/d580bbe288cde9b44169b4902b72a4e6/1?cbl=2044856&pq-origsite=gscholar",
+          "https://de.linkedin.com/in/bernd-sieber-2643779a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "markus.schreiber@glkn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Markus Schreiber",
+        "hypothesis_email": "markus.schreiber@glkn.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_markus_schreiber_d6fd8068e1",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Personalleitung Hegau-Bodensee-Klinikum/Hegau-Jugendwerk Gailingen",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-SI-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.valmedi.de/arbeitgeber/gesundheitsverbund-landkreis-konstanz-1528",
+          "https://de.linkedin.com/jobs/view/oberarzt-%C3%A4rztin-klinik-f%C3%BCr-akut-und-notfallmedizin-mit-kardiologischem-schwerpunkt-m-w-d-at-gesundheitsverbund-landkreis-konstanz-4372608027",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/6754_Geschaeftsbereichsleitung-Personal-und-Recht-m-w-d.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "rebecca.sellmann@glkn.de",
+        "confirmed_email": "rebecca.sellmann@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Rebecca Sellmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/rebecca-sellmann-79679a269",
+        "person_key": "person_rebecca_sellmann_d665ec6e94",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/kaufmaennische-direktion.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-SI-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.vlkkd.de/de/kontakt/",
+          "https://www.glkn.de/wLayout-glkn/wGlobal/scripts/accessDocument.php?document=%2Fmedia-glkn%2Fdocs%2FKonstanz%2FKlinikum-Konstanz%2Fmedizinische-bereiche%2Finnere-medizin%2Ffortbildungen%2FHCV_Frei.pdf&forceDownload=0",
+          "https://search.proquest.com/openview/d580bbe288cde9b44169b4902b72a4e6/1?cbl=2044856&pq-origsite=gscholar",
+          "https://de.linkedin.com/in/rebecca-sellmann-79679a269"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "susanne.kern@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Susanne Kern",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/susanne-kern-aa2356228",
+        "person_key": "person_susanne_kern_20fd65236b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleitung Hegau-Bodensee-Klinikum",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.valmedi.de/arbeitgeber/gesundheitsverbund-landkreis-konstanz-1528",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsbereiche.php",
+          "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+          "https://de.linkedin.com/in/susanne-kern-aa2356228"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "susanne.kern@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Susanne Kern",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/susanne-kern-aa2356228",
+        "person_key": "person_susanne_kern_32c0c966e1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleitung Hegau-Bodensee-Klinikum",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.valmedi.de/arbeitgeber/gesundheitsverbund-landkreis-konstanz-1528",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsbereiche.php",
+          "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+          "https://de.linkedin.com/in/susanne-kern-aa2356228"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "ursula.roeder@glkn.de",
+        "confirmed_email": "ursula.roeder@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ursula Röder",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/ursula-roeder-427a06a7",
+        "person_key": "person_ursula_r_der_4c888cb9f2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Hegau-Bodensee-Klinikum",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-SI-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php",
+          "https://www.vlkkd.de/de/kontakt/",
+          "https://www.glkn.de/wLayout-glkn/wGlobal/scripts/accessDocument.php?document=%2Fmedia-glkn%2Fdocs%2FKonstanz%2FKlinikum-Konstanz%2Fmedizinische-bereiche%2Finnere-medizin%2Ffortbildungen%2FHCV_Frei.pdf&forceDownload=0",
+          "https://search.proquest.com/openview/d580bbe288cde9b44169b4902b72a4e6/1?cbl=2044856&pq-origsite=gscholar",
+          "https://de.linkedin.com/in/ursula-roeder-427a06a7"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "ursula.roeder@glkn.de",
+        "confirmed_email": "ursula.roeder@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ursula Röder",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/ursula-roeder-427a06a7",
+        "person_key": "person_ursula_r_der_078873e663",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektion Singen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-SI-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php",
+          "https://www.vlkkd.de/de/kontakt/",
+          "https://www.glkn.de/wLayout-glkn/wGlobal/scripts/accessDocument.php?document=%2Fmedia-glkn%2Fdocs%2FKonstanz%2FKlinikum-Konstanz%2Fmedizinische-bereiche%2Finnere-medizin%2Ffortbildungen%2FHCV_Frei.pdf&forceDownload=0",
+          "https://search.proquest.com/openview/d580bbe288cde9b44169b4902b72a4e6/1?cbl=2044856&pq-origsite=gscholar",
+          "https://de.linkedin.com/in/ursula-roeder-427a06a7"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "hr_recruiting",
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Personalleitung Hegau-Bodensee-Klinikum/Hegau-Jugendwerk Gailingen",
+        "Kaufmännische Direktorin",
+        "Personalleitung Hegau-Bodensee-Klinikum",
+        "Pflegedirektorin Hegau-Bodensee-Klinikum",
+        "Pflegedirektion Singen"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsfuehrung.php",
+      "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+      "https://www.glkn.de/wLayout-glkn/wGlobal/scripts/accessDocument.php?document=%2Fmedia-glkn%2Fdocs%2FKonstanz%2FKlinikum-Konstanz%2Fmedizinische-bereiche%2Finnere-medizin%2Ffortbildungen%2FHCV_Frei.pdf&forceDownload=0",
+      "https://mvz-konstanz.de/kontakt/",
+      "https://www.vlkkd.de/de/kontakt/",
+      "https://search.proquest.com/openview/d580bbe288cde9b44169b4902b72a4e6/1?cbl=2044856&pq-origsite=gscholar",
+      "https://de.linkedin.com/in/bernd-sieber-2643779a",
+      "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+      "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-SI-EX-gBA-Qualitaetsbericht.pdf",
+      "https://www.valmedi.de/arbeitgeber/gesundheitsverbund-landkreis-konstanz-1528",
+      "https://de.linkedin.com/jobs/view/oberarzt-%C3%A4rztin-klinik-f%C3%BCr-akut-und-notfallmedizin-mit-kardiologischem-schwerpunkt-m-w-d-at-gesundheitsverbund-landkreis-konstanz-4372608027",
+      "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/6754_Geschaeftsbereichsleitung-Personal-und-Recht-m-w-d.php",
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/kaufmaennische-direktion.php",
+      "https://de.linkedin.com/in/rebecca-sellmann-79679a269",
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsbereiche.php",
+      "https://de.linkedin.com/in/susanne-kern-aa2356228",
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php",
+      "https://de.linkedin.com/in/ursula-roeder-427a06a7"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Gailingen am Hochrhein",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "company_website": "https://www.hegau-jugendwerk.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Petra Wirth",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Petra Wirth",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "barbara.martetschlaeger@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Martetschläger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+        "person_key": "person_barbara_martetschl_ger_398eb3a80c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.hegau-jugendwerk.de/media/dokumente/klinikleitung/qualitaetsbericht/Qualitaetsbericht-2024.pdf",
+          "https://www.hegau-jugendwerk.de/de/aktuelles/meldungen/2025/Herzliches-Willkommen-fuer-die-neue-Pflegedirektorin.php",
+          "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+          "https://www.hegau-jugendwerk.de/de/klinikleitung/Klinikleitung-Startseite.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "barbara.martetschlaeger@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Martetschläger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+        "person_key": "person_barbara_martetschl_ger_f821bac423",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.hegau-jugendwerk.de/media/dokumente/klinikleitung/qualitaetsbericht/Qualitaetsbericht-2024.pdf",
+          "https://www.hegau-jugendwerk.de/de/aktuelles/meldungen/2025/Herzliches-Willkommen-fuer-die-neue-Pflegedirektorin.php",
+          "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+          "https://www.hegau-jugendwerk.de/de/klinikleitung/Klinikleitung-Startseite.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "petra.wirth@hegau-jugendwerk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Petra Wirth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/petra-wirth-3646a0374",
+        "person_key": "person_petra_wirth_431f2c51b7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.hegau-jugendwerk.de/de/mitarbeiterprofile/Wirth_Petra.php",
+          "https://www.hegau-jugendwerk.de/de/leistungsspektrum/pflegedienst/Ehrenamt.php",
+          "https://de.linkedin.com/in/petra-wirth-3646a0374",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e94e8821fc26efdc/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "petra.wirth@hegau-jugendwerk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Petra Wirth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/petra-wirth-3646a0374",
+        "person_key": "person_petra_wirth_b7ab52bd63",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.hegau-jugendwerk.de/de/mitarbeiterprofile/Wirth_Petra.php",
+          "https://www.hegau-jugendwerk.de/de/leistungsspektrum/pflegedienst/Ehrenamt.php",
+          "https://de.linkedin.com/in/petra-wirth-3646a0374",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e94e8821fc26efdc/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Kaufmännische Direktorin",
+        "Pflegedirektorin"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.hegau-jugendwerk.de/media/dokumente/klinikleitung/qualitaetsbericht/Qualitaetsbericht-2024.pdf",
+      "https://www.hegau-jugendwerk.de/de/aktuelles/meldungen/2025/Herzliches-Willkommen-fuer-die-neue-Pflegedirektorin.php",
+      "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+      "https://www.hegau-jugendwerk.de/de/klinikleitung/Klinikleitung-Startseite.php",
+      "https://www.hegau-jugendwerk.de/de/mitarbeiterprofile/Wirth_Petra.php",
+      "https://www.hegau-jugendwerk.de/de/leistungsspektrum/pflegedienst/Ehrenamt.php",
+      "https://de.linkedin.com/in/petra-wirth-3646a0374",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e94e8821fc26efdc/start"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Karlsruhe",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|helios klinik für herzchirurgie karlsruhe|https://www.helios-gesundheit.de/kliniken/karlsruhe-herzchirurgie/|karlsruhe|germany",
+    "company_name": "Helios Klinik für Herzchirurgie Karlsruhe",
+    "company_website": "https://www.helios-gesundheit.de/kliniken/karlsruhe-herzchirurgie/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Ralf Levy",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "emre.nazli@helios-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Emre Nazli",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/emre-nazli-655932175",
+        "person_key": "person_emre_nazli_bc11295b1a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikgeschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820854-773169000-2023-xml.pdf",
+          "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/person/nazli-emre/",
+          "https://de.linkedin.com/in/emre-nazli-655932175",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b82bbde47c74acdf/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "ralf.levy@helios-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ralf Levy",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ralf_levy_77b1a6e7f4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.helios-gesundheit.de/karriere/job/e6e89609-5045-4a82-b950-036b5d9b0b0e/",
+          "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/person/levy-ralf/",
+          "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/aufenthalt/kontakt-anfahrt/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sandra.pfau2@helios-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sandra Pfau",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sandra_pfau_9c31e34b3f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Personalleiterin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://karriere.fresenius.de/en-US/job-detail/a175d023-5a72-56f8-932a-ae727fe2afdd/medizinischer-technologe-fuer-radiologie-mtr-m-w-d",
+          "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/aufenthalt/kontakt-anfahrt/ansprechpartner/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Klinikgeschäftsführer",
+        "Pflegedirektor",
+        "Stellvertretende Personalleiterin"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260820854-773169000-2023-xml.pdf",
+      "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/person/nazli-emre/",
+      "https://de.linkedin.com/in/emre-nazli-655932175",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b82bbde47c74acdf/start",
+      "https://www.helios-gesundheit.de/karriere/job/e6e89609-5045-4a82-b950-036b5d9b0b0e/",
+      "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/person/levy-ralf/",
+      "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/aufenthalt/kontakt-anfahrt/ansprechpartner/",
+      "https://karriere.fresenius.de/en-US/job-detail/a175d023-5a72-56f8-932a-ae727fe2afdd/medizinischer-technologe-fuer-radiologie-mtr-m-w-d"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 4,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stühlingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hans carossa klinik stühlingen|http://www.carossa-klinik.de|stühlingen|germany",
+    "company_name": "Hans Carossa Klinik Stühlingen",
+    "company_website": "http://www.carossa-klinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Sigrid Seifermann",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Sigrid Seifermann",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Marco Habbaba",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+        "person_key": "person_marco_habbaba_2ea59fba51",
+        "primary_channel": "LINKEDIN",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://carossa-klinik.de/impressum/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832643-773178000-2023-xml.pdf",
+          "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/725dbe4ba1f33d83/start"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Marco Habbaba",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+        "person_key": "person_marco_habbaba_d1b10c4236",
+        "primary_channel": "LINKEDIN",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://carossa-klinik.de/impressum/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832643-773178000-2023-xml.pdf",
+          "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/725dbe4ba1f33d83/start"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Sigrid Seifermann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sigrid_seifermann_3ff4cf1282",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832643-773178000-2023-xml.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/725dbe4ba1f33d83/start"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Sigrid Seifermann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sigrid_seifermann_9b144c7e77",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832643-773178000-2023-xml.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/725dbe4ba1f33d83/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://carossa-klinik.de/impressum/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260832643-773178000-2023-xml.pdf",
+      "https://de.linkedin.com/in/dr-marco-habbaba-57bb6115b",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/725dbe4ba1f33d83/start"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 6,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Singen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-bodensee-klinikum singen|http://www.glkn.de/glkn/index.php|singen|germany",
+    "company_name": "Hegau-Bodensee-Klinikum Singen",
+    "company_website": "http://www.glkn.de/glkn/index.php",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Ursula Röder",
+          "person_key": "",
+          "role": "Pflegedirektorin Hegau-Bodensee-Klinikum"
+        },
+        {
+          "full_name": "Ursula Röder",
+          "person_key": "",
+          "role": "Pflegedirektion Singen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "bernd.sieber@glkn.de",
+        "confirmed_email": "bernd.sieber@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Bernd Sieber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/bernd-sieber-2643779a",
+        "person_key": "person_bernd_sieber_271e267fa7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsfuehrung.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.glkn.de/wLayout-glkn/wGlobal/scripts/accessDocument.php?document=%2Fmedia-glkn%2Fdocs%2FKonstanz%2FKlinikum-Konstanz%2Fmedizinische-bereiche%2Finnere-medizin%2Ffortbildungen%2FHCV_Frei.pdf&forceDownload=0",
+          "https://mvz-konstanz.de/kontakt/",
+          "https://www.vlkkd.de/de/kontakt/",
+          "https://search.proquest.com/openview/d580bbe288cde9b44169b4902b72a4e6/1?cbl=2044856&pq-origsite=gscholar",
+          "https://de.linkedin.com/in/bernd-sieber-2643779a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "markus.schreiber@glkn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Markus Schreiber",
+        "hypothesis_email": "markus.schreiber@glkn.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_markus_schreiber_d6fd8068e1",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Personalleitung Hegau-Bodensee-Klinikum/Hegau-Jugendwerk Gailingen",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-SI-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.valmedi.de/arbeitgeber/gesundheitsverbund-landkreis-konstanz-1528",
+          "https://de.linkedin.com/jobs/view/oberarzt-%C3%A4rztin-klinik-f%C3%BCr-akut-und-notfallmedizin-mit-kardiologischem-schwerpunkt-m-w-d-at-gesundheitsverbund-landkreis-konstanz-4372608027",
+          "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/6754_Geschaeftsbereichsleitung-Personal-und-Recht-m-w-d.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "rebecca.sellmann@glkn.de",
+        "confirmed_email": "rebecca.sellmann@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Rebecca Sellmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/rebecca-sellmann-79679a269",
+        "person_key": "person_rebecca_sellmann_d665ec6e94",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/kaufmaennische-direktion.php",
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-SI-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.vlkkd.de/de/kontakt/",
+          "https://www.glkn.de/wLayout-glkn/wGlobal/scripts/accessDocument.php?document=%2Fmedia-glkn%2Fdocs%2FKonstanz%2FKlinikum-Konstanz%2Fmedizinische-bereiche%2Finnere-medizin%2Ffortbildungen%2FHCV_Frei.pdf&forceDownload=0",
+          "https://search.proquest.com/openview/d580bbe288cde9b44169b4902b72a4e6/1?cbl=2044856&pq-origsite=gscholar",
+          "https://de.linkedin.com/in/rebecca-sellmann-79679a269"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "susanne.kern@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Susanne Kern",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/susanne-kern-aa2356228",
+        "person_key": "person_susanne_kern_20fd65236b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleitung Hegau-Bodensee-Klinikum",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.valmedi.de/arbeitgeber/gesundheitsverbund-landkreis-konstanz-1528",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsbereiche.php",
+          "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+          "https://de.linkedin.com/in/susanne-kern-aa2356228"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "susanne.kern@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Susanne Kern",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/susanne-kern-aa2356228",
+        "person_key": "person_susanne_kern_32c0c966e1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleitung Hegau-Bodensee-Klinikum",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.valmedi.de/arbeitgeber/gesundheitsverbund-landkreis-konstanz-1528",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsbereiche.php",
+          "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+          "https://de.linkedin.com/in/susanne-kern-aa2356228"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "ursula.roeder@glkn.de",
+        "confirmed_email": "ursula.roeder@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ursula Röder",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/ursula-roeder-427a06a7",
+        "person_key": "person_ursula_r_der_4c888cb9f2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Hegau-Bodensee-Klinikum",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-SI-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php",
+          "https://www.vlkkd.de/de/kontakt/",
+          "https://www.glkn.de/wLayout-glkn/wGlobal/scripts/accessDocument.php?document=%2Fmedia-glkn%2Fdocs%2FKonstanz%2FKlinikum-Konstanz%2Fmedizinische-bereiche%2Finnere-medizin%2Ffortbildungen%2FHCV_Frei.pdf&forceDownload=0",
+          "https://search.proquest.com/openview/d580bbe288cde9b44169b4902b72a4e6/1?cbl=2044856&pq-origsite=gscholar",
+          "https://de.linkedin.com/in/ursula-roeder-427a06a7"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "ursula.roeder@glkn.de",
+        "confirmed_email": "ursula.roeder@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ursula Röder",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/ursula-roeder-427a06a7",
+        "person_key": "person_ursula_r_der_078873e663",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektion Singen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-SI-EX-gBA-Qualitaetsbericht.pdf",
+          "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php",
+          "https://www.vlkkd.de/de/kontakt/",
+          "https://www.glkn.de/wLayout-glkn/wGlobal/scripts/accessDocument.php?document=%2Fmedia-glkn%2Fdocs%2FKonstanz%2FKlinikum-Konstanz%2Fmedizinische-bereiche%2Finnere-medizin%2Ffortbildungen%2FHCV_Frei.pdf&forceDownload=0",
+          "https://search.proquest.com/openview/d580bbe288cde9b44169b4902b72a4e6/1?cbl=2044856&pq-origsite=gscholar",
+          "https://de.linkedin.com/in/ursula-roeder-427a06a7"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "hr_recruiting",
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Personalleitung Hegau-Bodensee-Klinikum/Hegau-Jugendwerk Gailingen",
+        "Kaufmännische Direktorin",
+        "Personalleitung Hegau-Bodensee-Klinikum",
+        "Pflegedirektorin Hegau-Bodensee-Klinikum",
+        "Pflegedirektion Singen"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsfuehrung.php",
+      "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-KN-EX-gBA-Qualitaetsbericht.pdf",
+      "https://www.glkn.de/wLayout-glkn/wGlobal/scripts/accessDocument.php?document=%2Fmedia-glkn%2Fdocs%2FKonstanz%2FKlinikum-Konstanz%2Fmedizinische-bereiche%2Finnere-medizin%2Ffortbildungen%2FHCV_Frei.pdf&forceDownload=0",
+      "https://mvz-konstanz.de/kontakt/",
+      "https://www.vlkkd.de/de/kontakt/",
+      "https://search.proquest.com/openview/d580bbe288cde9b44169b4902b72a4e6/1?cbl=2044856&pq-origsite=gscholar",
+      "https://de.linkedin.com/in/bernd-sieber-2643779a",
+      "https://www.glkn.de/glkn/stellenboerse/wir-als-arbeitgeber.php",
+      "https://www.glkn.de/media-glkn/docs/Uebergreifend/QBs-2018/2024-SI-EX-gBA-Qualitaetsbericht.pdf",
+      "https://www.valmedi.de/arbeitgeber/gesundheitsverbund-landkreis-konstanz-1528",
+      "https://de.linkedin.com/jobs/view/oberarzt-%C3%A4rztin-klinik-f%C3%BCr-akut-und-notfallmedizin-mit-kardiologischem-schwerpunkt-m-w-d-at-gesundheitsverbund-landkreis-konstanz-4372608027",
+      "https://www.glkn.de/glkn/stellenboerse/stellenangebote_import/6754_Geschaeftsbereichsleitung-Personal-und-Recht-m-w-d.php",
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/kaufmaennische-direktion.php",
+      "https://de.linkedin.com/in/rebecca-sellmann-79679a269",
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/geschaeftsbereiche.php",
+      "https://de.linkedin.com/in/susanne-kern-aa2356228",
+      "https://www.glkn.de/glkn/gesundheitsverbund/verbundweite-bereiche/pflegedirektion.php",
+      "https://de.linkedin.com/in/ursula-roeder-427a06a7"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Gailingen am Hochrhein",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|hegau-jugendwerk in gailingen am hochrhein|https://www.hegau-jugendwerk.de|gailingen am hochrhein|germany",
+    "company_name": "Hegau-Jugendwerk in Gailingen am Hochrhein",
+    "company_website": "https://www.hegau-jugendwerk.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Petra Wirth",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Petra Wirth",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "barbara.martetschlaeger@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Martetschläger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+        "person_key": "person_barbara_martetschl_ger_398eb3a80c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.hegau-jugendwerk.de/media/dokumente/klinikleitung/qualitaetsbericht/Qualitaetsbericht-2024.pdf",
+          "https://www.hegau-jugendwerk.de/de/aktuelles/meldungen/2025/Herzliches-Willkommen-fuer-die-neue-Pflegedirektorin.php",
+          "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+          "https://www.hegau-jugendwerk.de/de/klinikleitung/Klinikleitung-Startseite.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "barbara.martetschlaeger@glkn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Martetschläger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+        "person_key": "person_barbara_martetschl_ger_f821bac423",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.hegau-jugendwerk.de/media/dokumente/klinikleitung/qualitaetsbericht/Qualitaetsbericht-2024.pdf",
+          "https://www.hegau-jugendwerk.de/de/aktuelles/meldungen/2025/Herzliches-Willkommen-fuer-die-neue-Pflegedirektorin.php",
+          "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+          "https://www.hegau-jugendwerk.de/de/klinikleitung/Klinikleitung-Startseite.php"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "petra.wirth@hegau-jugendwerk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Petra Wirth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/petra-wirth-3646a0374",
+        "person_key": "person_petra_wirth_431f2c51b7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.hegau-jugendwerk.de/de/mitarbeiterprofile/Wirth_Petra.php",
+          "https://www.hegau-jugendwerk.de/de/leistungsspektrum/pflegedienst/Ehrenamt.php",
+          "https://de.linkedin.com/in/petra-wirth-3646a0374",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e94e8821fc26efdc/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "petra.wirth@hegau-jugendwerk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Petra Wirth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/petra-wirth-3646a0374",
+        "person_key": "person_petra_wirth_b7ab52bd63",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.hegau-jugendwerk.de/de/mitarbeiterprofile/Wirth_Petra.php",
+          "https://www.hegau-jugendwerk.de/de/leistungsspektrum/pflegedienst/Ehrenamt.php",
+          "https://de.linkedin.com/in/petra-wirth-3646a0374",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e94e8821fc26efdc/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Kaufmännische Direktorin",
+        "Pflegedirektorin"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.hegau-jugendwerk.de/media/dokumente/klinikleitung/qualitaetsbericht/Qualitaetsbericht-2024.pdf",
+      "https://www.hegau-jugendwerk.de/de/aktuelles/meldungen/2025/Herzliches-Willkommen-fuer-die-neue-Pflegedirektorin.php",
+      "https://de.linkedin.com/in/barbara-martetschl%C3%A4ger-6b8854152",
+      "https://www.hegau-jugendwerk.de/de/klinikleitung/Klinikleitung-Startseite.php",
+      "https://www.hegau-jugendwerk.de/de/mitarbeiterprofile/Wirth_Petra.php",
+      "https://www.hegau-jugendwerk.de/de/leistungsspektrum/pflegedienst/Ehrenamt.php",
+      "https://de.linkedin.com/in/petra-wirth-3646a0374",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/e94e8821fc26efdc/start"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Karlsruhe",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|helios klinik für herzchirurgie karlsruhe|https://www.helios-gesundheit.de/kliniken/karlsruhe-herzchirurgie/|karlsruhe|germany",
+    "company_name": "Helios Klinik für Herzchirurgie Karlsruhe",
+    "company_website": "https://www.helios-gesundheit.de/kliniken/karlsruhe-herzchirurgie/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Ralf Levy",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "emre.nazli@helios-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Emre Nazli",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/emre-nazli-655932175",
+        "person_key": "person_emre_nazli_bc11295b1a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikgeschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820854-773169000-2023-xml.pdf",
+          "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/person/nazli-emre/",
+          "https://de.linkedin.com/in/emre-nazli-655932175",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b82bbde47c74acdf/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "ralf.levy@helios-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ralf Levy",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ralf_levy_77b1a6e7f4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.helios-gesundheit.de/karriere/job/e6e89609-5045-4a82-b950-036b5d9b0b0e/",
+          "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/person/levy-ralf/",
+          "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/aufenthalt/kontakt-anfahrt/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sandra.pfau2@helios-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sandra Pfau",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sandra_pfau_9c31e34b3f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Personalleiterin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://karriere.fresenius.de/en-US/job-detail/a175d023-5a72-56f8-932a-ae727fe2afdd/medizinischer-technologe-fuer-radiologie-mtr-m-w-d",
+          "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/aufenthalt/kontakt-anfahrt/ansprechpartner/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Klinikgeschäftsführer",
+        "Pflegedirektor",
+        "Stellvertretende Personalleiterin"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260820854-773169000-2023-xml.pdf",
+      "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/person/nazli-emre/",
+      "https://de.linkedin.com/in/emre-nazli-655932175",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b82bbde47c74acdf/start",
+      "https://www.helios-gesundheit.de/karriere/job/e6e89609-5045-4a82-b950-036b5d9b0b0e/",
+      "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/person/levy-ralf/",
+      "https://www.helios-gesundheit.de/standorte-angebote/kliniken/karlsruhe-herzchirurgie/aufenthalt/kontakt-anfahrt/ansprechpartner/",
+      "https://karriere.fresenius.de/en-US/job-detail/a175d023-5a72-56f8-932a-ae727fe2afdd/medizinischer-technologe-fuer-radiologie-mtr-m-w-d"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
