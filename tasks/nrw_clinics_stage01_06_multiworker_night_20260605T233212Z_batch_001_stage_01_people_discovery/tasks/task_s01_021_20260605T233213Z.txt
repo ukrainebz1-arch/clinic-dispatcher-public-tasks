@@ -1,0 +1,89 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260605T233212Z_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_021_20260605T233213Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_021_20260605T233213Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260605T233212Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260605T233212Z_batch_001_stage_01_people_discovery
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260605T233212Z/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Augenklinik Dardenne in Bonn | company_website: https://www.augenklinik-dardenne.de/ | city: Bonn | country: Germany | source_url: https://klinikradar.de/kliniken/augenklinik-dardenne | pflegekraefte: 22.0
+2. company_name: VALEARA Bottrop | company_website: https://www.valeara.de/standorte-leistungen/valeara-bottrop | city: Bottrop | country: Germany | source_url: https://klinikradar.de/kliniken/valeara-bottrop | pflegekraefte: 4.0
+3. company_name: LVR-Klinik Viersen, Nettetal, Sassenfelder Kirchweg | company_website: http://www.klinik-viersen.lvr.de | city: Nettetal | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-viersen-nettetal-sassenfelder-kirchweg | pflegekraefte: 5.0
+4. company_name: Tagesklinik Dorsten | company_website: https://www.lwl-klinik-herten.de/unsere-einrichtungen/tageskliniken/tagesklinik-dorsten | city: Dorsten | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-dorsten | pflegekraefte: 4.0
+5. company_name: Tagesklinik für Psychiatrie und Psychotherapie des St. Rochus-Hospitals Telgte in Warendorf | company_website: http://www.srh-telgte.de | city: Warendorf | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-des-st-rochus-hospitals-telgte | pflegekraefte: 4.0
+6. company_name: Psychiatrische Tagesklinik Bad Oeynhausen | company_website: https://www.muehlenkreiskliniken.de/medizinisches-zentrum-fuer-seelische-gesundheit | city: Bad Oeynhausen | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-bad-oeynhausen | pflegekraefte: 8.0
+7. company_name: Psychiatrische Tagesklinik Minden | company_website: https://www.muehlenkreiskliniken.de/medizinisches-zentrum-fuer-seelische-gesundheit | city: Minden | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-tagesklinik-minden | pflegekraefte: 7.0
+8. company_name: Tagesklinik Walstedde in Drensteinfurt | city: Drensteinfurt | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-walstedde | pflegekraefte: 11.0
+9. company_name: Tagesklinik Lage in Lage, Lippe | company_website: http://www.gpz-lippe.de | city: Lage | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-lage | pflegekraefte: 3.0
+10. company_name: LVR-Klinik Viersen, Kempen, Von Broichhauen Allee | company_website: http://www.klinik-viersen.lvr.de | city: Kempen | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-viersen-kempen-von-broichhauen-allee | pflegekraefte: 4.0
+11. company_name: Tagesklinik Bad Meinberg | company_website: http://www.gpz-lippe.de | city: Horn-Bad Meinberg | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-bad-meinberg | pflegekraefte: 4.0
+12. company_name: Tagesklinik Haltern | company_website: https://www.lwl-klinik-herten.de/unsere-einrichtungen/tageskliniken/tagesklinik-haltern | city: Haltern am See | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-haltern | pflegekraefte: 5.0
+13. company_name: Rheinisch-Westfälisches Zentrum für Frührehabilitation und Beatmung in Nümbrecht | company_website: https://dbkg.de/kliniken/dr-becker-rhein-sieg-klinik/kurzprofil-klinik | city: Nümbrecht | country: Germany | source_url: https://klinikradar.de/kliniken/rheinisch-westfaelisches-zentrum-fuer-fruehrehabilitation-und-beatmung | pflegekraefte: 18.0
+14. company_name: LVR-Klinik Köln-Bilderstöckchen | company_website: http://www.klinik-koeln.lvr.de | city: Köln | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-koeln-bilderstoeckchen | pflegekraefte: 8.0
+15. company_name: Tagesklinik 3 Simmerath | company_website: http://www.alexianer-aachen.de | city: Simmerath | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-3-simmerath | pflegekraefte: 2.0
+16. company_name: Rheintor Klinik in Neuss | company_website: http://www.rheintorklinik.de | city: Neuss | country: Germany | source_url: https://klinikradar.de/kliniken/rheintor-klinik | pflegekraefte: 31.0
+17. company_name: Klinikum Lippe Tagesklinik Minden | company_website: http://www.klinikum-lippe.de | city: Minden | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-lippe-tagesklinik-minden | pflegekraefte: 3.0
+18. company_name: St. Vinzenz-Hospital Tagesklinik Wesel in Dinslaken | company_website: https://kliniken-niederrhein.gfo-online.de/ | city: Dinslaken | country: Germany | source_url: https://klinikradar.de/kliniken/st-vinzenz-hospital-tagesklinik-wesel | pflegekraefte: 4.0
+19. company_name: Klinikum Niederberg Tagesklinik für Psychiatrie in Heiligenhaus bei Velbert | company_website: https://www.helios-gesundheit.de/kliniken/niederberg/ | city: Heiligenhaus bei Velbert | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-niederberg-tagesklinik-fuer-psychiatrie | pflegekraefte: 3.0
+20. company_name: CardioCliniC Köln | company_website: http://www.cardioclinic-koeln.de | city: Köln | country: Germany | source_url: https://klinikradar.de/kliniken/cardioclinic-koeln | pflegekraefte: 31.0
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_021_20260605T233213Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
