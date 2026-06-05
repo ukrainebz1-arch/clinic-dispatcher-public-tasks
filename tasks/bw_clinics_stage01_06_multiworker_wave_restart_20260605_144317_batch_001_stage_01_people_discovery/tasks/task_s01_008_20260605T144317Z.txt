@@ -1,0 +1,89 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_008_20260605T144317Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_008_20260605T144317Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317_batch_001_stage_01_people_discovery
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Kreiskrankenhaus Schopfheim | company_website: https://klinloe.de | city: Schopfheim | country: Germany | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-schopfheim | pflegekraefte: 96
+2. company_name: ZfP Südwürttemberg Krankenhaus Bad Schussenried | company_website: http://www.zfp-web.de/ | city: Bad Schussenried | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-krankenhaus-bad-schussenried | pflegekraefte: 126
+3. company_name: Albklinik Münsingen | company_website: http://www.kreiskliniken-reutlingen.de | city: Münsingen | country: Germany | source_url: https://klinikradar.de/kliniken/albklinik-muensingen | pflegekraefte: 97
+4. company_name: SRH Kurpfalzkrankenhaus Heidelberg | company_website: http://www.kurpfalzkrankenhaus.de/ | city: Heidelberg | country: Germany | source_url: https://klinikradar.de/kliniken/srh-kurpfalzkrankenhaus-heidelberg | pflegekraefte: 116
+5. company_name: ZfP Klinikum Schloß Winnenden, Standort Schwäbisch Gmünd | company_website: http://www.zfp-winnenden.de/ | city: Schwäbisch Gmünd | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-klinikum-schloss-winnenden-standort-schwaebisch-gmuend | pflegekraefte: 44
+6. company_name: Agaplesion Bethesda Klinik Ulm | company_website: https://www.bethesda-ulm.de/start | city: Ulm | country: Germany | source_url: https://klinikradar.de/kliniken/agaplesion-bethesda-klinik-ulm | pflegekraefte: 69
+7. company_name: Tropenklinik Paul-Lechler-Krankenhaus in Tübingen | company_website: https://www.tropenklinik.de | city: Tübingen | country: Germany | source_url: https://klinikradar.de/kliniken/tropenklinik-paul-lechler-krankenhaus | pflegekraefte: 72
+8. company_name: Helios Klinik für Herzchirurgie Karlsruhe | company_website: https://www.helios-gesundheit.de/kliniken/karlsruhe-herzchirurgie/ | city: Karlsruhe | country: Germany | source_url: https://klinikradar.de/kliniken/helios-klinik-fuer-herzchirurgie-karlsruhe | pflegekraefte: 145
+9. company_name: Alb-Donau Klinikum (Langenau) | company_website: http://www.adk-gmbh.de | city: Langenau | country: Germany | source_url: https://klinikradar.de/kliniken/alb-donau-klinikum-langenau | pflegekraefte: 50
+10. company_name: St. Anna-Klinik in Stuttgart | company_website: https://st-anna-klinik.de/ | city: Stuttgart | country: Germany | source_url: https://klinikradar.de/kliniken/st-anna-klinik-boeblingen | pflegekraefte: 69
+11. company_name: Krankenhaus St. Vincentius in Heidelberg | company_website: http://www.vincentius-hd.de | city: Heidelberg | country: Germany | source_url: https://klinikradar.de/kliniken/krankenhaus-st-vincentius | pflegekraefte: 78
+12. company_name: Schussental-Klinik in Aulendorf | company_website: http://www.schussental-klinik.de/ | city: Aulendorf | country: Germany | source_url: https://klinikradar.de/kliniken/schussental-klinik | pflegekraefte: 30
+13. company_name: Krankenhaus Neuenbürg | company_website: https://www.rkh-gesundheit.de/krankenhaus-neuenbuerg/ | city: Neuenbürg | country: Germany | source_url: https://klinikradar.de/kliniken/krankenhaus-neuenbuerg | pflegekraefte: 120
+14. company_name: Median Klinik Gunzenbachhof Baden-Baden | company_website: http://www.median-kliniken.de | city: Baden-Baden | country: Germany | source_url: https://klinikradar.de/kliniken/median-klinik-gunzenbachhof-baden-baden | pflegekraefte: 53
+15. company_name: Ortenau Klinikum Wolfach | company_website: https://wolfach.ortenau-klinikum.de/ | city: Wolfach | country: Germany | source_url: https://klinikradar.de/kliniken/ortenau-klinikum-wolfach | pflegekraefte: 98
+16. company_name: MediClin Herzzentrum Lahr/Baden | company_website: http://www.herzzentrum-lahr.de | city: Lahr | country: Germany | source_url: https://klinikradar.de/kliniken/mediclin-herzzentrum-lahr-baden | pflegekraefte: 154
+17. company_name: ZfP Südwürttemberg Bad Schussenried Satellit Biberach | company_website: http://www.zfp-web.de/ | city: Biberach an der Riß | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-bad-schussenried-satellit-biberach | pflegekraefte: 56
+18. company_name: ZfP Klinikum Schloß Winnenden, Standort Ellwangen | company_website: http://www.zfp-winnenden.de/ | city: Ellwangen | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-klinikum-schloss-winnenden-standort-ellwangen | pflegekraefte: 32
+19. company_name: Rommel-Klinik in Bad Wildbad | company_website: http://www.rommel-klinik.de | city: Bad Wildbad | country: Germany | source_url: https://klinikradar.de/kliniken/rommel-klinik | pflegekraefte: 28
+20. company_name: Median Achertal-Klinik Ottenhöfen | company_website: http://www.median-kliniken.de | city: Ottenhöfen im Schwarzwald | country: Germany | source_url: https://klinikradar.de/kliniken/median-achertal-klinik-ottenhoefen | pflegekraefte: 50
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_008_20260605T144317Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
