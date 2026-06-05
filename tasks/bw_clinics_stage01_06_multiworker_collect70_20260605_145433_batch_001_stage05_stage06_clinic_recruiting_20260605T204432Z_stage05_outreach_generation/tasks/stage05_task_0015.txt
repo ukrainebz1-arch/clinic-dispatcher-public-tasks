@@ -1,0 +1,1256 @@
+TASK_ID: stage05_task_0015
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am doniswald in königsfeld im schwarzwald|https://doniswaldklinik.de/|königsfeld im schwarzwald|germany",
+    "company_name": "Klinik am Doniswald in Königsfeld im Schwarzwald",
+    "full_name": "Andreas Leschinger",
+    "message_target_id": "stage05_task_0015::person_andreas_leschinger_46333620bd::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_andreas_leschinger_46333620bd",
+    "recipient_value": "andreas.leschinger@doniswaldklinik.de",
+    "role_title": "Geschäftsführer und Chefarzt",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am doniswald in königsfeld im schwarzwald|https://doniswaldklinik.de/|königsfeld im schwarzwald|germany",
+    "company_name": "Klinik am Doniswald in Königsfeld im Schwarzwald",
+    "full_name": "Andreas Leschinger",
+    "message_target_id": "stage05_task_0015::person_andreas_leschinger_46333620bd::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_leschinger_46333620bd",
+    "recipient_value": "https://de.linkedin.com/in/andreas-leschinger-4949174a",
+    "role_title": "Geschäftsführer und Chefarzt",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am doniswald in königsfeld im schwarzwald|https://doniswaldklinik.de/|königsfeld im schwarzwald|germany",
+    "company_name": "Klinik am Doniswald in Königsfeld im Schwarzwald",
+    "full_name": "Andreas Leschinger",
+    "message_target_id": "stage05_task_0015::person_andreas_leschinger_46333620bd::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_leschinger_46333620bd",
+    "recipient_value": "https://de.linkedin.com/in/andreas-leschinger-4949174a",
+    "role_title": "Geschäftsführer und Chefarzt",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am doniswald in königsfeld im schwarzwald|https://doniswaldklinik.de/|königsfeld im schwarzwald|germany",
+    "company_name": "Klinik am Doniswald in Königsfeld im Schwarzwald",
+    "full_name": "Birgit Bensmail",
+    "message_target_id": "stage05_task_0015::person_birgit_bensmail_64af802555::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_birgit_bensmail_64af802555",
+    "recipient_value": "birgit.bensmail@doniswaldklinik.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am doniswald in königsfeld im schwarzwald|https://doniswaldklinik.de/|königsfeld im schwarzwald|germany",
+    "company_name": "Klinik am Doniswald in Königsfeld im Schwarzwald",
+    "full_name": "Karin Lubina",
+    "message_target_id": "stage05_task_0015::person_karin_lubina_2bd7e428e3::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_karin_lubina_2bd7e428e3",
+    "recipient_value": "karin.lubina@doniswaldklinik.de",
+    "role_title": "Kaufmännische Leitung",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "full_name": "Brigitte Käser",
+    "message_target_id": "stage05_task_0015::person_brigitte_k_ser_9954acad34::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_brigitte_k_ser_9954acad34",
+    "recipient_value": "brigitte.kaeser@af-k.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "full_name": "Irene Sauerbrey",
+    "message_target_id": "stage05_task_0015::person_irene_sauerbrey_b0418c1b6d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_irene_sauerbrey_b0418c1b6d",
+    "recipient_value": "irene.sauerbrey@af-k.de",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "full_name": "Irene Sauerbrey",
+    "message_target_id": "stage05_task_0015::person_irene_sauerbrey_b0418c1b6d::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_irene_sauerbrey_b0418c1b6d",
+    "recipient_value": "https://de.linkedin.com/in/irene-sauerbrey-b1b58b1b2",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "full_name": "Irene Sauerbrey",
+    "message_target_id": "stage05_task_0015::person_irene_sauerbrey_b0418c1b6d::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_irene_sauerbrey_b0418c1b6d",
+    "recipient_value": "https://de.linkedin.com/in/irene-sauerbrey-b1b58b1b2",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "full_name": "Martina Heusel",
+    "message_target_id": "stage05_task_0015::person_martina_heusel_de8025900d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_martina_heusel_de8025900d",
+    "recipient_value": "martina.heusel@af-k.de",
+    "role_title": "Leiterin Geschäftsbereich Personal",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "full_name": "Martina Heusel",
+    "message_target_id": "stage05_task_0015::person_martina_heusel_de8025900d::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_martina_heusel_de8025900d",
+    "recipient_value": "https://de.linkedin.com/in/martina-heusel-84827b165",
+    "role_title": "Leiterin Geschäftsbereich Personal",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "full_name": "Martina Heusel",
+    "message_target_id": "stage05_task_0015::person_martina_heusel_de8025900d::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_martina_heusel_de8025900d",
+    "recipient_value": "https://de.linkedin.com/in/martina-heusel-84827b165",
+    "role_title": "Leiterin Geschäftsbereich Personal",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "full_name": "Wolfgang Schmid",
+    "message_target_id": "stage05_task_0015::person_wolfgang_schmid_aa2f682aa7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_wolfgang_schmid_aa2f682aa7",
+    "recipient_value": "wolfgang.schmid@af-k.de",
+    "role_title": "Kaufmännischer Geschäftsführer",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "full_name": "Wolfgang Schmid",
+    "message_target_id": "stage05_task_0015::person_wolfgang_schmid_aa2f682aa7::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_wolfgang_schmid_aa2f682aa7",
+    "recipient_value": "https://de.linkedin.com/in/wolfgang-schmid-b95a30318",
+    "role_title": "Kaufmännischer Geschäftsführer",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "full_name": "Wolfgang Schmid",
+    "message_target_id": "stage05_task_0015::person_wolfgang_schmid_aa2f682aa7::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_wolfgang_schmid_aa2f682aa7",
+    "recipient_value": "https://de.linkedin.com/in/wolfgang-schmid-b95a30318",
+    "role_title": "Kaufmännischer Geschäftsführer",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik dr. becker in bad krozingen|http://www.beckerklinik.de|bad krozingen|germany",
+    "company_name": "Klinik Dr. Becker in Bad Krozingen",
+    "full_name": "Manuela Krahn",
+    "message_target_id": "stage05_task_0015::person_manuela_krahn_cae9e6b8f8::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_manuela_krahn_cae9e6b8f8",
+    "recipient_value": "manuela.krahn@beckerklinik.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik dr. becker in bad krozingen|http://www.beckerklinik.de|bad krozingen|germany",
+    "company_name": "Klinik Dr. Becker in Bad Krozingen",
+    "full_name": "Willi Schnitter",
+    "message_target_id": "stage05_task_0015::person_willi_schnitter_8094d191eb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_willi_schnitter_8094d191eb",
+    "recipient_value": "willi.schnitter@beckerklinik.de",
+    "role_title": "Verwaltungsleiter",
+    "task_id": "stage05_task_0015"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik dr. schwarz in ulm|http://www.klinik-schwarz.de|ulm|germany",
+    "company_name": "Klinik Dr. Schwarz in Ulm",
+    "full_name": "Dr. Guntram Schwarz",
+    "message_target_id": "stage05_task_0015::person_dr_guntram_schwarz_c7ad27e4de::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_guntram_schwarz_c7ad27e4de",
+    "recipient_value": "Guntram.Schwarz@Klinik-Schwarz.de",
+    "role_title": "Chefarzt",
+    "task_id": "stage05_task_0015"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Königsfeld im Schwarzwald",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am doniswald in königsfeld im schwarzwald|https://doniswaldklinik.de/|königsfeld im schwarzwald|germany",
+    "company_name": "Klinik am Doniswald in Königsfeld im Schwarzwald",
+    "company_website": "https://doniswaldklinik.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Birgit Bensmail",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "andreas.leschinger@doniswaldklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Leschinger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andreas-leschinger-4949174a",
+        "person_key": "person_andreas_leschinger_46333620bd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer und Chefarzt",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.doniswaldklinik.de/klinikleitung.html",
+          "https://www.doniswaldklinik.de/mailadressen.html",
+          "https://de.linkedin.com/in/andreas-leschinger-4949174a",
+          "https://www.doniswaldklinik.de/ihre-ansprechpartner.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "birgit.bensmail@doniswaldklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Birgit Bensmail",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_birgit_bensmail_64af802555",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://doniswaldklinik.de/pflegeteam.html",
+          "https://bebee.com/de/jobs/gesundheits-und-krankenpflegekraft-tag-und-oder-nachtdienst-klinik-am-doniswald-konigsfeld-baden-wur--theirstack-705048015",
+          "https://de.indeed.com/viewjob?jk=d1567c3268724388"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karin.lubina@doniswaldklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karin Lubina",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karin_lubina_2bd7e428e3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Leitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.doniswaldklinik.de/ihre-ansprechpartner.html",
+          "https://www.doniswaldklinik.de/mailadressen.html"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Geschäftsführer und Chefarzt",
+        "Pflegedienstleitung",
+        "Kaufmännische Leitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.doniswaldklinik.de/klinikleitung.html",
+      "https://www.doniswaldklinik.de/mailadressen.html",
+      "https://de.linkedin.com/in/andreas-leschinger-4949174a",
+      "https://www.doniswaldklinik.de/ihre-ansprechpartner.html",
+      "https://doniswaldklinik.de/pflegeteam.html",
+      "https://bebee.com/de/jobs/gesundheits-und-krankenpflegekraft-tag-und-oder-nachtdienst-klinik-am-doniswald-konigsfeld-baden-wur--theirstack-705048015",
+      "https://de.indeed.com/viewjob?jk=d1567c3268724388"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Göppingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "company_website": "https://www.alb-fils-klinikum.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Brigitte Käser",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Irene Sauerbrey",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "brigitte.kaeser@af-k.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Brigitte Käser",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_brigitte_k_ser_9954acad34",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.alb-fils-klinikum.de/pflege-und-beratung/ueber-die-pflege/das-team",
+          "https://www.alb-fils-klinikum.de/ueber-uns/organisation/klinikleitung",
+          "https://de.linkedin.com/posts/kmaonline_leitung-alb-fils-klinikum-macht-k%C3%A4ser-zur-activity-7283460954061697025-g0Tm"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "irene.sauerbrey@af-k.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Irene Sauerbrey",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/irene-sauerbrey-b1b58b1b2",
+        "person_key": "person_irene_sauerbrey_b0418c1b6d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.alb-fils-klinikum.de/pflege-und-beratung/ueber-die-pflege/das-team",
+          "https://de.linkedin.com/in/irene-sauerbrey-b1b58b1b2"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "martina.heusel@af-k.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martina Heusel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/martina-heusel-84827b165",
+        "person_key": "person_martina_heusel_de8025900d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leiterin Geschäftsbereich Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.alb-fils-klinikum.de/ueber-uns/geschaeftsbereiche",
+          "https://de.linkedin.com/in/martina-heusel-84827b165"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "wolfgang.schmid@af-k.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Wolfgang Schmid",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/wolfgang-schmid-b95a30318",
+        "person_key": "person_wolfgang_schmid_aa2f682aa7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260810589-772384000-2022-xml.pdf",
+          "https://www.alb-fils-klinikum.de/ueber-uns/organisation/klinikleitung",
+          "https://www.alb-fils-klinikum.de/ueber-uns/organisation/servicegesellschaft",
+          "https://de.linkedin.com/in/wolfgang-schmid-b95a30318"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Stellvertretende Pflegedirektorin",
+        "Leiterin Geschäftsbereich Personal",
+        "Kaufmännischer Geschäftsführer"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.alb-fils-klinikum.de/pflege-und-beratung/ueber-die-pflege/das-team",
+      "https://www.alb-fils-klinikum.de/ueber-uns/organisation/klinikleitung",
+      "https://de.linkedin.com/posts/kmaonline_leitung-alb-fils-klinikum-macht-k%C3%A4ser-zur-activity-7283460954061697025-g0Tm",
+      "https://de.linkedin.com/in/irene-sauerbrey-b1b58b1b2",
+      "https://www.alb-fils-klinikum.de/ueber-uns/geschaeftsbereiche",
+      "https://de.linkedin.com/in/martina-heusel-84827b165",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260810589-772384000-2022-xml.pdf",
+      "https://www.alb-fils-klinikum.de/ueber-uns/organisation/servicegesellschaft",
+      "https://de.linkedin.com/in/wolfgang-schmid-b95a30318"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Krozingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik dr. becker in bad krozingen|http://www.beckerklinik.de|bad krozingen|germany",
+    "company_name": "Klinik Dr. Becker in Bad Krozingen",
+    "company_website": "http://www.beckerklinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Manuela Krahn",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "manuela.krahn@beckerklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Manuela Krahn",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_manuela_krahn_cae9e6b8f8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260830300-772910000-2023-xml.pdf",
+          "https://www.beckerklinik.de/wp-content/uploads/2024/06/Beckerklinik-Qualitaetsbericht-2022.pdf",
+          "https://www.beckerklinik.de/wp-content/uploads/2025/12/Beckerklinik-Qualitaetsbericht-2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "willi.schnitter@beckerklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Willi Schnitter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_willi_schnitter_8094d191eb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleiter",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.beckerklinik.de/wp-content/uploads/2025/12/Beckerklinik-Qualitaetsbericht-2024.pdf",
+          "https://www.beckerklinik.de/wp-content/uploads/2024/12/Beckerklinik-Qualitaetsbericht-2023.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Verwaltungsleiter"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260830300-772910000-2023-xml.pdf",
+      "https://www.beckerklinik.de/wp-content/uploads/2024/06/Beckerklinik-Qualitaetsbericht-2022.pdf",
+      "https://www.beckerklinik.de/wp-content/uploads/2025/12/Beckerklinik-Qualitaetsbericht-2024.pdf",
+      "https://www.beckerklinik.de/wp-content/uploads/2024/12/Beckerklinik-Qualitaetsbericht-2023.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 1,
+      "phone_route_count": 0
+    },
+    "city": "Ulm",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik dr. schwarz in ulm|http://www.klinik-schwarz.de|ulm|germany",
+    "company_name": "Klinik Dr. Schwarz in Ulm",
+    "company_website": "http://www.klinik-schwarz.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Irena Scheck",
+          "person_key": "",
+          "role": "Stationsleitung / Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "Guntram.Schwarz@Klinik-Schwarz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Guntram Schwarz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_guntram_schwarz_c7ad27e4de",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefarzt",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10369.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/4e42516070fe3ca9/start"
+        ]
+      },
+      {
+        "available_channels": "NONE",
+        "candidate_email": "Irena.Scheck@klinik-schwarz.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "no_channel",
+        "email_status": "UNVERIFIED_GENERATED_EMAIL",
+        "full_name": "Irena Scheck",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_irena_scheck_3e44df22c9",
+        "primary_channel": "NONE",
+        "role": "Stationsleitung / Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10369.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/4e42516070fe3ca9/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Chefarzt",
+        "Stationsleitung / Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10369.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/4e42516070fe3ca9/start"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Königsfeld im Schwarzwald",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am doniswald in königsfeld im schwarzwald|https://doniswaldklinik.de/|königsfeld im schwarzwald|germany",
+    "company_name": "Klinik am Doniswald in Königsfeld im Schwarzwald",
+    "company_website": "https://doniswaldklinik.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Birgit Bensmail",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "andreas.leschinger@doniswaldklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Leschinger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andreas-leschinger-4949174a",
+        "person_key": "person_andreas_leschinger_46333620bd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer und Chefarzt",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.doniswaldklinik.de/klinikleitung.html",
+          "https://www.doniswaldklinik.de/mailadressen.html",
+          "https://de.linkedin.com/in/andreas-leschinger-4949174a",
+          "https://www.doniswaldklinik.de/ihre-ansprechpartner.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "birgit.bensmail@doniswaldklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Birgit Bensmail",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_birgit_bensmail_64af802555",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://doniswaldklinik.de/pflegeteam.html",
+          "https://bebee.com/de/jobs/gesundheits-und-krankenpflegekraft-tag-und-oder-nachtdienst-klinik-am-doniswald-konigsfeld-baden-wur--theirstack-705048015",
+          "https://de.indeed.com/viewjob?jk=d1567c3268724388"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karin.lubina@doniswaldklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karin Lubina",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karin_lubina_2bd7e428e3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Leitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.doniswaldklinik.de/ihre-ansprechpartner.html",
+          "https://www.doniswaldklinik.de/mailadressen.html"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Geschäftsführer und Chefarzt",
+        "Pflegedienstleitung",
+        "Kaufmännische Leitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.doniswaldklinik.de/klinikleitung.html",
+      "https://www.doniswaldklinik.de/mailadressen.html",
+      "https://de.linkedin.com/in/andreas-leschinger-4949174a",
+      "https://www.doniswaldklinik.de/ihre-ansprechpartner.html",
+      "https://doniswaldklinik.de/pflegeteam.html",
+      "https://bebee.com/de/jobs/gesundheits-und-krankenpflegekraft-tag-und-oder-nachtdienst-klinik-am-doniswald-konigsfeld-baden-wur--theirstack-705048015",
+      "https://de.indeed.com/viewjob?jk=d1567c3268724388"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Göppingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik am eichert in göppingen|https://www.alb-fils-klinikum.de|göppingen|germany",
+    "company_name": "Klinik am Eichert in Göppingen",
+    "company_website": "https://www.alb-fils-klinikum.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Brigitte Käser",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Irene Sauerbrey",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "brigitte.kaeser@af-k.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Brigitte Käser",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_brigitte_k_ser_9954acad34",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.alb-fils-klinikum.de/pflege-und-beratung/ueber-die-pflege/das-team",
+          "https://www.alb-fils-klinikum.de/ueber-uns/organisation/klinikleitung",
+          "https://de.linkedin.com/posts/kmaonline_leitung-alb-fils-klinikum-macht-k%C3%A4ser-zur-activity-7283460954061697025-g0Tm"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "irene.sauerbrey@af-k.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Irene Sauerbrey",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/irene-sauerbrey-b1b58b1b2",
+        "person_key": "person_irene_sauerbrey_b0418c1b6d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.alb-fils-klinikum.de/pflege-und-beratung/ueber-die-pflege/das-team",
+          "https://de.linkedin.com/in/irene-sauerbrey-b1b58b1b2"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "martina.heusel@af-k.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martina Heusel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/martina-heusel-84827b165",
+        "person_key": "person_martina_heusel_de8025900d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leiterin Geschäftsbereich Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.alb-fils-klinikum.de/ueber-uns/geschaeftsbereiche",
+          "https://de.linkedin.com/in/martina-heusel-84827b165"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "wolfgang.schmid@af-k.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Wolfgang Schmid",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/wolfgang-schmid-b95a30318",
+        "person_key": "person_wolfgang_schmid_aa2f682aa7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260810589-772384000-2022-xml.pdf",
+          "https://www.alb-fils-klinikum.de/ueber-uns/organisation/klinikleitung",
+          "https://www.alb-fils-klinikum.de/ueber-uns/organisation/servicegesellschaft",
+          "https://de.linkedin.com/in/wolfgang-schmid-b95a30318"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Stellvertretende Pflegedirektorin",
+        "Leiterin Geschäftsbereich Personal",
+        "Kaufmännischer Geschäftsführer"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.alb-fils-klinikum.de/pflege-und-beratung/ueber-die-pflege/das-team",
+      "https://www.alb-fils-klinikum.de/ueber-uns/organisation/klinikleitung",
+      "https://de.linkedin.com/posts/kmaonline_leitung-alb-fils-klinikum-macht-k%C3%A4ser-zur-activity-7283460954061697025-g0Tm",
+      "https://de.linkedin.com/in/irene-sauerbrey-b1b58b1b2",
+      "https://www.alb-fils-klinikum.de/ueber-uns/geschaeftsbereiche",
+      "https://de.linkedin.com/in/martina-heusel-84827b165",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260810589-772384000-2022-xml.pdf",
+      "https://www.alb-fils-klinikum.de/ueber-uns/organisation/servicegesellschaft",
+      "https://de.linkedin.com/in/wolfgang-schmid-b95a30318"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Krozingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik dr. becker in bad krozingen|http://www.beckerklinik.de|bad krozingen|germany",
+    "company_name": "Klinik Dr. Becker in Bad Krozingen",
+    "company_website": "http://www.beckerklinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Manuela Krahn",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "manuela.krahn@beckerklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Manuela Krahn",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_manuela_krahn_cae9e6b8f8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260830300-772910000-2023-xml.pdf",
+          "https://www.beckerklinik.de/wp-content/uploads/2024/06/Beckerklinik-Qualitaetsbericht-2022.pdf",
+          "https://www.beckerklinik.de/wp-content/uploads/2025/12/Beckerklinik-Qualitaetsbericht-2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "willi.schnitter@beckerklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Willi Schnitter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_willi_schnitter_8094d191eb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleiter",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.beckerklinik.de/wp-content/uploads/2025/12/Beckerklinik-Qualitaetsbericht-2024.pdf",
+          "https://www.beckerklinik.de/wp-content/uploads/2024/12/Beckerklinik-Qualitaetsbericht-2023.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Verwaltungsleiter"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260830300-772910000-2023-xml.pdf",
+      "https://www.beckerklinik.de/wp-content/uploads/2024/06/Beckerklinik-Qualitaetsbericht-2022.pdf",
+      "https://www.beckerklinik.de/wp-content/uploads/2025/12/Beckerklinik-Qualitaetsbericht-2024.pdf",
+      "https://www.beckerklinik.de/wp-content/uploads/2024/12/Beckerklinik-Qualitaetsbericht-2023.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 1,
+      "phone_route_count": 0
+    },
+    "city": "Ulm",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik dr. schwarz in ulm|http://www.klinik-schwarz.de|ulm|germany",
+    "company_name": "Klinik Dr. Schwarz in Ulm",
+    "company_website": "http://www.klinik-schwarz.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Irena Scheck",
+          "person_key": "",
+          "role": "Stationsleitung / Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "Guntram.Schwarz@Klinik-Schwarz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Guntram Schwarz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_guntram_schwarz_c7ad27e4de",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefarzt",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10369.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/4e42516070fe3ca9/start"
+        ]
+      },
+      {
+        "available_channels": "NONE",
+        "candidate_email": "Irena.Scheck@klinik-schwarz.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "no_channel",
+        "email_status": "UNVERIFIED_GENERATED_EMAIL",
+        "full_name": "Irena Scheck",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_irena_scheck_3e44df22c9",
+        "primary_channel": "NONE",
+        "role": "Stationsleitung / Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10369.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/4e42516070fe3ca9/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Chefarzt",
+        "Stationsleitung / Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.privat-patienten.de/fileadmin/Dateien/4_Im_Krankenhaus/Lieferung2022/Qualitaetsbericht_10369.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/4e42516070fe3ca9/start"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
