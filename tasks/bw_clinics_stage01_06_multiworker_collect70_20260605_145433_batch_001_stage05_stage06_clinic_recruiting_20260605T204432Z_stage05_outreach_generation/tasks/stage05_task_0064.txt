@@ -1,0 +1,1256 @@
+TASK_ID: stage05_task_0064
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg satellit ehingen|http://www.zfp-web.de|ehingen|germany",
+    "company_name": "ZfP Südwürttemberg Satellit Ehingen",
+    "full_name": "Karin Wochner",
+    "message_target_id": "stage05_task_0064::person_karin_wochner_764ce7b4c0::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_karin_wochner_764ce7b4c0",
+    "recipient_value": "karin.wochner@zfp-zentrum.de",
+    "role_title": "Betriebsdirektorin",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg satellit ehingen|http://www.zfp-web.de|ehingen|germany",
+    "company_name": "ZfP Südwürttemberg Satellit Ehingen",
+    "full_name": "Karin Wochner",
+    "message_target_id": "stage05_task_0064::person_karin_wochner_285ffbb705::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_karin_wochner_285ffbb705",
+    "recipient_value": "karin.wochner@zfp-zentrum.de",
+    "role_title": "Betriebsdirektorin",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg satellit ehingen|http://www.zfp-web.de|ehingen|germany",
+    "company_name": "ZfP Südwürttemberg Satellit Ehingen",
+    "full_name": "Martin Eggler",
+    "message_target_id": "stage05_task_0064::person_martin_eggler_748e386d64::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_martin_eggler_748e386d64",
+    "recipient_value": "martin.eggler@zfp-zentrum.de",
+    "role_title": "Pflegerische Leitung",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg satellit ehingen|http://www.zfp-web.de|ehingen|germany",
+    "company_name": "ZfP Südwürttemberg Satellit Ehingen",
+    "full_name": "Martin Eggler",
+    "message_target_id": "stage05_task_0064::person_martin_eggler_512c782665::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_martin_eggler_512c782665",
+    "recipient_value": "martin.eggler@zfp-zentrum.de",
+    "role_title": "Pflegerische Leitung",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit friedrichshafen|https://www.zfp-web.de/|friedrichshafen|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Friedrichshafen",
+    "full_name": "Michaela Hörmann",
+    "message_target_id": "stage05_task_0064::person_michaela_h_rmann_74ff7bb92c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_michaela_h_rmann_74ff7bb92c",
+    "recipient_value": "michaela.hoermann@zfp-zentrum.de",
+    "role_title": "Pflegedienstleitung Psychosomatik",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit friedrichshafen|https://www.zfp-web.de/|friedrichshafen|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Friedrichshafen",
+    "full_name": "Rudolf Gurnicki",
+    "message_target_id": "stage05_task_0064::person_rudolf_gurnicki_da844870c5::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_rudolf_gurnicki_da844870c5",
+    "recipient_value": "rudolf.gurnicki@zfp-zentrum.de",
+    "role_title": "Pflegedienstleitung Allgemeinpsychiatrie",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit ravensburg|https://www.zfp-web.de/|ravensburg|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Ravensburg",
+    "full_name": "Aline Jehle",
+    "message_target_id": "stage05_task_0064::person_aline_jehle_644870740d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_aline_jehle_644870740d",
+    "recipient_value": "aline.jehle@zfp-zentrum.de",
+    "role_title": "Abteilungsleitung Pflege",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit ravensburg|https://www.zfp-web.de/|ravensburg|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Ravensburg",
+    "full_name": "Karin Wochner",
+    "message_target_id": "stage05_task_0064::person_karin_wochner_2edb4e7c8c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_karin_wochner_2edb4e7c8c",
+    "recipient_value": "karin.wochner@zfp-zentrum.de",
+    "role_title": "Verwaltungsleitung",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit ravensburg|https://www.zfp-web.de/|ravensburg|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Ravensburg",
+    "full_name": "Michaela Hörmann",
+    "message_target_id": "stage05_task_0064::person_michaela_h_rmann_774b9e7295::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_michaela_h_rmann_774b9e7295",
+    "recipient_value": "michaela.hoermann@zfp-zentrum.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit ravensburg|https://www.zfp-web.de/|ravensburg|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Ravensburg",
+    "full_name": "Ruben Giesin",
+    "message_target_id": "stage05_task_0064::person_ruben_giesin_9022407b32::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ruben_giesin_9022407b32",
+    "recipient_value": "ruben.giesin@zfp-zentrum.de",
+    "role_title": "Abteilungsleitung Pflege",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit ravensburg|https://www.zfp-web.de/|ravensburg|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Ravensburg",
+    "full_name": "Ruben Giesin",
+    "message_target_id": "stage05_task_0064::person_ruben_giesin_9022407b32::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ruben_giesin_9022407b32",
+    "recipient_value": "https://de.linkedin.com/in/rubengiesin",
+    "role_title": "Abteilungsleitung Pflege",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit ravensburg|https://www.zfp-web.de/|ravensburg|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Ravensburg",
+    "full_name": "Ruben Giesin",
+    "message_target_id": "stage05_task_0064::person_ruben_giesin_9022407b32::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ruben_giesin_9022407b32",
+    "recipient_value": "https://de.linkedin.com/in/rubengiesin",
+    "role_title": "Abteilungsleitung Pflege",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit wangen|https://www.zfp-web.de/|wangen im allgäu|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Wangen",
+    "full_name": "Anna Heinsch",
+    "message_target_id": "stage05_task_0064::person_anna_heinsch_d90ea3c44f::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_anna_heinsch_d90ea3c44f",
+    "recipient_value": "anna.heinsch@zfp-zentrum.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0064"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit wangen|https://www.zfp-web.de/|wangen im allgäu|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Wangen",
+    "full_name": "Karin Wochner",
+    "message_target_id": "stage05_task_0064::person_karin_wochner_f20e9ac953::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_karin_wochner_f20e9ac953",
+    "recipient_value": "karin.wochner@zfp-zentrum.de",
+    "role_title": "Verwaltungsleitung",
+    "task_id": "stage05_task_0064"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ehingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg satellit ehingen|http://www.zfp-web.de|ehingen|germany",
+    "company_name": "ZfP Südwürttemberg Satellit Ehingen",
+    "company_website": "http://www.zfp-web.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Martin Eggler",
+          "person_key": "",
+          "role": "Pflegerische Leitung"
+        },
+        {
+          "full_name": "Martin Eggler",
+          "person_key": "",
+          "role": "Pflegerische Leitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karin.wochner@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karin Wochner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karin_wochner_764ce7b4c0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Betriebsdirektorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/news-und-media/kommunikation/zfp-unternehmensbroschuere-februar2022.pdf",
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-donau-riss/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/62e1d32440fa67b7/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karin.wochner@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karin Wochner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karin_wochner_285ffbb705",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Betriebsdirektorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/news-und-media/kommunikation/zfp-unternehmensbroschuere-februar2022.pdf",
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-donau-riss/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/62e1d32440fa67b7/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "martin.eggler@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martin Eggler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_martin_eggler_748e386d64",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Leitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fachgebiete/allgemeine-psychiatrie/ehingen/abteilung/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/62e1d32440fa67b7/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "martin.eggler@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martin Eggler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_martin_eggler_512c782665",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Leitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fachgebiete/allgemeine-psychiatrie/ehingen/abteilung/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/62e1d32440fa67b7/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Betriebsdirektorin",
+        "Pflegerische Leitung"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.zfp-web.de/fileadmin/zfp-web.de/news-und-media/kommunikation/zfp-unternehmensbroschuere-februar2022.pdf",
+      "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-donau-riss/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/62e1d32440fa67b7/start",
+      "https://www.zfp-web.de/fachgebiete/allgemeine-psychiatrie/ehingen/abteilung/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Friedrichshafen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit friedrichshafen|https://www.zfp-web.de/|friedrichshafen|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Friedrichshafen",
+    "company_website": "https://www.zfp-web.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Michaela Hörmann",
+          "person_key": "",
+          "role": "Pflegedienstleitung Psychosomatik"
+        },
+        {
+          "full_name": "Rudolf Gurnicki",
+          "person_key": "",
+          "role": "Pflegedienstleitung Allgemeinpsychiatrie"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "michaela.hoermann@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michaela Hörmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michaela_h_rmann_74ff7bb92c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Psychosomatik",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-ravensburg-bodensee/zfp-suedwuerttemberg-weissenau-satellit-friedrichshafen.pdf",
+          "https://www.german-hospital-directory.com/app/portrait/433268be67475083/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "rudolf.gurnicki@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Rudolf Gurnicki",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_rudolf_gurnicki_da844870c5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Allgemeinpsychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-ravensburg-bodensee/zfp-suedwuerttemberg-weissenau-satellit-friedrichshafen.pdf",
+          "https://www.qimeda.de/krankenhaus/zfp-suedwuerttemberg-weissenau-satellit-friedrichshafen-10269",
+          "https://www.german-hospital-directory.com/app/portrait/433268be67475083/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung Psychosomatik",
+        "Pflegedienstleitung Allgemeinpsychiatrie"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-ravensburg-bodensee/zfp-suedwuerttemberg-weissenau-satellit-friedrichshafen.pdf",
+      "https://www.german-hospital-directory.com/app/portrait/433268be67475083/start",
+      "https://www.qimeda.de/krankenhaus/zfp-suedwuerttemberg-weissenau-satellit-friedrichshafen-10269"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ravensburg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit ravensburg|https://www.zfp-web.de/|ravensburg|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Ravensburg",
+    "company_website": "https://www.zfp-web.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Aline Jehle",
+          "person_key": "",
+          "role": "Abteilungsleitung Pflege"
+        },
+        {
+          "full_name": "Michaela Hörmann",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Ruben Giesin",
+          "person_key": "",
+          "role": "Abteilungsleitung Pflege"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "aline.jehle@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Aline Jehle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_aline_jehle_644870740d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Abteilungsleitung Pflege",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fachgebiete/alterspsychiatrie/ravensburg/osk/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40902b4c28801232/start",
+          "https://www.zfp-web.de/fachgebiete/alterspsychiatrie/weissenau/abteilung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karin.wochner@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karin Wochner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karin_wochner_2edb4e7c8c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40902b4c28801232/start",
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/news-und-media/kommunikation/zfp-unternehmensbroschuere-februar2022.pdf",
+          "https://www.zfp-web.de/news-media/pressemitteilungen/schepker-uebergibt-an-valdes-stauber"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "michaela.hoermann@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michaela Hörmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michaela_h_rmann_774b9e7295",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40902b4c28801232/start",
+          "https://www.zfp-web.de/fachgebiete/alterspsychiatrie/ravensburg/osk/",
+          "https://www.zfp-web.de/fachgebiete/psychosomatische-medizin/ravensburg/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "ruben.giesin@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ruben Giesin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/rubengiesin",
+        "person_key": "person_ruben_giesin_9022407b32",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Abteilungsleitung Pflege",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40902b4c28801232/start",
+          "https://pflegefinder.bkk-dachverband.de/details/index.php?uid=510842155_88214_wei_s",
+          "https://de.linkedin.com/in/rubengiesin"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Abteilungsleitung Pflege",
+        "Verwaltungsleitung",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.zfp-web.de/fachgebiete/alterspsychiatrie/ravensburg/osk/",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40902b4c28801232/start",
+      "https://www.zfp-web.de/fachgebiete/alterspsychiatrie/weissenau/abteilung/",
+      "https://www.zfp-web.de/fileadmin/zfp-web.de/news-und-media/kommunikation/zfp-unternehmensbroschuere-februar2022.pdf",
+      "https://www.zfp-web.de/news-media/pressemitteilungen/schepker-uebergibt-an-valdes-stauber",
+      "https://www.zfp-web.de/fachgebiete/psychosomatische-medizin/ravensburg/",
+      "https://pflegefinder.bkk-dachverband.de/details/index.php?uid=510842155_88214_wei_s",
+      "https://de.linkedin.com/in/rubengiesin"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Wangen im Allgäu",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit wangen|https://www.zfp-web.de/|wangen im allgäu|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Wangen",
+    "company_website": "https://www.zfp-web.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Anna Heinsch",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "anna.heinsch@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anna Heinsch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anna_heinsch_d90ea3c44f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fachgebiete/allgemeine-psychiatrie/wangen/abteilung/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840905-772289000-2022-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karin.wochner@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karin Wochner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karin_wochner_f20e9ac953",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840905-772289000-2022-xml.pdf",
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-donau-riss/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/6e117ef1286d6a6b/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Verwaltungsleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.zfp-web.de/fachgebiete/allgemeine-psychiatrie/wangen/abteilung/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260840905-772289000-2022-xml.pdf",
+      "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-donau-riss/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/6e117ef1286d6a6b/start"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ehingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg satellit ehingen|http://www.zfp-web.de|ehingen|germany",
+    "company_name": "ZfP Südwürttemberg Satellit Ehingen",
+    "company_website": "http://www.zfp-web.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Martin Eggler",
+          "person_key": "",
+          "role": "Pflegerische Leitung"
+        },
+        {
+          "full_name": "Martin Eggler",
+          "person_key": "",
+          "role": "Pflegerische Leitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karin.wochner@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karin Wochner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karin_wochner_764ce7b4c0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Betriebsdirektorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/news-und-media/kommunikation/zfp-unternehmensbroschuere-februar2022.pdf",
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-donau-riss/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/62e1d32440fa67b7/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karin.wochner@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karin Wochner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karin_wochner_285ffbb705",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Betriebsdirektorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/news-und-media/kommunikation/zfp-unternehmensbroschuere-februar2022.pdf",
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-donau-riss/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/62e1d32440fa67b7/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "martin.eggler@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martin Eggler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_martin_eggler_748e386d64",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Leitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fachgebiete/allgemeine-psychiatrie/ehingen/abteilung/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/62e1d32440fa67b7/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "martin.eggler@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Martin Eggler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_martin_eggler_512c782665",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Leitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fachgebiete/allgemeine-psychiatrie/ehingen/abteilung/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/62e1d32440fa67b7/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Betriebsdirektorin",
+        "Pflegerische Leitung"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.zfp-web.de/fileadmin/zfp-web.de/news-und-media/kommunikation/zfp-unternehmensbroschuere-februar2022.pdf",
+      "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-donau-riss/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/62e1d32440fa67b7/start",
+      "https://www.zfp-web.de/fachgebiete/allgemeine-psychiatrie/ehingen/abteilung/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Friedrichshafen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit friedrichshafen|https://www.zfp-web.de/|friedrichshafen|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Friedrichshafen",
+    "company_website": "https://www.zfp-web.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Michaela Hörmann",
+          "person_key": "",
+          "role": "Pflegedienstleitung Psychosomatik"
+        },
+        {
+          "full_name": "Rudolf Gurnicki",
+          "person_key": "",
+          "role": "Pflegedienstleitung Allgemeinpsychiatrie"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "michaela.hoermann@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michaela Hörmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michaela_h_rmann_74ff7bb92c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Psychosomatik",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-ravensburg-bodensee/zfp-suedwuerttemberg-weissenau-satellit-friedrichshafen.pdf",
+          "https://www.german-hospital-directory.com/app/portrait/433268be67475083/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "rudolf.gurnicki@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Rudolf Gurnicki",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_rudolf_gurnicki_da844870c5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Allgemeinpsychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-ravensburg-bodensee/zfp-suedwuerttemberg-weissenau-satellit-friedrichshafen.pdf",
+          "https://www.qimeda.de/krankenhaus/zfp-suedwuerttemberg-weissenau-satellit-friedrichshafen-10269",
+          "https://www.german-hospital-directory.com/app/portrait/433268be67475083/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung Psychosomatik",
+        "Pflegedienstleitung Allgemeinpsychiatrie"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-ravensburg-bodensee/zfp-suedwuerttemberg-weissenau-satellit-friedrichshafen.pdf",
+      "https://www.german-hospital-directory.com/app/portrait/433268be67475083/start",
+      "https://www.qimeda.de/krankenhaus/zfp-suedwuerttemberg-weissenau-satellit-friedrichshafen-10269"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ravensburg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit ravensburg|https://www.zfp-web.de/|ravensburg|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Ravensburg",
+    "company_website": "https://www.zfp-web.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Aline Jehle",
+          "person_key": "",
+          "role": "Abteilungsleitung Pflege"
+        },
+        {
+          "full_name": "Michaela Hörmann",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Ruben Giesin",
+          "person_key": "",
+          "role": "Abteilungsleitung Pflege"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "aline.jehle@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Aline Jehle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_aline_jehle_644870740d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Abteilungsleitung Pflege",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fachgebiete/alterspsychiatrie/ravensburg/osk/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40902b4c28801232/start",
+          "https://www.zfp-web.de/fachgebiete/alterspsychiatrie/weissenau/abteilung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karin.wochner@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karin Wochner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karin_wochner_2edb4e7c8c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40902b4c28801232/start",
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/news-und-media/kommunikation/zfp-unternehmensbroschuere-februar2022.pdf",
+          "https://www.zfp-web.de/news-media/pressemitteilungen/schepker-uebergibt-an-valdes-stauber"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "michaela.hoermann@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michaela Hörmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michaela_h_rmann_774b9e7295",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40902b4c28801232/start",
+          "https://www.zfp-web.de/fachgebiete/alterspsychiatrie/ravensburg/osk/",
+          "https://www.zfp-web.de/fachgebiete/psychosomatische-medizin/ravensburg/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "ruben.giesin@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ruben Giesin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/rubengiesin",
+        "person_key": "person_ruben_giesin_9022407b32",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Abteilungsleitung Pflege",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40902b4c28801232/start",
+          "https://pflegefinder.bkk-dachverband.de/details/index.php?uid=510842155_88214_wei_s",
+          "https://de.linkedin.com/in/rubengiesin"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Abteilungsleitung Pflege",
+        "Verwaltungsleitung",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.zfp-web.de/fachgebiete/alterspsychiatrie/ravensburg/osk/",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/40902b4c28801232/start",
+      "https://www.zfp-web.de/fachgebiete/alterspsychiatrie/weissenau/abteilung/",
+      "https://www.zfp-web.de/fileadmin/zfp-web.de/news-und-media/kommunikation/zfp-unternehmensbroschuere-februar2022.pdf",
+      "https://www.zfp-web.de/news-media/pressemitteilungen/schepker-uebergibt-an-valdes-stauber",
+      "https://www.zfp-web.de/fachgebiete/psychosomatische-medizin/ravensburg/",
+      "https://pflegefinder.bkk-dachverband.de/details/index.php?uid=510842155_88214_wei_s",
+      "https://de.linkedin.com/in/rubengiesin"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Wangen im Allgäu",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp südwürttemberg weissenau satellit wangen|https://www.zfp-web.de/|wangen im allgäu|germany",
+    "company_name": "ZfP Südwürttemberg Weissenau Satellit Wangen",
+    "company_website": "https://www.zfp-web.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Anna Heinsch",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "anna.heinsch@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anna Heinsch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anna_heinsch_d90ea3c44f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-web.de/fachgebiete/allgemeine-psychiatrie/wangen/abteilung/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840905-772289000-2022-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karin.wochner@zfp-zentrum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karin Wochner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karin_wochner_f20e9ac953",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840905-772289000-2022-xml.pdf",
+          "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-donau-riss/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/6e117ef1286d6a6b/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Verwaltungsleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.zfp-web.de/fachgebiete/allgemeine-psychiatrie/wangen/abteilung/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260840905-772289000-2022-xml.pdf",
+      "https://www.zfp-web.de/fileadmin/zfp-web.de/ueber-uns/qualitaetsmanegement/qualitaetsberichte/Berichte/region-donau-riss/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/6e117ef1286d6a6b/start"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
