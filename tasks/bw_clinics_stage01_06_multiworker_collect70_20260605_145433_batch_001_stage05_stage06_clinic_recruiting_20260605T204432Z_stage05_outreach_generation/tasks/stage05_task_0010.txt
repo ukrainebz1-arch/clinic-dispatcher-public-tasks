@@ -1,0 +1,1729 @@
+TASK_ID: stage05_task_0010
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Dr. Sebastian Freytag",
+    "message_target_id": "stage05_task_0010::person_dr_sebastian_freytag_e0e5252c61::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_sebastian_freytag_e0e5252c61",
+    "recipient_value": "s.freytag@klinikum-tut.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Dr. Sebastian Freytag",
+    "message_target_id": "stage05_task_0010::person_dr_sebastian_freytag_e0e5252c61::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_sebastian_freytag_e0e5252c61",
+    "recipient_value": "https://de.linkedin.com/in/sebastian-freytag-42b997161",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Dr. Sebastian Freytag",
+    "message_target_id": "stage05_task_0010::person_dr_sebastian_freytag_e0e5252c61::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_sebastian_freytag_e0e5252c61",
+    "recipient_value": "https://de.linkedin.com/in/sebastian-freytag-42b997161",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Dr. Sebastian Freytag",
+    "message_target_id": "stage05_task_0010::person_dr_sebastian_freytag_d6ae0cd116::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_sebastian_freytag_d6ae0cd116",
+    "recipient_value": "s.freytag@klinikum-tut.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Dr. Sebastian Freytag",
+    "message_target_id": "stage05_task_0010::person_dr_sebastian_freytag_d6ae0cd116::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_sebastian_freytag_d6ae0cd116",
+    "recipient_value": "https://de.linkedin.com/in/sebastian-freytag-42b997161",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Dr. Sebastian Freytag",
+    "message_target_id": "stage05_task_0010::person_dr_sebastian_freytag_d6ae0cd116::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_sebastian_freytag_d6ae0cd116",
+    "recipient_value": "https://de.linkedin.com/in/sebastian-freytag-42b997161",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Natalia Schöner",
+    "message_target_id": "stage05_task_0010::person_natalia_sch_ner_43d5f6830c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_natalia_sch_ner_43d5f6830c",
+    "recipient_value": "n.schoener@klinikum-tut.de",
+    "role_title": "Verwaltungsdirektorin / Prokuristin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Natalia Schöner",
+    "message_target_id": "stage05_task_0010::person_natalia_sch_ner_c85a5910b4::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_natalia_sch_ner_c85a5910b4",
+    "recipient_value": "n.schoener@klinikum-tut.de",
+    "role_title": "Verwaltungsdirektorin / Prokuristin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Olga Gibert",
+    "message_target_id": "stage05_task_0010::person_olga_gibert_186a5e4f41::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_olga_gibert_186a5e4f41",
+    "recipient_value": "o.gibert@klinikum-tut.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Olga Gibert",
+    "message_target_id": "stage05_task_0010::person_olga_gibert_44b4efe6b9::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_olga_gibert_44b4efe6b9",
+    "recipient_value": "o.gibert@klinikum-tut.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Oliver Butsch",
+    "message_target_id": "stage05_task_0010::person_oliver_butsch_2c98b4b41a::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_oliver_butsch_2c98b4b41a",
+    "recipient_value": "o.butsch@klinikum-tut.de",
+    "role_title": "Personaldirektor / Prokurist",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Oliver Butsch",
+    "message_target_id": "stage05_task_0010::person_oliver_butsch_2c98b4b41a::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_oliver_butsch_2c98b4b41a",
+    "recipient_value": "https://de.linkedin.com/in/oliver-butsch-02507a142",
+    "role_title": "Personaldirektor / Prokurist",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Oliver Butsch",
+    "message_target_id": "stage05_task_0010::person_oliver_butsch_2c98b4b41a::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_oliver_butsch_2c98b4b41a",
+    "recipient_value": "https://de.linkedin.com/in/oliver-butsch-02507a142",
+    "role_title": "Personaldirektor / Prokurist",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Oliver Butsch",
+    "message_target_id": "stage05_task_0010::person_oliver_butsch_8d77b889b6::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_oliver_butsch_8d77b889b6",
+    "recipient_value": "o.butsch@klinikum-tut.de",
+    "role_title": "Personaldirektor / Prokurist",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Oliver Butsch",
+    "message_target_id": "stage05_task_0010::person_oliver_butsch_8d77b889b6::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_oliver_butsch_8d77b889b6",
+    "recipient_value": "https://de.linkedin.com/in/oliver-butsch-02507a142",
+    "role_title": "Personaldirektor / Prokurist",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "full_name": "Oliver Butsch",
+    "message_target_id": "stage05_task_0010::person_oliver_butsch_8d77b889b6::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_oliver_butsch_8d77b889b6",
+    "recipient_value": "https://de.linkedin.com/in/oliver-butsch-02507a142",
+    "role_title": "Personaldirektor / Prokurist",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Doreen Edelmann",
+    "message_target_id": "stage05_task_0010::person_doreen_edelmann_fce94e0e0e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_doreen_edelmann_fce94e0e0e",
+    "recipient_value": "doreen.edelmann@grn.de",
+    "role_title": "Stellvertretende Pflegedienstleiterin / Bereichsleitung Stationsdienste",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Jens Scheurich",
+    "message_target_id": "stage05_task_0010::person_jens_scheurich_e9764a58d9::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_jens_scheurich_e9764a58d9",
+    "recipient_value": "jens.scheurich@grn.de",
+    "role_title": "Pflegedienstleiter",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Judith Masuch",
+    "message_target_id": "stage05_task_0010::person_judith_masuch_6116657ff2::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_judith_masuch_6116657ff2",
+    "recipient_value": "judith.masuch@grn.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Judith Masuch",
+    "message_target_id": "stage05_task_0010::person_judith_masuch_6116657ff2::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_judith_masuch_6116657ff2",
+    "recipient_value": "https://de.linkedin.com/in/judith-masuch-003696240",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Judith Masuch",
+    "message_target_id": "stage05_task_0010::person_judith_masuch_6116657ff2::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_judith_masuch_6116657ff2",
+    "recipient_value": "https://de.linkedin.com/in/judith-masuch-003696240",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Katharina Elbs",
+    "message_target_id": "stage05_task_0010::person_katharina_elbs_f87b32195c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_katharina_elbs_f87b32195c",
+    "recipient_value": "katharina.elbs@grn.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Katharina Elbs",
+    "message_target_id": "stage05_task_0010::person_katharina_elbs_f87b32195c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_katharina_elbs_f87b32195c",
+    "recipient_value": "https://de.linkedin.com/in/katharina-elbs-76b8541",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Katharina Elbs",
+    "message_target_id": "stage05_task_0010::person_katharina_elbs_f87b32195c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_katharina_elbs_f87b32195c",
+    "recipient_value": "https://de.linkedin.com/in/katharina-elbs-76b8541",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Tobias Schneider",
+    "message_target_id": "stage05_task_0010::person_tobias_schneider_aada160798::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_tobias_schneider_aada160798",
+    "recipient_value": "tobias.schneider@grn.de",
+    "role_title": "Klinikleiter Schwetzingen",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Tobias Schneider",
+    "message_target_id": "stage05_task_0010::person_tobias_schneider_aada160798::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tobias_schneider_aada160798",
+    "recipient_value": "https://de.linkedin.com/in/tobias-schneider-a886b6278",
+    "role_title": "Klinikleiter Schwetzingen",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "full_name": "Tobias Schneider",
+    "message_target_id": "stage05_task_0010::person_tobias_schneider_aada160798::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tobias_schneider_aada160798",
+    "recipient_value": "https://de.linkedin.com/in/tobias-schneider-a886b6278",
+    "role_title": "Klinikleiter Schwetzingen",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik sinsheim|http://www.grn.de|sinsheim|germany",
+    "company_name": "GRN-Klinik Sinsheim",
+    "full_name": "Daniel Dietz",
+    "message_target_id": "stage05_task_0010::person_daniel_dietz_5f12c396f7::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_daniel_dietz_5f12c396f7",
+    "recipient_value": "daniel.dietz@grn.de",
+    "role_title": "Stellvertretender Pflegedienstleiter",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik sinsheim|http://www.grn.de|sinsheim|germany",
+    "company_name": "GRN-Klinik Sinsheim",
+    "full_name": "Rolf Poxleitner",
+    "message_target_id": "stage05_task_0010::person_rolf_poxleitner_8f3ba2751d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_rolf_poxleitner_8f3ba2751d",
+    "recipient_value": "rolf.poxleitner@grn.de",
+    "role_title": "Pflegedienstleiter",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik weinheim|http://www.grn.de|weinheim|germany",
+    "company_name": "GRN-Klinik Weinheim",
+    "full_name": "Heike Grönebaum",
+    "message_target_id": "stage05_task_0010::person_heike_gr_nebaum_e044e90467::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_heike_gr_nebaum_e044e90467",
+    "recipient_value": "heike.groenebaum@grn.de",
+    "role_title": "Sekretariat Pflegedienstleitung",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik weinheim|http://www.grn.de|weinheim|germany",
+    "company_name": "GRN-Klinik Weinheim",
+    "full_name": "Sandra Riechers",
+    "message_target_id": "stage05_task_0010::person_sandra_riechers_4d1411d9bb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sandra_riechers_4d1411d9bb",
+    "recipient_value": "sandra.riechers@grn.de",
+    "role_title": "Pflegedienstleiterin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik weinheim|http://www.grn.de|weinheim|germany",
+    "company_name": "GRN-Klinik Weinheim",
+    "full_name": "Sandra Riechers",
+    "message_target_id": "stage05_task_0010::person_sandra_riechers_4d1411d9bb::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sandra_riechers_4d1411d9bb",
+    "recipient_value": "https://de.linkedin.com/in/sandra-riechers-a34513278",
+    "role_title": "Pflegedienstleiterin",
+    "task_id": "stage05_task_0010"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik weinheim|http://www.grn.de|weinheim|germany",
+    "company_name": "GRN-Klinik Weinheim",
+    "full_name": "Sandra Riechers",
+    "message_target_id": "stage05_task_0010::person_sandra_riechers_4d1411d9bb::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sandra_riechers_4d1411d9bb",
+    "recipient_value": "https://de.linkedin.com/in/sandra-riechers-a34513278",
+    "role_title": "Pflegedienstleiterin",
+    "task_id": "stage05_task_0010"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 8,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Tuttlingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "company_website": "http://www.klinikum-tut.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Olga Gibert",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Olga Gibert",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.freytag@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Sebastian Freytag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sebastian-freytag-42b997161",
+        "person_key": "person_dr_sebastian_freytag_e0e5252c61",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://de.linkedin.com/in/sebastian-freytag-42b997161"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.freytag@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Sebastian Freytag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sebastian-freytag-42b997161",
+        "person_key": "person_dr_sebastian_freytag_d6ae0cd116",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://de.linkedin.com/in/sebastian-freytag-42b997161"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "n.schoener@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Natalia Schöner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_natalia_sch_ner_43d5f6830c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsdirektorin / Prokuristin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "n.schoener@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Natalia Schöner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_natalia_sch_ner_c85a5910b4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsdirektorin / Prokuristin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "o.gibert@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Olga Gibert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_olga_gibert_186a5e4f41",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://www.klinikum-tut.de/klinikum/medizinische-behandlung/pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "o.gibert@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Olga Gibert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_olga_gibert_44b4efe6b9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://www.klinikum-tut.de/klinikum/medizinische-behandlung/pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "o.butsch@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Oliver Butsch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/oliver-butsch-02507a142",
+        "person_key": "person_oliver_butsch_2c98b4b41a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektor / Prokurist",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://www.klinikum-tut.de/karriere/",
+          "https://de.linkedin.com/in/oliver-butsch-02507a142"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "o.butsch@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Oliver Butsch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/oliver-butsch-02507a142",
+        "person_key": "person_oliver_butsch_8d77b889b6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektor / Prokurist",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://www.klinikum-tut.de/karriere/",
+          "https://de.linkedin.com/in/oliver-butsch-02507a142"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "other_management",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Verwaltungsdirektorin / Prokuristin",
+        "Pflegedirektorin",
+        "Personaldirektor / Prokurist"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+      "https://de.linkedin.com/in/sebastian-freytag-42b997161",
+      "https://www.klinikum-tut.de/klinikum/medizinische-behandlung/pflege/",
+      "https://www.klinikum-tut.de/karriere/",
+      "https://de.linkedin.com/in/oliver-butsch-02507a142"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Schwetzingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "company_website": "https://www.grn.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Doreen Edelmann",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedienstleiterin / Bereichsleitung Stationsdienste"
+        },
+        {
+          "full_name": "Jens Scheurich",
+          "person_key": "",
+          "role": "Pflegedienstleiter"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "doreen.edelmann@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Doreen Edelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_doreen_edelmann_fce94e0e0e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedienstleiterin / Bereichsleitung Stationsdienste",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/schwetzingen/klinik/pflege/unser-team",
+          "https://de.linkedin.com/jobs/view/pflegefachkraft-f%C3%BCr-das-team-der-high-care-unit-hcu-m-w-d-at-grn-gesundheitszentren-rhein-neckar-ggmbh-3841785893",
+          "https://www.grn.de/schwetzingen/klinik/pflege/der-fachdisziplin"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "jens.scheurich@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jens Scheurich",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jens_scheurich_e9764a58d9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiter",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/schwetzingen/klinik/pflege/unser-team",
+          "https://de.linkedin.com/jobs/view/stellvertretende-funktionsleitung-zentrale-notaufnahme-m-w-d-at-grn-gesundheitszentren-rhein-neckar-ggmbh-4411346891",
+          "https://www.grn.de/schwetzingen/klinik/pflege/der-fachdisziplin"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "judith.masuch@grn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Judith Masuch",
+        "hypothesis_email": "judith.masuch@grn.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/judith-masuch-003696240",
+        "person_key": "person_judith_masuch_6116657ff2",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.grn.de/",
+          "https://www.grn.de/schwetzingen/klinik/pflege/unser-team",
+          "https://de.linkedin.com/posts/katharina-elbs-76b8541_ein-unglaublich-intensiver-prozess-hat-eine-activity-7303297888250413056-hAPV",
+          "https://de.linkedin.com/in/judith-masuch-003696240",
+          "https://karriere.grn.de/impressum"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "katharina.elbs@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Katharina Elbs",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/katharina-elbs-76b8541",
+        "person_key": "person_katharina_elbs_f87b32195c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.grn.de/blaetterkataloge/GRNplus_Schwetzingen-Mai-2021/21/",
+          "https://www.grn.de/ueber-uns/ueber-den-verbund-1",
+          "https://de.linkedin.com/posts/katharina-elbs-76b8541_ein-unglaublich-intensiver-prozess-hat-eine-activity-7303297888250413056-hAPV",
+          "https://de.linkedin.com/in/katharina-elbs-76b8541",
+          "https://karriere.grn.de/impressum"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "tobias.schneider@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tobias Schneider",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/tobias-schneider-a886b6278",
+        "person_key": "person_tobias_schneider_aada160798",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleiter Schwetzingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.grn.de/blaetterkataloge/GRNplus-Oktober-2022/21/",
+          "https://www.grn.de/schwetzingen/klinik/startseite",
+          "https://de.linkedin.com/in/tobias-schneider-a886b6278",
+          "https://www.grn.de/blaetterkataloge/GRNplus1-2025/34/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo",
+        "other_management"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedienstleiterin / Bereichsleitung Stationsdienste",
+        "Pflegedienstleiter",
+        "Geschäftsführerin",
+        "Klinikleiter Schwetzingen"
+      ],
+      "total_people": 5
+    },
+    "source_urls": [
+      "https://www.grn.de/schwetzingen/klinik/pflege/unser-team",
+      "https://de.linkedin.com/jobs/view/pflegefachkraft-f%C3%BCr-das-team-der-high-care-unit-hcu-m-w-d-at-grn-gesundheitszentren-rhein-neckar-ggmbh-3841785893",
+      "https://www.grn.de/schwetzingen/klinik/pflege/der-fachdisziplin",
+      "https://de.linkedin.com/jobs/view/stellvertretende-funktionsleitung-zentrale-notaufnahme-m-w-d-at-grn-gesundheitszentren-rhein-neckar-ggmbh-4411346891",
+      "https://www.grn.de/",
+      "https://de.linkedin.com/posts/katharina-elbs-76b8541_ein-unglaublich-intensiver-prozess-hat-eine-activity-7303297888250413056-hAPV",
+      "https://de.linkedin.com/in/judith-masuch-003696240",
+      "https://karriere.grn.de/impressum",
+      "https://www.grn.de/blaetterkataloge/GRNplus_Schwetzingen-Mai-2021/21/",
+      "https://www.grn.de/ueber-uns/ueber-den-verbund-1",
+      "https://de.linkedin.com/in/katharina-elbs-76b8541",
+      "https://www.grn.de/blaetterkataloge/GRNplus-Oktober-2022/21/",
+      "https://www.grn.de/schwetzingen/klinik/startseite",
+      "https://de.linkedin.com/in/tobias-schneider-a886b6278",
+      "https://www.grn.de/blaetterkataloge/GRNplus1-2025/34/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Sinsheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik sinsheim|http://www.grn.de|sinsheim|germany",
+    "company_name": "GRN-Klinik Sinsheim",
+    "company_website": "http://www.grn.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Daniel Dietz",
+          "person_key": "",
+          "role": "Stellvertretender Pflegedienstleiter"
+        },
+        {
+          "full_name": "Rolf Poxleitner",
+          "person_key": "",
+          "role": "Pflegedienstleiter"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "daniel.dietz@grn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Daniel Dietz",
+        "hypothesis_email": "daniel.dietz@grn.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_daniel_dietz_5f12c396f7",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Stellvertretender Pflegedienstleiter",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/aktuelle-meldungen-detail/gruene-damen-helfende-haende-im-krankenhaus",
+          "https://www.grn.de/eberbach/klinik/pflege/die-fachdisziplin",
+          "https://www.grn.de/eberbach/klinik/anaesthesie-und-intensivmedizin/kontakt-und-sprechzeiten",
+          "https://www.grn.de/sinsheim/klinik/pflege/kontakt-und-sprechzeiten"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "rolf.poxleitner@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Rolf Poxleitner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_rolf_poxleitner_8f3ba2751d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiter",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/eberbach/klinik/pflege/die-fachdisziplin",
+          "https://www.grn.de/blaetterkataloge/GRNplus1-2025/36/",
+          "https://www.grn.de/sinsheim/klinik/pflege/kontakt-und-sprechzeiten"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Stellvertretender Pflegedienstleiter",
+        "Pflegedienstleiter"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.grn.de/aktuelle-meldungen-detail/gruene-damen-helfende-haende-im-krankenhaus",
+      "https://www.grn.de/eberbach/klinik/pflege/die-fachdisziplin",
+      "https://www.grn.de/eberbach/klinik/anaesthesie-und-intensivmedizin/kontakt-und-sprechzeiten",
+      "https://www.grn.de/sinsheim/klinik/pflege/kontakt-und-sprechzeiten",
+      "https://www.grn.de/blaetterkataloge/GRNplus1-2025/36/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Weinheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik weinheim|http://www.grn.de|weinheim|germany",
+    "company_name": "GRN-Klinik Weinheim",
+    "company_website": "http://www.grn.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Heike Grönebaum",
+          "person_key": "",
+          "role": "Sekretariat Pflegedienstleitung"
+        },
+        {
+          "full_name": "Sandra Riechers",
+          "person_key": "",
+          "role": "Pflegedienstleiterin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "heike.groenebaum@grn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Heike Grönebaum",
+        "hypothesis_email": "heike.groenebaum@grn.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_heike_gr_nebaum_e044e90467",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Sekretariat Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/weinheim/klinik/pflege/unser-team",
+          "https://www.grn.de/blaetterkataloge/GRNplus1-2025/38/",
+          "https://www.grn.de/weinheim/klinik/pflege/kontakt"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "sandra.riechers@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sandra Riechers",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sandra-riechers-a34513278",
+        "person_key": "person_sandra_riechers_4d1411d9bb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/weinheim/klinik/pflege/die-fachdisziplin",
+          "https://www.grn.de/weinheim/klinik/pflege/unser-team",
+          "https://de.linkedin.com/in/sandra-riechers-a34513278"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Sekretariat Pflegedienstleitung",
+        "Pflegedienstleiterin"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.grn.de/weinheim/klinik/pflege/unser-team",
+      "https://www.grn.de/blaetterkataloge/GRNplus1-2025/38/",
+      "https://www.grn.de/weinheim/klinik/pflege/kontakt",
+      "https://www.grn.de/weinheim/klinik/pflege/die-fachdisziplin",
+      "https://de.linkedin.com/in/sandra-riechers-a34513278"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 8,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Tuttlingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|gesundheitszentrum tuttlingen|http://www.klinikum-tut.de/|tuttlingen|germany",
+    "company_name": "Gesundheitszentrum Tuttlingen",
+    "company_website": "http://www.klinikum-tut.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Olga Gibert",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Olga Gibert",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.freytag@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Sebastian Freytag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sebastian-freytag-42b997161",
+        "person_key": "person_dr_sebastian_freytag_e0e5252c61",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://de.linkedin.com/in/sebastian-freytag-42b997161"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.freytag@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Sebastian Freytag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sebastian-freytag-42b997161",
+        "person_key": "person_dr_sebastian_freytag_d6ae0cd116",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://de.linkedin.com/in/sebastian-freytag-42b997161"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "n.schoener@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Natalia Schöner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_natalia_sch_ner_43d5f6830c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsdirektorin / Prokuristin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "n.schoener@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Natalia Schöner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_natalia_sch_ner_c85a5910b4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsdirektorin / Prokuristin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "o.gibert@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Olga Gibert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_olga_gibert_186a5e4f41",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://www.klinikum-tut.de/klinikum/medizinische-behandlung/pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "o.gibert@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Olga Gibert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_olga_gibert_44b4efe6b9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://www.klinikum-tut.de/klinikum/medizinische-behandlung/pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "o.butsch@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Oliver Butsch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/oliver-butsch-02507a142",
+        "person_key": "person_oliver_butsch_2c98b4b41a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektor / Prokurist",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://www.klinikum-tut.de/karriere/",
+          "https://de.linkedin.com/in/oliver-butsch-02507a142"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "o.butsch@klinikum-tut.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Oliver Butsch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/oliver-butsch-02507a142",
+        "person_key": "person_oliver_butsch_8d77b889b6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektor / Prokurist",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+          "https://www.klinikum-tut.de/karriere/",
+          "https://de.linkedin.com/in/oliver-butsch-02507a142"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "other_management",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Verwaltungsdirektorin / Prokuristin",
+        "Pflegedirektorin",
+        "Personaldirektor / Prokurist"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://www.klinikum-tut.de/klinikum/ueber-uns/ihre-ansprechpartner/",
+      "https://de.linkedin.com/in/sebastian-freytag-42b997161",
+      "https://www.klinikum-tut.de/klinikum/medizinische-behandlung/pflege/",
+      "https://www.klinikum-tut.de/karriere/",
+      "https://de.linkedin.com/in/oliver-butsch-02507a142"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Schwetzingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik schwetzingen|https://www.grn.de/|schwetzingen|germany",
+    "company_name": "GRN-Klinik Schwetzingen",
+    "company_website": "https://www.grn.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Doreen Edelmann",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedienstleiterin / Bereichsleitung Stationsdienste"
+        },
+        {
+          "full_name": "Jens Scheurich",
+          "person_key": "",
+          "role": "Pflegedienstleiter"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "doreen.edelmann@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Doreen Edelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_doreen_edelmann_fce94e0e0e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedienstleiterin / Bereichsleitung Stationsdienste",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/schwetzingen/klinik/pflege/unser-team",
+          "https://de.linkedin.com/jobs/view/pflegefachkraft-f%C3%BCr-das-team-der-high-care-unit-hcu-m-w-d-at-grn-gesundheitszentren-rhein-neckar-ggmbh-3841785893",
+          "https://www.grn.de/schwetzingen/klinik/pflege/der-fachdisziplin"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "jens.scheurich@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jens Scheurich",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jens_scheurich_e9764a58d9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiter",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/schwetzingen/klinik/pflege/unser-team",
+          "https://de.linkedin.com/jobs/view/stellvertretende-funktionsleitung-zentrale-notaufnahme-m-w-d-at-grn-gesundheitszentren-rhein-neckar-ggmbh-4411346891",
+          "https://www.grn.de/schwetzingen/klinik/pflege/der-fachdisziplin"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "judith.masuch@grn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Judith Masuch",
+        "hypothesis_email": "judith.masuch@grn.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/judith-masuch-003696240",
+        "person_key": "person_judith_masuch_6116657ff2",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.grn.de/",
+          "https://www.grn.de/schwetzingen/klinik/pflege/unser-team",
+          "https://de.linkedin.com/posts/katharina-elbs-76b8541_ein-unglaublich-intensiver-prozess-hat-eine-activity-7303297888250413056-hAPV",
+          "https://de.linkedin.com/in/judith-masuch-003696240",
+          "https://karriere.grn.de/impressum"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "katharina.elbs@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Katharina Elbs",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/katharina-elbs-76b8541",
+        "person_key": "person_katharina_elbs_f87b32195c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.grn.de/blaetterkataloge/GRNplus_Schwetzingen-Mai-2021/21/",
+          "https://www.grn.de/ueber-uns/ueber-den-verbund-1",
+          "https://de.linkedin.com/posts/katharina-elbs-76b8541_ein-unglaublich-intensiver-prozess-hat-eine-activity-7303297888250413056-hAPV",
+          "https://de.linkedin.com/in/katharina-elbs-76b8541",
+          "https://karriere.grn.de/impressum"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "tobias.schneider@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tobias Schneider",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/tobias-schneider-a886b6278",
+        "person_key": "person_tobias_schneider_aada160798",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleiter Schwetzingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.grn.de/blaetterkataloge/GRNplus-Oktober-2022/21/",
+          "https://www.grn.de/schwetzingen/klinik/startseite",
+          "https://de.linkedin.com/in/tobias-schneider-a886b6278",
+          "https://www.grn.de/blaetterkataloge/GRNplus1-2025/34/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo",
+        "other_management"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedienstleiterin / Bereichsleitung Stationsdienste",
+        "Pflegedienstleiter",
+        "Geschäftsführerin",
+        "Klinikleiter Schwetzingen"
+      ],
+      "total_people": 5
+    },
+    "source_urls": [
+      "https://www.grn.de/schwetzingen/klinik/pflege/unser-team",
+      "https://de.linkedin.com/jobs/view/pflegefachkraft-f%C3%BCr-das-team-der-high-care-unit-hcu-m-w-d-at-grn-gesundheitszentren-rhein-neckar-ggmbh-3841785893",
+      "https://www.grn.de/schwetzingen/klinik/pflege/der-fachdisziplin",
+      "https://de.linkedin.com/jobs/view/stellvertretende-funktionsleitung-zentrale-notaufnahme-m-w-d-at-grn-gesundheitszentren-rhein-neckar-ggmbh-4411346891",
+      "https://www.grn.de/",
+      "https://de.linkedin.com/posts/katharina-elbs-76b8541_ein-unglaublich-intensiver-prozess-hat-eine-activity-7303297888250413056-hAPV",
+      "https://de.linkedin.com/in/judith-masuch-003696240",
+      "https://karriere.grn.de/impressum",
+      "https://www.grn.de/blaetterkataloge/GRNplus_Schwetzingen-Mai-2021/21/",
+      "https://www.grn.de/ueber-uns/ueber-den-verbund-1",
+      "https://de.linkedin.com/in/katharina-elbs-76b8541",
+      "https://www.grn.de/blaetterkataloge/GRNplus-Oktober-2022/21/",
+      "https://www.grn.de/schwetzingen/klinik/startseite",
+      "https://de.linkedin.com/in/tobias-schneider-a886b6278",
+      "https://www.grn.de/blaetterkataloge/GRNplus1-2025/34/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Sinsheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik sinsheim|http://www.grn.de|sinsheim|germany",
+    "company_name": "GRN-Klinik Sinsheim",
+    "company_website": "http://www.grn.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Daniel Dietz",
+          "person_key": "",
+          "role": "Stellvertretender Pflegedienstleiter"
+        },
+        {
+          "full_name": "Rolf Poxleitner",
+          "person_key": "",
+          "role": "Pflegedienstleiter"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "daniel.dietz@grn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Daniel Dietz",
+        "hypothesis_email": "daniel.dietz@grn.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_daniel_dietz_5f12c396f7",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Stellvertretender Pflegedienstleiter",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/aktuelle-meldungen-detail/gruene-damen-helfende-haende-im-krankenhaus",
+          "https://www.grn.de/eberbach/klinik/pflege/die-fachdisziplin",
+          "https://www.grn.de/eberbach/klinik/anaesthesie-und-intensivmedizin/kontakt-und-sprechzeiten",
+          "https://www.grn.de/sinsheim/klinik/pflege/kontakt-und-sprechzeiten"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "rolf.poxleitner@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Rolf Poxleitner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_rolf_poxleitner_8f3ba2751d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiter",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/eberbach/klinik/pflege/die-fachdisziplin",
+          "https://www.grn.de/blaetterkataloge/GRNplus1-2025/36/",
+          "https://www.grn.de/sinsheim/klinik/pflege/kontakt-und-sprechzeiten"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Stellvertretender Pflegedienstleiter",
+        "Pflegedienstleiter"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.grn.de/aktuelle-meldungen-detail/gruene-damen-helfende-haende-im-krankenhaus",
+      "https://www.grn.de/eberbach/klinik/pflege/die-fachdisziplin",
+      "https://www.grn.de/eberbach/klinik/anaesthesie-und-intensivmedizin/kontakt-und-sprechzeiten",
+      "https://www.grn.de/sinsheim/klinik/pflege/kontakt-und-sprechzeiten",
+      "https://www.grn.de/blaetterkataloge/GRNplus1-2025/36/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Weinheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|grn-klinik weinheim|http://www.grn.de|weinheim|germany",
+    "company_name": "GRN-Klinik Weinheim",
+    "company_website": "http://www.grn.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Heike Grönebaum",
+          "person_key": "",
+          "role": "Sekretariat Pflegedienstleitung"
+        },
+        {
+          "full_name": "Sandra Riechers",
+          "person_key": "",
+          "role": "Pflegedienstleiterin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "heike.groenebaum@grn.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Heike Grönebaum",
+        "hypothesis_email": "heike.groenebaum@grn.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_heike_gr_nebaum_e044e90467",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Sekretariat Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/weinheim/klinik/pflege/unser-team",
+          "https://www.grn.de/blaetterkataloge/GRNplus1-2025/38/",
+          "https://www.grn.de/weinheim/klinik/pflege/kontakt"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "sandra.riechers@grn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sandra Riechers",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sandra-riechers-a34513278",
+        "person_key": "person_sandra_riechers_4d1411d9bb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.grn.de/weinheim/klinik/pflege/die-fachdisziplin",
+          "https://www.grn.de/weinheim/klinik/pflege/unser-team",
+          "https://de.linkedin.com/in/sandra-riechers-a34513278"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Sekretariat Pflegedienstleitung",
+        "Pflegedienstleiterin"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.grn.de/weinheim/klinik/pflege/unser-team",
+      "https://www.grn.de/blaetterkataloge/GRNplus1-2025/38/",
+      "https://www.grn.de/weinheim/klinik/pflege/kontakt",
+      "https://www.grn.de/weinheim/klinik/pflege/die-fachdisziplin",
+      "https://de.linkedin.com/in/sandra-riechers-a34513278"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
