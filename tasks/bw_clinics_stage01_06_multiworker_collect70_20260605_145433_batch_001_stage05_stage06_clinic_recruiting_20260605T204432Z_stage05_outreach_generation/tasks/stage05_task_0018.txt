@@ -1,0 +1,1576 @@
+TASK_ID: stage05_task_0018
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Daniel Weiß",
+    "message_target_id": "stage05_task_0018::person_daniel_wei_f029b7e000::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_daniel_wei_f029b7e000",
+    "recipient_value": "da.weiss@klinikverbund-suedwest.de",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Daniel Weiß",
+    "message_target_id": "stage05_task_0018::person_daniel_wei_f029b7e000::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_daniel_wei_f029b7e000",
+    "recipient_value": "https://de.linkedin.com/in/daniel-weiss-966477143",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Daniel Weiß",
+    "message_target_id": "stage05_task_0018::person_daniel_wei_f029b7e000::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_daniel_wei_f029b7e000",
+    "recipient_value": "https://de.linkedin.com/in/daniel-weiss-966477143",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Daniel Weiß",
+    "message_target_id": "stage05_task_0018::person_daniel_wei_aed6afe6ed::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_daniel_wei_aed6afe6ed",
+    "recipient_value": "da.weiss@klinikverbund-suedwest.de",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Daniel Weiß",
+    "message_target_id": "stage05_task_0018::person_daniel_wei_aed6afe6ed::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_daniel_wei_aed6afe6ed",
+    "recipient_value": "https://de.linkedin.com/in/daniel-weiss-966477143",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Daniel Weiß",
+    "message_target_id": "stage05_task_0018::person_daniel_wei_aed6afe6ed::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_daniel_wei_aed6afe6ed",
+    "recipient_value": "https://de.linkedin.com/in/daniel-weiss-966477143",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Danilo Sonntag",
+    "message_target_id": "stage05_task_0018::person_danilo_sonntag_8cb6f6c2dd::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_danilo_sonntag_8cb6f6c2dd",
+    "recipient_value": "d.sonntag@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Danilo Sonntag",
+    "message_target_id": "stage05_task_0018::person_danilo_sonntag_43ec7d6fe3::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_danilo_sonntag_43ec7d6fe3",
+    "recipient_value": "d.sonntag@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0018::person_nicolai_stolzenberger_6696d100a8::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_nicolai_stolzenberger_6696d100a8",
+    "recipient_value": "n.stolzenberger@klinikverbund-suedwest.de",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0018::person_nicolai_stolzenberger_6696d100a8::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_nicolai_stolzenberger_6696d100a8",
+    "recipient_value": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0018::person_nicolai_stolzenberger_6696d100a8::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_nicolai_stolzenberger_6696d100a8",
+    "recipient_value": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0018::person_nicolai_stolzenberger_ab33212754::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_nicolai_stolzenberger_ab33212754",
+    "recipient_value": "n.stolzenberger@klinikverbund-suedwest.de",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0018::person_nicolai_stolzenberger_ab33212754::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_nicolai_stolzenberger_ab33212754",
+    "recipient_value": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Nicolai Stolzenberger",
+    "message_target_id": "stage05_task_0018::person_nicolai_stolzenberger_ab33212754::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_nicolai_stolzenberger_ab33212754",
+    "recipient_value": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+    "role_title": "Krankenhausdirektor Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Tobias Bock-Viessmann",
+    "message_target_id": "stage05_task_0018::person_tobias_bock_viessmann_cca5d842cc::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_tobias_bock_viessmann_cca5d842cc",
+    "recipient_value": "t.bock-viessmann@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Tobias Bock-Viessmann",
+    "message_target_id": "stage05_task_0018::person_tobias_bock_viessmann_2c226f783f::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_tobias_bock_viessmann_2c226f783f",
+    "recipient_value": "t.bock-viessmann@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Volker Seelmann",
+    "message_target_id": "stage05_task_0018::person_volker_seelmann_87e669c967::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_volker_seelmann_87e669c967",
+    "recipient_value": "v.seelmann@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "full_name": "Volker Seelmann",
+    "message_target_id": "stage05_task_0018::person_volker_seelmann_17513276f0::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_volker_seelmann_17513276f0",
+    "recipient_value": "v.seelmann@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken calw|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/|calw|germany",
+    "company_name": "Kliniken Calw",
+    "full_name": "Alexandra Freimuth",
+    "message_target_id": "stage05_task_0018::person_alexandra_freimuth_778234b90e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_alexandra_freimuth_778234b90e",
+    "recipient_value": "a.freimuth@klinikverbund-suedwest.de",
+    "role_title": "Regionaldirektorin",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken calw|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/|calw|germany",
+    "company_name": "Kliniken Calw",
+    "full_name": "Christina Fritza",
+    "message_target_id": "stage05_task_0018::person_christina_fritza_d62e9f95b2::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_christina_fritza_d62e9f95b2",
+    "recipient_value": "c.fritza@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektorin Calw",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken calw|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/|calw|germany",
+    "company_name": "Kliniken Calw",
+    "full_name": "Christina Fritza",
+    "message_target_id": "stage05_task_0018::person_christina_fritza_d62e9f95b2::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christina_fritza_d62e9f95b2",
+    "recipient_value": "https://de.linkedin.com/in/christina-fritza-97a42b351",
+    "role_title": "Pflegedirektorin Calw",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken calw|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/|calw|germany",
+    "company_name": "Kliniken Calw",
+    "full_name": "Christina Fritza",
+    "message_target_id": "stage05_task_0018::person_christina_fritza_d62e9f95b2::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christina_fritza_d62e9f95b2",
+    "recipient_value": "https://de.linkedin.com/in/christina-fritza-97a42b351",
+    "role_title": "Pflegedirektorin Calw",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken nagold|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/|nagold|germany",
+    "company_name": "Kliniken Nagold",
+    "full_name": "Alexandra Freimuth",
+    "message_target_id": "stage05_task_0018::person_alexandra_freimuth_e9353ddcc3::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_alexandra_freimuth_e9353ddcc3",
+    "recipient_value": "a.freimuth@klinikverbund-suedwest.de",
+    "role_title": "Krankenhausdirektorin Nagold",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken nagold|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/|nagold|germany",
+    "company_name": "Kliniken Nagold",
+    "full_name": "Andreas Fiedler",
+    "message_target_id": "stage05_task_0018::person_andreas_fiedler_b443d3e9eb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_andreas_fiedler_b443d3e9eb",
+    "recipient_value": "an.fiedler@klinikverbund-suedwest.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder - satellitenstation z2n im katharinenhospital in stuttgart|http://www.kliniken-schmieder.de|stuttgart|germany",
+    "company_name": "Kliniken Schmieder - Satellitenstation Z2N im Katharinenhospital in Stuttgart",
+    "full_name": "Katja Weis",
+    "message_target_id": "stage05_task_0018::person_katja_weis_f4cc49a8b2::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_katja_weis_f4cc49a8b2",
+    "recipient_value": "k.weis@kliniken-schmieder.de",
+    "role_title": "Pflegedienstleitung Stuttgart-Gerlingen",
+    "task_id": "stage05_task_0018"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder - satellitenstation z2n im katharinenhospital in stuttgart|http://www.kliniken-schmieder.de|stuttgart|germany",
+    "company_name": "Kliniken Schmieder - Satellitenstation Z2N im Katharinenhospital in Stuttgart",
+    "full_name": "Miriam Thiel",
+    "message_target_id": "stage05_task_0018::person_miriam_thiel_8df604112c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_miriam_thiel_8df604112c",
+    "recipient_value": "m.thiel@kliniken-schmieder.de",
+    "role_title": "Geschäftsleiterin Kliniken Schmieder Stuttgart-Gerlingen",
+    "task_id": "stage05_task_0018"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 10,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Böblingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "company_website": "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 6,
+      "decision_makers": [
+        {
+          "full_name": "Danilo Sonntag",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Danilo Sonntag",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Tobias Bock-Viessmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Tobias Bock-Viessmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Volker Seelmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Volker Seelmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "da.weiss@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Daniel Weiß",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/daniel-weiss-966477143",
+        "person_key": "person_daniel_wei_f029b7e000",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://de.linkedin.com/in/daniel-weiss-966477143",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "da.weiss@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Daniel Weiß",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/daniel-weiss-966477143",
+        "person_key": "person_daniel_wei_aed6afe6ed",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://de.linkedin.com/in/daniel-weiss-966477143",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "d.sonntag@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Danilo Sonntag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_danilo_sonntag_8cb6f6c2dd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "d.sonntag@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Danilo Sonntag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_danilo_sonntag_43ec7d6fe3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "n.stolzenberger@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicolai Stolzenberger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+        "person_key": "person_nicolai_stolzenberger_6696d100a8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "n.stolzenberger@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicolai Stolzenberger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+        "person_key": "person_nicolai_stolzenberger_ab33212754",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.bock-viessmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tobias Bock-Viessmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_tobias_bock_viessmann_cca5d842cc",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.bock-viessmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tobias Bock-Viessmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_tobias_bock_viessmann_2c226f783f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "v.seelmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Volker Seelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_volker_seelmann_87e669c967",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260812525-771314000-2023-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "v.seelmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Volker Seelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_volker_seelmann_17513276f0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260812525-771314000-2023-xml.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Krankenhausdirektor Sindelfingen-Böblingen",
+        "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+      ],
+      "total_people": 10
+    },
+    "source_urls": [
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+      "https://de.linkedin.com/in/daniel-weiss-966477143",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/",
+      "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+      "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260812525-771314000-2023-xml.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Calw",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken calw|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/|calw|germany",
+    "company_name": "Kliniken Calw",
+    "company_website": "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Christina Fritza",
+          "person_key": "",
+          "role": "Pflegedirektorin Calw"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "a.freimuth@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Alexandra Freimuth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_alexandra_freimuth_778234b90e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Regionaldirektorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/aktuelles-presse/detail/klinikverbund-suedwest-schafft-regionaldirektionen-ab/",
+          "https://de.linkedin.com/posts/klinikverbund-suedwest_klinikverbunds%C3%BCdwest-kvsw-digitalisierungimgesundheitswesen-activity-7432378906495655936-XjqV",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/7f421257b22c5784/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "c.fritza@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Christina Fritza",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christina-fritza-97a42b351",
+        "person_key": "person_christina_fritza_d62e9f95b2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Calw",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-in-den-kliniken-calw/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/ansprechpartner/",
+          "https://de.linkedin.com/in/christina-fritza-97a42b351"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Regionaldirektorin",
+        "Pflegedirektorin Calw"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/aktuelles-presse/detail/klinikverbund-suedwest-schafft-regionaldirektionen-ab/",
+      "https://de.linkedin.com/posts/klinikverbund-suedwest_klinikverbunds%C3%BCdwest-kvsw-digitalisierungimgesundheitswesen-activity-7432378906495655936-XjqV",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/7f421257b22c5784/start",
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-in-den-kliniken-calw/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/ansprechpartner/",
+      "https://de.linkedin.com/in/christina-fritza-97a42b351"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Nagold",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken nagold|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/|nagold|germany",
+    "company_name": "Kliniken Nagold",
+    "company_website": "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Andreas Fiedler",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "a.freimuth@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Alexandra Freimuth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_alexandra_freimuth_e9353ddcc3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektorin Nagold",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/ansprechpartner/",
+          "https://de.linkedin.com/posts/richard-herdlein-427930149_auf-die-n%C3%A4chsten-gemeinsamen-projekte-mit-activity-7420214472973312000-czQw"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "an.fiedler@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Fiedler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_andreas_fiedler_b443d3e9eb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-in-den-kliniken-nagold/",
+          "https://de.linkedin.com/posts/richard-herdlein-427930149_auf-die-n%C3%A4chsten-gemeinsamen-projekte-mit-activity-7420214472973312000-czQw",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/ansprechpartner/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Krankenhausdirektorin Nagold",
+        "Pflegedirektor"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/ansprechpartner/",
+      "https://de.linkedin.com/posts/richard-herdlein-427930149_auf-die-n%C3%A4chsten-gemeinsamen-projekte-mit-activity-7420214472973312000-czQw",
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-in-den-kliniken-nagold/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder - satellitenstation z2n im katharinenhospital in stuttgart|http://www.kliniken-schmieder.de|stuttgart|germany",
+    "company_name": "Kliniken Schmieder - Satellitenstation Z2N im Katharinenhospital in Stuttgart",
+    "company_website": "http://www.kliniken-schmieder.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Katja Weis",
+          "person_key": "",
+          "role": "Pflegedienstleitung Stuttgart-Gerlingen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "k.weis@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Katja Weis",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_katja_weis_f4cc49a8b2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Stuttgart-Gerlingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/gerlingen/fuehrungsteam.html",
+          "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.thiel@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Miriam Thiel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_miriam_thiel_8df604112c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsleiterin Kliniken Schmieder Stuttgart-Gerlingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/stuttgart/fuehrungsteam.html"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung Stuttgart-Gerlingen",
+        "Geschäftsleiterin Kliniken Schmieder Stuttgart-Gerlingen"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.kliniken-schmieder.de/kliniken-und-standorte/gerlingen/fuehrungsteam.html",
+      "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html",
+      "https://www.kliniken-schmieder.de/kliniken-und-standorte/stuttgart/fuehrungsteam.html"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 10,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Böblingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken böblingen|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/|böblingen|germany",
+    "company_name": "Kliniken Böblingen",
+    "company_website": "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 6,
+      "decision_makers": [
+        {
+          "full_name": "Danilo Sonntag",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Danilo Sonntag",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Tobias Bock-Viessmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Tobias Bock-Viessmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Volker Seelmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        },
+        {
+          "full_name": "Volker Seelmann",
+          "person_key": "",
+          "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "da.weiss@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Daniel Weiß",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/daniel-weiss-966477143",
+        "person_key": "person_daniel_wei_f029b7e000",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://de.linkedin.com/in/daniel-weiss-966477143",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "da.weiss@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Daniel Weiß",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/daniel-weiss-966477143",
+        "person_key": "person_daniel_wei_aed6afe6ed",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://de.linkedin.com/in/daniel-weiss-966477143",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "d.sonntag@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Danilo Sonntag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_danilo_sonntag_8cb6f6c2dd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "d.sonntag@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Danilo Sonntag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_danilo_sonntag_43ec7d6fe3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "n.stolzenberger@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicolai Stolzenberger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+        "person_key": "person_nicolai_stolzenberger_6696d100a8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "n.stolzenberger@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicolai Stolzenberger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+        "person_key": "person_nicolai_stolzenberger_ab33212754",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektor Sindelfingen-Böblingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.bock-viessmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tobias Bock-Viessmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_tobias_bock_viessmann_cca5d842cc",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.bock-viessmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tobias Bock-Viessmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_tobias_bock_viessmann_2c226f783f",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "v.seelmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Volker Seelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_volker_seelmann_87e669c967",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260812525-771314000-2023-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "v.seelmann@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Volker Seelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_volker_seelmann_17513276f0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Klinikum Sindelfingen-Böblingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+          "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260812525-771314000-2023-xml.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Krankenhausdirektor Sindelfingen-Böblingen",
+        "Pflegedirektor Klinikum Sindelfingen-Böblingen"
+      ],
+      "total_people": 10
+    },
+    "source_urls": [
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-boeblingen/ansprechpartner/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+      "https://de.linkedin.com/in/daniel-weiss-966477143",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ansprechpartner/",
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-im-klinikum-sindelfingen-boeblingen/",
+      "https://de.linkedin.com/in/nicolai-stolzenberger-b26b6b383",
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflegedirektorium/",
+      "https://www.klinikverbund-suedwest.de/fileadmin/default/mediapool/05_klinikverbund-suedwest/Qualitaet/Qualitaetsberichte/260812525-771314000-2023-xml.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Calw",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken calw|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/|calw|germany",
+    "company_name": "Kliniken Calw",
+    "company_website": "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Christina Fritza",
+          "person_key": "",
+          "role": "Pflegedirektorin Calw"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "a.freimuth@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Alexandra Freimuth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_alexandra_freimuth_778234b90e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Regionaldirektorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/aktuelles-presse/detail/klinikverbund-suedwest-schafft-regionaldirektionen-ab/",
+          "https://de.linkedin.com/posts/klinikverbund-suedwest_klinikverbunds%C3%BCdwest-kvsw-digitalisierungimgesundheitswesen-activity-7432378906495655936-XjqV",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/7f421257b22c5784/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "c.fritza@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Christina Fritza",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christina-fritza-97a42b351",
+        "person_key": "person_christina_fritza_d62e9f95b2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Calw",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-in-den-kliniken-calw/",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/ansprechpartner/",
+          "https://de.linkedin.com/in/christina-fritza-97a42b351"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Regionaldirektorin",
+        "Pflegedirektorin Calw"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/ansprechpartner/krankenhausdirektionen/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/aktuelles-presse/detail/klinikverbund-suedwest-schafft-regionaldirektionen-ab/",
+      "https://de.linkedin.com/posts/klinikverbund-suedwest_klinikverbunds%C3%BCdwest-kvsw-digitalisierungimgesundheitswesen-activity-7432378906495655936-XjqV",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/7f421257b22c5784/start",
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-in-den-kliniken-calw/",
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/ansprechpartner/",
+      "https://de.linkedin.com/in/christina-fritza-97a42b351"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Nagold",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken nagold|https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/|nagold|germany",
+    "company_name": "Kliniken Nagold",
+    "company_website": "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Andreas Fiedler",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "a.freimuth@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Alexandra Freimuth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_alexandra_freimuth_e9353ddcc3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Krankenhausdirektorin Nagold",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/ansprechpartner/",
+          "https://de.linkedin.com/posts/richard-herdlein-427930149_auf-die-n%C3%A4chsten-gemeinsamen-projekte-mit-activity-7420214472973312000-czQw"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "an.fiedler@klinikverbund-suedwest.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Fiedler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_andreas_fiedler_b443d3e9eb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-in-den-kliniken-nagold/",
+          "https://de.linkedin.com/posts/richard-herdlein-427930149_auf-die-n%C3%A4chsten-gemeinsamen-projekte-mit-activity-7420214472973312000-czQw",
+          "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/ansprechpartner/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Krankenhausdirektorin Nagold",
+        "Pflegedirektor"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/ansprechpartner/",
+      "https://de.linkedin.com/posts/richard-herdlein-427930149_auf-die-n%C3%A4chsten-gemeinsamen-projekte-mit-activity-7420214472973312000-czQw",
+      "https://www.klinikverbund-suedwest.de/pflege-beratung/pflege-funktionsdienst/pflegeorganisation/pflege-in-den-kliniken-nagold/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|kliniken schmieder - satellitenstation z2n im katharinenhospital in stuttgart|http://www.kliniken-schmieder.de|stuttgart|germany",
+    "company_name": "Kliniken Schmieder - Satellitenstation Z2N im Katharinenhospital in Stuttgart",
+    "company_website": "http://www.kliniken-schmieder.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Katja Weis",
+          "person_key": "",
+          "role": "Pflegedienstleitung Stuttgart-Gerlingen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "k.weis@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Katja Weis",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_katja_weis_f4cc49a8b2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Stuttgart-Gerlingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/gerlingen/fuehrungsteam.html",
+          "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.thiel@kliniken-schmieder.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Miriam Thiel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_miriam_thiel_8df604112c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsleiterin Kliniken Schmieder Stuttgart-Gerlingen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kliniken-schmieder.de/kliniken-und-standorte/stuttgart/fuehrungsteam.html"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung Stuttgart-Gerlingen",
+        "Geschäftsleiterin Kliniken Schmieder Stuttgart-Gerlingen"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.kliniken-schmieder.de/kliniken-und-standorte/gerlingen/fuehrungsteam.html",
+      "https://www.kliniken-schmieder.de/karriere/pflegedienst/schmieder-pflegepool.html",
+      "https://www.kliniken-schmieder.de/kliniken-und-standorte/stuttgart/fuehrungsteam.html"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
