@@ -1,0 +1,1663 @@
+TASK_ID: stage05_task_0062
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort schwäbisch gmünd|http://www.zfp-winnenden.de/|schwäbisch gmünd|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Schwäbisch Gmünd",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0062::person_anett_rose_losert_d964973ba4::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_anett_rose_losert_d964973ba4",
+    "recipient_value": "a.rose-losert@zfp-winnenden.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort schwäbisch gmünd|http://www.zfp-winnenden.de/|schwäbisch gmünd|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Schwäbisch Gmünd",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0062::person_anett_rose_losert_d964973ba4::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anett_rose_losert_d964973ba4",
+    "recipient_value": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort schwäbisch gmünd|http://www.zfp-winnenden.de/|schwäbisch gmünd|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Schwäbisch Gmünd",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0062::person_anett_rose_losert_d964973ba4::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anett_rose_losert_d964973ba4",
+    "recipient_value": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort schwäbisch gmünd|http://www.zfp-winnenden.de/|schwäbisch gmünd|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Schwäbisch Gmünd",
+    "full_name": "Klaus Kaiser",
+    "message_target_id": "stage05_task_0062::person_klaus_kaiser_87b2454554::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_klaus_kaiser_87b2454554",
+    "recipient_value": "k.kaiser@zfp-winnenden.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort schwäbisch gmünd|http://www.zfp-winnenden.de/|schwäbisch gmünd|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Schwäbisch Gmünd",
+    "full_name": "Sabine Fleiner",
+    "message_target_id": "stage05_task_0062::person_sabine_fleiner_0ed64a44b1::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sabine_fleiner_0ed64a44b1",
+    "recipient_value": "s.fleiner@zfp-winnenden.de",
+    "role_title": "Pflegedienstleiterin für die ZfP Standorte Schwäbisch Gmünd und Ellwangen",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0062::person_anett_rose_losert_60665718cd::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_anett_rose_losert_60665718cd",
+    "recipient_value": "a.rose-losert@zfp-winnenden.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0062::person_anett_rose_losert_60665718cd::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anett_rose_losert_60665718cd",
+    "recipient_value": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0062::person_anett_rose_losert_60665718cd::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anett_rose_losert_60665718cd",
+    "recipient_value": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0062::person_anett_rose_losert_a3322858e0::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_anett_rose_losert_a3322858e0",
+    "recipient_value": "a.rose-losert@zfp-winnenden.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0062::person_anett_rose_losert_a3322858e0::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anett_rose_losert_a3322858e0",
+    "recipient_value": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0062::person_anett_rose_losert_a3322858e0::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anett_rose_losert_a3322858e0",
+    "recipient_value": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Daniel Barschtipan",
+    "message_target_id": "stage05_task_0062::person_daniel_barschtipan_7388cc948c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_daniel_barschtipan_7388cc948c",
+    "recipient_value": "d.barschtipan@zfp-winnenden.de",
+    "role_title": "Pflegedienstleiter",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Daniel Barschtipan",
+    "message_target_id": "stage05_task_0062::person_daniel_barschtipan_7388cc948c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_daniel_barschtipan_7388cc948c",
+    "recipient_value": "https://de.linkedin.com/in/daniel-barschtipan-0685aa133",
+    "role_title": "Pflegedienstleiter",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Daniel Barschtipan",
+    "message_target_id": "stage05_task_0062::person_daniel_barschtipan_7388cc948c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_daniel_barschtipan_7388cc948c",
+    "recipient_value": "https://de.linkedin.com/in/daniel-barschtipan-0685aa133",
+    "role_title": "Pflegedienstleiter",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Gabi Bernat",
+    "message_target_id": "stage05_task_0062::person_gabi_bernat_abe2c93743::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_gabi_bernat_abe2c93743",
+    "recipient_value": "g.bernat@zfp-winnenden.de",
+    "role_title": "Pflegedienstleiterin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Klaus Kaiser",
+    "message_target_id": "stage05_task_0062::person_klaus_kaiser_d6f9aa2c47::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_klaus_kaiser_d6f9aa2c47",
+    "recipient_value": "k.kaiser@zfp-winnenden.de",
+    "role_title": "Pflegedirektor/Medizindirektion",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Marija Eckert-Bilic",
+    "message_target_id": "stage05_task_0062::person_marija_eckert_bilic_db4cae6053::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_marija_eckert_bilic_db4cae6053",
+    "recipient_value": "m.eckert-bilic@zfp-winnenden.de",
+    "role_title": "Stv. Pflegedirektorin und Pflegedienstleiterin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Romana Weissert",
+    "message_target_id": "stage05_task_0062::person_romana_weissert_07ed0e28b4::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_romana_weissert_07ed0e28b4",
+    "recipient_value": "r.weissert@zfp-winnenden.de",
+    "role_title": "Personaldirektorin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "full_name": "Romana Weissert",
+    "message_target_id": "stage05_task_0062::person_romana_weissert_faf5166b57::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_romana_weissert_faf5166b57",
+    "recipient_value": "r.weissert@zfp-winnenden.de",
+    "role_title": "Personaldirektorin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit (taz) konstanz|http://zfp-reichenau.de|konstanz|germany",
+    "company_name": "ZfP Reichenau Satellit (TAZ) Konstanz",
+    "full_name": "Dorothee Collet",
+    "message_target_id": "stage05_task_0062::person_dorothee_collet_78626b70a0::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dorothee_collet_78626b70a0",
+    "recipient_value": "dorothee.collet@zfp-reichenau.de",
+    "role_title": "Pflegedienstleitung Klinik für Suchtmedizin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit (taz) konstanz|http://zfp-reichenau.de|konstanz|germany",
+    "company_name": "ZfP Reichenau Satellit (TAZ) Konstanz",
+    "full_name": "Ute Bing",
+    "message_target_id": "stage05_task_0062::person_ute_bing_f5a29fd418::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ute_bing_f5a29fd418",
+    "recipient_value": "u.bing@zfp-reichenau.de",
+    "role_title": "Pflegedienstleitung Sinova Klinik für Psychosomatische Medizin und Psychotherapie",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit (taz) konstanz|http://zfp-reichenau.de|konstanz|germany",
+    "company_name": "ZfP Reichenau Satellit (TAZ) Konstanz",
+    "full_name": "Ute Bing",
+    "message_target_id": "stage05_task_0062::person_ute_bing_f5a29fd418::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ute_bing_f5a29fd418",
+    "recipient_value": "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+    "role_title": "Pflegedienstleitung Sinova Klinik für Psychosomatische Medizin und Psychotherapie",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit (taz) konstanz|http://zfp-reichenau.de|konstanz|germany",
+    "company_name": "ZfP Reichenau Satellit (TAZ) Konstanz",
+    "full_name": "Ute Bing",
+    "message_target_id": "stage05_task_0062::person_ute_bing_f5a29fd418::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ute_bing_f5a29fd418",
+    "recipient_value": "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+    "role_title": "Pflegedienstleitung Sinova Klinik für Psychosomatische Medizin und Psychotherapie",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit waldshut in waldshut-tiengen|https://www.zfp-reichenau.de|waldshut-tiengen|germany",
+    "company_name": "ZfP Reichenau Satellit Waldshut in Waldshut-Tiengen",
+    "full_name": "Claudia Vallentin",
+    "message_target_id": "stage05_task_0062::person_claudia_vallentin_fcad69d958::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_claudia_vallentin_fcad69d958",
+    "recipient_value": "claudia.vallentin@zfp-reichenau.de",
+    "role_title": "Ärztliche Direktorin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit waldshut in waldshut-tiengen|https://www.zfp-reichenau.de|waldshut-tiengen|germany",
+    "company_name": "ZfP Reichenau Satellit Waldshut in Waldshut-Tiengen",
+    "full_name": "Claudia Vallentin",
+    "message_target_id": "stage05_task_0062::person_claudia_vallentin_a957bfdd20::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_claudia_vallentin_a957bfdd20",
+    "recipient_value": "claudia.vallentin@zfp-reichenau.de",
+    "role_title": "Ärztliche Direktorin",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit waldshut in waldshut-tiengen|https://www.zfp-reichenau.de|waldshut-tiengen|germany",
+    "company_name": "ZfP Reichenau Satellit Waldshut in Waldshut-Tiengen",
+    "full_name": "Lorenzo Alessandro Fenech",
+    "message_target_id": "stage05_task_0062::person_lorenzo_alessandro_fenech_d9de26274e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_lorenzo_alessandro_fenech_d9de26274e",
+    "recipient_value": "lorenzo.fenech@zfp-reichenau.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0062"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit waldshut in waldshut-tiengen|https://www.zfp-reichenau.de|waldshut-tiengen|germany",
+    "company_name": "ZfP Reichenau Satellit Waldshut in Waldshut-Tiengen",
+    "full_name": "Lorenzo Alessandro Fenech",
+    "message_target_id": "stage05_task_0062::person_lorenzo_alessandro_fenech_c4890c7dde::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_lorenzo_alessandro_fenech_c4890c7dde",
+    "recipient_value": "lorenzo.fenech@zfp-reichenau.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0062"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Schwäbisch Gmünd",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort schwäbisch gmünd|http://www.zfp-winnenden.de/|schwäbisch gmünd|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Schwäbisch Gmünd",
+    "company_website": "http://www.zfp-winnenden.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Klaus Kaiser",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Sabine Fleiner",
+          "person_key": "",
+          "role": "Pflegedienstleiterin für die ZfP Standorte Schwäbisch Gmünd und Ellwangen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "a.rose-losert@zfp-winnenden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Anett Rose-Losert",
+        "hypothesis_email": "a.rose-losert@zfp-winnenden.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+        "person_key": "person_anett_rose_losert_d964973ba4",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Dokumente_PDFs/Qualitaet/_2024_GBA_Referenzbericht_EL_260810761-772582000.pdf",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/impressum",
+          "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation?cHash=d4aa4c127eafd64920aad2206cdf6fdc&tx_alto_staff_altostaff_employees%5Bcontroller%5D=Employee&tx_alto_staff_altostaff_employees%5BcurrentPage%5D=4"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "k.kaiser@zfp-winnenden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Klaus Kaiser",
+        "hypothesis_email": "k.kaiser@zfp-winnenden.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_klaus_kaiser_87b2454554",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Dokumente_PDFs/Qualitaet/_2024_GBA_Referenzbericht_EL_260810761-772582000.pdf",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation?cHash=868b4d5401d99b7f50c1105ceebe6032&tx_alto_staff_altostaff_employees%5Bcontroller%5D=Employee&tx_alto_staff_altostaff_employees%5BcurrentPage%5D=3"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "s.fleiner@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Fleiner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sabine_fleiner_0ed64a44b1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin für die ZfP Standorte Schwäbisch Gmünd und Ellwangen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/kliniken/allgemeinpsychiatrie",
+          "https://de.linkedin.com/posts/emilio-vel%C3%A1squez-lecca-b16b9b1b1_als-safewards-trainer-begleite-ich-mit-gro%C3%9Fem-activity-7068221191664099328-s6Rc"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Pflegedirektor",
+        "Pflegedienstleiterin für die ZfP Standorte Schwäbisch Gmünd und Ellwangen"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Dokumente_PDFs/Qualitaet/_2024_GBA_Referenzbericht_EL_260810761-772582000.pdf",
+      "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+      "https://www.zfp-winnenden.de/impressum",
+      "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+      "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation?cHash=d4aa4c127eafd64920aad2206cdf6fdc&tx_alto_staff_altostaff_employees%5Bcontroller%5D=Employee&tx_alto_staff_altostaff_employees%5BcurrentPage%5D=4",
+      "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation?cHash=868b4d5401d99b7f50c1105ceebe6032&tx_alto_staff_altostaff_employees%5Bcontroller%5D=Employee&tx_alto_staff_altostaff_employees%5BcurrentPage%5D=3",
+      "https://www.zfp-winnenden.de/kliniken/allgemeinpsychiatrie",
+      "https://de.linkedin.com/posts/emilio-vel%C3%A1squez-lecca-b16b9b1b1_als-safewards-trainer-begleite-ich-mit-gro%C3%9Fem-activity-7068221191664099328-s6Rc"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 5,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 3,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Winnenden",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "company_website": "http://www.zfp-winnenden.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Daniel Barschtipan",
+          "person_key": "",
+          "role": "Pflegedienstleiter"
+        },
+        {
+          "full_name": "Gabi Bernat",
+          "person_key": "",
+          "role": "Pflegedienstleiterin"
+        },
+        {
+          "full_name": "Klaus Kaiser",
+          "person_key": "",
+          "role": "Pflegedirektor/Medizindirektion"
+        },
+        {
+          "full_name": "Marija Eckert-Bilic",
+          "person_key": "",
+          "role": "Stv. Pflegedirektorin und Pflegedienstleiterin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "a.rose-losert@zfp-winnenden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Anett Rose-Losert",
+        "hypothesis_email": "a.rose-losert@zfp-winnenden.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+        "person_key": "person_anett_rose_losert_60665718cd",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/kontaktpersonen",
+          "https://www.zfp-winnenden.de/impressum",
+          "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+          "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Flyer_Geschaeftsberichte/Geschaeftsberichte/Geschaeftsbericht_2021.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "a.rose-losert@zfp-winnenden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Anett Rose-Losert",
+        "hypothesis_email": "a.rose-losert@zfp-winnenden.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+        "person_key": "person_anett_rose_losert_a3322858e0",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/kontaktpersonen",
+          "https://www.zfp-winnenden.de/impressum",
+          "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+          "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Flyer_Geschaeftsberichte/Geschaeftsberichte/Geschaeftsbericht_2021.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "d.barschtipan@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Daniel Barschtipan",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/daniel-barschtipan-0685aa133",
+        "person_key": "person_daniel_barschtipan_7388cc948c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiter",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/patientinnen-und-angehoerige/beratung-und-aufnahme",
+          "https://de.linkedin.com/in/daniel-barschtipan-0685aa133",
+          "https://jobs.karriere.zfp-winnenden.de/jobposting/4cd2d864eb86c21408c53e9f99641e65c84e8a29"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "g.bernat@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Gabi Bernat",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_gabi_bernat_abe2c93743",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/kliniken/suchttherapie"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "k.kaiser@zfp-winnenden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Klaus Kaiser",
+        "hypothesis_email": "k.kaiser@zfp-winnenden.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_klaus_kaiser_d6f9aa2c47",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektor/Medizindirektion",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/kontaktpersonen",
+          "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Flyer_Geschaeftsberichte/Geschaeftsberichte/Geschaeftsbericht_2021.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.eckert-bilic@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marija Eckert-Bilic",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_marija_eckert_bilic_db4cae6053",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stv. Pflegedirektorin und Pflegedienstleiterin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/kliniken/psychosomatik"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "r.weissert@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Romana Weissert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_romana_weissert_07ed0e28b4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektorin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://fokus-beruf.de/aussteller/zfp-klinikum-schloss-winnenden/",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://jobs.karriere.zfp-winnenden.de/jobposting/b050ead0fe8b3d3f9a2d2370905273bf51c0d4e9"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "r.weissert@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Romana Weissert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_romana_weissert_faf5166b57",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektorin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://fokus-beruf.de/aussteller/zfp-klinikum-schloss-winnenden/",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://jobs.karriere.zfp-winnenden.de/jobposting/b050ead0fe8b3d3f9a2d2370905273bf51c0d4e9"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Pflegedienstleiter",
+        "Pflegedienstleiterin",
+        "Pflegedirektor/Medizindirektion",
+        "Stv. Pflegedirektorin und Pflegedienstleiterin",
+        "Personaldirektorin"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+      "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/kontaktpersonen",
+      "https://www.zfp-winnenden.de/impressum",
+      "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+      "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Flyer_Geschaeftsberichte/Geschaeftsberichte/Geschaeftsbericht_2021.pdf",
+      "https://www.zfp-winnenden.de/patientinnen-und-angehoerige/beratung-und-aufnahme",
+      "https://de.linkedin.com/in/daniel-barschtipan-0685aa133",
+      "https://jobs.karriere.zfp-winnenden.de/jobposting/4cd2d864eb86c21408c53e9f99641e65c84e8a29",
+      "https://www.zfp-winnenden.de/kliniken/suchttherapie",
+      "https://www.zfp-winnenden.de/kliniken/psychosomatik",
+      "https://fokus-beruf.de/aussteller/zfp-klinikum-schloss-winnenden/",
+      "https://jobs.karriere.zfp-winnenden.de/jobposting/b050ead0fe8b3d3f9a2d2370905273bf51c0d4e9"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Konstanz",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit (taz) konstanz|http://zfp-reichenau.de|konstanz|germany",
+    "company_name": "ZfP Reichenau Satellit (TAZ) Konstanz",
+    "company_website": "http://zfp-reichenau.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Dorothee Collet",
+          "person_key": "",
+          "role": "Pflegedienstleitung Klinik für Suchtmedizin"
+        },
+        {
+          "full_name": "Ute Bing",
+          "person_key": "",
+          "role": "Pflegedienstleitung Sinova Klinik für Psychosomatische Medizin und Psychotherapie"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "dorothee.collet@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dorothee Collet",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dorothee_collet_78626b70a0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Klinik für Suchtmedizin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/klinik-fuer-suchtmedizin/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/suchtmedizinische_tagesklinik_sinova_konstanz_2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "u.bing@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ute Bing",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+        "person_key": "person_ute_bing_f5a29fd418",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Sinova Klinik für Psychosomatische Medizin und Psychotherapie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/suchtmedizinische_tagesklinik_sinova_konstanz_2024.pdf",
+          "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/sinova-klinik-fuer-psychosomatische-medizin-und-psychotherapie/klinik"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung Klinik für Suchtmedizin",
+        "Pflegedienstleitung Sinova Klinik für Psychosomatische Medizin und Psychotherapie"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.zfp-reichenau.de/einrichtungen/kliniken/klinik-fuer-suchtmedizin/klinik",
+      "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/suchtmedizinische_tagesklinik_sinova_konstanz_2024.pdf",
+      "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+      "https://www.zfp-reichenau.de/einrichtungen/kliniken/sinova-klinik-fuer-psychosomatische-medizin-und-psychotherapie/klinik"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Waldshut-Tiengen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit waldshut in waldshut-tiengen|https://www.zfp-reichenau.de|waldshut-tiengen|germany",
+    "company_name": "ZfP Reichenau Satellit Waldshut in Waldshut-Tiengen",
+    "company_website": "https://www.zfp-reichenau.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Lorenzo Alessandro Fenech",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Lorenzo Alessandro Fenech",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "claudia.vallentin@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Claudia Vallentin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_claudia_vallentin_fcad69d958",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/pbz_waldshut_2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "claudia.vallentin@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Claudia Vallentin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_claudia_vallentin_a957bfdd20",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/pbz_waldshut_2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "lorenzo.fenech@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lorenzo Alessandro Fenech",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_lorenzo_alessandro_fenech_d9de26274e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/pbz_waldshut_2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "lorenzo.fenech@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lorenzo Alessandro Fenech",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_lorenzo_alessandro_fenech_c4890c7dde",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/pbz_waldshut_2024.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Ärztliche Direktorin",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+      "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/pbz_waldshut_2024.pdf"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Schwäbisch Gmünd",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort schwäbisch gmünd|http://www.zfp-winnenden.de/|schwäbisch gmünd|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Schwäbisch Gmünd",
+    "company_website": "http://www.zfp-winnenden.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Klaus Kaiser",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Sabine Fleiner",
+          "person_key": "",
+          "role": "Pflegedienstleiterin für die ZfP Standorte Schwäbisch Gmünd und Ellwangen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "a.rose-losert@zfp-winnenden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Anett Rose-Losert",
+        "hypothesis_email": "a.rose-losert@zfp-winnenden.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+        "person_key": "person_anett_rose_losert_d964973ba4",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Dokumente_PDFs/Qualitaet/_2024_GBA_Referenzbericht_EL_260810761-772582000.pdf",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/impressum",
+          "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation?cHash=d4aa4c127eafd64920aad2206cdf6fdc&tx_alto_staff_altostaff_employees%5Bcontroller%5D=Employee&tx_alto_staff_altostaff_employees%5BcurrentPage%5D=4"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "k.kaiser@zfp-winnenden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Klaus Kaiser",
+        "hypothesis_email": "k.kaiser@zfp-winnenden.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_klaus_kaiser_87b2454554",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Dokumente_PDFs/Qualitaet/_2024_GBA_Referenzbericht_EL_260810761-772582000.pdf",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation?cHash=868b4d5401d99b7f50c1105ceebe6032&tx_alto_staff_altostaff_employees%5Bcontroller%5D=Employee&tx_alto_staff_altostaff_employees%5BcurrentPage%5D=3"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "s.fleiner@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Fleiner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sabine_fleiner_0ed64a44b1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin für die ZfP Standorte Schwäbisch Gmünd und Ellwangen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/kliniken/allgemeinpsychiatrie",
+          "https://de.linkedin.com/posts/emilio-vel%C3%A1squez-lecca-b16b9b1b1_als-safewards-trainer-begleite-ich-mit-gro%C3%9Fem-activity-7068221191664099328-s6Rc"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Pflegedirektor",
+        "Pflegedienstleiterin für die ZfP Standorte Schwäbisch Gmünd und Ellwangen"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Dokumente_PDFs/Qualitaet/_2024_GBA_Referenzbericht_EL_260810761-772582000.pdf",
+      "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+      "https://www.zfp-winnenden.de/impressum",
+      "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+      "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation?cHash=d4aa4c127eafd64920aad2206cdf6fdc&tx_alto_staff_altostaff_employees%5Bcontroller%5D=Employee&tx_alto_staff_altostaff_employees%5BcurrentPage%5D=4",
+      "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation?cHash=868b4d5401d99b7f50c1105ceebe6032&tx_alto_staff_altostaff_employees%5Bcontroller%5D=Employee&tx_alto_staff_altostaff_employees%5BcurrentPage%5D=3",
+      "https://www.zfp-winnenden.de/kliniken/allgemeinpsychiatrie",
+      "https://de.linkedin.com/posts/emilio-vel%C3%A1squez-lecca-b16b9b1b1_als-safewards-trainer-begleite-ich-mit-gro%C3%9Fem-activity-7068221191664099328-s6Rc"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 5,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 3,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Winnenden",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp klinikum schloß winnenden, standort winnenden|http://www.zfp-winnenden.de/|winnenden|germany",
+    "company_name": "ZfP Klinikum Schloß Winnenden, Standort Winnenden",
+    "company_website": "http://www.zfp-winnenden.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Daniel Barschtipan",
+          "person_key": "",
+          "role": "Pflegedienstleiter"
+        },
+        {
+          "full_name": "Gabi Bernat",
+          "person_key": "",
+          "role": "Pflegedienstleiterin"
+        },
+        {
+          "full_name": "Klaus Kaiser",
+          "person_key": "",
+          "role": "Pflegedirektor/Medizindirektion"
+        },
+        {
+          "full_name": "Marija Eckert-Bilic",
+          "person_key": "",
+          "role": "Stv. Pflegedirektorin und Pflegedienstleiterin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "a.rose-losert@zfp-winnenden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Anett Rose-Losert",
+        "hypothesis_email": "a.rose-losert@zfp-winnenden.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+        "person_key": "person_anett_rose_losert_60665718cd",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/kontaktpersonen",
+          "https://www.zfp-winnenden.de/impressum",
+          "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+          "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Flyer_Geschaeftsberichte/Geschaeftsberichte/Geschaeftsbericht_2021.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "a.rose-losert@zfp-winnenden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Anett Rose-Losert",
+        "hypothesis_email": "a.rose-losert@zfp-winnenden.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+        "person_key": "person_anett_rose_losert_a3322858e0",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/kontaktpersonen",
+          "https://www.zfp-winnenden.de/impressum",
+          "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+          "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Flyer_Geschaeftsberichte/Geschaeftsberichte/Geschaeftsbericht_2021.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "d.barschtipan@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Daniel Barschtipan",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/daniel-barschtipan-0685aa133",
+        "person_key": "person_daniel_barschtipan_7388cc948c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiter",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/patientinnen-und-angehoerige/beratung-und-aufnahme",
+          "https://de.linkedin.com/in/daniel-barschtipan-0685aa133",
+          "https://jobs.karriere.zfp-winnenden.de/jobposting/4cd2d864eb86c21408c53e9f99641e65c84e8a29"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "g.bernat@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Gabi Bernat",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_gabi_bernat_abe2c93743",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/kliniken/suchttherapie"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "k.kaiser@zfp-winnenden.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Klaus Kaiser",
+        "hypothesis_email": "k.kaiser@zfp-winnenden.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_klaus_kaiser_d6f9aa2c47",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektor/Medizindirektion",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/kontaktpersonen",
+          "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Flyer_Geschaeftsberichte/Geschaeftsberichte/Geschaeftsbericht_2021.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.eckert-bilic@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marija Eckert-Bilic",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_marija_eckert_bilic_db4cae6053",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stv. Pflegedirektorin und Pflegedienstleiterin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-winnenden.de/kliniken/psychosomatik"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "r.weissert@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Romana Weissert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_romana_weissert_07ed0e28b4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektorin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://fokus-beruf.de/aussteller/zfp-klinikum-schloss-winnenden/",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://jobs.karriere.zfp-winnenden.de/jobposting/b050ead0fe8b3d3f9a2d2370905273bf51c0d4e9"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "r.weissert@zfp-winnenden.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Romana Weissert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_romana_weissert_faf5166b57",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektorin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://fokus-beruf.de/aussteller/zfp-klinikum-schloss-winnenden/",
+          "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+          "https://jobs.karriere.zfp-winnenden.de/jobposting/b050ead0fe8b3d3f9a2d2370905273bf51c0d4e9"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Pflegedienstleiter",
+        "Pflegedienstleiterin",
+        "Pflegedirektor/Medizindirektion",
+        "Stv. Pflegedirektorin und Pflegedienstleiterin",
+        "Personaldirektorin"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/organisation",
+      "https://www.zfp-winnenden.de/ueber-uns/unser-unternehmen/kontaktpersonen",
+      "https://www.zfp-winnenden.de/impressum",
+      "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+      "https://www.zfp-winnenden.de/fileadmin/user_upload/klinikum-schloss-winnenden/Flyer_Geschaeftsberichte/Geschaeftsberichte/Geschaeftsbericht_2021.pdf",
+      "https://www.zfp-winnenden.de/patientinnen-und-angehoerige/beratung-und-aufnahme",
+      "https://de.linkedin.com/in/daniel-barschtipan-0685aa133",
+      "https://jobs.karriere.zfp-winnenden.de/jobposting/4cd2d864eb86c21408c53e9f99641e65c84e8a29",
+      "https://www.zfp-winnenden.de/kliniken/suchttherapie",
+      "https://www.zfp-winnenden.de/kliniken/psychosomatik",
+      "https://fokus-beruf.de/aussteller/zfp-klinikum-schloss-winnenden/",
+      "https://jobs.karriere.zfp-winnenden.de/jobposting/b050ead0fe8b3d3f9a2d2370905273bf51c0d4e9"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Konstanz",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit (taz) konstanz|http://zfp-reichenau.de|konstanz|germany",
+    "company_name": "ZfP Reichenau Satellit (TAZ) Konstanz",
+    "company_website": "http://zfp-reichenau.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Dorothee Collet",
+          "person_key": "",
+          "role": "Pflegedienstleitung Klinik für Suchtmedizin"
+        },
+        {
+          "full_name": "Ute Bing",
+          "person_key": "",
+          "role": "Pflegedienstleitung Sinova Klinik für Psychosomatische Medizin und Psychotherapie"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "dorothee.collet@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dorothee Collet",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dorothee_collet_78626b70a0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Klinik für Suchtmedizin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/klinik-fuer-suchtmedizin/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/suchtmedizinische_tagesklinik_sinova_konstanz_2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "u.bing@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ute Bing",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+        "person_key": "person_ute_bing_f5a29fd418",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Sinova Klinik für Psychosomatische Medizin und Psychotherapie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/suchtmedizinische_tagesklinik_sinova_konstanz_2024.pdf",
+          "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/sinova-klinik-fuer-psychosomatische-medizin-und-psychotherapie/klinik"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung Klinik für Suchtmedizin",
+        "Pflegedienstleitung Sinova Klinik für Psychosomatische Medizin und Psychotherapie"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.zfp-reichenau.de/einrichtungen/kliniken/klinik-fuer-suchtmedizin/klinik",
+      "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/suchtmedizinische_tagesklinik_sinova_konstanz_2024.pdf",
+      "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+      "https://www.zfp-reichenau.de/einrichtungen/kliniken/sinova-klinik-fuer-psychosomatische-medizin-und-psychotherapie/klinik"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Waldshut-Tiengen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|zfp reichenau satellit waldshut in waldshut-tiengen|https://www.zfp-reichenau.de|waldshut-tiengen|germany",
+    "company_name": "ZfP Reichenau Satellit Waldshut in Waldshut-Tiengen",
+    "company_website": "https://www.zfp-reichenau.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Lorenzo Alessandro Fenech",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Lorenzo Alessandro Fenech",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "claudia.vallentin@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Claudia Vallentin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_claudia_vallentin_fcad69d958",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/pbz_waldshut_2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "claudia.vallentin@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Claudia Vallentin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_claudia_vallentin_a957bfdd20",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/pbz_waldshut_2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "lorenzo.fenech@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lorenzo Alessandro Fenech",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_lorenzo_alessandro_fenech_d9de26274e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/pbz_waldshut_2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "lorenzo.fenech@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lorenzo Alessandro Fenech",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_lorenzo_alessandro_fenech_c4890c7dde",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/pbz_waldshut_2024.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Ärztliche Direktorin",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+      "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/pbz_waldshut_2024.pdf"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
