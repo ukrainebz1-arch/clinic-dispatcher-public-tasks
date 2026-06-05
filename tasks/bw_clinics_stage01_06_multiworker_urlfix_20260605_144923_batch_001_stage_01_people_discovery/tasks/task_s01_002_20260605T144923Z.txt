@@ -1,0 +1,89 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_urlfix_20260605_144923_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_002_20260605T144923Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_002_20260605T144923Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_urlfix_20260605_144923
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_urlfix_20260605_144923_batch_001_stage_01_people_discovery
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_urlfix_20260605_144923/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Klinikum Heidenheim | company_website: http://www.kliniken-heidenheim.de | city: Heidenheim an der Brenz | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-heidenheim | pflegekraefte: 651
+2. company_name: Klinikum Christophsbad Göppingen | company_website: http://www.christophsbad.de | city: Göppingen | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-christophsbad-goeppingen | pflegekraefte: 333
+3. company_name: St. Elisabethen-Klinikum in Ravensburg | company_website: http://www.oberschwabenklinik.de | city: Ravensburg | country: Germany | source_url: https://klinikradar.de/kliniken/st-elisabethen-klinikum | pflegekraefte: 598
+4. company_name: Theresienkrankenhaus in Mannheim | company_website: https://www.bk-julia-lanz.de/bkjl/ | city: Mannheim | country: Germany | source_url: https://klinikradar.de/kliniken/theresienkrankenhaus | pflegekraefte: 603
+5. company_name: SRH Krankenhaus Sigmaringen | company_website: https://www.kliniken-sigmaringen.de/ | city: Sigmaringen | country: Germany | source_url: https://klinikradar.de/kliniken/srh-krankenhaus-sigmaringen | pflegekraefte: 408
+6. company_name: Helios Klinikum Pforzheim | company_website: http://www.helios-gesundheit.de/pforzheim | city: Pforzheim | country: Germany | source_url: https://klinikradar.de/kliniken/helios-klinikum-pforzheim | pflegekraefte: 572
+7. company_name: Siloah St. Trudpert Klinikum in Pforzheim | company_website: https://www.siloah.de/ | city: Pforzheim | country: Germany | source_url: https://klinikradar.de/kliniken/siloah-st-trudpert-klinikum | pflegekraefte: 527
+8. company_name: Zentrum für Psychiatrie Emmendingen | company_website: https://www.zfp-emmendingen.de | city: Emmendingen | country: Germany | source_url: https://klinikradar.de/kliniken/zentrum-fuer-psychiatrie-emmendingen | pflegekraefte: 369
+9. company_name: Diakonie-Klinikum Schwäbisch Hall | company_website: https://www.diak-klinikum.de/ | city: Schwäbisch Hall | country: Germany | source_url: https://klinikradar.de/kliniken/diakonie-klinikum-schwaebisch-hall | pflegekraefte: 452
+10. company_name: Medius Klinik Kirchheim | company_website: http://www.medius-kliniken.de | city: Kirchheim unter Teck | country: Germany | source_url: https://klinikradar.de/kliniken/medius-klinik-kirchheim | pflegekraefte: 473
+11. company_name: Vinzenz von Paul Hospital in Rottweil | company_website: http://www.VvPH.de | city: Rottweil | country: Germany | source_url: https://klinikradar.de/kliniken/vinzenz-von-paul-hospital | pflegekraefte: 359
+12. company_name: Universitätsklinikum Ulm - Klinik für Kinder-​ und Jugendmedizin | company_website: http://www.uniklinik-ulm.de/ | city: Gynäkologische Tumoren | country: Germany | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-ulm-klinik-fuer-kinder-und-jugendmedizin | pflegekraefte: 564
+13. company_name: Hegau-Bodensee-Klinikum Singen | company_website: http://www.glkn.de/glkn/index.php | city: Singen | country: Germany | source_url: https://klinikradar.de/kliniken/hegau-bodensee-klinikum-singen | pflegekraefte: 599
+14. company_name: Kliniken Sindelfingen | company_website: https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-sindelfingen/ | city: Sindelfingen | country: Germany | source_url: https://klinikradar.de/kliniken/kliniken-sindelfingen | pflegekraefte: 501
+15. company_name: Caritas-Krankenhaus Bad Mergentheim | company_website: https://www.ckbm.de/ckbm/ | city: Bad Mergentheim | country: Germany | source_url: https://klinikradar.de/kliniken/caritas-krankenhaus-bad-mergentheim | pflegekraefte: 410
+16. company_name: Ortenau Klinikum Lahr | company_website: https://lahr.ortenau-klinikum.de/ | city: Lahr | country: Germany | source_url: https://klinikradar.de/kliniken/ortenau-klinikum-lahr | pflegekraefte: 516
+17. company_name: Sana Klinikum Biberach | company_website: https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach | city: Biberach an der Riß | country: Germany | source_url: https://klinikradar.de/kliniken/sana-klinikum-biberach | pflegekraefte: 344
+18. company_name: ZfP Klinikum Schloß Winnenden, Standort Winnenden | company_website: http://www.zfp-winnenden.de/ | city: Winnenden | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-klinikum-schloss-winnenden-standort-winnenden | pflegekraefte: 307
+19. company_name: SRH Klinikum Karlsbad-Langensteinbach | company_website: http://www.klinikum-karlsbad.de | city: Karlsbad | country: Germany | source_url: https://klinikradar.de/kliniken/srh-klinikum-karlsbad-langensteinbach | pflegekraefte: 325
+20. company_name: Krankenhaus Bietigheim in Bietigheim-Bissingen | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/krankenhaus-bietigheim-vaihingen/ | city: Bietigheim-Bissingen | country: Germany | source_url: https://klinikradar.de/kliniken/krankenhaus-bietigheim | pflegekraefte: 430
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_002_20260605T144923Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
