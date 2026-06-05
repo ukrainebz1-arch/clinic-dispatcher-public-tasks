@@ -1,0 +1,1584 @@
+TASK_ID: stage05_task_0047
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-klinik in stuttgart|https://st-anna-klinik.de/|stuttgart|germany",
+    "company_name": "St. Anna-Klinik in Stuttgart",
+    "full_name": "Dipl. Oec. Andreas Schöller",
+    "message_target_id": "stage05_task_0047::person_dipl_oec_andreas_sch_ller_17fd6f6a45::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dipl_oec_andreas_sch_ller_17fd6f6a45",
+    "recipient_value": "schoeller@st-anna-klinik.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-virngrund-klinik in ellwangen (jagst)|https://www.klinik-ellwangen.de|ellwangen|germany",
+    "company_name": "St. Anna-Virngrund-Klinik in Ellwangen (Jagst)",
+    "full_name": "Bernd Ziegler",
+    "message_target_id": "stage05_task_0047::person_bernd_ziegler_93e6bb857d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_bernd_ziegler_93e6bb857d",
+    "recipient_value": "bernd.ziegler@kliniken-ostalb.de",
+    "role_title": "Kaufmännischer Standortleiter Aalen und Ellwangen",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-virngrund-klinik in ellwangen (jagst)|https://www.klinik-ellwangen.de|ellwangen|germany",
+    "company_name": "St. Anna-Virngrund-Klinik in Ellwangen (Jagst)",
+    "full_name": "Daniel Köger",
+    "message_target_id": "stage05_task_0047::person_daniel_k_ger_3acb3bc56b::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_daniel_k_ger_3acb3bc56b",
+    "recipient_value": "Daniel.Koeger@kliniken-ostalb.de",
+    "role_title": "Pflegerischer Standortleiter St. Anna-Virngrund-Klinik",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-virngrund-klinik in ellwangen (jagst)|https://www.klinik-ellwangen.de|ellwangen|germany",
+    "company_name": "St. Anna-Virngrund-Klinik in Ellwangen (Jagst)",
+    "full_name": "Daniel Köger",
+    "message_target_id": "stage05_task_0047::person_daniel_k_ger_3acb3bc56b::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_daniel_k_ger_3acb3bc56b",
+    "recipient_value": "https://de.linkedin.com/in/daniel-k%C3%B6ger-689823309",
+    "role_title": "Pflegerischer Standortleiter St. Anna-Virngrund-Klinik",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-virngrund-klinik in ellwangen (jagst)|https://www.klinik-ellwangen.de|ellwangen|germany",
+    "company_name": "St. Anna-Virngrund-Klinik in Ellwangen (Jagst)",
+    "full_name": "Daniel Köger",
+    "message_target_id": "stage05_task_0047::person_daniel_k_ger_3acb3bc56b::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_daniel_k_ger_3acb3bc56b",
+    "recipient_value": "https://de.linkedin.com/in/daniel-k%C3%B6ger-689823309",
+    "role_title": "Pflegerischer Standortleiter St. Anna-Virngrund-Klinik",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-virngrund-klinik in ellwangen (jagst)|https://www.klinik-ellwangen.de|ellwangen|germany",
+    "company_name": "St. Anna-Virngrund-Klinik in Ellwangen (Jagst)",
+    "full_name": "Robert Filter",
+    "message_target_id": "stage05_task_0047::person_robert_filter_e0fb144653::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_robert_filter_e0fb144653",
+    "recipient_value": "https://de.linkedin.com/in/robert-filter-a4519489",
+    "role_title": "Leiter Personalabteilung",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-virngrund-klinik in ellwangen (jagst)|https://www.klinik-ellwangen.de|ellwangen|germany",
+    "company_name": "St. Anna-Virngrund-Klinik in Ellwangen (Jagst)",
+    "full_name": "Robert Filter",
+    "message_target_id": "stage05_task_0047::person_robert_filter_e0fb144653::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_robert_filter_e0fb144653",
+    "recipient_value": "https://de.linkedin.com/in/robert-filter-a4519489",
+    "role_title": "Leiter Personalabteilung",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Alena Stier",
+    "message_target_id": "stage05_task_0047::person_alena_stier_50d2fbe452::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_alena_stier_50d2fbe452",
+    "recipient_value": "alena.stier@oberschwabenklinik.de",
+    "role_title": "Leitung Pflege und Prozessmanagement",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Klaus Sonntag",
+    "message_target_id": "stage05_task_0047::person_klaus_sonntag_2c1bda6097::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_klaus_sonntag_2c1bda6097",
+    "recipient_value": "klaus.sonntag@oberschwabenklinik.de",
+    "role_title": "Leitung Pflege und Prozessmanagement",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Matthias Schäfer",
+    "message_target_id": "stage05_task_0047::person_matthias_sch_fer_406cba5103::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_matthias_sch_fer_406cba5103",
+    "recipient_value": "matthias.schaefer@oberschwabenklinik.de",
+    "role_title": "Leitung Pflege und Prozessmanagement",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Raimund Alker",
+    "message_target_id": "stage05_task_0047::person_raimund_alker_ea3512d9d8::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_raimund_alker_ea3512d9d8",
+    "recipient_value": "raimund.alker@oberschwabenklinik.de",
+    "role_title": "Personalleiter",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Raimund Alker",
+    "message_target_id": "stage05_task_0047::person_raimund_alker_ea3512d9d8::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_raimund_alker_ea3512d9d8",
+    "recipient_value": "https://de.linkedin.com/in/raimund-alker-a07b3048",
+    "role_title": "Personalleiter",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Raimund Alker",
+    "message_target_id": "stage05_task_0047::person_raimund_alker_ea3512d9d8::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_raimund_alker_ea3512d9d8",
+    "recipient_value": "https://de.linkedin.com/in/raimund-alker-a07b3048",
+    "role_title": "Personalleiter",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Swen Wendt",
+    "message_target_id": "stage05_task_0047::person_swen_wendt_f54d11e1f5::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_swen_wendt_f54d11e1f5",
+    "recipient_value": "swen.wendt@oberschwabenklinik.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Swen Wendt",
+    "message_target_id": "stage05_task_0047::person_swen_wendt_f54d11e1f5::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_swen_wendt_f54d11e1f5",
+    "recipient_value": "https://de.linkedin.com/in/swen-wendt-a22aa283",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Swen Wendt",
+    "message_target_id": "stage05_task_0047::person_swen_wendt_f54d11e1f5::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_swen_wendt_f54d11e1f5",
+    "recipient_value": "https://de.linkedin.com/in/swen-wendt-a22aa283",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Swen Wendt",
+    "message_target_id": "stage05_task_0047::person_swen_wendt_4d8d246ab7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_swen_wendt_4d8d246ab7",
+    "recipient_value": "swen.wendt@oberschwabenklinik.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Swen Wendt",
+    "message_target_id": "stage05_task_0047::person_swen_wendt_4d8d246ab7::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_swen_wendt_4d8d246ab7",
+    "recipient_value": "https://de.linkedin.com/in/swen-wendt-a22aa283",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Swen Wendt",
+    "message_target_id": "stage05_task_0047::person_swen_wendt_4d8d246ab7::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_swen_wendt_4d8d246ab7",
+    "recipient_value": "https://de.linkedin.com/in/swen-wendt-a22aa283",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "full_name": "Valentina Weber",
+    "message_target_id": "stage05_task_0047::person_valentina_weber_78a637aa48::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_valentina_weber_78a637aa48",
+    "recipient_value": "valentina.weber@oberschwabenklinik.de",
+    "role_title": "Stellv. Leitung Pflege und Prozessmanagement",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-krankenhaus lörrach|https://klinloe.de|lörrach|germany",
+    "company_name": "St. Elisabethen-Krankenhaus Lörrach",
+    "full_name": "Dubravka Kavur",
+    "message_target_id": "stage05_task_0047::person_dubravka_kavur_50c3fbb45b::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dubravka_kavur_50c3fbb45b",
+    "recipient_value": "kavur.dubravka@klinloe.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-krankenhaus lörrach|https://klinloe.de|lörrach|germany",
+    "company_name": "St. Elisabethen-Krankenhaus Lörrach",
+    "full_name": "Dubravka Kavur",
+    "message_target_id": "stage05_task_0047::person_dubravka_kavur_50c3fbb45b::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dubravka_kavur_50c3fbb45b",
+    "recipient_value": "https://de.linkedin.com/in/dubravka-kavur-a239b8123",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-krankenhaus lörrach|https://klinloe.de|lörrach|germany",
+    "company_name": "St. Elisabethen-Krankenhaus Lörrach",
+    "full_name": "Dubravka Kavur",
+    "message_target_id": "stage05_task_0047::person_dubravka_kavur_50c3fbb45b::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dubravka_kavur_50c3fbb45b",
+    "recipient_value": "https://de.linkedin.com/in/dubravka-kavur-a239b8123",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-krankenhaus lörrach|https://klinloe.de|lörrach|germany",
+    "company_name": "St. Elisabethen-Krankenhaus Lörrach",
+    "full_name": "Jeannine Sturm",
+    "message_target_id": "stage05_task_0047::person_jeannine_sturm_536363668a::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_jeannine_sturm_536363668a",
+    "recipient_value": "j.sturm@elikh.de",
+    "role_title": "Kommissarische Bereichsleiterin Pflege- und Funktionsdienst St. Elisabethen",
+    "task_id": "stage05_task_0047"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-krankenhaus lörrach|https://klinloe.de|lörrach|germany",
+    "company_name": "St. Elisabethen-Krankenhaus Lörrach",
+    "full_name": "Nadine Brödlin",
+    "message_target_id": "stage05_task_0047::person_nadine_br_dlin_0e57aa69e0::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_nadine_br_dlin_0e57aa69e0",
+    "recipient_value": "broedlin.nadine@klinikloe.de",
+    "role_title": "Leitung Personal",
+    "task_id": "stage05_task_0047"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 1,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-klinik in stuttgart|https://st-anna-klinik.de/|stuttgart|germany",
+    "company_name": "St. Anna-Klinik in Stuttgart",
+    "company_website": "https://st-anna-klinik.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Dorothea Casha",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "schoeller@st-anna-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dipl. Oec. Andreas Schöller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dipl_oec_andreas_sch_ller_17fd6f6a45",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260812569-772571000-2023-xml.pdf",
+          "https://st-anna-klinik.de/namen-zahlen-fakten.html"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Dorothea Casha",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dorothea_casha_59d3da3f3f",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://st-anna-klinik.de/files/klinik/download/stellenausschreibungen/Pflegefachfrau.pdf",
+          "https://st-anna-klinik.de/namen-zahlen-fakten.html",
+          "https://st-anna-klinik.de/st-anna-klinik-als-arbeitsgeber/physiotherapeut-in-w-m-d.html",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260812569-772571000-2023-xml.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260812569-772571000-2023-xml.pdf",
+      "https://st-anna-klinik.de/namen-zahlen-fakten.html",
+      "https://st-anna-klinik.de/files/klinik/download/stellenausschreibungen/Pflegefachfrau.pdf",
+      "https://st-anna-klinik.de/st-anna-klinik-als-arbeitsgeber/physiotherapeut-in-w-m-d.html"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ellwangen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-virngrund-klinik in ellwangen (jagst)|https://www.klinik-ellwangen.de|ellwangen|germany",
+    "company_name": "St. Anna-Virngrund-Klinik in Ellwangen (Jagst)",
+    "company_website": "https://www.klinik-ellwangen.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Daniel Köger",
+          "person_key": "",
+          "role": "Pflegerischer Standortleiter St. Anna-Virngrund-Klinik"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "bernd.ziegler@kliniken-ostalb.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Bernd Ziegler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_bernd_ziegler_93e6bb857d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Standortleiter Aalen und Ellwangen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kliniken-ostalb.de/uploads/attachment/download/515/Qualit%C3%A4tsbericht_2023_St._Anna-Virngrund-Klinik_Ellwangen.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5fa115fcc56a71e0/fachabteilung/4/start",
+          "https://www.kliniken-ostalb.de/ueber-uns/unternehmen-organisation/standortleitungen"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Daniel.Koeger@kliniken-ostalb.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Daniel Köger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/daniel-k%C3%B6ger-689823309",
+        "person_key": "person_daniel_k_ger_3acb3bc56b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerischer Standortleiter St. Anna-Virngrund-Klinik",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.ostalbkreis.de/sixcms/media.php/26/Liste-Stationaere-Kurzzeit-Pflegeeinrichtungen-OAK-03-2026.pdf",
+          "https://de.linkedin.com/in/daniel-k%C3%B6ger-689823309",
+          "https://www.kliniken-ostalb.de/pflege-therapie/pflegedirektion"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "NOT_FOUND_EMAIL",
+        "full_name": "Robert Filter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/robert-filter-a4519489",
+        "person_key": "person_robert_filter_e0fb144653",
+        "primary_channel": "LINKEDIN",
+        "role": "Leiter Personalabteilung",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://de.linkedin.com/in/robert-filter-a4519489",
+          "https://www.joolist.eu/de-de/betriebsarzt-betriebsarztin-in-voll-oder-teilzeit-arbeitsort-ellwangen-jagst/showjob-1066695-0-",
+          "https://www.enzensberg.de/ueber-uns",
+          "https://www.enzensberg.de/aktuelles/neuer-geschaeftsleiter-in-der-m-i-klinikgruppe-enzensberg"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Kaufmännischer Standortleiter Aalen und Ellwangen",
+        "Pflegerischer Standortleiter St. Anna-Virngrund-Klinik",
+        "Leiter Personalabteilung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kliniken-ostalb.de/uploads/attachment/download/515/Qualit%C3%A4tsbericht_2023_St._Anna-Virngrund-Klinik_Ellwangen.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5fa115fcc56a71e0/fachabteilung/4/start",
+      "https://www.kliniken-ostalb.de/ueber-uns/unternehmen-organisation/standortleitungen",
+      "https://www.ostalbkreis.de/sixcms/media.php/26/Liste-Stationaere-Kurzzeit-Pflegeeinrichtungen-OAK-03-2026.pdf",
+      "https://de.linkedin.com/in/daniel-k%C3%B6ger-689823309",
+      "https://www.kliniken-ostalb.de/pflege-therapie/pflegedirektion",
+      "https://de.linkedin.com/in/robert-filter-a4519489",
+      "https://www.joolist.eu/de-de/betriebsarzt-betriebsarztin-in-voll-oder-teilzeit-arbeitsort-ellwangen-jagst/showjob-1066695-0-",
+      "https://www.enzensberg.de/ueber-uns",
+      "https://www.enzensberg.de/aktuelles/neuer-geschaeftsleiter-in-der-m-i-klinikgruppe-enzensberg"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 3,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ravensburg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "company_website": "http://www.oberschwabenklinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 6,
+      "decision_makers": [
+        {
+          "full_name": "Alena Stier",
+          "person_key": "",
+          "role": "Leitung Pflege und Prozessmanagement"
+        },
+        {
+          "full_name": "Klaus Sonntag",
+          "person_key": "",
+          "role": "Leitung Pflege und Prozessmanagement"
+        },
+        {
+          "full_name": "Matthias Schäfer",
+          "person_key": "",
+          "role": "Leitung Pflege und Prozessmanagement"
+        },
+        {
+          "full_name": "Swen Wendt",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Swen Wendt",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Valentina Weber",
+          "person_key": "",
+          "role": "Stellv. Leitung Pflege und Prozessmanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "alena.stier@oberschwabenklinik.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Alena Stier",
+        "hypothesis_email": "alena.stier@oberschwabenklinik.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_alena_stier_50d2fbe452",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Leitung Pflege und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html",
+          "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/2021_Einblick_EK.pdf",
+          "false"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "klaus.sonntag@oberschwabenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Klaus Sonntag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_klaus_sonntag_2c1bda6097",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Pflege und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/Patientenmagazin-Einblick_St-Elisabethen-Klinikum-Ravensburg.pdf",
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "matthias.schaefer@oberschwabenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Matthias Schäfer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_matthias_sch_fer_406cba5103",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Pflege und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/hightech-trifft-herz-osk-bildet-ab-2026-medizintechnologinnen-technologen-fuer-radiologie-aus.html",
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "raimund.alker@oberschwabenklinik.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Raimund Alker",
+        "hypothesis_email": "raimund.alker@oberschwabenklinik.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/raimund-alker-a07b3048",
+        "person_key": "person_raimund_alker_ea3512d9d8",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Personalleiter",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/raimund-alker-ist-neuer-personalleiter-der-oberschwabenklinik.html",
+          "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/zwischen-dienstplan-und-lebensgeschichte-osk-ehrt-jubilare-mit-bis-zu-60-dienstjahren.html",
+          "https://de.linkedin.com/in/raimund-alker-a07b3048",
+          "https://talents.studysmarter.de/companies/oberschwabenklinik-gmbh/hr-business-partner-personalreferent-fuer-personalplanung-und-stellenbewirtschaftung-w-m-d-2810526/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "swen.wendt@oberschwabenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Swen Wendt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/swen-wendt-a22aa283",
+        "person_key": "person_swen_wendt_f54d11e1f5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/2021_Einblick_EK.pdf",
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html",
+          "https://de.linkedin.com/in/swen-wendt-a22aa283"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "swen.wendt@oberschwabenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Swen Wendt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/swen-wendt-a22aa283",
+        "person_key": "person_swen_wendt_4d8d246ab7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/2021_Einblick_EK.pdf",
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html",
+          "https://de.linkedin.com/in/swen-wendt-a22aa283"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "valentina.weber@oberschwabenklinik.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Valentina Weber",
+        "hypothesis_email": "valentina.weber@oberschwabenklinik.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_valentina_weber_78a637aa48",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Stellv. Leitung Pflege und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html",
+          "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/von-der-auszubildenden-zur-fuehrungskraft-valentina-weber-uebernimmt-wichtige-rolle-im-pflege-und-prozessmanagement.html",
+          "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/2021_Einblick_EK.pdf",
+          "false"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Leitung Pflege und Prozessmanagement",
+        "Personalleiter",
+        "Pflegedirektor",
+        "Stellv. Leitung Pflege und Prozessmanagement"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html",
+      "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/2021_Einblick_EK.pdf",
+      "false",
+      "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/Patientenmagazin-Einblick_St-Elisabethen-Klinikum-Ravensburg.pdf",
+      "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/hightech-trifft-herz-osk-bildet-ab-2026-medizintechnologinnen-technologen-fuer-radiologie-aus.html",
+      "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/raimund-alker-ist-neuer-personalleiter-der-oberschwabenklinik.html",
+      "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/zwischen-dienstplan-und-lebensgeschichte-osk-ehrt-jubilare-mit-bis-zu-60-dienstjahren.html",
+      "https://de.linkedin.com/in/raimund-alker-a07b3048",
+      "https://talents.studysmarter.de/companies/oberschwabenklinik-gmbh/hr-business-partner-personalreferent-fuer-personalplanung-und-stellenbewirtschaftung-w-m-d-2810526/",
+      "https://de.linkedin.com/in/swen-wendt-a22aa283",
+      "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/von-der-auszubildenden-zur-fuehrungskraft-valentina-weber-uebernimmt-wichtige-rolle-im-pflege-und-prozessmanagement.html"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Lörrach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-krankenhaus lörrach|https://klinloe.de|lörrach|germany",
+    "company_name": "St. Elisabethen-Krankenhaus Lörrach",
+    "company_website": "https://klinloe.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Dubravka Kavur",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Jeannine Sturm",
+          "person_key": "",
+          "role": "Kommissarische Bereichsleiterin Pflege- und Funktionsdienst St. Elisabethen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "kavur.dubravka@klinloe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dubravka Kavur",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dubravka-kavur-a239b8123",
+        "person_key": "person_dubravka_kavur_50c3fbb45b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinloe.de/pflege-und-funktionsdienst/pflege-und-funktionsdienst.html",
+          "https://de.linkedin.com/in/dubravka-kavur-a239b8123"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "j.sturm@elikh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jeannine Sturm",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jeannine_sturm_536363668a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kommissarische Bereichsleiterin Pflege- und Funktionsdienst St. Elisabethen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinloe.de/pflege-und-funktionsdienst/pflege-und-funktionsdienst.html",
+          "https://de.linkedin.com/posts/kliniken-des-landkreises-loerrach-gmbh_klinikenl%C3%B6rrach-geburtshilfe-stelisabethenkrankenhaus-activity-7215693238341435393-hRVr"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "broedlin.nadine@klinikloe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nadine Brödlin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nadine_br_dlin_0e57aa69e0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.loerrach-landkreis.de/ceasy/resource/?download=1&id=12243",
+          "https://www.klinloe.de/karriere.html",
+          "https://www.klinloe.de/neues-klinikum/presse/klinikleitung-mit-neuer-organisationsstruktur.html",
+          "https://www.xing.com/profile/Nadine_Broedlin"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Kommissarische Bereichsleiterin Pflege- und Funktionsdienst St. Elisabethen",
+        "Leitung Personal"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.klinloe.de/pflege-und-funktionsdienst/pflege-und-funktionsdienst.html",
+      "https://de.linkedin.com/in/dubravka-kavur-a239b8123",
+      "https://de.linkedin.com/posts/kliniken-des-landkreises-loerrach-gmbh_klinikenl%C3%B6rrach-geburtshilfe-stelisabethenkrankenhaus-activity-7215693238341435393-hRVr",
+      "https://www.loerrach-landkreis.de/ceasy/resource/?download=1&id=12243",
+      "https://www.klinloe.de/karriere.html",
+      "https://www.klinloe.de/neues-klinikum/presse/klinikleitung-mit-neuer-organisationsstruktur.html",
+      "https://www.xing.com/profile/Nadine_Broedlin"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 1,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-klinik in stuttgart|https://st-anna-klinik.de/|stuttgart|germany",
+    "company_name": "St. Anna-Klinik in Stuttgart",
+    "company_website": "https://st-anna-klinik.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Dorothea Casha",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "schoeller@st-anna-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dipl. Oec. Andreas Schöller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dipl_oec_andreas_sch_ller_17fd6f6a45",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260812569-772571000-2023-xml.pdf",
+          "https://st-anna-klinik.de/namen-zahlen-fakten.html"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Dorothea Casha",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dorothea_casha_59d3da3f3f",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://st-anna-klinik.de/files/klinik/download/stellenausschreibungen/Pflegefachfrau.pdf",
+          "https://st-anna-klinik.de/namen-zahlen-fakten.html",
+          "https://st-anna-klinik.de/st-anna-klinik-als-arbeitsgeber/physiotherapeut-in-w-m-d.html",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260812569-772571000-2023-xml.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260812569-772571000-2023-xml.pdf",
+      "https://st-anna-klinik.de/namen-zahlen-fakten.html",
+      "https://st-anna-klinik.de/files/klinik/download/stellenausschreibungen/Pflegefachfrau.pdf",
+      "https://st-anna-klinik.de/st-anna-klinik-als-arbeitsgeber/physiotherapeut-in-w-m-d.html"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ellwangen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. anna-virngrund-klinik in ellwangen (jagst)|https://www.klinik-ellwangen.de|ellwangen|germany",
+    "company_name": "St. Anna-Virngrund-Klinik in Ellwangen (Jagst)",
+    "company_website": "https://www.klinik-ellwangen.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Daniel Köger",
+          "person_key": "",
+          "role": "Pflegerischer Standortleiter St. Anna-Virngrund-Klinik"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "bernd.ziegler@kliniken-ostalb.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Bernd Ziegler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_bernd_ziegler_93e6bb857d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Standortleiter Aalen und Ellwangen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kliniken-ostalb.de/uploads/attachment/download/515/Qualit%C3%A4tsbericht_2023_St._Anna-Virngrund-Klinik_Ellwangen.pdf",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5fa115fcc56a71e0/fachabteilung/4/start",
+          "https://www.kliniken-ostalb.de/ueber-uns/unternehmen-organisation/standortleitungen"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Daniel.Koeger@kliniken-ostalb.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Daniel Köger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/daniel-k%C3%B6ger-689823309",
+        "person_key": "person_daniel_k_ger_3acb3bc56b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerischer Standortleiter St. Anna-Virngrund-Klinik",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.ostalbkreis.de/sixcms/media.php/26/Liste-Stationaere-Kurzzeit-Pflegeeinrichtungen-OAK-03-2026.pdf",
+          "https://de.linkedin.com/in/daniel-k%C3%B6ger-689823309",
+          "https://www.kliniken-ostalb.de/pflege-therapie/pflegedirektion"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "NOT_FOUND_EMAIL",
+        "full_name": "Robert Filter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/robert-filter-a4519489",
+        "person_key": "person_robert_filter_e0fb144653",
+        "primary_channel": "LINKEDIN",
+        "role": "Leiter Personalabteilung",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://de.linkedin.com/in/robert-filter-a4519489",
+          "https://www.joolist.eu/de-de/betriebsarzt-betriebsarztin-in-voll-oder-teilzeit-arbeitsort-ellwangen-jagst/showjob-1066695-0-",
+          "https://www.enzensberg.de/ueber-uns",
+          "https://www.enzensberg.de/aktuelles/neuer-geschaeftsleiter-in-der-m-i-klinikgruppe-enzensberg"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Kaufmännischer Standortleiter Aalen und Ellwangen",
+        "Pflegerischer Standortleiter St. Anna-Virngrund-Klinik",
+        "Leiter Personalabteilung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kliniken-ostalb.de/uploads/attachment/download/515/Qualit%C3%A4tsbericht_2023_St._Anna-Virngrund-Klinik_Ellwangen.pdf",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5fa115fcc56a71e0/fachabteilung/4/start",
+      "https://www.kliniken-ostalb.de/ueber-uns/unternehmen-organisation/standortleitungen",
+      "https://www.ostalbkreis.de/sixcms/media.php/26/Liste-Stationaere-Kurzzeit-Pflegeeinrichtungen-OAK-03-2026.pdf",
+      "https://de.linkedin.com/in/daniel-k%C3%B6ger-689823309",
+      "https://www.kliniken-ostalb.de/pflege-therapie/pflegedirektion",
+      "https://de.linkedin.com/in/robert-filter-a4519489",
+      "https://www.joolist.eu/de-de/betriebsarzt-betriebsarztin-in-voll-oder-teilzeit-arbeitsort-ellwangen-jagst/showjob-1066695-0-",
+      "https://www.enzensberg.de/ueber-uns",
+      "https://www.enzensberg.de/aktuelles/neuer-geschaeftsleiter-in-der-m-i-klinikgruppe-enzensberg"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 3,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ravensburg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-klinikum in ravensburg|http://www.oberschwabenklinik.de|ravensburg|germany",
+    "company_name": "St. Elisabethen-Klinikum in Ravensburg",
+    "company_website": "http://www.oberschwabenklinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 6,
+      "decision_makers": [
+        {
+          "full_name": "Alena Stier",
+          "person_key": "",
+          "role": "Leitung Pflege und Prozessmanagement"
+        },
+        {
+          "full_name": "Klaus Sonntag",
+          "person_key": "",
+          "role": "Leitung Pflege und Prozessmanagement"
+        },
+        {
+          "full_name": "Matthias Schäfer",
+          "person_key": "",
+          "role": "Leitung Pflege und Prozessmanagement"
+        },
+        {
+          "full_name": "Swen Wendt",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Swen Wendt",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Valentina Weber",
+          "person_key": "",
+          "role": "Stellv. Leitung Pflege und Prozessmanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "alena.stier@oberschwabenklinik.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Alena Stier",
+        "hypothesis_email": "alena.stier@oberschwabenklinik.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_alena_stier_50d2fbe452",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Leitung Pflege und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html",
+          "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/2021_Einblick_EK.pdf",
+          "false"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "klaus.sonntag@oberschwabenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Klaus Sonntag",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_klaus_sonntag_2c1bda6097",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Pflege und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/Patientenmagazin-Einblick_St-Elisabethen-Klinikum-Ravensburg.pdf",
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "matthias.schaefer@oberschwabenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Matthias Schäfer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_matthias_sch_fer_406cba5103",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Pflege und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/hightech-trifft-herz-osk-bildet-ab-2026-medizintechnologinnen-technologen-fuer-radiologie-aus.html",
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "raimund.alker@oberschwabenklinik.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Raimund Alker",
+        "hypothesis_email": "raimund.alker@oberschwabenklinik.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/raimund-alker-a07b3048",
+        "person_key": "person_raimund_alker_ea3512d9d8",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Personalleiter",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/raimund-alker-ist-neuer-personalleiter-der-oberschwabenklinik.html",
+          "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/zwischen-dienstplan-und-lebensgeschichte-osk-ehrt-jubilare-mit-bis-zu-60-dienstjahren.html",
+          "https://de.linkedin.com/in/raimund-alker-a07b3048",
+          "https://talents.studysmarter.de/companies/oberschwabenklinik-gmbh/hr-business-partner-personalreferent-fuer-personalplanung-und-stellenbewirtschaftung-w-m-d-2810526/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "swen.wendt@oberschwabenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Swen Wendt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/swen-wendt-a22aa283",
+        "person_key": "person_swen_wendt_f54d11e1f5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/2021_Einblick_EK.pdf",
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html",
+          "https://de.linkedin.com/in/swen-wendt-a22aa283"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "swen.wendt@oberschwabenklinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Swen Wendt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/swen-wendt-a22aa283",
+        "person_key": "person_swen_wendt_4d8d246ab7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/2021_Einblick_EK.pdf",
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html",
+          "https://de.linkedin.com/in/swen-wendt-a22aa283"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "valentina.weber@oberschwabenklinik.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Valentina Weber",
+        "hypothesis_email": "valentina.weber@oberschwabenklinik.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_valentina_weber_78a637aa48",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Stellv. Leitung Pflege und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html",
+          "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/von-der-auszubildenden-zur-fuehrungskraft-valentina-weber-uebernimmt-wichtige-rolle-im-pflege-und-prozessmanagement.html",
+          "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/2021_Einblick_EK.pdf",
+          "false"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Leitung Pflege und Prozessmanagement",
+        "Personalleiter",
+        "Pflegedirektor",
+        "Stellv. Leitung Pflege und Prozessmanagement"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.oberschwabenklinik.de/medizinische-versorgung/pflege/allgemein.html",
+      "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/2021_Einblick_EK.pdf",
+      "false",
+      "https://www.oberschwabenklinik.de/fileadmin/redakteur/1OSK/Presse/Mediathek/Patientenmagazin-Einblick_St-Elisabethen-Klinikum-Ravensburg.pdf",
+      "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/hightech-trifft-herz-osk-bildet-ab-2026-medizintechnologinnen-technologen-fuer-radiologie-aus.html",
+      "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/raimund-alker-ist-neuer-personalleiter-der-oberschwabenklinik.html",
+      "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/zwischen-dienstplan-und-lebensgeschichte-osk-ehrt-jubilare-mit-bis-zu-60-dienstjahren.html",
+      "https://de.linkedin.com/in/raimund-alker-a07b3048",
+      "https://talents.studysmarter.de/companies/oberschwabenklinik-gmbh/hr-business-partner-personalreferent-fuer-personalplanung-und-stellenbewirtschaftung-w-m-d-2810526/",
+      "https://de.linkedin.com/in/swen-wendt-a22aa283",
+      "https://www.oberschwabenklinik.de/service/aktuelles/detailseite/von-der-auszubildenden-zur-fuehrungskraft-valentina-weber-uebernimmt-wichtige-rolle-im-pflege-und-prozessmanagement.html"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Lörrach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|st. elisabethen-krankenhaus lörrach|https://klinloe.de|lörrach|germany",
+    "company_name": "St. Elisabethen-Krankenhaus Lörrach",
+    "company_website": "https://klinloe.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Dubravka Kavur",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Jeannine Sturm",
+          "person_key": "",
+          "role": "Kommissarische Bereichsleiterin Pflege- und Funktionsdienst St. Elisabethen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "kavur.dubravka@klinloe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dubravka Kavur",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dubravka-kavur-a239b8123",
+        "person_key": "person_dubravka_kavur_50c3fbb45b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinloe.de/pflege-und-funktionsdienst/pflege-und-funktionsdienst.html",
+          "https://de.linkedin.com/in/dubravka-kavur-a239b8123"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "j.sturm@elikh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jeannine Sturm",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jeannine_sturm_536363668a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kommissarische Bereichsleiterin Pflege- und Funktionsdienst St. Elisabethen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.klinloe.de/pflege-und-funktionsdienst/pflege-und-funktionsdienst.html",
+          "https://de.linkedin.com/posts/kliniken-des-landkreises-loerrach-gmbh_klinikenl%C3%B6rrach-geburtshilfe-stelisabethenkrankenhaus-activity-7215693238341435393-hRVr"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "broedlin.nadine@klinikloe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nadine Brödlin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nadine_br_dlin_0e57aa69e0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.loerrach-landkreis.de/ceasy/resource/?download=1&id=12243",
+          "https://www.klinloe.de/karriere.html",
+          "https://www.klinloe.de/neues-klinikum/presse/klinikleitung-mit-neuer-organisationsstruktur.html",
+          "https://www.xing.com/profile/Nadine_Broedlin"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Kommissarische Bereichsleiterin Pflege- und Funktionsdienst St. Elisabethen",
+        "Leitung Personal"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.klinloe.de/pflege-und-funktionsdienst/pflege-und-funktionsdienst.html",
+      "https://de.linkedin.com/in/dubravka-kavur-a239b8123",
+      "https://de.linkedin.com/posts/kliniken-des-landkreises-loerrach-gmbh_klinikenl%C3%B6rrach-geburtshilfe-stelisabethenkrankenhaus-activity-7215693238341435393-hRVr",
+      "https://www.loerrach-landkreis.de/ceasy/resource/?download=1&id=12243",
+      "https://www.klinloe.de/karriere.html",
+      "https://www.klinloe.de/neues-klinikum/presse/klinikleitung-mit-neuer-organisationsstruktur.html",
+      "https://www.xing.com/profile/Nadine_Broedlin"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
