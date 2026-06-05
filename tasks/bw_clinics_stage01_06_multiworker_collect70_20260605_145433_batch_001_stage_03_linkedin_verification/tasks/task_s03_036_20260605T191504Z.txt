@@ -1,0 +1,84 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_036_20260605T191504Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_036_20260605T191504Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_collect70_20260605_145433/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Helios Spital Überlingen | company_website: http://www.helios-gesundheit.de/ueberlingen | first_name: Moritz | last_name: Lang | full_name: Moritz Lang | role: Klinikgeschäftsführer | role_category: founder_ceo | confidence: high | notes: Official Helios Ansprechpartner page lists him in clinic leadership.
+2. batch_id: batch_001 | company_name: Helios Spital Überlingen | company_website: http://www.helios-gesundheit.de/ueberlingen | first_name: Laura | last_name: Heim | full_name: Laura Heim | role: Assistenz der Geschäftsführung | role_category: other_management | confidence: medium | notes: Official Helios page lists her as management assistant.
+3. batch_id: batch_001 | company_name: Alb-Donau Klinikum (Ehingen) | company_website: http://www.adk-gmbh.de | first_name: Regine | last_name: Deutschle | full_name: Regine Deutschle | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official ADK nursing page lists her as Pflegedirektorin.
+4. batch_id: batch_001 | company_name: Alb-Donau Klinikum (Ehingen) | company_website: http://www.adk-gmbh.de | first_name: Nadine | last_name: Hirschle | full_name: Nadine Hirschle | role: Pflegedienstleitung Alb-Donau Klinikum Ehingen | role_category: operations | confidence: high | notes: Official ADK nursing page lists her for Ehingen.
+5. batch_id: batch_001 | company_name: Alb-Donau Klinikum (Ehingen) | company_website: http://www.adk-gmbh.de | first_name: Michael | last_name: Dahlmann | full_name: Michael Dahlmann | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Hospital directory lists him as head of administration.
+6. batch_id: batch_001 | company_name: Psychiatrisches Behandlungszentrum Böblingen | company_website: https://www.kn-calw.de/boeblingen | first_name: Jennifer | last_name: Faron | full_name: Jennifer Faron | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official PBZ Böblingen page lists her as Pflegedienstleitung.
+7. batch_id: batch_001 | company_name: Psychiatrisches Behandlungszentrum Böblingen | company_website: https://www.kn-calw.de/boeblingen | first_name: Michael | last_name: Reuber | full_name: Michael Reuber | role: Chefarzt | role_category: other_management | confidence: high | notes: Official PBZ Böblingen page lists him as Chefarzt.
+8. batch_id: batch_001 | company_name: Psychiatrisches Behandlungszentrum Böblingen | company_website: https://www.kn-calw.de/boeblingen | first_name: Andreas | last_name: Dummert | full_name: Andreas Dummert | role: Pflegedirektor | role_category: operations | confidence: medium | notes: Hospital directory lists him as Pflegedirektor for the site.
+9. batch_id: batch_001 | company_name: Fachkliniken Wangen | company_website: http://www.fachkliniken-wangen.de | first_name: Florian | last_name: Ihler | full_name: Florian Ihler | role: Leitung Pflege-, Therapie- und Patientenmanagement | role_category: operations | confidence: high | notes: Official Ansprechpartner page lists him in Pflege-, Therapie- und Patientenmanagement.
+10. batch_id: batch_001 | company_name: Fachkliniken Wangen | company_website: http://www.fachkliniken-wangen.de | first_name: Stefan | last_name: Richter | full_name: Stefan Richter | role: Klinikdirektor | role_category: other_management | confidence: high | notes: Official Ansprechpartner page lists him as Klinikdirektor.
+11. batch_id: batch_001 | company_name: Fachkliniken Wangen | company_website: http://www.fachkliniken-wangen.de | first_name: Walter | last_name: Binder | full_name: Walter Binder | role: Kaufmännische Leitung Kinderkliniken | role_category: other_management | confidence: high | notes: Official Ansprechpartner page lists him as kaufmännische Leitung.
+12. batch_id: batch_001 | company_name: Fachkliniken Wangen | company_website: http://www.fachkliniken-wangen.de | first_name: Nicole | last_name: Baumann | full_name: Nicole Baumann | role: Personalreferentin | role_category: hr_recruiting | confidence: high | notes: Official Ansprechpartner page lists her under career contacts.
+13. batch_id: batch_001 | company_name: PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen | company_website: http://www.pprt.de | first_name: Uwe | last_name: Armbruster | full_name: Uwe Armbruster | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official PP.rt contact database lists him as Pflegedirektor.
+14. batch_id: batch_001 | company_name: PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen | company_website: http://www.pprt.de | first_name: Marc | last_name: Böhringer | full_name: Marc Böhringer | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official PP.rt contact database lists him under Geschäftsführung.
+15. batch_id: batch_001 | company_name: PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen | company_website: http://www.pprt.de | first_name: Gerhard | last_name: Längle | full_name: Gerhard Längle | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official PP.rt contact database lists him under Geschäftsführung.
+16. batch_id: batch_001 | company_name: Acura Kliniken Baden-Baden | company_website: http://www.acura-kliniken.com | first_name: Julia | last_name: Maifarth | full_name: Julia Maifarth | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official ACURA Pflege-Team page lists her as Pflegedirektorin.
+17. batch_id: batch_001 | company_name: Acura Kliniken Baden-Baden | company_website: http://www.acura-kliniken.com | first_name: Harry | last_name: Schröter | full_name: Harry Schröter | role: Stellvertretende Pflegedienstleitung | role_category: operations | confidence: high | notes: Official ACURA Pflege-Team page lists him as deputy PDL.
+18. batch_id: batch_001 | company_name: Acura Kliniken Baden-Baden | company_website: http://www.acura-kliniken.com | first_name: Maja | last_name: Treichel | full_name: Maja Treichel | role: Geschäftsleitung | role_category: founder_ceo | confidence: high | notes: Official management page names her in Geschäftsleitung.
+19. batch_id: batch_001 | company_name: Acura Kliniken Baden-Baden | company_website: http://www.acura-kliniken.com | first_name: Dirk | last_name: Schmitz | full_name: Dirk Schmitz | role: Geschäftsleitung | role_category: founder_ceo | confidence: high | notes: Official management page names him in Geschäftsleitung.
+20. batch_id: batch_001 | company_name: Diabetes Klinik in Bad Mergentheim | company_website: http://www.diabetes-zentrum.de | first_name: Klaus | last_name: Rotter | full_name: Klaus Rotter | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official contacts page lists him as Pflegedienstleitung.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_036_20260605T191504Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
