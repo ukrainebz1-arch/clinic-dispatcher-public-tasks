@@ -1,0 +1,1527 @@
+TASK_ID: stage05_task_0036
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum kehl|http://offenburg-kehl.ortenau-klinikum.de/|kehl|germany",
+    "company_name": "Ortenau Klinikum Kehl",
+    "full_name": "Daniela Neff",
+    "message_target_id": "stage05_task_0036::person_daniela_neff_5fc8d952c4::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_daniela_neff_5fc8d952c4",
+    "recipient_value": "daniela.neff@ortenau-klinikum.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum kehl|http://offenburg-kehl.ortenau-klinikum.de/|kehl|germany",
+    "company_name": "Ortenau Klinikum Kehl",
+    "full_name": "Daniela Neff",
+    "message_target_id": "stage05_task_0036::person_daniela_neff_5fc8d952c4::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_daniela_neff_5fc8d952c4",
+    "recipient_value": "https://de.linkedin.com/in/daniela-neff-32734a35a",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum kehl|http://offenburg-kehl.ortenau-klinikum.de/|kehl|germany",
+    "company_name": "Ortenau Klinikum Kehl",
+    "full_name": "Daniela Neff",
+    "message_target_id": "stage05_task_0036::person_daniela_neff_5fc8d952c4::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_daniela_neff_5fc8d952c4",
+    "recipient_value": "https://de.linkedin.com/in/daniela-neff-32734a35a",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Constantin Schmidt",
+    "message_target_id": "stage05_task_0036::person_constantin_schmidt_382d8b93bf::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_constantin_schmidt_382d8b93bf",
+    "recipient_value": "constantin.schmidt@ortenau-klinikum.de",
+    "role_title": "Personaldirektor",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Constantin Schmidt",
+    "message_target_id": "stage05_task_0036::person_constantin_schmidt_382d8b93bf::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_constantin_schmidt_382d8b93bf",
+    "recipient_value": "https://de.linkedin.com/in/constantin-schmidt-5162b4302",
+    "role_title": "Personaldirektor",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Constantin Schmidt",
+    "message_target_id": "stage05_task_0036::person_constantin_schmidt_382d8b93bf::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_constantin_schmidt_382d8b93bf",
+    "recipient_value": "https://de.linkedin.com/in/constantin-schmidt-5162b4302",
+    "role_title": "Personaldirektor",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Kathleen Messer",
+    "message_target_id": "stage05_task_0036::person_kathleen_messer_42c600f9da::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_kathleen_messer_42c600f9da",
+    "recipient_value": "Kathleen.Messer@ortenau-klinikum.de",
+    "role_title": "Pflegerische Vorständin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Kathleen Messer",
+    "message_target_id": "stage05_task_0036::person_kathleen_messer_42c600f9da::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_kathleen_messer_42c600f9da",
+    "recipient_value": "https://de.linkedin.com/in/kathleen-messer-765312153",
+    "role_title": "Pflegerische Vorständin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Kathleen Messer",
+    "message_target_id": "stage05_task_0036::person_kathleen_messer_42c600f9da::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_kathleen_messer_42c600f9da",
+    "recipient_value": "https://de.linkedin.com/in/kathleen-messer-765312153",
+    "role_title": "Pflegerische Vorständin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Monika Bach",
+    "message_target_id": "stage05_task_0036::person_monika_bach_5fe21af70c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_monika_bach_5fe21af70c",
+    "recipient_value": "monika.bach@ortenau-klinikum.de",
+    "role_title": "Stv. Pflegedirektorin der Betriebsstelle Lahr",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Monika Bach",
+    "message_target_id": "stage05_task_0036::person_monika_bach_88aef52b92::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_monika_bach_88aef52b92",
+    "recipient_value": "monika.bach@ortenau-klinikum.de",
+    "role_title": "Stv. Pflegedirektorin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Prof. Dr. Georg Mols",
+    "message_target_id": "stage05_task_0036::person_prof_dr_georg_mols_6d37aed727::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_prof_dr_georg_mols_6d37aed727",
+    "recipient_value": "georg.mols@ortenau-klinikum.de",
+    "role_title": "Ärztlicher Direktor",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Prof. Dr. Georg Mols",
+    "message_target_id": "stage05_task_0036::person_prof_dr_georg_mols_6d37aed727::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_prof_dr_georg_mols_6d37aed727",
+    "recipient_value": "https://de.linkedin.com/in/prof-dr-georg-mols-d-e-a-a-m-b-a-11719753",
+    "role_title": "Ärztlicher Direktor",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Prof. Dr. Georg Mols",
+    "message_target_id": "stage05_task_0036::person_prof_dr_georg_mols_6d37aed727::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_prof_dr_georg_mols_6d37aed727",
+    "recipient_value": "https://de.linkedin.com/in/prof-dr-georg-mols-d-e-a-a-m-b-a-11719753",
+    "role_title": "Ärztlicher Direktor",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Stefan Ries",
+    "message_target_id": "stage05_task_0036::person_stefan_ries_4404bf24d8::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefan_ries_4404bf24d8",
+    "recipient_value": "stefan.ries@ortenau-klinikum.de",
+    "role_title": "Pflegedirektor Lahr und Wolfach",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "full_name": "Stefan Ries",
+    "message_target_id": "stage05_task_0036::person_stefan_ries_0bdf36c5db::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefan_ries_0bdf36c5db",
+    "recipient_value": "stefan.ries@ortenau-klinikum.de",
+    "role_title": "Pflegedirektor Lahr und Wolfach",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "full_name": "Claudia Bauer-Rabe",
+    "message_target_id": "stage05_task_0036::person_claudia_bauer_rabe_67a4a27801::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_claudia_bauer_rabe_67a4a27801",
+    "recipient_value": "claudia.bauer-rabe@ortenau-klinikum.de",
+    "role_title": "Kaufmännische Vorständin und Vorstandsvorsitzende",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "full_name": "Claudia Bauer-Rabe",
+    "message_target_id": "stage05_task_0036::person_claudia_bauer_rabe_67a4a27801::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_claudia_bauer_rabe_67a4a27801",
+    "recipient_value": "https://de.linkedin.com/in/claudia-bauer-rabe-5b5262166",
+    "role_title": "Kaufmännische Vorständin und Vorstandsvorsitzende",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "full_name": "Claudia Bauer-Rabe",
+    "message_target_id": "stage05_task_0036::person_claudia_bauer_rabe_67a4a27801::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_claudia_bauer_rabe_67a4a27801",
+    "recipient_value": "https://de.linkedin.com/in/claudia-bauer-rabe-5b5262166",
+    "role_title": "Kaufmännische Vorständin und Vorstandsvorsitzende",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "full_name": "Kathleen Messer",
+    "message_target_id": "stage05_task_0036::person_kathleen_messer_add00f9dd6::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_kathleen_messer_add00f9dd6",
+    "recipient_value": "kathleen.messer@ortenau-klinikum.de",
+    "role_title": "Pflegerische Vorständin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "full_name": "Kathleen Messer",
+    "message_target_id": "stage05_task_0036::person_kathleen_messer_add00f9dd6::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_kathleen_messer_add00f9dd6",
+    "recipient_value": "https://de.linkedin.com/in/kathleen-messer-765312153",
+    "role_title": "Pflegerische Vorständin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "full_name": "Kathleen Messer",
+    "message_target_id": "stage05_task_0036::person_kathleen_messer_add00f9dd6::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_kathleen_messer_add00f9dd6",
+    "recipient_value": "https://de.linkedin.com/in/kathleen-messer-765312153",
+    "role_title": "Pflegerische Vorständin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "full_name": "Rafaela Kedzierski",
+    "message_target_id": "stage05_task_0036::person_rafaela_kedzierski_6a57da6e21::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_rafaela_kedzierski_6a57da6e21",
+    "recipient_value": "rafaela.kedzierski@ortenau-klinikum.de",
+    "role_title": "Kommissarische Pflegedirektorin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "full_name": "Rafaela Kedzierski",
+    "message_target_id": "stage05_task_0036::person_rafaela_kedzierski_6a57da6e21::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_rafaela_kedzierski_6a57da6e21",
+    "recipient_value": "https://de.linkedin.com/in/rafaela-kedzierski-250133239",
+    "role_title": "Kommissarische Pflegedirektorin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "full_name": "Rafaela Kedzierski",
+    "message_target_id": "stage05_task_0036::person_rafaela_kedzierski_6a57da6e21::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_rafaela_kedzierski_6a57da6e21",
+    "recipient_value": "https://de.linkedin.com/in/rafaela-kedzierski-250133239",
+    "role_title": "Kommissarische Pflegedirektorin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum wolfach|https://wolfach.ortenau-klinikum.de/|wolfach|germany",
+    "company_name": "Ortenau Klinikum Wolfach",
+    "full_name": "Kornelia Buntru",
+    "message_target_id": "stage05_task_0036::person_kornelia_buntru_c4f0f39ecb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_kornelia_buntru_c4f0f39ecb",
+    "recipient_value": "kornelia.buntru@ortenau-klinikum.de",
+    "role_title": "Klinikdirektorin",
+    "task_id": "stage05_task_0036"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum wolfach|https://wolfach.ortenau-klinikum.de/|wolfach|germany",
+    "company_name": "Ortenau Klinikum Wolfach",
+    "full_name": "Stefan Ries",
+    "message_target_id": "stage05_task_0036::person_stefan_ries_2ec12496da::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefan_ries_2ec12496da",
+    "recipient_value": "stefan.ries@ortenau-klinikum.de",
+    "role_title": "Pflegedirektor Lahr und Wolfach",
+    "task_id": "stage05_task_0036"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Kehl",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum kehl|http://offenburg-kehl.ortenau-klinikum.de/|kehl|germany",
+    "company_name": "Ortenau Klinikum Kehl",
+    "company_website": "http://offenburg-kehl.ortenau-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Daniela Neff",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "daniela.neff@ortenau-klinikum.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Daniela Neff",
+        "hypothesis_email": "daniela.neff@ortenau-klinikum.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/daniela-neff-32734a35a",
+        "person_key": "person_daniela_neff_5fc8d952c4",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/klinikleitung/",
+          "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://de.linkedin.com/in/daniela-neff-32734a35a"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedirektorin"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/klinikleitung/",
+      "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+      "https://de.linkedin.com/in/daniela-neff-32734a35a"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 7,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Lahr",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "company_website": "https://lahr.ortenau-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 5,
+      "decision_makers": [
+        {
+          "full_name": "Kathleen Messer",
+          "person_key": "",
+          "role": "Pflegerische Vorständin"
+        },
+        {
+          "full_name": "Monika Bach",
+          "person_key": "",
+          "role": "Stv. Pflegedirektorin der Betriebsstelle Lahr"
+        },
+        {
+          "full_name": "Monika Bach",
+          "person_key": "",
+          "role": "Stv. Pflegedirektorin"
+        },
+        {
+          "full_name": "Stefan Ries",
+          "person_key": "",
+          "role": "Pflegedirektor Lahr und Wolfach"
+        },
+        {
+          "full_name": "Stefan Ries",
+          "person_key": "",
+          "role": "Pflegedirektor Lahr und Wolfach"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "constantin.schmidt@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Constantin Schmidt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/constantin-schmidt-5162b4302",
+        "person_key": "person_constantin_schmidt_382d8b93bf",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektor",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.ortenau-klinikum.de/fileadmin/user_upload/PDFs/Verbund/Fortbildungs-_und_Gesundheitsf%C3%B6rderungsprogramm_2024.pdf",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsbereich-personal/",
+          "https://de.linkedin.com/in/constantin-schmidt-5162b4302"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Kathleen.Messer@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kathleen Messer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/kathleen-messer-765312153",
+        "person_key": "person_kathleen_messer_42c600f9da",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Vorständin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://de.linkedin.com/in/kathleen-messer-765312153",
+          "https://www.ortenau-klinikum.de/impressum/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "monika.bach@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Monika Bach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_monika_bach_5fe21af70c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stv. Pflegedirektorin der Betriebsstelle Lahr",
+        "role_category": "operations",
+        "source_urls": [
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "monika.bach@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Monika Bach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_monika_bach_88aef52b92",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stv. Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "georg.mols@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Prof. Dr. Georg Mols",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/prof-dr-georg-mols-d-e-a-a-m-b-a-11719753",
+        "person_key": "person_prof_dr_georg_mols_6d37aed727",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztlicher Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.bda.de/expertengruppen-referate/kommissionen/kommission-weiterbildung.html",
+          "https://lahr.ortenau-klinikum.de/fachkliniken/klinik-fuer-anaesthesiologie-und-operative-intensivmedizin/team-der-klinik-fuer-anaesthesiologie-und-operative-intensivmedizin/",
+          "https://de.linkedin.com/in/prof-dr-georg-mols-d-e-a-a-m-b-a-11719753",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/335eee87e6d09acb/fachabteilung/1/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "stefan.ries@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Ries",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefan_ries_4404bf24d8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Lahr und Wolfach",
+        "role_category": "operations",
+        "source_urls": [
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "stefan.ries@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Ries",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefan_ries_0bdf36c5db",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Lahr und Wolfach",
+        "role_category": "operations",
+        "source_urls": [
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Personaldirektor",
+        "Pflegerische Vorständin",
+        "Stv. Pflegedirektorin der Betriebsstelle Lahr",
+        "Stv. Pflegedirektorin",
+        "Ärztlicher Direktor",
+        "Pflegedirektor Lahr und Wolfach"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.ortenau-klinikum.de/fileadmin/user_upload/PDFs/Verbund/Fortbildungs-_und_Gesundheitsf%C3%B6rderungsprogramm_2024.pdf",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsbereich-personal/",
+      "https://de.linkedin.com/in/constantin-schmidt-5162b4302",
+      "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+      "https://de.linkedin.com/in/kathleen-messer-765312153",
+      "https://www.ortenau-klinikum.de/impressum/",
+      "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+      "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/",
+      "https://www.bda.de/expertengruppen-referate/kommissionen/kommission-weiterbildung.html",
+      "https://lahr.ortenau-klinikum.de/fachkliniken/klinik-fuer-anaesthesiologie-und-operative-intensivmedizin/team-der-klinik-fuer-anaesthesiologie-und-operative-intensivmedizin/",
+      "https://de.linkedin.com/in/prof-dr-georg-mols-d-e-a-a-m-b-a-11719753",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/335eee87e6d09acb/fachabteilung/1/start"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Offenburg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "company_website": "http://offenburg-kehl.ortenau-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Kathleen Messer",
+          "person_key": "",
+          "role": "Pflegerische Vorständin"
+        },
+        {
+          "full_name": "Rafaela Kedzierski",
+          "person_key": "",
+          "role": "Kommissarische Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "claudia.bauer-rabe@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Claudia Bauer-Rabe",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/claudia-bauer-rabe-5b5262166",
+        "person_key": "person_claudia_bauer_rabe_67a4a27801",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Vorständin und Vorstandsvorsitzende",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.ortenau-klinikum.de/impressum/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/",
+          "https://www.ortenau-klinikum.de/aktuelles/presse/",
+          "https://www.linkedin.com/posts/claudia-bauer-rabe-5b5262166_httpslnkdinewfcguif-activity-7381817784072081408-WX2g",
+          "https://de.linkedin.com/in/claudia-bauer-rabe-5b5262166"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "kathleen.messer@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kathleen Messer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/kathleen-messer-765312153",
+        "person_key": "person_kathleen_messer_add00f9dd6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Vorständin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://de.linkedin.com/in/kathleen-messer-765312153",
+          "https://www.ortenau-klinikum.de/impressum/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "rafaela.kedzierski@ortenau-klinikum.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Rafaela Kedzierski",
+        "hypothesis_email": "rafaela.kedzierski@ortenau-klinikum.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/rafaela-kedzierski-250133239",
+        "person_key": "person_rafaela_kedzierski_6a57da6e21",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Kommissarische Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-der-pflegedirektion/",
+          "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+          "https://www.ortenau-klinikum.de/aktuelles/presse/",
+          "https://de.linkedin.com/in/rafaela-kedzierski-250133239"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Kaufmännische Vorständin und Vorstandsvorsitzende",
+        "Pflegerische Vorständin",
+        "Kommissarische Pflegedirektorin"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.ortenau-klinikum.de/impressum/",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/",
+      "https://www.ortenau-klinikum.de/aktuelles/presse/",
+      "https://www.linkedin.com/posts/claudia-bauer-rabe-5b5262166_httpslnkdinewfcguif-activity-7381817784072081408-WX2g",
+      "https://de.linkedin.com/in/claudia-bauer-rabe-5b5262166",
+      "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+      "https://de.linkedin.com/in/kathleen-messer-765312153",
+      "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+      "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-der-pflegedirektion/",
+      "https://de.linkedin.com/in/rafaela-kedzierski-250133239"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Wolfach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum wolfach|https://wolfach.ortenau-klinikum.de/|wolfach|germany",
+    "company_name": "Ortenau Klinikum Wolfach",
+    "company_website": "https://wolfach.ortenau-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Stefan Ries",
+          "person_key": "",
+          "role": "Pflegedirektor Lahr und Wolfach"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "kornelia.buntru@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kornelia Buntru",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_kornelia_buntru_c4f0f39ecb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikdirektorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://wolfach.ortenau-klinikum.de/ueber-uns/klinikleitung/",
+          "https://www.ortenau-klinikum.de/fileadmin/user_upload/PDFs/Qualitaetsberichte/260833483-772791000-2023_Wolfach-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "stefan.ries@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Ries",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefan_ries_2ec12496da",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Lahr und Wolfach",
+        "role_category": "operations",
+        "source_urls": [
+          "https://wolfach.ortenau-klinikum.de/ueber-uns/klinikleitung/",
+          "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/anfahrt-und-parken/",
+          "https://wolfach.ortenau-klinikum.de/ueber-uns/pflege/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Klinikdirektorin",
+        "Pflegedirektor Lahr und Wolfach"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://wolfach.ortenau-klinikum.de/ueber-uns/klinikleitung/",
+      "https://www.ortenau-klinikum.de/fileadmin/user_upload/PDFs/Qualitaetsberichte/260833483-772791000-2023_Wolfach-xml.pdf",
+      "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/anfahrt-und-parken/",
+      "https://wolfach.ortenau-klinikum.de/ueber-uns/pflege/"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Kehl",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum kehl|http://offenburg-kehl.ortenau-klinikum.de/|kehl|germany",
+    "company_name": "Ortenau Klinikum Kehl",
+    "company_website": "http://offenburg-kehl.ortenau-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Daniela Neff",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "daniela.neff@ortenau-klinikum.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Daniela Neff",
+        "hypothesis_email": "daniela.neff@ortenau-klinikum.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/daniela-neff-32734a35a",
+        "person_key": "person_daniela_neff_5fc8d952c4",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/klinikleitung/",
+          "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://de.linkedin.com/in/daniela-neff-32734a35a"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedirektorin"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/klinikleitung/",
+      "https://achern.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+      "https://de.linkedin.com/in/daniela-neff-32734a35a"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 7,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Lahr",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum lahr|https://lahr.ortenau-klinikum.de/|lahr|germany",
+    "company_name": "Ortenau Klinikum Lahr",
+    "company_website": "https://lahr.ortenau-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 5,
+      "decision_makers": [
+        {
+          "full_name": "Kathleen Messer",
+          "person_key": "",
+          "role": "Pflegerische Vorständin"
+        },
+        {
+          "full_name": "Monika Bach",
+          "person_key": "",
+          "role": "Stv. Pflegedirektorin der Betriebsstelle Lahr"
+        },
+        {
+          "full_name": "Monika Bach",
+          "person_key": "",
+          "role": "Stv. Pflegedirektorin"
+        },
+        {
+          "full_name": "Stefan Ries",
+          "person_key": "",
+          "role": "Pflegedirektor Lahr und Wolfach"
+        },
+        {
+          "full_name": "Stefan Ries",
+          "person_key": "",
+          "role": "Pflegedirektor Lahr und Wolfach"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "constantin.schmidt@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Constantin Schmidt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/constantin-schmidt-5162b4302",
+        "person_key": "person_constantin_schmidt_382d8b93bf",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektor",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.ortenau-klinikum.de/fileadmin/user_upload/PDFs/Verbund/Fortbildungs-_und_Gesundheitsf%C3%B6rderungsprogramm_2024.pdf",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsbereich-personal/",
+          "https://de.linkedin.com/in/constantin-schmidt-5162b4302"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Kathleen.Messer@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kathleen Messer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/kathleen-messer-765312153",
+        "person_key": "person_kathleen_messer_42c600f9da",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Vorständin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://de.linkedin.com/in/kathleen-messer-765312153",
+          "https://www.ortenau-klinikum.de/impressum/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "monika.bach@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Monika Bach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_monika_bach_5fe21af70c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stv. Pflegedirektorin der Betriebsstelle Lahr",
+        "role_category": "operations",
+        "source_urls": [
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "monika.bach@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Monika Bach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_monika_bach_88aef52b92",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stv. Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "georg.mols@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Prof. Dr. Georg Mols",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/prof-dr-georg-mols-d-e-a-a-m-b-a-11719753",
+        "person_key": "person_prof_dr_georg_mols_6d37aed727",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztlicher Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.bda.de/expertengruppen-referate/kommissionen/kommission-weiterbildung.html",
+          "https://lahr.ortenau-klinikum.de/fachkliniken/klinik-fuer-anaesthesiologie-und-operative-intensivmedizin/team-der-klinik-fuer-anaesthesiologie-und-operative-intensivmedizin/",
+          "https://de.linkedin.com/in/prof-dr-georg-mols-d-e-a-a-m-b-a-11719753",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/335eee87e6d09acb/fachabteilung/1/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "stefan.ries@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Ries",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefan_ries_4404bf24d8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Lahr und Wolfach",
+        "role_category": "operations",
+        "source_urls": [
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "stefan.ries@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Ries",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefan_ries_0bdf36c5db",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Lahr und Wolfach",
+        "role_category": "operations",
+        "source_urls": [
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Personaldirektor",
+        "Pflegerische Vorständin",
+        "Stv. Pflegedirektorin der Betriebsstelle Lahr",
+        "Stv. Pflegedirektorin",
+        "Ärztlicher Direktor",
+        "Pflegedirektor Lahr und Wolfach"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.ortenau-klinikum.de/fileadmin/user_upload/PDFs/Verbund/Fortbildungs-_und_Gesundheitsf%C3%B6rderungsprogramm_2024.pdf",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsbereich-personal/",
+      "https://de.linkedin.com/in/constantin-schmidt-5162b4302",
+      "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+      "https://de.linkedin.com/in/kathleen-messer-765312153",
+      "https://www.ortenau-klinikum.de/impressum/",
+      "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+      "https://lahr.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-pflege/",
+      "https://www.bda.de/expertengruppen-referate/kommissionen/kommission-weiterbildung.html",
+      "https://lahr.ortenau-klinikum.de/fachkliniken/klinik-fuer-anaesthesiologie-und-operative-intensivmedizin/team-der-klinik-fuer-anaesthesiologie-und-operative-intensivmedizin/",
+      "https://de.linkedin.com/in/prof-dr-georg-mols-d-e-a-a-m-b-a-11719753",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/335eee87e6d09acb/fachabteilung/1/start"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Offenburg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum offenburg-kehl standort offenburg|http://offenburg-kehl.ortenau-klinikum.de/|offenburg|germany",
+    "company_name": "Ortenau Klinikum Offenburg-Kehl Standort Offenburg",
+    "company_website": "http://offenburg-kehl.ortenau-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Kathleen Messer",
+          "person_key": "",
+          "role": "Pflegerische Vorständin"
+        },
+        {
+          "full_name": "Rafaela Kedzierski",
+          "person_key": "",
+          "role": "Kommissarische Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "claudia.bauer-rabe@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Claudia Bauer-Rabe",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/claudia-bauer-rabe-5b5262166",
+        "person_key": "person_claudia_bauer_rabe_67a4a27801",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Vorständin und Vorstandsvorsitzende",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.ortenau-klinikum.de/impressum/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/",
+          "https://www.ortenau-klinikum.de/aktuelles/presse/",
+          "https://www.linkedin.com/posts/claudia-bauer-rabe-5b5262166_httpslnkdinewfcguif-activity-7381817784072081408-WX2g",
+          "https://de.linkedin.com/in/claudia-bauer-rabe-5b5262166"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "kathleen.messer@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kathleen Messer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/kathleen-messer-765312153",
+        "person_key": "person_kathleen_messer_add00f9dd6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Vorständin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://de.linkedin.com/in/kathleen-messer-765312153",
+          "https://www.ortenau-klinikum.de/impressum/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "rafaela.kedzierski@ortenau-klinikum.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Rafaela Kedzierski",
+        "hypothesis_email": "rafaela.kedzierski@ortenau-klinikum.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/rafaela-kedzierski-250133239",
+        "person_key": "person_rafaela_kedzierski_6a57da6e21",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Kommissarische Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+          "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+          "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-der-pflegedirektion/",
+          "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+          "https://www.ortenau-klinikum.de/aktuelles/presse/",
+          "https://de.linkedin.com/in/rafaela-kedzierski-250133239"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Kaufmännische Vorständin und Vorstandsvorsitzende",
+        "Pflegerische Vorständin",
+        "Kommissarische Pflegedirektorin"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.ortenau-klinikum.de/impressum/",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/",
+      "https://www.ortenau-klinikum.de/aktuelles/presse/",
+      "https://www.linkedin.com/posts/claudia-bauer-rabe-5b5262166_httpslnkdinewfcguif-activity-7381817784072081408-WX2g",
+      "https://de.linkedin.com/in/claudia-bauer-rabe-5b5262166",
+      "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/kontakte-und-adressen/",
+      "https://www.ortenau-klinikum.de/klinikverbund/geschaeftsfuehrung-und-unternehmensberichte/pflegerischer-vorstand/",
+      "https://de.linkedin.com/in/kathleen-messer-765312153",
+      "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/pflegedirektion/",
+      "https://offenburg-kehl.ortenau-klinikum.de/ueber-uns/pflegedirektion/team-der-pflegedirektion/",
+      "https://de.linkedin.com/in/rafaela-kedzierski-250133239"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Wolfach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ortenau klinikum wolfach|https://wolfach.ortenau-klinikum.de/|wolfach|germany",
+    "company_name": "Ortenau Klinikum Wolfach",
+    "company_website": "https://wolfach.ortenau-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Stefan Ries",
+          "person_key": "",
+          "role": "Pflegedirektor Lahr und Wolfach"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "kornelia.buntru@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kornelia Buntru",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_kornelia_buntru_c4f0f39ecb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikdirektorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://wolfach.ortenau-klinikum.de/ueber-uns/klinikleitung/",
+          "https://www.ortenau-klinikum.de/fileadmin/user_upload/PDFs/Qualitaetsberichte/260833483-772791000-2023_Wolfach-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "stefan.ries@ortenau-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefan Ries",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefan_ries_2ec12496da",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor Lahr und Wolfach",
+        "role_category": "operations",
+        "source_urls": [
+          "https://wolfach.ortenau-klinikum.de/ueber-uns/klinikleitung/",
+          "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/anfahrt-und-parken/",
+          "https://wolfach.ortenau-klinikum.de/ueber-uns/pflege/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Klinikdirektorin",
+        "Pflegedirektor Lahr und Wolfach"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://wolfach.ortenau-klinikum.de/ueber-uns/klinikleitung/",
+      "https://www.ortenau-klinikum.de/fileadmin/user_upload/PDFs/Qualitaetsberichte/260833483-772791000-2023_Wolfach-xml.pdf",
+      "https://wolfach.ortenau-klinikum.de/patienten-angehoerige/anfahrt-und-parken/",
+      "https://wolfach.ortenau-klinikum.de/ueber-uns/pflege/"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
