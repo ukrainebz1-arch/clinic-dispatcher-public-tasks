@@ -1,0 +1,1800 @@
+TASK_ID: stage05_task_0043
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "full_name": "Annika Kurz",
+    "message_target_id": "stage05_task_0043::person_annika_kurz_4552d5bae3::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_annika_kurz_4552d5bae3",
+    "recipient_value": "annika.kurz@rbk.de",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "full_name": "Annika Kurz",
+    "message_target_id": "stage05_task_0043::person_annika_kurz_4552d5bae3::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_annika_kurz_4552d5bae3",
+    "recipient_value": "https://de.linkedin.com/in/annika-kurz-841026319",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "full_name": "Annika Kurz",
+    "message_target_id": "stage05_task_0043::person_annika_kurz_4552d5bae3::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_annika_kurz_4552d5bae3",
+    "recipient_value": "https://de.linkedin.com/in/annika-kurz-841026319",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "full_name": "Christel Idler",
+    "message_target_id": "stage05_task_0043::person_christel_idler_4b57d7b621::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_christel_idler_4b57d7b621",
+    "recipient_value": "christel.idler@rbk.de",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "full_name": "Christel Idler",
+    "message_target_id": "stage05_task_0043::person_christel_idler_4b57d7b621::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christel_idler_4b57d7b621",
+    "recipient_value": "https://de.linkedin.com/in/christel-idler-8036711a1",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "full_name": "Christel Idler",
+    "message_target_id": "stage05_task_0043::person_christel_idler_4b57d7b621::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christel_idler_4b57d7b621",
+    "recipient_value": "https://de.linkedin.com/in/christel-idler-8036711a1",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "full_name": "Denis Seric",
+    "message_target_id": "stage05_task_0043::person_denis_seric_eb688bad54::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_denis_seric_eb688bad54",
+    "recipient_value": "denis.seric@rbk.de",
+    "role_title": "Geschäftsleiter Robert Bosch Krankenhaus, Standort City",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "full_name": "Ralf Busse",
+    "message_target_id": "stage05_task_0043::person_ralf_busse_0f4e932b26::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ralf_busse_0f4e932b26",
+    "recipient_value": "ralf.busse@rbk.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "full_name": "Sabine Velte",
+    "message_target_id": "stage05_task_0043::person_sabine_velte_e95592a05b::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sabine_velte_e95592a05b",
+    "recipient_value": "sabine.velte@rbk.de",
+    "role_title": "Personaldirektorin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rommel-klinik in bad wildbad|http://www.rommel-klinik.de|bad wildbad|germany",
+    "company_name": "Rommel-Klinik in Bad Wildbad",
+    "full_name": "Harald Croyé",
+    "message_target_id": "stage05_task_0043::person_harald_croy_16f37150f2::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_harald_croy_16f37150f2",
+    "recipient_value": "croye@rommel-klinik.de",
+    "role_title": "Pflegedienstleitung und Pflegeleitung-QMB",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rommel-klinik in bad wildbad|http://www.rommel-klinik.de|bad wildbad|germany",
+    "company_name": "Rommel-Klinik in Bad Wildbad",
+    "full_name": "Konstantin Römer",
+    "message_target_id": "stage05_task_0043::person_konstantin_r_mer_9c74765bff::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_konstantin_r_mer_9c74765bff",
+    "recipient_value": "roemer@rommel-klinik.de",
+    "role_title": "Standortleiter",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rommel-klinik in bad wildbad|http://www.rommel-klinik.de|bad wildbad|germany",
+    "company_name": "Rommel-Klinik in Bad Wildbad",
+    "full_name": "Konstantin Römer",
+    "message_target_id": "stage05_task_0043::person_konstantin_r_mer_9c74765bff::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_konstantin_r_mer_9c74765bff",
+    "recipient_value": "https://de.linkedin.com/in/konstantin-r%C3%B6mer-rk1900",
+    "role_title": "Standortleiter",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rommel-klinik in bad wildbad|http://www.rommel-klinik.de|bad wildbad|germany",
+    "company_name": "Rommel-Klinik in Bad Wildbad",
+    "full_name": "Konstantin Römer",
+    "message_target_id": "stage05_task_0043::person_konstantin_r_mer_9c74765bff::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_konstantin_r_mer_9c74765bff",
+    "recipient_value": "https://de.linkedin.com/in/konstantin-r%C3%B6mer-rk1900",
+    "role_title": "Standortleiter",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rommel-klinik in bad wildbad|http://www.rommel-klinik.de|bad wildbad|germany",
+    "company_name": "Rommel-Klinik in Bad Wildbad",
+    "full_name": "Luisa Martin",
+    "message_target_id": "stage05_task_0043::person_luisa_martin_3e17551447::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_luisa_martin_3e17551447",
+    "recipient_value": "martin@rommel-klinik.de",
+    "role_title": "Leitung Personal",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Beate Jörißen",
+    "message_target_id": "stage05_task_0043::person_beate_j_ri_en_f12c6a9e25::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_beate_j_ri_en_f12c6a9e25",
+    "recipient_value": "beate.joerissen@sana.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Beate Jörißen",
+    "message_target_id": "stage05_task_0043::person_beate_j_ri_en_f12c6a9e25::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_beate_j_ri_en_f12c6a9e25",
+    "recipient_value": "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Beate Jörißen",
+    "message_target_id": "stage05_task_0043::person_beate_j_ri_en_f12c6a9e25::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_beate_j_ri_en_f12c6a9e25",
+    "recipient_value": "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Beate Jörißen",
+    "message_target_id": "stage05_task_0043::person_beate_j_ri_en_1c5755d658::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_beate_j_ri_en_1c5755d658",
+    "recipient_value": "beate.joerissen@sana.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Beate Jörißen",
+    "message_target_id": "stage05_task_0043::person_beate_j_ri_en_1c5755d658::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_beate_j_ri_en_1c5755d658",
+    "recipient_value": "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Beate Jörißen",
+    "message_target_id": "stage05_task_0043::person_beate_j_ri_en_1c5755d658::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_beate_j_ri_en_1c5755d658",
+    "recipient_value": "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Dr. Thomas Schmidt",
+    "message_target_id": "stage05_task_0043::person_dr_thomas_schmidt_a19551dcec::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_thomas_schmidt_a19551dcec",
+    "recipient_value": "thomas.schmidt3@sana.de",
+    "role_title": "Ärztlicher Direktor",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Dr. Thomas Schmidt",
+    "message_target_id": "stage05_task_0043::person_dr_thomas_schmidt_a19551dcec::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_thomas_schmidt_a19551dcec",
+    "recipient_value": "https://de.linkedin.com/in/dr-med-thomas-schmidt-696693b8",
+    "role_title": "Ärztlicher Direktor",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Dr. Thomas Schmidt",
+    "message_target_id": "stage05_task_0043::person_dr_thomas_schmidt_a19551dcec::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_thomas_schmidt_a19551dcec",
+    "recipient_value": "https://de.linkedin.com/in/dr-med-thomas-schmidt-696693b8",
+    "role_title": "Ärztlicher Direktor",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Florian Mathäy",
+    "message_target_id": "stage05_task_0043::person_florian_math_y_8ff4f26ce8::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_florian_math_y_8ff4f26ce8",
+    "recipient_value": "florian.mathaey@sana.de",
+    "role_title": "Personalleiter",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Florian Mathäy",
+    "message_target_id": "stage05_task_0043::person_florian_math_y_8ff4f26ce8::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_florian_math_y_8ff4f26ce8",
+    "recipient_value": "https://de.linkedin.com/in/florian-math%C3%A4y-64948710b",
+    "role_title": "Personalleiter",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Florian Mathäy",
+    "message_target_id": "stage05_task_0043::person_florian_math_y_8ff4f26ce8::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_florian_math_y_8ff4f26ce8",
+    "recipient_value": "https://de.linkedin.com/in/florian-math%C3%A4y-64948710b",
+    "role_title": "Personalleiter",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Nataša Gneiding",
+    "message_target_id": "stage05_task_0043::person_nata_a_gneiding_a7b2392926::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_nata_a_gneiding_a7b2392926",
+    "recipient_value": "natascha.gneiding@sana.de",
+    "role_title": "Klinikmanagerin / Prokuristin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Nataša Gneiding",
+    "message_target_id": "stage05_task_0043::person_nata_a_gneiding_a7b2392926::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_nata_a_gneiding_a7b2392926",
+    "recipient_value": "https://de.linkedin.com/in/natascha-gneiding-145713a3",
+    "role_title": "Klinikmanagerin / Prokuristin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Nataša Gneiding",
+    "message_target_id": "stage05_task_0043::person_nata_a_gneiding_a7b2392926::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_nata_a_gneiding_a7b2392926",
+    "recipient_value": "https://de.linkedin.com/in/natascha-gneiding-145713a3",
+    "role_title": "Klinikmanagerin / Prokuristin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Udo Wihlenda",
+    "message_target_id": "stage05_task_0043::person_udo_wihlenda_48a9d617a1::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_udo_wihlenda_48a9d617a1",
+    "recipient_value": "udo.wihlenda@sana.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "full_name": "Udo Wihlenda",
+    "message_target_id": "stage05_task_0043::person_udo_wihlenda_9a8279bd57::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_udo_wihlenda_9a8279bd57",
+    "recipient_value": "udo.wihlenda@sana.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sankt rochus kliniken in bad schönborn|https://www.sankt-rochus-kliniken.de|bad schönborn|germany",
+    "company_name": "Sankt Rochus Kliniken in Bad Schönborn",
+    "full_name": "Christian Busche",
+    "message_target_id": "stage05_task_0043::person_christian_busche_c6ae44f957::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_christian_busche_c6ae44f957",
+    "recipient_value": "c.busche@sankt-rochus-kliniken.de",
+    "role_title": "Geschäftsführer cts RehaVerbund",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sankt rochus kliniken in bad schönborn|https://www.sankt-rochus-kliniken.de|bad schönborn|germany",
+    "company_name": "Sankt Rochus Kliniken in Bad Schönborn",
+    "full_name": "Christian Busche",
+    "message_target_id": "stage05_task_0043::person_christian_busche_c6ae44f957::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christian_busche_c6ae44f957",
+    "recipient_value": "https://de.linkedin.com/in/christian-busche-17133314a",
+    "role_title": "Geschäftsführer cts RehaVerbund",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sankt rochus kliniken in bad schönborn|https://www.sankt-rochus-kliniken.de|bad schönborn|germany",
+    "company_name": "Sankt Rochus Kliniken in Bad Schönborn",
+    "full_name": "Christian Busche",
+    "message_target_id": "stage05_task_0043::person_christian_busche_c6ae44f957::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_christian_busche_c6ae44f957",
+    "recipient_value": "https://de.linkedin.com/in/christian-busche-17133314a",
+    "role_title": "Geschäftsführer cts RehaVerbund",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sankt rochus kliniken in bad schönborn|https://www.sankt-rochus-kliniken.de|bad schönborn|germany",
+    "company_name": "Sankt Rochus Kliniken in Bad Schönborn",
+    "full_name": "Kerstin Walther",
+    "message_target_id": "stage05_task_0043::person_kerstin_walther_894294fa4c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_kerstin_walther_894294fa4c",
+    "recipient_value": "k.walther@sankt-rochus-kliniken.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0043"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sankt rochus kliniken in bad schönborn|https://www.sankt-rochus-kliniken.de|bad schönborn|germany",
+    "company_name": "Sankt Rochus Kliniken in Bad Schönborn",
+    "full_name": "Ralf Ullrich",
+    "message_target_id": "stage05_task_0043::person_ralf_ullrich_2d9ae5a8dd::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ralf_ullrich_2d9ae5a8dd",
+    "recipient_value": "r.ullrich@sankt-rochus-kliniken.de",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0043"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 5,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "company_website": "http://www.rbk.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Annika Kurz",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Christel Idler",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Ralf Busse",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "annika.kurz@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Annika Kurz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/annika-kurz-841026319",
+        "person_key": "person_annika_kurz_4552d5bae3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/behandlung/abteilungen/haematologie-onkologie-und-palliativmedizin/team",
+          "https://www.rbk.de/behandlung/abteilungen/psychosomatische-medizin/team",
+          "https://de.linkedin.com/in/annika-kurz-841026319",
+          "https://www.rbk.de/behandlung/pflege/team"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "christel.idler@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Christel Idler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christel-idler-8036711a1",
+        "person_key": "person_christel_idler_4b57d7b621",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/behandlung/abteilungen/innere-medizin-und-altersmedizin/team",
+          "https://www.rbk.de/behandlung/abteilungen/geriatrie/team",
+          "https://de.linkedin.com/in/christel-idler-8036711a1",
+          "https://www.rbk.de/behandlung/pflege/team"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "denis.seric@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Denis Seric",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_denis_seric_eb688bad54",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsleiter Robert Bosch Krankenhaus, Standort City",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+          "https://www.rbk.de/ueber-uns/organisation/administration"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "ralf.busse@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ralf Busse",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ralf_busse_0f4e932b26",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+          "https://www.bibliomed-pflege.de/autor/5153-ralf-busse",
+          "https://www.rbk.de/behandlung/pflege/team",
+          "https://www.rbk.de/behandlung/medizinische-zentren/onkologisches-zentrum/lungenkrebszentrum"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sabine.velte@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Velte",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sabine_velte_e95592a05b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektorin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+          "https://www.rbk.de/ueber-uns/organisation/administration"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin",
+        "Geschäftsleiter Robert Bosch Krankenhaus, Standort City",
+        "Pflegedirektor",
+        "Personaldirektorin"
+      ],
+      "total_people": 5
+    },
+    "source_urls": [
+      "https://www.rbk.de/behandlung/abteilungen/haematologie-onkologie-und-palliativmedizin/team",
+      "https://www.rbk.de/behandlung/abteilungen/psychosomatische-medizin/team",
+      "https://de.linkedin.com/in/annika-kurz-841026319",
+      "https://www.rbk.de/behandlung/pflege/team",
+      "https://www.rbk.de/behandlung/abteilungen/innere-medizin-und-altersmedizin/team",
+      "https://www.rbk.de/behandlung/abteilungen/geriatrie/team",
+      "https://de.linkedin.com/in/christel-idler-8036711a1",
+      "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+      "https://www.rbk.de/ueber-uns/organisation/administration",
+      "https://www.bibliomed-pflege.de/autor/5153-ralf-busse",
+      "https://www.rbk.de/behandlung/medizinische-zentren/onkologisches-zentrum/lungenkrebszentrum"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Wildbad",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rommel-klinik in bad wildbad|http://www.rommel-klinik.de|bad wildbad|germany",
+    "company_name": "Rommel-Klinik in Bad Wildbad",
+    "company_website": "http://www.rommel-klinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Harald Croyé",
+          "person_key": "",
+          "role": "Pflegedienstleitung und Pflegeleitung-QMB"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "croye@rommel-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Harald Croyé",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_harald_croy_16f37150f2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung und Pflegeleitung-QMB",
+        "role_category": "operations",
+        "source_urls": [
+          "https://rommel-klinik.de/ueber-uns/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "roemer@rommel-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Konstantin Römer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/konstantin-r%C3%B6mer-rk1900",
+        "person_key": "person_konstantin_r_mer_9c74765bff",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Standortleiter",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://klinik-atlas.info/hospital_list_test%20_cron/rommel-klinik-gmbh/",
+          "https://rommel-klinik.de/verwaltung/",
+          "https://rommel-klinik.de/neuer-standortleiter/",
+          "https://de.linkedin.com/in/konstantin-r%C3%B6mer-rk1900"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "martin@rommel-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Luisa Martin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_luisa_martin_3e17551447",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://rommel-klinik.de/verwaltung/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedienstleitung und Pflegeleitung-QMB",
+        "Standortleiter",
+        "Leitung Personal"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://rommel-klinik.de/ueber-uns/",
+      "https://klinik-atlas.info/hospital_list_test%20_cron/rommel-klinik-gmbh/",
+      "https://rommel-klinik.de/verwaltung/",
+      "https://rommel-klinik.de/neuer-standortleiter/",
+      "https://de.linkedin.com/in/konstantin-r%C3%B6mer-rk1900"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 7,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 5,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Biberach an der Riß",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "company_website": "https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Udo Wihlenda",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Udo Wihlenda",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "beate.joerissen@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Beate Jörißen",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160",
+        "person_key": "person_beate_j_ri_en_f12c6a9e25",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.fachklinik-dietenbronn.de/ueber-uns/ansprechpartner/klinikleitung/",
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+          "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "beate.joerissen@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Beate Jörißen",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160",
+        "person_key": "person_beate_j_ri_en_1c5755d658",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.fachklinik-dietenbronn.de/ueber-uns/ansprechpartner/klinikleitung/",
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+          "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "thomas.schmidt3@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Thomas Schmidt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-med-thomas-schmidt-696693b8",
+        "person_key": "person_dr_thomas_schmidt_a19551dcec",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztlicher Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.sana.de/biberach/medizin-pflege/allgemein-und-viszeralchirurgie",
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+          "https://de.linkedin.com/in/dr-med-thomas-schmidt-696693b8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "florian.mathaey@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Florian Mathäy",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/florian-math%C3%A4y-64948710b",
+        "person_key": "person_florian_math_y_8ff4f26ce8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleiter",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+          "https://de.linkedin.com/in/florian-math%C3%A4y-64948710b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "natascha.gneiding@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nataša Gneiding",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/natascha-gneiding-145713a3",
+        "person_key": "person_nata_a_gneiding_a7b2392926",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikmanagerin / Prokuristin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+          "https://www.sana.de/media/Kliniken/biberach/1-medizin-pflege/qualitaet/Sana_Klinikum_Landkreis_Biberach_Qualitaetsbericht_2024.pdf",
+          "https://de.linkedin.com/in/natascha-gneiding-145713a3"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "udo.wihlenda@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Udo Wihlenda",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_udo_wihlenda_48a9d617a1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.sana.de/biberach/medizin-pflege/der-sana-pflegeanspruch/pflegedirektion",
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "udo.wihlenda@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Udo Wihlenda",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_udo_wihlenda_9a8279bd57",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.sana.de/biberach/medizin-pflege/der-sana-pflegeanspruch/pflegedirektion",
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "other_management",
+        "hr_recruiting",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Ärztlicher Direktor",
+        "Personalleiter",
+        "Klinikmanagerin / Prokuristin",
+        "Pflegedirektor"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.fachklinik-dietenbronn.de/ueber-uns/ansprechpartner/klinikleitung/",
+      "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+      "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160",
+      "https://www.sana.de/biberach/medizin-pflege/allgemein-und-viszeralchirurgie",
+      "https://de.linkedin.com/in/dr-med-thomas-schmidt-696693b8",
+      "https://de.linkedin.com/in/florian-math%C3%A4y-64948710b",
+      "https://www.sana.de/media/Kliniken/biberach/1-medizin-pflege/qualitaet/Sana_Klinikum_Landkreis_Biberach_Qualitaetsbericht_2024.pdf",
+      "https://de.linkedin.com/in/natascha-gneiding-145713a3",
+      "https://www.sana.de/biberach/medizin-pflege/der-sana-pflegeanspruch/pflegedirektion"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Schönborn",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sankt rochus kliniken in bad schönborn|https://www.sankt-rochus-kliniken.de|bad schönborn|germany",
+    "company_name": "Sankt Rochus Kliniken in Bad Schönborn",
+    "company_website": "https://www.sankt-rochus-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Kerstin Walther",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "c.busche@sankt-rochus-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Christian Busche",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christian-busche-17133314a",
+        "person_key": "person_christian_busche_c6ae44f957",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer cts RehaVerbund",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Christian-Busche%2C3022458",
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung",
+          "https://de.linkedin.com/in/christian-busche-17133314a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "k.walther@sankt-rochus-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kerstin Walther",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_kerstin_walther_894294fa4c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung",
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Kerstin-Walther%2C3025121"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "r.ullrich@sankt-rochus-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ralf Ullrich",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ralf_ullrich_2d9ae5a8dd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung",
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Ralf-Ullrich%2C3022460"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Geschäftsführer cts RehaVerbund",
+        "Pflegedirektorin",
+        "Kaufmännischer Direktor"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Christian-Busche%2C3022458",
+      "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung",
+      "https://de.linkedin.com/in/christian-busche-17133314a",
+      "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Kerstin-Walther%2C3025121",
+      "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Ralf-Ullrich%2C3022460"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 5,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|robert-bosch-krankenhaus, standort city in stuttgart|http://www.rbk.de/|stuttgart|germany",
+    "company_name": "Robert-Bosch-Krankenhaus, Standort City in Stuttgart",
+    "company_website": "http://www.rbk.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Annika Kurz",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Christel Idler",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        },
+        {
+          "full_name": "Ralf Busse",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "annika.kurz@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Annika Kurz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/annika-kurz-841026319",
+        "person_key": "person_annika_kurz_4552d5bae3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/behandlung/abteilungen/haematologie-onkologie-und-palliativmedizin/team",
+          "https://www.rbk.de/behandlung/abteilungen/psychosomatische-medizin/team",
+          "https://de.linkedin.com/in/annika-kurz-841026319",
+          "https://www.rbk.de/behandlung/pflege/team"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "christel.idler@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Christel Idler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christel-idler-8036711a1",
+        "person_key": "person_christel_idler_4b57d7b621",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/behandlung/abteilungen/innere-medizin-und-altersmedizin/team",
+          "https://www.rbk.de/behandlung/abteilungen/geriatrie/team",
+          "https://de.linkedin.com/in/christel-idler-8036711a1",
+          "https://www.rbk.de/behandlung/pflege/team"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "denis.seric@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Denis Seric",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_denis_seric_eb688bad54",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsleiter Robert Bosch Krankenhaus, Standort City",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+          "https://www.rbk.de/ueber-uns/organisation/administration"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "ralf.busse@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ralf Busse",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ralf_busse_0f4e932b26",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+          "https://www.bibliomed-pflege.de/autor/5153-ralf-busse",
+          "https://www.rbk.de/behandlung/pflege/team",
+          "https://www.rbk.de/behandlung/medizinische-zentren/onkologisches-zentrum/lungenkrebszentrum"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sabine.velte@rbk.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sabine Velte",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sabine_velte_e95592a05b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektorin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+          "https://www.rbk.de/ueber-uns/organisation/administration"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin",
+        "Geschäftsleiter Robert Bosch Krankenhaus, Standort City",
+        "Pflegedirektor",
+        "Personaldirektorin"
+      ],
+      "total_people": 5
+    },
+    "source_urls": [
+      "https://www.rbk.de/behandlung/abteilungen/haematologie-onkologie-und-palliativmedizin/team",
+      "https://www.rbk.de/behandlung/abteilungen/psychosomatische-medizin/team",
+      "https://de.linkedin.com/in/annika-kurz-841026319",
+      "https://www.rbk.de/behandlung/pflege/team",
+      "https://www.rbk.de/behandlung/abteilungen/innere-medizin-und-altersmedizin/team",
+      "https://www.rbk.de/behandlung/abteilungen/geriatrie/team",
+      "https://de.linkedin.com/in/christel-idler-8036711a1",
+      "https://www.rbk.de/ueber-uns/organisation/krankenhausleitung",
+      "https://www.rbk.de/ueber-uns/organisation/administration",
+      "https://www.bibliomed-pflege.de/autor/5153-ralf-busse",
+      "https://www.rbk.de/behandlung/medizinische-zentren/onkologisches-zentrum/lungenkrebszentrum"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Wildbad",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rommel-klinik in bad wildbad|http://www.rommel-klinik.de|bad wildbad|germany",
+    "company_name": "Rommel-Klinik in Bad Wildbad",
+    "company_website": "http://www.rommel-klinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Harald Croyé",
+          "person_key": "",
+          "role": "Pflegedienstleitung und Pflegeleitung-QMB"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "croye@rommel-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Harald Croyé",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_harald_croy_16f37150f2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung und Pflegeleitung-QMB",
+        "role_category": "operations",
+        "source_urls": [
+          "https://rommel-klinik.de/ueber-uns/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "roemer@rommel-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Konstantin Römer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/konstantin-r%C3%B6mer-rk1900",
+        "person_key": "person_konstantin_r_mer_9c74765bff",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Standortleiter",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://klinik-atlas.info/hospital_list_test%20_cron/rommel-klinik-gmbh/",
+          "https://rommel-klinik.de/verwaltung/",
+          "https://rommel-klinik.de/neuer-standortleiter/",
+          "https://de.linkedin.com/in/konstantin-r%C3%B6mer-rk1900"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "martin@rommel-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Luisa Martin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_luisa_martin_3e17551447",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://rommel-klinik.de/verwaltung/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedienstleitung und Pflegeleitung-QMB",
+        "Standortleiter",
+        "Leitung Personal"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://rommel-klinik.de/ueber-uns/",
+      "https://klinik-atlas.info/hospital_list_test%20_cron/rommel-klinik-gmbh/",
+      "https://rommel-klinik.de/verwaltung/",
+      "https://rommel-klinik.de/neuer-standortleiter/",
+      "https://de.linkedin.com/in/konstantin-r%C3%B6mer-rk1900"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 7,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 5,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Biberach an der Riß",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sana klinikum biberach|https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach|biberach an der riß|germany",
+    "company_name": "Sana Klinikum Biberach",
+    "company_website": "https://www.sana.de/biberach/medizin-pflege/sana-klinikum-landkreis-biberach",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Udo Wihlenda",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Udo Wihlenda",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "beate.joerissen@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Beate Jörißen",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160",
+        "person_key": "person_beate_j_ri_en_f12c6a9e25",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.fachklinik-dietenbronn.de/ueber-uns/ansprechpartner/klinikleitung/",
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+          "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "beate.joerissen@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Beate Jörißen",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160",
+        "person_key": "person_beate_j_ri_en_1c5755d658",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.fachklinik-dietenbronn.de/ueber-uns/ansprechpartner/klinikleitung/",
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+          "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "thomas.schmidt3@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Thomas Schmidt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-med-thomas-schmidt-696693b8",
+        "person_key": "person_dr_thomas_schmidt_a19551dcec",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztlicher Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.sana.de/biberach/medizin-pflege/allgemein-und-viszeralchirurgie",
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+          "https://de.linkedin.com/in/dr-med-thomas-schmidt-696693b8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "florian.mathaey@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Florian Mathäy",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/florian-math%C3%A4y-64948710b",
+        "person_key": "person_florian_math_y_8ff4f26ce8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleiter",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+          "https://de.linkedin.com/in/florian-math%C3%A4y-64948710b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "natascha.gneiding@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nataša Gneiding",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/natascha-gneiding-145713a3",
+        "person_key": "person_nata_a_gneiding_a7b2392926",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikmanagerin / Prokuristin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+          "https://www.sana.de/media/Kliniken/biberach/1-medizin-pflege/qualitaet/Sana_Klinikum_Landkreis_Biberach_Qualitaetsbericht_2024.pdf",
+          "https://de.linkedin.com/in/natascha-gneiding-145713a3"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "udo.wihlenda@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Udo Wihlenda",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_udo_wihlenda_48a9d617a1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.sana.de/biberach/medizin-pflege/der-sana-pflegeanspruch/pflegedirektion",
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "udo.wihlenda@sana.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Udo Wihlenda",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_udo_wihlenda_9a8279bd57",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.sana.de/biberach/medizin-pflege/der-sana-pflegeanspruch/pflegedirektion",
+          "https://www.sana.de/biberach/ueber-uns/ansprechpartner"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "other_management",
+        "hr_recruiting",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "Ärztlicher Direktor",
+        "Personalleiter",
+        "Klinikmanagerin / Prokuristin",
+        "Pflegedirektor"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.fachklinik-dietenbronn.de/ueber-uns/ansprechpartner/klinikleitung/",
+      "https://www.sana.de/biberach/ueber-uns/ansprechpartner",
+      "https://de.linkedin.com/in/beate-j%C3%B6ri%C3%9Fen-a54a49160",
+      "https://www.sana.de/biberach/medizin-pflege/allgemein-und-viszeralchirurgie",
+      "https://de.linkedin.com/in/dr-med-thomas-schmidt-696693b8",
+      "https://de.linkedin.com/in/florian-math%C3%A4y-64948710b",
+      "https://www.sana.de/media/Kliniken/biberach/1-medizin-pflege/qualitaet/Sana_Klinikum_Landkreis_Biberach_Qualitaetsbericht_2024.pdf",
+      "https://de.linkedin.com/in/natascha-gneiding-145713a3",
+      "https://www.sana.de/biberach/medizin-pflege/der-sana-pflegeanspruch/pflegedirektion"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Schönborn",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|sankt rochus kliniken in bad schönborn|https://www.sankt-rochus-kliniken.de|bad schönborn|germany",
+    "company_name": "Sankt Rochus Kliniken in Bad Schönborn",
+    "company_website": "https://www.sankt-rochus-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Kerstin Walther",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "c.busche@sankt-rochus-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Christian Busche",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/christian-busche-17133314a",
+        "person_key": "person_christian_busche_c6ae44f957",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer cts RehaVerbund",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Christian-Busche%2C3022458",
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung",
+          "https://de.linkedin.com/in/christian-busche-17133314a"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "k.walther@sankt-rochus-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Kerstin Walther",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_kerstin_walther_894294fa4c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung",
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Kerstin-Walther%2C3025121"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "r.ullrich@sankt-rochus-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ralf Ullrich",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ralf_ullrich_2d9ae5a8dd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung",
+          "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Ralf-Ullrich%2C3022460"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Geschäftsführer cts RehaVerbund",
+        "Pflegedirektorin",
+        "Kaufmännischer Direktor"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Christian-Busche%2C3022458",
+      "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung",
+      "https://de.linkedin.com/in/christian-busche-17133314a",
+      "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Kerstin-Walther%2C3025121",
+      "https://www.sankt-rochus-kliniken.de/wir-ueber-uns/klinikleitung/klinikkonferenz/Ralf-Ullrich%2C3022460"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
