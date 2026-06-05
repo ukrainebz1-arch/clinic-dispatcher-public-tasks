@@ -1,0 +1,1289 @@
+TASK_ID: stage05_task_0038
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|parkinson klinik ortenau in wolfach|http://www.parkinson-klinik.de|wolfach|germany",
+    "company_name": "Parkinson Klinik Ortenau in Wolfach",
+    "full_name": "Anja Stegelitz",
+    "message_target_id": "stage05_task_0038::person_anja_stegelitz_0c96559389::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_anja_stegelitz_0c96559389",
+    "recipient_value": "a.stegelitz@parkinson-klinik.de",
+    "role_title": "Verwaltungs- und Personalleitung",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|parkinson klinik ortenau in wolfach|http://www.parkinson-klinik.de|wolfach|germany",
+    "company_name": "Parkinson Klinik Ortenau in Wolfach",
+    "full_name": "Anja Stegelitz",
+    "message_target_id": "stage05_task_0038::person_anja_stegelitz_0c96559389::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anja_stegelitz_0c96559389",
+    "recipient_value": "https://de.linkedin.com/in/stegelitz-anja-park-stegelitz-ba458215b",
+    "role_title": "Verwaltungs- und Personalleitung",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|parkinson klinik ortenau in wolfach|http://www.parkinson-klinik.de|wolfach|germany",
+    "company_name": "Parkinson Klinik Ortenau in Wolfach",
+    "full_name": "Anja Stegelitz",
+    "message_target_id": "stage05_task_0038::person_anja_stegelitz_0c96559389::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anja_stegelitz_0c96559389",
+    "recipient_value": "https://de.linkedin.com/in/stegelitz-anja-park-stegelitz-ba458215b",
+    "role_title": "Verwaltungs- und Personalleitung",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|parkinson klinik ortenau in wolfach|http://www.parkinson-klinik.de|wolfach|germany",
+    "company_name": "Parkinson Klinik Ortenau in Wolfach",
+    "full_name": "Heiko Stegelitz",
+    "message_target_id": "stage05_task_0038::person_heiko_stegelitz_8989b339b0::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_heiko_stegelitz_8989b339b0",
+    "recipient_value": "h.stegelitz@parkinson-klinik.de",
+    "role_title": "Geschäftsführung und Inhaber",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|parkinson klinik ortenau in wolfach|http://www.parkinson-klinik.de|wolfach|germany",
+    "company_name": "Parkinson Klinik Ortenau in Wolfach",
+    "full_name": "Sven Huber",
+    "message_target_id": "stage05_task_0038::person_sven_huber_5389fc49ad::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sven_huber_5389fc49ad",
+    "recipient_value": "s.huber@parkinson-klinik.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|pp.rt klinik für psychiatrie und psychosomatik in reutlingen|http://www.pprt.de|reutlingen|germany",
+    "company_name": "PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen",
+    "full_name": "Gerhard Längle",
+    "message_target_id": "stage05_task_0038::person_gerhard_l_ngle_23740131c0::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_gerhard_l_ngle_23740131c0",
+    "recipient_value": "gerhard.laengle@pprt.de",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|pp.rt klinik für psychiatrie und psychosomatik in reutlingen|http://www.pprt.de|reutlingen|germany",
+    "company_name": "PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen",
+    "full_name": "Marc Böhringer",
+    "message_target_id": "stage05_task_0038::person_marc_b_hringer_d8f6fa9aa7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_marc_b_hringer_d8f6fa9aa7",
+    "recipient_value": "marc.boehringer@pprt.de",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|pp.rt klinik für psychiatrie und psychosomatik in reutlingen|http://www.pprt.de|reutlingen|germany",
+    "company_name": "PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen",
+    "full_name": "Marc Böhringer",
+    "message_target_id": "stage05_task_0038::person_marc_b_hringer_d8f6fa9aa7::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marc_b_hringer_d8f6fa9aa7",
+    "recipient_value": "https://de.linkedin.com/in/marc-b%C3%B6hringer-200398244",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|pp.rt klinik für psychiatrie und psychosomatik in reutlingen|http://www.pprt.de|reutlingen|germany",
+    "company_name": "PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen",
+    "full_name": "Marc Böhringer",
+    "message_target_id": "stage05_task_0038::person_marc_b_hringer_d8f6fa9aa7::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marc_b_hringer_d8f6fa9aa7",
+    "recipient_value": "https://de.linkedin.com/in/marc-b%C3%B6hringer-200398244",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|pp.rt klinik für psychiatrie und psychosomatik in reutlingen|http://www.pprt.de|reutlingen|germany",
+    "company_name": "PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen",
+    "full_name": "Uwe Armbruster",
+    "message_target_id": "stage05_task_0038::person_uwe_armbruster_ab73c26e32::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_uwe_armbruster_ab73c26e32",
+    "recipient_value": "uwe.armbruster@pprt.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Andreas Breitmayer",
+    "message_target_id": "stage05_task_0038::person_andreas_breitmayer_9ddf147a3d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_andreas_breitmayer_9ddf147a3d",
+    "recipient_value": "a.breitmayer@klinikum-weissenhof.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Andreas Breitmayer",
+    "message_target_id": "stage05_task_0038::person_andreas_breitmayer_9ddf147a3d::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_breitmayer_9ddf147a3d",
+    "recipient_value": "https://de.linkedin.com/in/breitmayer-andreas-97227592",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Andreas Breitmayer",
+    "message_target_id": "stage05_task_0038::person_andreas_breitmayer_9ddf147a3d::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_breitmayer_9ddf147a3d",
+    "recipient_value": "https://de.linkedin.com/in/breitmayer-andreas-97227592",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Anke Herzig",
+    "message_target_id": "stage05_task_0038::person_anke_herzig_7344b6f314::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_anke_herzig_7344b6f314",
+    "recipient_value": "a.herzig@klinikum-weissenhof.de",
+    "role_title": "Pflegedienstleiterin Gerontopsychiatrie",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Anke Herzig",
+    "message_target_id": "stage05_task_0038::person_anke_herzig_7344b6f314::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anke_herzig_7344b6f314",
+    "recipient_value": "https://de.linkedin.com/in/anke-herzig-a275ba14b",
+    "role_title": "Pflegedienstleiterin Gerontopsychiatrie",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Anke Herzig",
+    "message_target_id": "stage05_task_0038::person_anke_herzig_7344b6f314::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anke_herzig_7344b6f314",
+    "recipient_value": "https://de.linkedin.com/in/anke-herzig-a275ba14b",
+    "role_title": "Pflegedienstleiterin Gerontopsychiatrie",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Erika Lautenschlager",
+    "message_target_id": "stage05_task_0038::person_erika_lautenschlager_ed86e044ac::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_erika_lautenschlager_ed86e044ac",
+    "recipient_value": "e.lautenschlager@klinikum-weissenhof.de",
+    "role_title": "Pflegedienstleiterin Allgemeine Psychiatrie",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Erika Lautenschlager",
+    "message_target_id": "stage05_task_0038::person_erika_lautenschlager_ed86e044ac::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_erika_lautenschlager_ed86e044ac",
+    "recipient_value": "https://de.linkedin.com/in/erika-lautenschlager-36a8183a4",
+    "role_title": "Pflegedienstleiterin Allgemeine Psychiatrie",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Erika Lautenschlager",
+    "message_target_id": "stage05_task_0038::person_erika_lautenschlager_ed86e044ac::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_erika_lautenschlager_ed86e044ac",
+    "recipient_value": "https://de.linkedin.com/in/erika-lautenschlager-36a8183a4",
+    "role_title": "Pflegedienstleiterin Allgemeine Psychiatrie",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Markus Mauch",
+    "message_target_id": "stage05_task_0038::person_markus_mauch_d7fd4d78a3::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_markus_mauch_d7fd4d78a3",
+    "recipient_value": "m.mauch@klinikum-weissenhof.de",
+    "role_title": "Pflegedienstleiter Kinder- und Jugendpsychiatrie",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Roland Kuttner",
+    "message_target_id": "stage05_task_0038::person_roland_kuttner_80aa731e2c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_roland_kuttner_80aa731e2c",
+    "recipient_value": "r.kuttner@klinikum-weissenhof.de",
+    "role_title": "Personaldirektor",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Stefanie Klein",
+    "message_target_id": "stage05_task_0038::person_stefanie_klein_e8a3b1ac36::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefanie_klein_e8a3b1ac36",
+    "recipient_value": "s.klein@klinikum-weissenhof.de",
+    "role_title": "Pflegedienstleiterin Suchttherapie",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Stefanie Klein",
+    "message_target_id": "stage05_task_0038::person_stefanie_klein_e8a3b1ac36::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefanie_klein_e8a3b1ac36",
+    "recipient_value": "https://de.linkedin.com/in/stefanie-klein-788809b1",
+    "role_title": "Pflegedienstleiterin Suchttherapie",
+    "task_id": "stage05_task_0038"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "full_name": "Stefanie Klein",
+    "message_target_id": "stage05_task_0038::person_stefanie_klein_e8a3b1ac36::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefanie_klein_e8a3b1ac36",
+    "recipient_value": "https://de.linkedin.com/in/stefanie-klein-788809b1",
+    "role_title": "Pflegedienstleiterin Suchttherapie",
+    "task_id": "stage05_task_0038"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Wolfach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|parkinson klinik ortenau in wolfach|http://www.parkinson-klinik.de|wolfach|germany",
+    "company_name": "Parkinson Klinik Ortenau in Wolfach",
+    "company_website": "http://www.parkinson-klinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Sven Huber",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "a.stegelitz@parkinson-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anja Stegelitz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stegelitz-anja-park-stegelitz-ba458215b",
+        "person_key": "person_anja_stegelitz_0c96559389",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungs- und Personalleitung",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://sab067b0ebf96e213.jimcontent.com/download/version/1769708144/module/13269808987/name/Qualitaetsbericht_Parkinson-Klinik-Ortenau_2024.pdf",
+          "https://www.parkinson-klinik-ortenau.de/parkinson-klinik/ansprechpartner/",
+          "https://de.linkedin.com/in/stegelitz-anja-park-stegelitz-ba458215b",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5d2b78675d60382c/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "h.stegelitz@parkinson-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heiko Stegelitz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_heiko_stegelitz_8989b339b0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung und Inhaber",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://sab067b0ebf96e213.jimcontent.com/download/version/1769708144/module/13269808987/name/Qualitaetsbericht_Parkinson-Klinik-Ortenau_2024.pdf",
+          "https://www.parkinson-klinik-ortenau.de/impressum/",
+          "https://de.linkedin.com/posts/bwkg_bwkg-krankenhaus-reha-activity-7349344515729600514-6ePU",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5d2b78675d60382c/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "s.huber@parkinson-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sven Huber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sven_huber_5389fc49ad",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://sab067b0ebf96e213.jimcontent.com/download/version/1769708144/module/13269808987/name/Qualitaetsbericht_Parkinson-Klinik-Ortenau_2024.pdf",
+          "https://www.parkinson-klinik-ortenau.de/parkinson-klinik/ansprechpartner/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5d2b78675d60382c/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Verwaltungs- und Personalleitung",
+        "Geschäftsführung und Inhaber",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://sab067b0ebf96e213.jimcontent.com/download/version/1769708144/module/13269808987/name/Qualitaetsbericht_Parkinson-Klinik-Ortenau_2024.pdf",
+      "https://www.parkinson-klinik-ortenau.de/parkinson-klinik/ansprechpartner/",
+      "https://de.linkedin.com/in/stegelitz-anja-park-stegelitz-ba458215b",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5d2b78675d60382c/start",
+      "https://www.parkinson-klinik-ortenau.de/impressum/",
+      "https://de.linkedin.com/posts/bwkg_bwkg-krankenhaus-reha-activity-7349344515729600514-6ePU"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Reutlingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|pp.rt klinik für psychiatrie und psychosomatik in reutlingen|http://www.pprt.de|reutlingen|germany",
+    "company_name": "PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen",
+    "company_website": "http://www.pprt.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Uwe Armbruster",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "gerhard.laengle@pprt.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Gerhard Längle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_gerhard_l_ngle_23740131c0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.pprt.de/unternehmen/kontakt",
+          "https://www.pprt.de/impressum"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marc.boehringer@pprt.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marc Böhringer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marc-b%C3%B6hringer-200398244",
+        "person_key": "person_marc_b_hringer_d8f6fa9aa7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.pprt.de/unternehmen/kontakt",
+          "https://de.linkedin.com/in/marc-b%C3%B6hringer-200398244"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "uwe.armbruster@pprt.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Uwe Armbruster",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_uwe_armbruster_ab73c26e32",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.pprt.de/unternehmen/kontakt",
+          "https://www.pprt.de/unternehmen/organisation/betriebsleitung"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführung",
+        "Pflegedirektor"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.pprt.de/unternehmen/kontakt",
+      "https://www.pprt.de/impressum",
+      "https://de.linkedin.com/in/marc-b%C3%B6hringer-200398244",
+      "https://www.pprt.de/unternehmen/organisation/betriebsleitung"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Schwäbisch Hall",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "company_website": "http://www.zfpg-sha.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Anke Herzig",
+          "person_key": "",
+          "role": "Pflegedienstleiterin Gerontopsychiatrie"
+        },
+        {
+          "full_name": "Erika Lautenschlager",
+          "person_key": "",
+          "role": "Pflegedienstleiterin Allgemeine Psychiatrie"
+        },
+        {
+          "full_name": "Markus Mauch",
+          "person_key": "",
+          "role": "Pflegedienstleiter Kinder- und Jugendpsychiatrie"
+        },
+        {
+          "full_name": "Stefanie Klein",
+          "person_key": "",
+          "role": "Pflegedienstleiterin Suchttherapie"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "a.breitmayer@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Breitmayer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/breitmayer-andreas-97227592",
+        "person_key": "person_andreas_breitmayer_9ddf147a3d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen",
+          "https://de.linkedin.com/in/breitmayer-andreas-97227592"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "a.herzig@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anke Herzig",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anke-herzig-a275ba14b",
+        "person_key": "person_anke_herzig_7344b6f314",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin Gerontopsychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen",
+          "https://de.linkedin.com/in/anke-herzig-a275ba14b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "e.lautenschlager@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Erika Lautenschlager",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/erika-lautenschlager-36a8183a4",
+        "person_key": "person_erika_lautenschlager_ed86e044ac",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin Allgemeine Psychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen",
+          "https://de.linkedin.com/in/erika-lautenschlager-36a8183a4"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.mauch@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Markus Mauch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_markus_mauch_d7fd4d78a3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiter Kinder- und Jugendpsychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "r.kuttner@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Roland Kuttner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_roland_kuttner_80aa731e2c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektor",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen",
+          "false"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.klein@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefanie Klein",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefanie-klein-788809b1",
+        "person_key": "person_stefanie_klein_e8a3b1ac36",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin Suchttherapie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen",
+          "https://de.linkedin.com/in/stefanie-klein-788809b1"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedienstleiterin Gerontopsychiatrie",
+        "Pflegedienstleiterin Allgemeine Psychiatrie",
+        "Pflegedienstleiter Kinder- und Jugendpsychiatrie",
+        "Personaldirektor",
+        "Pflegedienstleiterin Suchttherapie"
+      ],
+      "total_people": 6
+    },
+    "source_urls": [
+      "https://www.zfpg-sha.de/kontaktpersonen",
+      "https://de.linkedin.com/in/breitmayer-andreas-97227592",
+      "https://de.linkedin.com/in/anke-herzig-a275ba14b",
+      "https://de.linkedin.com/in/erika-lautenschlager-36a8183a4",
+      "false",
+      "https://de.linkedin.com/in/stefanie-klein-788809b1"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Wolfach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|parkinson klinik ortenau in wolfach|http://www.parkinson-klinik.de|wolfach|germany",
+    "company_name": "Parkinson Klinik Ortenau in Wolfach",
+    "company_website": "http://www.parkinson-klinik.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Sven Huber",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "a.stegelitz@parkinson-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anja Stegelitz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stegelitz-anja-park-stegelitz-ba458215b",
+        "person_key": "person_anja_stegelitz_0c96559389",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungs- und Personalleitung",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://sab067b0ebf96e213.jimcontent.com/download/version/1769708144/module/13269808987/name/Qualitaetsbericht_Parkinson-Klinik-Ortenau_2024.pdf",
+          "https://www.parkinson-klinik-ortenau.de/parkinson-klinik/ansprechpartner/",
+          "https://de.linkedin.com/in/stegelitz-anja-park-stegelitz-ba458215b",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5d2b78675d60382c/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "h.stegelitz@parkinson-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Heiko Stegelitz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_heiko_stegelitz_8989b339b0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung und Inhaber",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://sab067b0ebf96e213.jimcontent.com/download/version/1769708144/module/13269808987/name/Qualitaetsbericht_Parkinson-Klinik-Ortenau_2024.pdf",
+          "https://www.parkinson-klinik-ortenau.de/impressum/",
+          "https://de.linkedin.com/posts/bwkg_bwkg-krankenhaus-reha-activity-7349344515729600514-6ePU",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5d2b78675d60382c/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "s.huber@parkinson-klinik.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sven Huber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sven_huber_5389fc49ad",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://sab067b0ebf96e213.jimcontent.com/download/version/1769708144/module/13269808987/name/Qualitaetsbericht_Parkinson-Klinik-Ortenau_2024.pdf",
+          "https://www.parkinson-klinik-ortenau.de/parkinson-klinik/ansprechpartner/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5d2b78675d60382c/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Verwaltungs- und Personalleitung",
+        "Geschäftsführung und Inhaber",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://sab067b0ebf96e213.jimcontent.com/download/version/1769708144/module/13269808987/name/Qualitaetsbericht_Parkinson-Klinik-Ortenau_2024.pdf",
+      "https://www.parkinson-klinik-ortenau.de/parkinson-klinik/ansprechpartner/",
+      "https://de.linkedin.com/in/stegelitz-anja-park-stegelitz-ba458215b",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5d2b78675d60382c/start",
+      "https://www.parkinson-klinik-ortenau.de/impressum/",
+      "https://de.linkedin.com/posts/bwkg_bwkg-krankenhaus-reha-activity-7349344515729600514-6ePU"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Reutlingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|pp.rt klinik für psychiatrie und psychosomatik in reutlingen|http://www.pprt.de|reutlingen|germany",
+    "company_name": "PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen",
+    "company_website": "http://www.pprt.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Uwe Armbruster",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "gerhard.laengle@pprt.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Gerhard Längle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_gerhard_l_ngle_23740131c0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.pprt.de/unternehmen/kontakt",
+          "https://www.pprt.de/impressum"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marc.boehringer@pprt.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marc Böhringer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marc-b%C3%B6hringer-200398244",
+        "person_key": "person_marc_b_hringer_d8f6fa9aa7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.pprt.de/unternehmen/kontakt",
+          "https://de.linkedin.com/in/marc-b%C3%B6hringer-200398244"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "uwe.armbruster@pprt.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Uwe Armbruster",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_uwe_armbruster_ab73c26e32",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.pprt.de/unternehmen/kontakt",
+          "https://www.pprt.de/unternehmen/organisation/betriebsleitung"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführung",
+        "Pflegedirektor"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.pprt.de/unternehmen/kontakt",
+      "https://www.pprt.de/impressum",
+      "https://de.linkedin.com/in/marc-b%C3%B6hringer-200398244",
+      "https://www.pprt.de/unternehmen/organisation/betriebsleitung"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Schwäbisch Hall",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrie schwäbisch hall|http://www.zfpg-sha.de/|schwäbisch hall|germany",
+    "company_name": "Psychiatrie Schwäbisch Hall",
+    "company_website": "http://www.zfpg-sha.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Anke Herzig",
+          "person_key": "",
+          "role": "Pflegedienstleiterin Gerontopsychiatrie"
+        },
+        {
+          "full_name": "Erika Lautenschlager",
+          "person_key": "",
+          "role": "Pflegedienstleiterin Allgemeine Psychiatrie"
+        },
+        {
+          "full_name": "Markus Mauch",
+          "person_key": "",
+          "role": "Pflegedienstleiter Kinder- und Jugendpsychiatrie"
+        },
+        {
+          "full_name": "Stefanie Klein",
+          "person_key": "",
+          "role": "Pflegedienstleiterin Suchttherapie"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "a.breitmayer@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Breitmayer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/breitmayer-andreas-97227592",
+        "person_key": "person_andreas_breitmayer_9ddf147a3d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen",
+          "https://de.linkedin.com/in/breitmayer-andreas-97227592"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "a.herzig@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anke Herzig",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anke-herzig-a275ba14b",
+        "person_key": "person_anke_herzig_7344b6f314",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin Gerontopsychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen",
+          "https://de.linkedin.com/in/anke-herzig-a275ba14b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "e.lautenschlager@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Erika Lautenschlager",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/erika-lautenschlager-36a8183a4",
+        "person_key": "person_erika_lautenschlager_ed86e044ac",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin Allgemeine Psychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen",
+          "https://de.linkedin.com/in/erika-lautenschlager-36a8183a4"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.mauch@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Markus Mauch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_markus_mauch_d7fd4d78a3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiter Kinder- und Jugendpsychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "r.kuttner@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Roland Kuttner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_roland_kuttner_80aa731e2c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektor",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen",
+          "false"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.klein@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefanie Klein",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefanie-klein-788809b1",
+        "person_key": "person_stefanie_klein_e8a3b1ac36",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleiterin Suchttherapie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfpg-sha.de/kontaktpersonen",
+          "https://de.linkedin.com/in/stefanie-klein-788809b1"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedienstleiterin Gerontopsychiatrie",
+        "Pflegedienstleiterin Allgemeine Psychiatrie",
+        "Pflegedienstleiter Kinder- und Jugendpsychiatrie",
+        "Personaldirektor",
+        "Pflegedienstleiterin Suchttherapie"
+      ],
+      "total_people": 6
+    },
+    "source_urls": [
+      "https://www.zfpg-sha.de/kontaktpersonen",
+      "https://de.linkedin.com/in/breitmayer-andreas-97227592",
+      "https://de.linkedin.com/in/anke-herzig-a275ba14b",
+      "https://de.linkedin.com/in/erika-lautenschlager-36a8183a4",
+      "false",
+      "https://de.linkedin.com/in/stefanie-klein-788809b1"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
