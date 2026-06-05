@@ -1,0 +1,84 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_012_20260605T191504Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_012_20260605T191504Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_collect70_20260605_145433/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Tagesklinik Heilbronn | company_website: http://www.klinikum-weissenhof.de/ | first_name: Bettina | last_name: Löwe | full_name: Bettina Löwe | role: Pflegerische Stationsleitung | role_category: operations | confidence: high | notes: Official site lists Tagesklinik nursing lead
+2. batch_id: batch_001 | company_name: Tagesklinik Heilbronn | company_website: http://www.klinikum-weissenhof.de/ | first_name: Birgit | last_name: Karl | full_name: Birgit Karl | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Operator careers site lists Pflegedirektorin
+3. batch_id: batch_001 | company_name: Dr. Römer Kliniken in Calw | company_website: http://www.roemerklinik.de | first_name: Cristina | last_name: Torbica | full_name: Cristina Torbica | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: DKV lists as Pflegedienstleitung
+4. batch_id: batch_001 | company_name: Dr. Römer Kliniken in Calw | company_website: http://www.roemerklinik.de | first_name: Philipp | last_name: Meßner | full_name: Philipp Meßner | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists Geschäftsführung
+5. batch_id: batch_001 | company_name: ZfP Südwürttemberg Satellit Ehingen | company_website: http://www.zfp-web.de | first_name: Martin | last_name: Eggler | full_name: Martin Eggler | role: Pflegerische Leitung | role_category: operations | confidence: high | notes: Official site lists Pflegerische Leitung
+6. batch_id: batch_001 | company_name: ZfP Südwürttemberg Satellit Ehingen | company_website: http://www.zfp-web.de | first_name: Karin | last_name: Wochner | full_name: Karin Wochner | role: Betriebsdirektorin | role_category: other_management | confidence: high | notes: DKV lists as Betriebsdirektorin
+7. batch_id: batch_001 | company_name: Zentrum für Psychische Gesundheit Neckar-Odenwald in Mosbach | company_website: https://www.pzn-wiesloch.de/ | first_name: Walter | last_name: Reiß | full_name: Walter Reiß | role: Pflegedirektor | role_category: operations | confidence: high | notes: Hospital directory lists Pflegedirektor
+8. batch_id: batch_001 | company_name: Zentrum für Psychische Gesundheit Neckar-Odenwald in Mosbach | company_website: https://www.pzn-wiesloch.de/ | first_name: Lukas | last_name: Alexa | full_name: Dr. Lukas Alexa | role: Ärztlicher Leiter | role_category: other_management | confidence: high | notes: Official PZN contact page lists site lead
+9. batch_id: batch_001 | company_name: Charlottenklinik für Augenheilkunde in Stuttgart | company_website: https://www.charlottenklinik.de/ | first_name: Marie | last_name: Schäfer | full_name: Marie Schäfer | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official clinic leadership page lists Geschäftsführerin
+10. batch_id: batch_001 | company_name: Charlottenklinik für Augenheilkunde in Stuttgart | company_website: https://www.charlottenklinik.de/ | first_name: Gangolf | last_name: Sauder | full_name: Prof. Dr. Gangolf Sauder | role: Chefarzt | role_category: other_management | confidence: high | notes: Official clinic leadership page lists Chefarzt
+11. batch_id: batch_001 | company_name: Klinik Sankt Elisabeth in Heidelberg | company_website: http://www.sankt-elisabeth.de | first_name: Karina | last_name: Wiesner | full_name: Karina Wiesner | role: PDL Bereich Geburtshilfe | role_category: operations | confidence: high | notes: DKV lists nursing management
+12. batch_id: batch_001 | company_name: Klinik Sankt Elisabeth in Heidelberg | company_website: http://www.sankt-elisabeth.de | first_name: Regina | last_name: Tretzka | full_name: Regina Tretzka | role: PDL Bereich operativ | role_category: operations | confidence: high | notes: DKV lists nursing management
+13. batch_id: batch_001 | company_name: Klinik Sankt Elisabeth in Heidelberg | company_website: http://www.sankt-elisabeth.de | first_name: Arne | last_name: Greiner | full_name: Arne Greiner | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: DKV lists Geschäftsführung
+14. batch_id: batch_001 | company_name: Zentrum für Psychische Gesundheit Bruchsal | company_website: https://www.pzn-wiesloch.de/ | first_name: Walter | last_name: Reiß | full_name: Walter Reiß | role: Pflegedirektor | role_category: operations | confidence: high | notes: DKV lists as Pflegedirektor
+15. batch_id: batch_001 | company_name: Zentrum für Psychische Gesundheit Bruchsal | company_website: https://www.pzn-wiesloch.de/ | first_name: Ines | last_name: Just | full_name: Dr. Ines Just | role: Ärztliche Leiterin des zfpG Bruchsal | role_category: other_management | confidence: medium | notes: PZN job posting names site medical lead
+16. batch_id: batch_001 | company_name: ZfP Reichenau Satellit Waldshut in Waldshut-Tiengen | company_website: https://www.zfp-reichenau.de | first_name: Lorenzo Alessandro | last_name: Fenech | full_name: Lorenzo Alessandro Fenech | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official site lists Pflegedienstleitung
+17. batch_id: batch_001 | company_name: ZfP Reichenau Satellit Waldshut in Waldshut-Tiengen | company_website: https://www.zfp-reichenau.de | first_name: Claudia | last_name: Vallentin | full_name: Claudia Vallentin | role: Ärztliche Direktorin | role_category: other_management | confidence: high | notes: Official site lists Ärztliche Direktorin
+18. batch_id: batch_001 | company_name: Klinik Haus Vogt in Titisee-Neustadt | company_website: http://www.klinik-haus-vogt.de | first_name: Heike | last_name: Bentz-Schuhbaum | full_name: Heike Bentz-Schuhbaum | role: Pädagogische Leitung | role_category: operations | confidence: high | notes: DKV lists under care leadership
+19. batch_id: batch_001 | company_name: Klinik Haus Vogt in Titisee-Neustadt | company_website: http://www.klinik-haus-vogt.de | first_name: Barbara | last_name: Laufer-Herrmann | full_name: Barbara Laufer-Herrmann | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official site lists Geschäftsführerin
+20. batch_id: batch_001 | company_name: ZfP Südwürttemberg Bad Schussenried Satellit Ulm | company_website: http://www.zfp-web.de | first_name: Ralf | last_name: Assfalg | full_name: Ralf Assfalg | role: Pflegerische Leitung | role_category: operations | confidence: high | notes: DKV lists Pflegerische Leitung
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_012_20260605T191504Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
