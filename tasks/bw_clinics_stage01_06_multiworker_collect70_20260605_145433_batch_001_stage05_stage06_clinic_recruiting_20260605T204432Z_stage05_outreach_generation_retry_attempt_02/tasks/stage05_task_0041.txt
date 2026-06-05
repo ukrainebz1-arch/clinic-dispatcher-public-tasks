@@ -1,0 +1,1204 @@
+TASK_ID: stage05_task_0041
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches behandlungszentrum böblingen|https://www.kn-calw.de/boeblingen|böblingen|germany",
+    "company_name": "Psychiatrisches Behandlungszentrum Böblingen",
+    "full_name": "Andreas Dummert",
+    "message_target_id": "stage05_task_0041::person_andreas_dummert_56e052eb50::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_andreas_dummert_56e052eb50",
+    "recipient_value": "a.dummert@kn-calw.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches behandlungszentrum böblingen|https://www.kn-calw.de/boeblingen|böblingen|germany",
+    "company_name": "Psychiatrisches Behandlungszentrum Böblingen",
+    "full_name": "Andreas Dummert",
+    "message_target_id": "stage05_task_0041::person_andreas_dummert_56e052eb50::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_dummert_56e052eb50",
+    "recipient_value": "https://de.linkedin.com/in/andreas-dummert-797a23381",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches behandlungszentrum böblingen|https://www.kn-calw.de/boeblingen|böblingen|germany",
+    "company_name": "Psychiatrisches Behandlungszentrum Böblingen",
+    "full_name": "Andreas Dummert",
+    "message_target_id": "stage05_task_0041::person_andreas_dummert_56e052eb50::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_dummert_56e052eb50",
+    "recipient_value": "https://de.linkedin.com/in/andreas-dummert-797a23381",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches behandlungszentrum böblingen|https://www.kn-calw.de/boeblingen|böblingen|germany",
+    "company_name": "Psychiatrisches Behandlungszentrum Böblingen",
+    "full_name": "Jennifer Faron",
+    "message_target_id": "stage05_task_0041::person_jennifer_faron_3f37d34bb7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_jennifer_faron_3f37d34bb7",
+    "recipient_value": "j.faron@kn-calw.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches behandlungszentrum böblingen|https://www.kn-calw.de/boeblingen|böblingen|germany",
+    "company_name": "Psychiatrisches Behandlungszentrum Böblingen",
+    "full_name": "Michael Reuber",
+    "message_target_id": "stage05_task_0041::person_michael_reuber_b2330a0e7a::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_michael_reuber_b2330a0e7a",
+    "recipient_value": "m.reuber@kn-calw.de",
+    "role_title": "Chefarzt",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches zentrum nordbaden in wiesloch|https://www.pzn-wiesloch.de/|wiesloch|germany",
+    "company_name": "Psychiatrisches Zentrum Nordbaden in Wiesloch",
+    "full_name": "Andreas Emmerich",
+    "message_target_id": "stage05_task_0041::person_andreas_emmerich_269fc35487::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_andreas_emmerich_269fc35487",
+    "recipient_value": "andreas.emmerich@pzn-wiesloch.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches zentrum nordbaden in wiesloch|https://www.pzn-wiesloch.de/|wiesloch|germany",
+    "company_name": "Psychiatrisches Zentrum Nordbaden in Wiesloch",
+    "full_name": "Andreas Emmerich",
+    "message_target_id": "stage05_task_0041::person_andreas_emmerich_269fc35487::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_emmerich_269fc35487",
+    "recipient_value": "https://de.linkedin.com/in/andreas-emmerich-8128bb119",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches zentrum nordbaden in wiesloch|https://www.pzn-wiesloch.de/|wiesloch|germany",
+    "company_name": "Psychiatrisches Zentrum Nordbaden in Wiesloch",
+    "full_name": "Andreas Emmerich",
+    "message_target_id": "stage05_task_0041::person_andreas_emmerich_269fc35487::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_emmerich_269fc35487",
+    "recipient_value": "https://de.linkedin.com/in/andreas-emmerich-8128bb119",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches zentrum nordbaden in wiesloch|https://www.pzn-wiesloch.de/|wiesloch|germany",
+    "company_name": "Psychiatrisches Zentrum Nordbaden in Wiesloch",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0041::person_anett_rose_losert_2c991fae4b::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_anett_rose_losert_2c991fae4b",
+    "recipient_value": "a.rose-losert@klinikum-weissenhof.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches zentrum nordbaden in wiesloch|https://www.pzn-wiesloch.de/|wiesloch|germany",
+    "company_name": "Psychiatrisches Zentrum Nordbaden in Wiesloch",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0041::person_anett_rose_losert_2c991fae4b::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anett_rose_losert_2c991fae4b",
+    "recipient_value": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches zentrum nordbaden in wiesloch|https://www.pzn-wiesloch.de/|wiesloch|germany",
+    "company_name": "Psychiatrisches Zentrum Nordbaden in Wiesloch",
+    "full_name": "Anett Rose-Losert",
+    "message_target_id": "stage05_task_0041::person_anett_rose_losert_2c991fae4b::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anett_rose_losert_2c991fae4b",
+    "recipient_value": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches zentrum nordbaden in wiesloch|https://www.pzn-wiesloch.de/|wiesloch|germany",
+    "company_name": "Psychiatrisches Zentrum Nordbaden in Wiesloch",
+    "full_name": "Isolde Schuller",
+    "message_target_id": "stage05_task_0041::person_isolde_schuller_8a1988afaf::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_isolde_schuller_8a1988afaf",
+    "recipient_value": "isolde.schuller@pzn-wiesloch.de",
+    "role_title": "Personaldirektorin",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychotherapeutisches zentrum kitzberg-klinik in bad mergentheim|https://kitzberg-kliniken.de|bad mergentheim|germany",
+    "company_name": "Psychotherapeutisches Zentrum Kitzberg-Klinik in Bad Mergentheim",
+    "full_name": "Carsten Deutschmann",
+    "message_target_id": "stage05_task_0041::person_carsten_deutschmann_355872f00b::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_carsten_deutschmann_355872f00b",
+    "recipient_value": "c.deutschmann@ptz.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychotherapeutisches zentrum kitzberg-klinik in bad mergentheim|https://kitzberg-kliniken.de|bad mergentheim|germany",
+    "company_name": "Psychotherapeutisches Zentrum Kitzberg-Klinik in Bad Mergentheim",
+    "full_name": "Ronny Olschewsky",
+    "message_target_id": "stage05_task_0041::person_ronny_olschewsky_8ba7ab582a::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ronny_olschewsky_8ba7ab582a",
+    "recipient_value": "r.olschewsky@ptz.de",
+    "role_title": "Leiter Pflege- und Erziehungsdienst",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rechbergklinik bretten|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/rechbergklinik-bretten/|bretten|germany",
+    "company_name": "Rechbergklinik Bretten",
+    "full_name": "Lisa Müller",
+    "message_target_id": "stage05_task_0041::person_lisa_m_ller_78a242c9f3::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_lisa_m_ller_78a242c9f3",
+    "recipient_value": "lisa.mueller@rkh-gesundheit.de",
+    "role_title": "Direktorin Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rechbergklinik bretten|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/rechbergklinik-bretten/|bretten|germany",
+    "company_name": "Rechbergklinik Bretten",
+    "full_name": "Lisa Müller",
+    "message_target_id": "stage05_task_0041::person_lisa_m_ller_78a242c9f3::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_lisa_m_ller_78a242c9f3",
+    "recipient_value": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+    "role_title": "Direktorin Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0041"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rechbergklinik bretten|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/rechbergklinik-bretten/|bretten|germany",
+    "company_name": "Rechbergklinik Bretten",
+    "full_name": "Lisa Müller",
+    "message_target_id": "stage05_task_0041::person_lisa_m_ller_78a242c9f3::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_lisa_m_ller_78a242c9f3",
+    "recipient_value": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+    "role_title": "Direktorin Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0041"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Böblingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches behandlungszentrum böblingen|https://www.kn-calw.de/boeblingen|böblingen|germany",
+    "company_name": "Psychiatrisches Behandlungszentrum Böblingen",
+    "company_website": "https://www.kn-calw.de/boeblingen",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Andreas Dummert",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Jennifer Faron",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "a.dummert@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Dummert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andreas-dummert-797a23381",
+        "person_key": "person_andreas_dummert_56e052eb50",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kn-calw.de/pflegerische-qualitaet",
+          "https://de.linkedin.com/in/andreas-dummert-797a23381",
+          "https://www.kn-calw.de/geschaeftsleitung"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "j.faron@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jennifer Faron",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jennifer_faron_3f37d34bb7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kn-calw.de/psychiatrisches-behandlungszentrum-boeblingen",
+          "https://www.kn-calw.de/klinik-fuer-kinder-und-jugendpsychiatrie-und-psychotherapie-boeblingen",
+          "https://www.kn-calw.de/pflegerische-qualitaet"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.reuber@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michael Reuber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_reuber_b2330a0e7a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefarzt",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kn-calw.de/psychiatrisches-behandlungszentrum-boeblingen"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedirektor",
+        "Pflegedienstleitung",
+        "Chefarzt"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kn-calw.de/pflegerische-qualitaet",
+      "https://de.linkedin.com/in/andreas-dummert-797a23381",
+      "https://www.kn-calw.de/geschaeftsleitung",
+      "https://www.kn-calw.de/psychiatrisches-behandlungszentrum-boeblingen",
+      "https://www.kn-calw.de/klinik-fuer-kinder-und-jugendpsychiatrie-und-psychotherapie-boeblingen"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Wiesloch",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches zentrum nordbaden in wiesloch|https://www.pzn-wiesloch.de/|wiesloch|germany",
+    "company_name": "Psychiatrisches Zentrum Nordbaden in Wiesloch",
+    "company_website": "https://www.pzn-wiesloch.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Andreas Emmerich",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "andreas.emmerich@pzn-wiesloch.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Andreas Emmerich",
+        "hypothesis_email": "andreas.emmerich@pzn-wiesloch.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andreas-emmerich-8128bb119",
+        "person_key": "person_andreas_emmerich_269fc35487",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.pzn-wiesloch.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.pzn-wiesloch.de/ueber-uns/kontaktpersonen",
+          "https://www.pzn-wiesloch.de/impressum",
+          "https://www.pzn-wiesloch.de/ueber-uns/organisation/",
+          "https://www.pzn-wiesloch.de/kontakt/",
+          "https://de.linkedin.com/in/andreas-emmerich-8128bb119",
+          "https://www.pzn-wiesloch.de/ueber-uns/aktuelles/detail/andreas-emmerich-ist-neuer-pflegedirektor-am-psychiatrischen-zentrum-nordbaden"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "anett.rose-losert@pzn-wiesloch.de",
+        "confirmed_email": "a.rose-losert@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anett Rose-Losert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+        "person_key": "person_anett_rose_losert_2c991fae4b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.pzn-wiesloch.de/fileadmin/user_upload/psychiatrisches-zentrum-nordbaden/Dokumente_PDFe/QM/2024_ZfPG_Neckar-Odenwald_Gesetzlicher_Qualitaetsbericht.pdf",
+          "https://www.pzn-wiesloch.de/ueber-uns/organisation/",
+          "https://www.pzn-wiesloch.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.pzn-wiesloch.de/ueber-uns/kontaktpersonen",
+          "https://www.pzn-wiesloch.de/impressum",
+          "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+          "https://www.pzn-wiesloch.de/fileadmin/user_upload/psychiatrisches-zentrum-nordbaden/Nur_UK_Dokumente_PDFe/Report/PZN_GB_2024_2025.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "isolde.schuller@pzn-wiesloch.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Isolde Schuller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_isolde_schuller_8a1988afaf",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektorin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.pzn-wiesloch.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.landtag-bw.de/resource/blob/224676/051fee1a335311b67bec59ad9338c9cb/15_4224_D.pdf",
+          "https://www.pzn-wiesloch.de/ueber-uns/kontaktpersonen",
+          "https://www.pzn-wiesloch.de/fileadmin/user_upload/psychiatrisches-zentrum-nordbaden/Nur_UK_Dokumente_PDFe/Report/PZN_GB_2024_2025.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedirektor",
+        "Geschäftsführerin",
+        "Personaldirektorin"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.pzn-wiesloch.de/ueber-uns/unser-unternehmen/organisation",
+      "https://www.pzn-wiesloch.de/ueber-uns/kontaktpersonen",
+      "https://www.pzn-wiesloch.de/impressum",
+      "https://www.pzn-wiesloch.de/ueber-uns/organisation/",
+      "https://www.pzn-wiesloch.de/kontakt/",
+      "https://de.linkedin.com/in/andreas-emmerich-8128bb119",
+      "https://www.pzn-wiesloch.de/ueber-uns/aktuelles/detail/andreas-emmerich-ist-neuer-pflegedirektor-am-psychiatrischen-zentrum-nordbaden",
+      "https://www.pzn-wiesloch.de/fileadmin/user_upload/psychiatrisches-zentrum-nordbaden/Dokumente_PDFe/QM/2024_ZfPG_Neckar-Odenwald_Gesetzlicher_Qualitaetsbericht.pdf",
+      "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+      "https://www.pzn-wiesloch.de/fileadmin/user_upload/psychiatrisches-zentrum-nordbaden/Nur_UK_Dokumente_PDFe/Report/PZN_GB_2024_2025.pdf",
+      "https://www.landtag-bw.de/resource/blob/224676/051fee1a335311b67bec59ad9338c9cb/15_4224_D.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Mergentheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychotherapeutisches zentrum kitzberg-klinik in bad mergentheim|https://kitzberg-kliniken.de|bad mergentheim|germany",
+    "company_name": "Psychotherapeutisches Zentrum Kitzberg-Klinik in Bad Mergentheim",
+    "company_website": "https://kitzberg-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Ronny Olschewsky",
+          "person_key": "",
+          "role": "Leiter Pflege- und Erziehungsdienst"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "c.deutschmann@ptz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Carsten Deutschmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_carsten_deutschmann_355872f00b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260812013-773695000-2023-xml.pdf",
+          "https://www.kitzberg-kliniken.de/ueber-uns/leitung",
+          "https://www.kitzberg-kliniken.de/impressum",
+          "false",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5060eb844e0702fe/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "r.olschewsky@ptz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ronny Olschewsky",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ronny_olschewsky_8ba7ab582a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leiter Pflege- und Erziehungsdienst",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260812013-773695000-2024-xml.pdf",
+          "https://www.kitzberg-kliniken.de/ueber-uns/leitung",
+          "false",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5060eb844e0702fe/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Leiter Pflege- und Erziehungsdienst"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260812013-773695000-2023-xml.pdf",
+      "https://www.kitzberg-kliniken.de/ueber-uns/leitung",
+      "https://www.kitzberg-kliniken.de/impressum",
+      "false",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5060eb844e0702fe/start",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260812013-773695000-2024-xml.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bretten",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rechbergklinik bretten|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/rechbergklinik-bretten/|bretten|germany",
+    "company_name": "Rechbergklinik Bretten",
+    "company_website": "https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/rechbergklinik-bretten/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Lisa Müller",
+          "person_key": "",
+          "role": "Direktorin Pflege- und Prozessmanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "lisa.mueller@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lisa Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+        "person_key": "person_lisa_m_ller_78a242c9f3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktorin Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Informationen/Patienten-und-Mitarbeiterzeitung/KLK/rkhaktuell-2025-04_KLK.pdf",
+          "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+          "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bretten_2024.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Direktorin Pflege- und Prozessmanagement"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Informationen/Patienten-und-Mitarbeiterzeitung/KLK/rkhaktuell-2025-04_KLK.pdf",
+      "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+      "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bretten_2024.pdf"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Böblingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches behandlungszentrum böblingen|https://www.kn-calw.de/boeblingen|böblingen|germany",
+    "company_name": "Psychiatrisches Behandlungszentrum Böblingen",
+    "company_website": "https://www.kn-calw.de/boeblingen",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Andreas Dummert",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Jennifer Faron",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "a.dummert@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Dummert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andreas-dummert-797a23381",
+        "person_key": "person_andreas_dummert_56e052eb50",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kn-calw.de/pflegerische-qualitaet",
+          "https://de.linkedin.com/in/andreas-dummert-797a23381",
+          "https://www.kn-calw.de/geschaeftsleitung"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "j.faron@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jennifer Faron",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jennifer_faron_3f37d34bb7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kn-calw.de/psychiatrisches-behandlungszentrum-boeblingen",
+          "https://www.kn-calw.de/klinik-fuer-kinder-und-jugendpsychiatrie-und-psychotherapie-boeblingen",
+          "https://www.kn-calw.de/pflegerische-qualitaet"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.reuber@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michael Reuber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_reuber_b2330a0e7a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Chefarzt",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kn-calw.de/psychiatrisches-behandlungszentrum-boeblingen"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedirektor",
+        "Pflegedienstleitung",
+        "Chefarzt"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kn-calw.de/pflegerische-qualitaet",
+      "https://de.linkedin.com/in/andreas-dummert-797a23381",
+      "https://www.kn-calw.de/geschaeftsleitung",
+      "https://www.kn-calw.de/psychiatrisches-behandlungszentrum-boeblingen",
+      "https://www.kn-calw.de/klinik-fuer-kinder-und-jugendpsychiatrie-und-psychotherapie-boeblingen"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Wiesloch",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychiatrisches zentrum nordbaden in wiesloch|https://www.pzn-wiesloch.de/|wiesloch|germany",
+    "company_name": "Psychiatrisches Zentrum Nordbaden in Wiesloch",
+    "company_website": "https://www.pzn-wiesloch.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Andreas Emmerich",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "andreas.emmerich@pzn-wiesloch.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Andreas Emmerich",
+        "hypothesis_email": "andreas.emmerich@pzn-wiesloch.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andreas-emmerich-8128bb119",
+        "person_key": "person_andreas_emmerich_269fc35487",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.pzn-wiesloch.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.pzn-wiesloch.de/ueber-uns/kontaktpersonen",
+          "https://www.pzn-wiesloch.de/impressum",
+          "https://www.pzn-wiesloch.de/ueber-uns/organisation/",
+          "https://www.pzn-wiesloch.de/kontakt/",
+          "https://de.linkedin.com/in/andreas-emmerich-8128bb119",
+          "https://www.pzn-wiesloch.de/ueber-uns/aktuelles/detail/andreas-emmerich-ist-neuer-pflegedirektor-am-psychiatrischen-zentrum-nordbaden"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "anett.rose-losert@pzn-wiesloch.de",
+        "confirmed_email": "a.rose-losert@klinikum-weissenhof.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anett Rose-Losert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+        "person_key": "person_anett_rose_losert_2c991fae4b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.pzn-wiesloch.de/fileadmin/user_upload/psychiatrisches-zentrum-nordbaden/Dokumente_PDFe/QM/2024_ZfPG_Neckar-Odenwald_Gesetzlicher_Qualitaetsbericht.pdf",
+          "https://www.pzn-wiesloch.de/ueber-uns/organisation/",
+          "https://www.pzn-wiesloch.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.pzn-wiesloch.de/ueber-uns/kontaktpersonen",
+          "https://www.pzn-wiesloch.de/impressum",
+          "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+          "https://www.pzn-wiesloch.de/fileadmin/user_upload/psychiatrisches-zentrum-nordbaden/Nur_UK_Dokumente_PDFe/Report/PZN_GB_2024_2025.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "isolde.schuller@pzn-wiesloch.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Isolde Schuller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_isolde_schuller_8a1988afaf",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personaldirektorin",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.pzn-wiesloch.de/ueber-uns/unser-unternehmen/organisation",
+          "https://www.landtag-bw.de/resource/blob/224676/051fee1a335311b67bec59ad9338c9cb/15_4224_D.pdf",
+          "https://www.pzn-wiesloch.de/ueber-uns/kontaktpersonen",
+          "https://www.pzn-wiesloch.de/fileadmin/user_upload/psychiatrisches-zentrum-nordbaden/Nur_UK_Dokumente_PDFe/Report/PZN_GB_2024_2025.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedirektor",
+        "Geschäftsführerin",
+        "Personaldirektorin"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.pzn-wiesloch.de/ueber-uns/unser-unternehmen/organisation",
+      "https://www.pzn-wiesloch.de/ueber-uns/kontaktpersonen",
+      "https://www.pzn-wiesloch.de/impressum",
+      "https://www.pzn-wiesloch.de/ueber-uns/organisation/",
+      "https://www.pzn-wiesloch.de/kontakt/",
+      "https://de.linkedin.com/in/andreas-emmerich-8128bb119",
+      "https://www.pzn-wiesloch.de/ueber-uns/aktuelles/detail/andreas-emmerich-ist-neuer-pflegedirektor-am-psychiatrischen-zentrum-nordbaden",
+      "https://www.pzn-wiesloch.de/fileadmin/user_upload/psychiatrisches-zentrum-nordbaden/Dokumente_PDFe/QM/2024_ZfPG_Neckar-Odenwald_Gesetzlicher_Qualitaetsbericht.pdf",
+      "https://de.linkedin.com/in/anett-rose-losert-a86353157",
+      "https://www.pzn-wiesloch.de/fileadmin/user_upload/psychiatrisches-zentrum-nordbaden/Nur_UK_Dokumente_PDFe/Report/PZN_GB_2024_2025.pdf",
+      "https://www.landtag-bw.de/resource/blob/224676/051fee1a335311b67bec59ad9338c9cb/15_4224_D.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Mergentheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|psychotherapeutisches zentrum kitzberg-klinik in bad mergentheim|https://kitzberg-kliniken.de|bad mergentheim|germany",
+    "company_name": "Psychotherapeutisches Zentrum Kitzberg-Klinik in Bad Mergentheim",
+    "company_website": "https://kitzberg-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Ronny Olschewsky",
+          "person_key": "",
+          "role": "Leiter Pflege- und Erziehungsdienst"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "c.deutschmann@ptz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Carsten Deutschmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_carsten_deutschmann_355872f00b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260812013-773695000-2023-xml.pdf",
+          "https://www.kitzberg-kliniken.de/ueber-uns/leitung",
+          "https://www.kitzberg-kliniken.de/impressum",
+          "false",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5060eb844e0702fe/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "r.olschewsky@ptz.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ronny Olschewsky",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ronny_olschewsky_8ba7ab582a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leiter Pflege- und Erziehungsdienst",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260812013-773695000-2024-xml.pdf",
+          "https://www.kitzberg-kliniken.de/ueber-uns/leitung",
+          "false",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5060eb844e0702fe/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Leiter Pflege- und Erziehungsdienst"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260812013-773695000-2023-xml.pdf",
+      "https://www.kitzberg-kliniken.de/ueber-uns/leitung",
+      "https://www.kitzberg-kliniken.de/impressum",
+      "false",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/5060eb844e0702fe/start",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260812013-773695000-2024-xml.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bretten",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|rechbergklinik bretten|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/rechbergklinik-bretten/|bretten|germany",
+    "company_name": "Rechbergklinik Bretten",
+    "company_website": "https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/rechbergklinik-bretten/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Lisa Müller",
+          "person_key": "",
+          "role": "Direktorin Pflege- und Prozessmanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "lisa.mueller@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lisa Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+        "person_key": "person_lisa_m_ller_78a242c9f3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktorin Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Informationen/Patienten-und-Mitarbeiterzeitung/KLK/rkhaktuell-2025-04_KLK.pdf",
+          "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+          "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bretten_2024.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Direktorin Pflege- und Prozessmanagement"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Informationen/Patienten-und-Mitarbeiterzeitung/KLK/rkhaktuell-2025-04_KLK.pdf",
+      "https://www.rkh-gesundheit.de/fuerst-stirum-klinik-bruchsal/behandlung/pflege/",
+      "https://de.linkedin.com/in/lisa-m%C3%BCller-10313b14b",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Bruchsal/Qualit%C3%A4tsbericht_Bretten_2024.pdf"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
