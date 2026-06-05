@@ -1,0 +1,1640 @@
+TASK_ID: stage05_task_0050
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik bad säckingen|https://www.zfp-reichenau.de/|bad säckingen|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Bad Säckingen",
+    "full_name": "Claudia Vallentin",
+    "message_target_id": "stage05_task_0050::person_claudia_vallentin_94645b1f7e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_claudia_vallentin_94645b1f7e",
+    "recipient_value": "claudia.vallentin@zfp-reichenau.de",
+    "role_title": "Ärztliche Direktorin",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik bad säckingen|https://www.zfp-reichenau.de/|bad säckingen|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Bad Säckingen",
+    "full_name": "Jochen Reutter",
+    "message_target_id": "stage05_task_0050::person_jochen_reutter_7365c21413::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_jochen_reutter_7365c21413",
+    "recipient_value": "jochen.reutter@zfp-reichenau.de",
+    "role_title": "Verwaltungsleitung / Betriebsdirektor",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik bad säckingen|https://www.zfp-reichenau.de/|bad säckingen|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Bad Säckingen",
+    "full_name": "Lorenzo Alessandro Fenech",
+    "message_target_id": "stage05_task_0050::person_lorenzo_alessandro_fenech_2b6bca8d3b::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_lorenzo_alessandro_fenech_2b6bca8d3b",
+    "recipient_value": "lorenzo.fenech@zfp-reichenau.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik bad säckingen|https://www.zfp-reichenau.de/|bad säckingen|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Bad Säckingen",
+    "full_name": "Lorenzo Alessandro Fenech",
+    "message_target_id": "stage05_task_0050::person_lorenzo_alessandro_fenech_2b6bca8d3b::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_lorenzo_alessandro_fenech_2b6bca8d3b",
+    "recipient_value": "https://de.linkedin.com/in/lorenzo-alessandro-fenech-b3a5b8252",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik bad säckingen|https://www.zfp-reichenau.de/|bad säckingen|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Bad Säckingen",
+    "full_name": "Lorenzo Alessandro Fenech",
+    "message_target_id": "stage05_task_0050::person_lorenzo_alessandro_fenech_2b6bca8d3b::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_lorenzo_alessandro_fenech_2b6bca8d3b",
+    "recipient_value": "https://de.linkedin.com/in/lorenzo-alessandro-fenech-b3a5b8252",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik freiburg|https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg|freiburg im breisgau|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Freiburg",
+    "full_name": "Simon Weiß",
+    "message_target_id": "stage05_task_0050::person_simon_wei_1216dd900d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_simon_wei_1216dd900d",
+    "recipient_value": "s.weiss@zfp-emmendingen.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik freiburg|https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg|freiburg im breisgau|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Freiburg",
+    "full_name": "Simon Weiß",
+    "message_target_id": "stage05_task_0050::person_simon_wei_1216dd900d::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_simon_wei_1216dd900d",
+    "recipient_value": "https://de.linkedin.com/in/simon-wei%C3%9F-m-a-4b78471a3",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik freiburg|https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg|freiburg im breisgau|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Freiburg",
+    "full_name": "Simon Weiß",
+    "message_target_id": "stage05_task_0050::person_simon_wei_1216dd900d::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_simon_wei_1216dd900d",
+    "recipient_value": "https://de.linkedin.com/in/simon-wei%C3%9F-m-a-4b78471a3",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik freiburg|https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg|freiburg im breisgau|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Freiburg",
+    "full_name": "Viola Wegener",
+    "message_target_id": "stage05_task_0050::person_viola_wegener_d54a4c3308::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_viola_wegener_d54a4c3308",
+    "recipient_value": "v.wegerer@zfp-emmendingen.de",
+    "role_title": "Ärztliche Leitung",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik pforzheim|https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim|pforzheim|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Pforzheim",
+    "full_name": "Andreas Dummert",
+    "message_target_id": "stage05_task_0050::person_andreas_dummert_10ef985646::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_andreas_dummert_10ef985646",
+    "recipient_value": "a.dummert@kn-calw.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik pforzheim|https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim|pforzheim|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Pforzheim",
+    "full_name": "Andreas Dummert",
+    "message_target_id": "stage05_task_0050::person_andreas_dummert_10ef985646::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_dummert_10ef985646",
+    "recipient_value": "https://de.linkedin.com/in/andreas-dummert-797a23381",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik pforzheim|https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim|pforzheim|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Pforzheim",
+    "full_name": "Andreas Dummert",
+    "message_target_id": "stage05_task_0050::person_andreas_dummert_10ef985646::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andreas_dummert_10ef985646",
+    "recipient_value": "https://de.linkedin.com/in/andreas-dummert-797a23381",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik pforzheim|https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim|pforzheim|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Pforzheim",
+    "full_name": "Johannes König",
+    "message_target_id": "stage05_task_0050::person_johannes_k_nig_5a98d9866a::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_johannes_k_nig_5a98d9866a",
+    "recipient_value": "j.koenig@kn-calw.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik pforzheim|https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim|pforzheim|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Pforzheim",
+    "full_name": "Jürgen Banschbach",
+    "message_target_id": "stage05_task_0050::person_j_rgen_banschbach_9c1c898649::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_j_rgen_banschbach_9c1c898649",
+    "recipient_value": "j.banschbach@kn-calw.de",
+    "role_title": "Betriebsdirektor",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik pforzheim|https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim|pforzheim|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Pforzheim",
+    "full_name": "Jürgen Banschbach",
+    "message_target_id": "stage05_task_0050::person_j_rgen_banschbach_9c1c898649::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_j_rgen_banschbach_9c1c898649",
+    "recipient_value": "https://de.linkedin.com/in/j%C3%BCrgen-banschbach-b51375bb",
+    "role_title": "Betriebsdirektor",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik pforzheim|https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim|pforzheim|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Pforzheim",
+    "full_name": "Jürgen Banschbach",
+    "message_target_id": "stage05_task_0050::person_j_rgen_banschbach_9c1c898649::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_j_rgen_banschbach_9c1c898649",
+    "recipient_value": "https://de.linkedin.com/in/j%C3%BCrgen-banschbach-b51375bb",
+    "role_title": "Betriebsdirektor",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Barbara Munz",
+    "message_target_id": "stage05_task_0050::person_barbara_munz_1fe471d421::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_barbara_munz_1fe471d421",
+    "recipient_value": "b.munz@medius-kliniken.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Bernhard Hafner",
+    "message_target_id": "stage05_task_0050::person_bernhard_hafner_9ec699a99d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_bernhard_hafner_9ec699a99d",
+    "recipient_value": "b.hafner@medius-kliniken.de",
+    "role_title": "Pflegedienstleitung Psychiatrie",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Bernhard Hafner",
+    "message_target_id": "stage05_task_0050::person_bernhard_hafner_9ec699a99d::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_bernhard_hafner_9ec699a99d",
+    "recipient_value": "https://de.linkedin.com/in/bernhard-hafner-65732515b",
+    "role_title": "Pflegedienstleitung Psychiatrie",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Bernhard Hafner",
+    "message_target_id": "stage05_task_0050::person_bernhard_hafner_9ec699a99d::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_bernhard_hafner_9ec699a99d",
+    "recipient_value": "https://de.linkedin.com/in/bernhard-hafner-65732515b",
+    "role_title": "Pflegedienstleitung Psychiatrie",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Dr. med. Frank Heilmann",
+    "message_target_id": "stage05_task_0050::person_dr_med_frank_heilmann_bf2da39fe4::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_dr_med_frank_heilmann_bf2da39fe4",
+    "recipient_value": "f.heilmann@medius-kliniken.de",
+    "role_title": "Oberärztliche Leitung der Tagesklinik Bernhausen",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Julia Rein",
+    "message_target_id": "stage05_task_0050::person_julia_rein_f458ae4552::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_julia_rein_f458ae4552",
+    "recipient_value": "j.rein@medius-kliniken.de",
+    "role_title": "Pflegedienstleitung Psychiatrie",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Julia Rein",
+    "message_target_id": "stage05_task_0050::person_julia_rein_f458ae4552::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_julia_rein_f458ae4552",
+    "recipient_value": "https://de.linkedin.com/in/julia-rein-07030b2b2",
+    "role_title": "Pflegedienstleitung Psychiatrie",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Julia Rein",
+    "message_target_id": "stage05_task_0050::person_julia_rein_f458ae4552::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_julia_rein_f458ae4552",
+    "recipient_value": "https://de.linkedin.com/in/julia-rein-07030b2b2",
+    "role_title": "Pflegedienstleitung Psychiatrie",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Katharina Weber",
+    "message_target_id": "stage05_task_0050::person_katharina_weber_ac108772b3::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_katharina_weber_ac108772b3",
+    "recipient_value": "k.weber2@medius-kliniken.de",
+    "role_title": "Leitung Personalmarketing u. Recruiting",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Katharina Weber",
+    "message_target_id": "stage05_task_0050::person_katharina_weber_ac108772b3::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_katharina_weber_ac108772b3",
+    "recipient_value": "https://www.linkedin.com/in/katharina-weber-134a61261",
+    "role_title": "Leitung Personalmarketing u. Recruiting",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Katharina Weber",
+    "message_target_id": "stage05_task_0050::person_katharina_weber_ac108772b3::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_katharina_weber_ac108772b3",
+    "recipient_value": "https://www.linkedin.com/in/katharina-weber-134a61261",
+    "role_title": "Leitung Personalmarketing u. Recruiting",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Michael Grubwinkler",
+    "message_target_id": "stage05_task_0050::person_michael_grubwinkler_e2c2e4a9d0::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_michael_grubwinkler_e2c2e4a9d0",
+    "recipient_value": "m.grubwinkler@medius-kliniken.de",
+    "role_title": "Leitung Personalmanagement",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Norbert Nadler",
+    "message_target_id": "stage05_task_0050::person_norbert_nadler_caf27e52cc::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_norbert_nadler_caf27e52cc",
+    "recipient_value": "n.nadler@medius-kliniken.de",
+    "role_title": "Klinikleitung",
+    "task_id": "stage05_task_0050"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "full_name": "Sandra Rantzau",
+    "message_target_id": "stage05_task_0050::person_sandra_rantzau_fcee1c3718::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_sandra_rantzau_fcee1c3718",
+    "recipient_value": "s.rantzau@medius-kliniken.de",
+    "role_title": "Pflegeleitung",
+    "task_id": "stage05_task_0050"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Säckingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik bad säckingen|https://www.zfp-reichenau.de/|bad säckingen|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Bad Säckingen",
+    "company_website": "https://www.zfp-reichenau.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Lorenzo Alessandro Fenech",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "claudia.vallentin@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Claudia Vallentin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_claudia_vallentin_94645b1f7e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://www.zfp-reichenau.de/karriere/stellenangebote/job/aerztin-arzt-in-weiterbildung-w-m-d-r12-26-5d894b90",
+          "https://www.zfp-reichenau.de/ueber-uns/organisation-und-struktur"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "jochen.reutter@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jochen Reutter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jochen_reutter_7365c21413",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung / Betriebsdirektor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/ueber-uns/organisation-und-struktur",
+          "https://www.zfp-reichenau.de/ueber-uns/zentrale-dienste",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/791519023dd61240/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "lorenzo.fenech@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lorenzo Alessandro Fenech",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lorenzo-alessandro-fenech-b3a5b8252",
+        "person_key": "person_lorenzo_alessandro_fenech_2b6bca8d3b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://de.linkedin.com/in/lorenzo-alessandro-fenech-b3a5b8252",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/791519023dd61240/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Ärztliche Direktorin",
+        "Verwaltungsleitung / Betriebsdirektor",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+      "https://www.zfp-reichenau.de/karriere/stellenangebote/job/aerztin-arzt-in-weiterbildung-w-m-d-r12-26-5d894b90",
+      "https://www.zfp-reichenau.de/ueber-uns/organisation-und-struktur",
+      "https://www.zfp-reichenau.de/ueber-uns/zentrale-dienste",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/791519023dd61240/start",
+      "https://de.linkedin.com/in/lorenzo-alessandro-fenech-b3a5b8252"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Freiburg im Breisgau",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik freiburg|https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg|freiburg im breisgau|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Freiburg",
+    "company_website": "https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Simon Weiß",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.weiss@zfp-emmendingen.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Simon Weiß",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/simon-wei%C3%9F-m-a-4b78471a3",
+        "person_key": "person_simon_wei_1216dd900d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg",
+          "https://www.zfp-emmendingen.de/sites/default/files/media_document/2026-02/Qualit%C3%A4tsbericht%202024%2C%20Suchtmedizinische%20Tagesklinik%20Freiburg.pdf",
+          "https://de.linkedin.com/in/simon-wei%C3%9F-m-a-4b78471a3"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "v.wegerer@zfp-emmendingen.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Viola Wegener",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_viola_wegener_d54a4c3308",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Leitung",
+        "role_category": "unknown",
+        "source_urls": [
+          "https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg",
+          "https://www.zfp-emmendingen.de/sites/default/files/media_document/2026-02/Qualit%C3%A4tsbericht%202024%2C%20Suchtmedizinische%20Tagesklinik%20Freiburg.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "unknown"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Ärztliche Leitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg",
+      "https://www.zfp-emmendingen.de/sites/default/files/media_document/2026-02/Qualit%C3%A4tsbericht%202024%2C%20Suchtmedizinische%20Tagesklinik%20Freiburg.pdf",
+      "https://de.linkedin.com/in/simon-wei%C3%9F-m-a-4b78471a3"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Pforzheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik pforzheim|https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim|pforzheim|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Pforzheim",
+    "company_website": "https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Andreas Dummert",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Johannes König",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "a.dummert@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Dummert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andreas-dummert-797a23381",
+        "person_key": "person_andreas_dummert_10ef985646",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kn-calw.de/geschaeftsleitung",
+          "https://www.kn-calw.de/organisation",
+          "https://de.linkedin.com/in/andreas-dummert-797a23381",
+          "https://www.kn-calw.de/pflegerische-qualitaet"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "j.koenig@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Johannes König",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_johannes_k_nig_5a98d9866a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "j.banschbach@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jürgen Banschbach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/j%C3%BCrgen-banschbach-b51375bb",
+        "person_key": "person_j_rgen_banschbach_9c1c898649",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Betriebsdirektor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kn-calw.de/geschaeftsleitung",
+          "https://www.kn-calw.de/organisation",
+          "https://de.linkedin.com/in/j%C3%BCrgen-banschbach-b51375bb",
+          "https://www.kn-calw.de/sites/default/files/media_document/2025-02/Qualit%C3%A4tsbericht%202023%20Psychiatrische%20Tagesklinik%20Pforzheim.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedirektor",
+        "Pflegedienstleitung",
+        "Betriebsdirektor"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kn-calw.de/geschaeftsleitung",
+      "https://www.kn-calw.de/organisation",
+      "https://de.linkedin.com/in/andreas-dummert-797a23381",
+      "https://www.kn-calw.de/pflegerische-qualitaet",
+      "https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim",
+      "https://de.linkedin.com/in/j%C3%BCrgen-banschbach-b51375bb",
+      "https://www.kn-calw.de/sites/default/files/media_document/2025-02/Qualit%C3%A4tsbericht%202023%20Psychiatrische%20Tagesklinik%20Pforzheim.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Filderstadt",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "company_website": "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Barbara Munz",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Bernhard Hafner",
+          "person_key": "",
+          "role": "Pflegedienstleitung Psychiatrie"
+        },
+        {
+          "full_name": "Julia Rein",
+          "person_key": "",
+          "role": "Pflegedienstleitung Psychiatrie"
+        },
+        {
+          "full_name": "Sandra Rantzau",
+          "person_key": "",
+          "role": "Pflegeleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "b.munz@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Munz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_barbara_munz_1fe471d421",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medius-kliniken.de/beruf-karriere/pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "b.hafner@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Bernhard Hafner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/bernhard-hafner-65732515b",
+        "person_key": "person_bernhard_hafner_9ec699a99d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Psychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medius-kliniken.de/beruf-karriere/pflege/",
+          "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/team/",
+          "https://de.linkedin.com/in/bernhard-hafner-65732515b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "f.heilmann@medius-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Dr. med. Frank Heilmann",
+        "hypothesis_email": "f.heilmann@medius-kliniken.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_med_frank_heilmann_bf2da39fe4",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Oberärztliche Leitung der Tagesklinik Bernhausen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/",
+          "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/team/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "j.rein@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Julia Rein",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/julia-rein-07030b2b2",
+        "person_key": "person_julia_rein_f458ae4552",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Psychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medius-kliniken.de/beruf-karriere/pflege/",
+          "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/team/",
+          "https://de.linkedin.com/in/julia-rein-07030b2b2"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "k.weber2@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Katharina Weber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://www.linkedin.com/in/katharina-weber-134a61261",
+        "person_key": "person_katharina_weber_ac108772b3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Personalmarketing u. Recruiting",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.medius-kliniken.de/beruf-karriere/pflege/",
+          "https://www.medius-kliniken.de/beruf-karriere/aerztinnen-aerzte/zukunft-aerzte/",
+          "https://www.linkedin.com/in/katharina-weber-134a61261",
+          "https://www.medius-kliniken.de/beruf-karriere/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.grubwinkler@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michael Grubwinkler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_grubwinkler_e2c2e4a9d0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Personalmanagement",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.medius-kliniken.de/ueber-uns/der-klinikverbund/die-geschaeftsbereiche/",
+          "https://www.medius-kliniken.de/beruf-karriere/aerztinnen-aerzte/zukunft-aerzte/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "n.nadler@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Norbert Nadler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_norbert_nadler_caf27e52cc",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.medius-kliniken.de/ueber-uns/der-klinikverbund/die-krankenhausleitungen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "s.rantzau@medius-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Sandra Rantzau",
+        "hypothesis_email": "s.rantzau@medius-kliniken.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_sandra_rantzau_fcee1c3718",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegeleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/",
+          "https://www.medius-kliniken.de/beruf-karriere/pflege/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Pflegedienstleitung Psychiatrie",
+        "Oberärztliche Leitung der Tagesklinik Bernhausen",
+        "Leitung Personalmarketing u. Recruiting",
+        "Leitung Personalmanagement",
+        "Klinikleitung",
+        "Pflegeleitung"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://www.medius-kliniken.de/beruf-karriere/pflege/",
+      "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/team/",
+      "https://de.linkedin.com/in/bernhard-hafner-65732515b",
+      "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/",
+      "https://de.linkedin.com/in/julia-rein-07030b2b2",
+      "https://www.medius-kliniken.de/beruf-karriere/aerztinnen-aerzte/zukunft-aerzte/",
+      "https://www.linkedin.com/in/katharina-weber-134a61261",
+      "https://www.medius-kliniken.de/beruf-karriere/",
+      "https://www.medius-kliniken.de/ueber-uns/der-klinikverbund/die-geschaeftsbereiche/",
+      "https://www.medius-kliniken.de/ueber-uns/der-klinikverbund/die-krankenhausleitungen/"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Säckingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik bad säckingen|https://www.zfp-reichenau.de/|bad säckingen|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Bad Säckingen",
+    "company_website": "https://www.zfp-reichenau.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Lorenzo Alessandro Fenech",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "claudia.vallentin@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Claudia Vallentin",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_claudia_vallentin_94645b1f7e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://www.zfp-reichenau.de/karriere/stellenangebote/job/aerztin-arzt-in-weiterbildung-w-m-d-r12-26-5d894b90",
+          "https://www.zfp-reichenau.de/ueber-uns/organisation-und-struktur"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "jochen.reutter@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jochen Reutter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jochen_reutter_7365c21413",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Verwaltungsleitung / Betriebsdirektor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/ueber-uns/organisation-und-struktur",
+          "https://www.zfp-reichenau.de/ueber-uns/zentrale-dienste",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/791519023dd61240/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "lorenzo.fenech@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lorenzo Alessandro Fenech",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lorenzo-alessandro-fenech-b3a5b8252",
+        "person_key": "person_lorenzo_alessandro_fenech_2b6bca8d3b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+          "https://de.linkedin.com/in/lorenzo-alessandro-fenech-b3a5b8252",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/791519023dd61240/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Ärztliche Direktorin",
+        "Verwaltungsleitung / Betriebsdirektor",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.zfp-reichenau.de/einrichtungen/kliniken/psychiatrisches-behandlungszentrum-waldshut-tiengen/klinik",
+      "https://www.zfp-reichenau.de/karriere/stellenangebote/job/aerztin-arzt-in-weiterbildung-w-m-d-r12-26-5d894b90",
+      "https://www.zfp-reichenau.de/ueber-uns/organisation-und-struktur",
+      "https://www.zfp-reichenau.de/ueber-uns/zentrale-dienste",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/791519023dd61240/start",
+      "https://de.linkedin.com/in/lorenzo-alessandro-fenech-b3a5b8252"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Freiburg im Breisgau",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik freiburg|https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg|freiburg im breisgau|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Freiburg",
+    "company_website": "https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Simon Weiß",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "s.weiss@zfp-emmendingen.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Simon Weiß",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/simon-wei%C3%9F-m-a-4b78471a3",
+        "person_key": "person_simon_wei_1216dd900d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg",
+          "https://www.zfp-emmendingen.de/sites/default/files/media_document/2026-02/Qualit%C3%A4tsbericht%202024%2C%20Suchtmedizinische%20Tagesklinik%20Freiburg.pdf",
+          "https://de.linkedin.com/in/simon-wei%C3%9F-m-a-4b78471a3"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "v.wegerer@zfp-emmendingen.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Viola Wegener",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_viola_wegener_d54a4c3308",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Leitung",
+        "role_category": "unknown",
+        "source_urls": [
+          "https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg",
+          "https://www.zfp-emmendingen.de/sites/default/files/media_document/2026-02/Qualit%C3%A4tsbericht%202024%2C%20Suchtmedizinische%20Tagesklinik%20Freiburg.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "unknown"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Ärztliche Leitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.zfp-emmendingen.de/suchtmedizinische-tagesklinik-freiburg",
+      "https://www.zfp-emmendingen.de/sites/default/files/media_document/2026-02/Qualit%C3%A4tsbericht%202024%2C%20Suchtmedizinische%20Tagesklinik%20Freiburg.pdf",
+      "https://de.linkedin.com/in/simon-wei%C3%9F-m-a-4b78471a3"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Pforzheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|suchtmedizinische tagesklinik pforzheim|https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim|pforzheim|germany",
+    "company_name": "Suchtmedizinische Tagesklinik Pforzheim",
+    "company_website": "https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Andreas Dummert",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Johannes König",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "a.dummert@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Andreas Dummert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andreas-dummert-797a23381",
+        "person_key": "person_andreas_dummert_10ef985646",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kn-calw.de/geschaeftsleitung",
+          "https://www.kn-calw.de/organisation",
+          "https://de.linkedin.com/in/andreas-dummert-797a23381",
+          "https://www.kn-calw.de/pflegerische-qualitaet"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "j.koenig@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Johannes König",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_johannes_k_nig_5a98d9866a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "j.banschbach@kn-calw.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jürgen Banschbach",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/j%C3%BCrgen-banschbach-b51375bb",
+        "person_key": "person_j_rgen_banschbach_9c1c898649",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Betriebsdirektor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.kn-calw.de/geschaeftsleitung",
+          "https://www.kn-calw.de/organisation",
+          "https://de.linkedin.com/in/j%C3%BCrgen-banschbach-b51375bb",
+          "https://www.kn-calw.de/sites/default/files/media_document/2025-02/Qualit%C3%A4tsbericht%202023%20Psychiatrische%20Tagesklinik%20Pforzheim.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedirektor",
+        "Pflegedienstleitung",
+        "Betriebsdirektor"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kn-calw.de/geschaeftsleitung",
+      "https://www.kn-calw.de/organisation",
+      "https://de.linkedin.com/in/andreas-dummert-797a23381",
+      "https://www.kn-calw.de/pflegerische-qualitaet",
+      "https://www.kn-calw.de/suchtmedizinische-tagesklinik-pforzheim",
+      "https://de.linkedin.com/in/j%C3%BCrgen-banschbach-b51375bb",
+      "https://www.kn-calw.de/sites/default/files/media_document/2025-02/Qualit%C3%A4tsbericht%202023%20Psychiatrische%20Tagesklinik%20Pforzheim.pdf"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Filderstadt",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik bernhausen in filderstadt|https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/|filderstadt|germany",
+    "company_name": "Tagesklinik Bernhausen in Filderstadt",
+    "company_website": "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Barbara Munz",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Bernhard Hafner",
+          "person_key": "",
+          "role": "Pflegedienstleitung Psychiatrie"
+        },
+        {
+          "full_name": "Julia Rein",
+          "person_key": "",
+          "role": "Pflegedienstleitung Psychiatrie"
+        },
+        {
+          "full_name": "Sandra Rantzau",
+          "person_key": "",
+          "role": "Pflegeleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "b.munz@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Munz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_barbara_munz_1fe471d421",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medius-kliniken.de/beruf-karriere/pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "b.hafner@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Bernhard Hafner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/bernhard-hafner-65732515b",
+        "person_key": "person_bernhard_hafner_9ec699a99d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Psychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medius-kliniken.de/beruf-karriere/pflege/",
+          "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/team/",
+          "https://de.linkedin.com/in/bernhard-hafner-65732515b"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "f.heilmann@medius-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Dr. med. Frank Heilmann",
+        "hypothesis_email": "f.heilmann@medius-kliniken.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_med_frank_heilmann_bf2da39fe4",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Oberärztliche Leitung der Tagesklinik Bernhausen",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/",
+          "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/team/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "j.rein@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Julia Rein",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/julia-rein-07030b2b2",
+        "person_key": "person_julia_rein_f458ae4552",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Psychiatrie",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medius-kliniken.de/beruf-karriere/pflege/",
+          "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/team/",
+          "https://de.linkedin.com/in/julia-rein-07030b2b2"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "k.weber2@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Katharina Weber",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://www.linkedin.com/in/katharina-weber-134a61261",
+        "person_key": "person_katharina_weber_ac108772b3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Personalmarketing u. Recruiting",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.medius-kliniken.de/beruf-karriere/pflege/",
+          "https://www.medius-kliniken.de/beruf-karriere/aerztinnen-aerzte/zukunft-aerzte/",
+          "https://www.linkedin.com/in/katharina-weber-134a61261",
+          "https://www.medius-kliniken.de/beruf-karriere/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.grubwinkler@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michael Grubwinkler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_grubwinkler_e2c2e4a9d0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitung Personalmanagement",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.medius-kliniken.de/ueber-uns/der-klinikverbund/die-geschaeftsbereiche/",
+          "https://www.medius-kliniken.de/beruf-karriere/aerztinnen-aerzte/zukunft-aerzte/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "n.nadler@medius-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Norbert Nadler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_norbert_nadler_caf27e52cc",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.medius-kliniken.de/ueber-uns/der-klinikverbund/die-krankenhausleitungen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "s.rantzau@medius-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Sandra Rantzau",
+        "hypothesis_email": "s.rantzau@medius-kliniken.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_sandra_rantzau_fcee1c3718",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegeleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/",
+          "https://www.medius-kliniken.de/beruf-karriere/pflege/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Pflegedienstleitung Psychiatrie",
+        "Oberärztliche Leitung der Tagesklinik Bernhausen",
+        "Leitung Personalmarketing u. Recruiting",
+        "Leitung Personalmanagement",
+        "Klinikleitung",
+        "Pflegeleitung"
+      ],
+      "total_people": 8
+    },
+    "source_urls": [
+      "https://www.medius-kliniken.de/beruf-karriere/pflege/",
+      "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/team/",
+      "https://de.linkedin.com/in/bernhard-hafner-65732515b",
+      "https://www.medius-kliniken.de/standorte/medius-klinik-kirchheim/fachbereiche/klinik-fuer-psychiatrie-und-psychotherapie/transsektorale-versorgung/teilstationaere-behandlung-tageskliniken/tagesklinik-bernhausen/",
+      "https://de.linkedin.com/in/julia-rein-07030b2b2",
+      "https://www.medius-kliniken.de/beruf-karriere/aerztinnen-aerzte/zukunft-aerzte/",
+      "https://www.linkedin.com/in/katharina-weber-134a61261",
+      "https://www.medius-kliniken.de/beruf-karriere/",
+      "https://www.medius-kliniken.de/ueber-uns/der-klinikverbund/die-geschaeftsbereiche/",
+      "https://www.medius-kliniken.de/ueber-uns/der-klinikverbund/die-krankenhausleitungen/"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
