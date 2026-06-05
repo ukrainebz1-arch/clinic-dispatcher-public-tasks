@@ -1,0 +1,1883 @@
+TASK_ID: stage05_task_0054
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik singen|https://www.zfp-reichenau.de|singen|germany",
+    "company_name": "Tagesklinik Singen",
+    "full_name": "Jochen Reutter",
+    "message_target_id": "stage05_task_0054::person_jochen_reutter_11a1921b59::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_jochen_reutter_11a1921b59",
+    "recipient_value": "jochen.reutter@zfp-reichenau.de",
+    "role_title": "Betriebsdirektor",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik singen|https://www.zfp-reichenau.de|singen|germany",
+    "company_name": "Tagesklinik Singen",
+    "full_name": "Oliver Müller",
+    "message_target_id": "stage05_task_0054::person_oliver_m_ller_c91ef4be81::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_oliver_m_ller_c91ef4be81",
+    "recipient_value": "oliver.mueller@zfp-reichenau.de",
+    "role_title": "Ärztlicher Direktor Psychosomatik und Psychotherapie",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik singen|https://www.zfp-reichenau.de|singen|germany",
+    "company_name": "Tagesklinik Singen",
+    "full_name": "Oliver Müller",
+    "message_target_id": "stage05_task_0054::person_oliver_m_ller_c91ef4be81::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_oliver_m_ller_c91ef4be81",
+    "recipient_value": "https://de.linkedin.com/in/oliver-mueller-230868178",
+    "role_title": "Ärztlicher Direktor Psychosomatik und Psychotherapie",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik singen|https://www.zfp-reichenau.de|singen|germany",
+    "company_name": "Tagesklinik Singen",
+    "full_name": "Oliver Müller",
+    "message_target_id": "stage05_task_0054::person_oliver_m_ller_c91ef4be81::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_oliver_m_ller_c91ef4be81",
+    "recipient_value": "https://de.linkedin.com/in/oliver-mueller-230868178",
+    "role_title": "Ärztlicher Direktor Psychosomatik und Psychotherapie",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik singen|https://www.zfp-reichenau.de|singen|germany",
+    "company_name": "Tagesklinik Singen",
+    "full_name": "Ute Claudia Bing",
+    "message_target_id": "stage05_task_0054::person_ute_claudia_bing_a576543e3c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ute_claudia_bing_a576543e3c",
+    "recipient_value": "uteclaudia.bing@zfp-reichenau.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik singen|https://www.zfp-reichenau.de|singen|germany",
+    "company_name": "Tagesklinik Singen",
+    "full_name": "Ute Claudia Bing",
+    "message_target_id": "stage05_task_0054::person_ute_claudia_bing_a576543e3c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ute_claudia_bing_a576543e3c",
+    "recipient_value": "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik singen|https://www.zfp-reichenau.de|singen|germany",
+    "company_name": "Tagesklinik Singen",
+    "full_name": "Ute Claudia Bing",
+    "message_target_id": "stage05_task_0054::person_ute_claudia_bing_a576543e3c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_ute_claudia_bing_a576543e3c",
+    "recipient_value": "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik vaihingen|https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/|vaihingen an der enz|germany",
+    "company_name": "Tagesklinik Vaihingen",
+    "full_name": "Janina Oehrle",
+    "message_target_id": "stage05_task_0054::person_janina_oehrle_c299eac3aa::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_janina_oehrle_c299eac3aa",
+    "recipient_value": "janina.oehrle@rkh-gesundheit.de",
+    "role_title": "Klinikleitung",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik vaihingen|https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/|vaihingen an der enz|germany",
+    "company_name": "Tagesklinik Vaihingen",
+    "full_name": "Janina Oehrle",
+    "message_target_id": "stage05_task_0054::person_janina_oehrle_c299eac3aa::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_janina_oehrle_c299eac3aa",
+    "recipient_value": "https://de.linkedin.com/in/janina-oehrle-470078195",
+    "role_title": "Klinikleitung",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik vaihingen|https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/|vaihingen an der enz|germany",
+    "company_name": "Tagesklinik Vaihingen",
+    "full_name": "Janina Oehrle",
+    "message_target_id": "stage05_task_0054::person_janina_oehrle_c299eac3aa::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_janina_oehrle_c299eac3aa",
+    "recipient_value": "https://de.linkedin.com/in/janina-oehrle-470078195",
+    "role_title": "Klinikleitung",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik vaihingen|https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/|vaihingen an der enz|germany",
+    "company_name": "Tagesklinik Vaihingen",
+    "full_name": "Manfred Müller",
+    "message_target_id": "stage05_task_0054::person_manfred_m_ller_c7a9455279::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_manfred_m_ller_c7a9455279",
+    "recipient_value": "manfred.mueller@rkh-gesundheit.de",
+    "role_title": "Pflegerische Klinikleitung Bietigheim",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik vaihingen|https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/|vaihingen an der enz|germany",
+    "company_name": "Tagesklinik Vaihingen",
+    "full_name": "Marcus Herbst",
+    "message_target_id": "stage05_task_0054::person_marcus_herbst_89fe274b3c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_marcus_herbst_89fe274b3c",
+    "recipient_value": "marcus.herbst@rkh-gesundheit.de",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik vaihingen|https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/|vaihingen an der enz|germany",
+    "company_name": "Tagesklinik Vaihingen",
+    "full_name": "Marcus Herbst",
+    "message_target_id": "stage05_task_0054::person_marcus_herbst_89fe274b3c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marcus_herbst_89fe274b3c",
+    "recipient_value": "https://de.linkedin.com/in/marcus-herbst-508a822b3",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik vaihingen|https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/|vaihingen an der enz|germany",
+    "company_name": "Tagesklinik Vaihingen",
+    "full_name": "Marcus Herbst",
+    "message_target_id": "stage05_task_0054::person_marcus_herbst_89fe274b3c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marcus_herbst_89fe274b3c",
+    "recipient_value": "https://de.linkedin.com/in/marcus-herbst-508a822b3",
+    "role_title": "Klinikgeschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Andrea Albrecht",
+    "message_target_id": "stage05_task_0054::person_andrea_albrecht_f850a6fd16::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andrea_albrecht_f850a6fd16",
+    "recipient_value": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Andrea Albrecht",
+    "message_target_id": "stage05_task_0054::person_andrea_albrecht_f850a6fd16::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andrea_albrecht_f850a6fd16",
+    "recipient_value": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Andrea Albrecht",
+    "message_target_id": "stage05_task_0054::person_andrea_albrecht_c7aa1239c4::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andrea_albrecht_c7aa1239c4",
+    "recipient_value": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Andrea Albrecht",
+    "message_target_id": "stage05_task_0054::person_andrea_albrecht_c7aa1239c4::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_andrea_albrecht_c7aa1239c4",
+    "recipient_value": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Dr. Frank Zils",
+    "message_target_id": "stage05_task_0054::person_dr_frank_zils_c61aac42f1::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_frank_zils_c61aac42f1",
+    "recipient_value": "f.zils@bbtgruppe.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Dr. Frank Zils",
+    "message_target_id": "stage05_task_0054::person_dr_frank_zils_c61aac42f1::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_frank_zils_c61aac42f1",
+    "recipient_value": "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Dr. Frank Zils",
+    "message_target_id": "stage05_task_0054::person_dr_frank_zils_c61aac42f1::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_frank_zils_c61aac42f1",
+    "recipient_value": "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Julia Bergmann",
+    "message_target_id": "stage05_task_0054::person_julia_bergmann_bb918f7e99::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_julia_bergmann_bb918f7e99",
+    "recipient_value": "ju.bergmann@bbtgruppe.de",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Julia Bergmann",
+    "message_target_id": "stage05_task_0054::person_julia_bergmann_bb918f7e99::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_julia_bergmann_bb918f7e99",
+    "recipient_value": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Julia Bergmann",
+    "message_target_id": "stage05_task_0054::person_julia_bergmann_bb918f7e99::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_julia_bergmann_bb918f7e99",
+    "recipient_value": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+    "role_title": "Kaufmännische Direktorin",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Sabine Anspach",
+    "message_target_id": "stage05_task_0054::person_sabine_anspach_778a8e1c60::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_sabine_anspach_778a8e1c60",
+    "recipient_value": "s.anspach@bbtgruppe.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Sabine Anspach",
+    "message_target_id": "stage05_task_0054::person_sabine_anspach_778a8e1c60::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sabine_anspach_778a8e1c60",
+    "recipient_value": "https://de.linkedin.com/in/sabine-anspach-10215724",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Sabine Anspach",
+    "message_target_id": "stage05_task_0054::person_sabine_anspach_778a8e1c60::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sabine_anspach_778a8e1c60",
+    "recipient_value": "https://de.linkedin.com/in/sabine-anspach-10215724",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Thomas Schaefer",
+    "message_target_id": "stage05_task_0054::person_thomas_schaefer_682ce41fde::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_thomas_schaefer_682ce41fde",
+    "recipient_value": "th.schaefer@bbtgruppe.de",
+    "role_title": "Klinikübergreifende Leitung Personal",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Thomas Schaefer",
+    "message_target_id": "stage05_task_0054::person_thomas_schaefer_682ce41fde::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_thomas_schaefer_682ce41fde",
+    "recipient_value": "https://de.linkedin.com/in/thomas-schaefer-732185156",
+    "role_title": "Klinikübergreifende Leitung Personal",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "full_name": "Thomas Schaefer",
+    "message_target_id": "stage05_task_0054::person_thomas_schaefer_682ce41fde::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_thomas_schaefer_682ce41fde",
+    "recipient_value": "https://de.linkedin.com/in/thomas-schaefer-732185156",
+    "role_title": "Klinikübergreifende Leitung Personal",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thoraxklinik heidelberg|http://www.thoraxklinik-heidelberg.de/|heidelberg|germany",
+    "company_name": "Thoraxklinik Heidelberg",
+    "full_name": "Brigitte Radovanovic",
+    "message_target_id": "stage05_task_0054::person_brigitte_radovanovic_346baae145::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_brigitte_radovanovic_346baae145",
+    "recipient_value": "Brigitte.Radovanovic@thoraxklinik-heidelberg.de",
+    "role_title": "Pflegemanagement",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thoraxklinik heidelberg|http://www.thoraxklinik-heidelberg.de/|heidelberg|germany",
+    "company_name": "Thoraxklinik Heidelberg",
+    "full_name": "Sebastian Frank",
+    "message_target_id": "stage05_task_0054::person_sebastian_frank_2c19795deb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sebastian_frank_2c19795deb",
+    "recipient_value": "Sebastian.Frank@thoraxklinik-heidelberg.de",
+    "role_title": "Kaufmännischer Geschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thoraxklinik heidelberg|http://www.thoraxklinik-heidelberg.de/|heidelberg|germany",
+    "company_name": "Thoraxklinik Heidelberg",
+    "full_name": "Stefan Bauer",
+    "message_target_id": "stage05_task_0054::person_stefan_bauer_d6a448e180::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_stefan_bauer_d6a448e180",
+    "recipient_value": "Stefan.Bauer@thoraxklinik-heidelberg.de",
+    "role_title": "Leiter Personal / Stellvertretender Geschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thoraxklinik heidelberg|http://www.thoraxklinik-heidelberg.de/|heidelberg|germany",
+    "company_name": "Thoraxklinik Heidelberg",
+    "full_name": "Stefan Bauer",
+    "message_target_id": "stage05_task_0054::person_stefan_bauer_d6a448e180::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefan_bauer_d6a448e180",
+    "recipient_value": "https://de.linkedin.com/in/stefan-bauer-7320a5b0",
+    "role_title": "Leiter Personal / Stellvertretender Geschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thoraxklinik heidelberg|http://www.thoraxklinik-heidelberg.de/|heidelberg|germany",
+    "company_name": "Thoraxklinik Heidelberg",
+    "full_name": "Stefan Bauer",
+    "message_target_id": "stage05_task_0054::person_stefan_bauer_d6a448e180::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_stefan_bauer_d6a448e180",
+    "recipient_value": "https://de.linkedin.com/in/stefan-bauer-7320a5b0",
+    "role_title": "Leiter Personal / Stellvertretender Geschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thoraxklinik heidelberg|http://www.thoraxklinik-heidelberg.de/|heidelberg|germany",
+    "company_name": "Thoraxklinik Heidelberg",
+    "full_name": "Univ.-Prof. Dr. med. Felix Herth",
+    "message_target_id": "stage05_task_0054::person_univ_prof_dr_med_felix_herth_ab8abced21::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_univ_prof_dr_med_felix_herth_ab8abced21",
+    "recipient_value": "Felix.Herth@thoraxklinik-heidelberg.de",
+    "role_title": "Medizinischer Geschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thoraxklinik heidelberg|http://www.thoraxklinik-heidelberg.de/|heidelberg|germany",
+    "company_name": "Thoraxklinik Heidelberg",
+    "full_name": "Univ.-Prof. Dr. med. Felix Herth",
+    "message_target_id": "stage05_task_0054::person_univ_prof_dr_med_felix_herth_ab8abced21::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_univ_prof_dr_med_felix_herth_ab8abced21",
+    "recipient_value": "https://de.linkedin.com/in/felix-jf-herth-58a93414",
+    "role_title": "Medizinischer Geschäftsführer",
+    "task_id": "stage05_task_0054"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thoraxklinik heidelberg|http://www.thoraxklinik-heidelberg.de/|heidelberg|germany",
+    "company_name": "Thoraxklinik Heidelberg",
+    "full_name": "Univ.-Prof. Dr. med. Felix Herth",
+    "message_target_id": "stage05_task_0054::person_univ_prof_dr_med_felix_herth_ab8abced21::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_univ_prof_dr_med_felix_herth_ab8abced21",
+    "recipient_value": "https://de.linkedin.com/in/felix-jf-herth-58a93414",
+    "role_title": "Medizinischer Geschäftsführer",
+    "task_id": "stage05_task_0054"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Singen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik singen|https://www.zfp-reichenau.de|singen|germany",
+    "company_name": "Tagesklinik Singen",
+    "company_website": "https://www.zfp-reichenau.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Ute Claudia Bing",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "jochen.reutter@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jochen Reutter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jochen_reutter_11a1921b59",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Betriebsdirektor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/ueber-uns/organisation-und-struktur",
+          "https://www.zfp-reichenau.de/ueber-uns/zentrale-dienste",
+          "https://de.linkedin.com/posts/redaktionsbuero-hagenlocher_hier-arbeiten-menschen-f%C3%BCr-menschen-activity-7145684771396866048-7lZ1",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/2924d576560d6d15/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "oliver.mueller@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Oliver Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/oliver-mueller-230868178",
+        "person_key": "person_oliver_m_ller_c91ef4be81",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztlicher Direktor Psychosomatik und Psychotherapie",
+        "role_category": "unknown",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/sinova-klinik-fuer-psychosomatische-medizin-und-psychotherapie/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/tagesklinik_singen_2024.pdf",
+          "https://de.linkedin.com/in/oliver-mueller-230868178"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "uteclaudia.bing@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ute Claudia Bing",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+        "person_key": "person_ute_claudia_bing_a576543e3c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/sinova-klinik-fuer-psychosomatische-medizin-und-psychotherapie/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/tagesklinik_singen_2024.pdf",
+          "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/2924d576560d6d15/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "unknown",
+        "operations"
+      ],
+      "roles": [
+        "Betriebsdirektor",
+        "Ärztlicher Direktor Psychosomatik und Psychotherapie",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.zfp-reichenau.de/ueber-uns/organisation-und-struktur",
+      "https://www.zfp-reichenau.de/ueber-uns/zentrale-dienste",
+      "https://de.linkedin.com/posts/redaktionsbuero-hagenlocher_hier-arbeiten-menschen-f%C3%BCr-menschen-activity-7145684771396866048-7lZ1",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/2924d576560d6d15/start",
+      "https://www.zfp-reichenau.de/einrichtungen/kliniken/sinova-klinik-fuer-psychosomatische-medizin-und-psychotherapie/klinik",
+      "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/tagesklinik_singen_2024.pdf",
+      "https://de.linkedin.com/in/oliver-mueller-230868178",
+      "https://de.linkedin.com/in/ute-claudia-bing-a8756b258"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Vaihingen an der Enz",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik vaihingen|https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/|vaihingen an der enz|germany",
+    "company_name": "Tagesklinik Vaihingen",
+    "company_website": "https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Manfred Müller",
+          "person_key": "",
+          "role": "Pflegerische Klinikleitung Bietigheim"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "janina.oehrle@rkh-gesundheit.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Janina Oehrle",
+        "hypothesis_email": "janina.oehrle@rkh-gesundheit.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/janina-oehrle-470078195",
+        "person_key": "person_janina_oehrle_c299eac3aa",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Klinikleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Bietigheim_2024.pdf",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Ludwigsburg_2024.pdf",
+          "https://www.rkh-gesundheit.de/ueber-uns/geschaeftsfuehrung/",
+          "https://www.rkh-gesundheit.de/",
+          "https://de.linkedin.com/in/janina-oehrle-470078195"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "manfred.mueller@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Manfred Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_manfred_m_ller_c7a9455279",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Klinikleitung Bietigheim",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Bietigheim_2024.pdf",
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Vaihingen_2023.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marcus.herbst@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marcus Herbst",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marcus-herbst-508a822b3",
+        "person_key": "person_marcus_herbst_89fe274b3c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikgeschäftsführer",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/media/pressemitteilungen/detailseite/news/marcus-herbst-neuer-klinikgeschaeftsfuehrer-fuer-die-rkh-kliniken-ludwigsburg-bietigheim/",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Ludwigsburg_2024.pdf",
+          "https://de.linkedin.com/posts/medconweb_marcus-herbst-wird-neuer-klinikgesch%C3%A4ftsf%C3%BChrer-activity-7322634874484416515-MvPK",
+          "https://de.linkedin.com/in/marcus-herbst-508a822b3",
+          "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Klinikleitung",
+        "Pflegerische Klinikleitung Bietigheim",
+        "Klinikgeschäftsführer"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Bietigheim_2024.pdf",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Ludwigsburg_2024.pdf",
+      "https://www.rkh-gesundheit.de/ueber-uns/geschaeftsfuehrung/",
+      "https://www.rkh-gesundheit.de/",
+      "https://de.linkedin.com/in/janina-oehrle-470078195",
+      "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Vaihingen_2023.pdf",
+      "https://www.rkh-gesundheit.de/media/pressemitteilungen/detailseite/news/marcus-herbst-neuer-klinikgeschaeftsfuehrer-fuer-die-rkh-kliniken-ludwigsburg-bietigheim/",
+      "https://de.linkedin.com/posts/medconweb_marcus-herbst-wird-neuer-klinikgesch%C3%A4ftsf%C3%BChrer-activity-7322634874484416515-MvPK",
+      "https://de.linkedin.com/in/marcus-herbst-508a822b3"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 3,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 6,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Mannheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "company_website": "https://www.bk-julia-lanz.de/bkjl/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Andrea Albrecht",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Andrea Albrecht",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Anette Buhles",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Andrea Albrecht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+        "person_key": "person_andrea_albrecht_f850a6fd16",
+        "primary_channel": "LINKEDIN",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Andrea-Albrecht.php",
+          "https://bk-julia-lanz.de/bkjl/impressum/",
+          "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Andrea Albrecht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+        "person_key": "person_andrea_albrecht_c7aa1239c4",
+        "primary_channel": "LINKEDIN",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Andrea-Albrecht.php",
+          "https://bk-julia-lanz.de/bkjl/impressum/",
+          "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Anette Buhles",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anette_buhles_b4e872b116",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Buhles-Anette.php",
+          "https://bk-julia-lanz.de/bkjl/impressum/",
+          "false",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "f.zils@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Frank Zils",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+        "person_key": "person_dr_frank_zils_c61aac42f1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://theologie-trier.de/fileadmin/theofak/Alumni/Textdokumente/Alumni_Zils.pdf",
+          "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Zils-Frank.php",
+          "https://www.bk-julia-lanz.de/bkjl/impressum/",
+          "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/24-12-03_Pressemitteilung_Zentrierung_Fachabteilungen.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "ju.bergmann@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Julia Bergmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+        "person_key": "person_julia_bergmann_bb918f7e99",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+          "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Julia-Bergmann.php",
+          "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "s.anspach@bbtgruppe.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Sabine Anspach",
+        "hypothesis_email": "s.anspach@bbtgruppe.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sabine-anspach-10215724",
+        "person_key": "person_sabine_anspach_778a8e1c60",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Anspach-Sabine.php",
+          "https://www.bbtgruppe.de/media-bkjl/docs/24-12-03_Pressemitteilung_Zentrierung_Fachabteilungen.pdf",
+          "https://www.mvz-kirchberg.de/mvzkb/impressum/",
+          "https://de.linkedin.com/in/sabine-anspach-10215724",
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/24-12-03_Pressemitteilung_Zentrierung_Fachabteilungen.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "th.schaefer@bbtgruppe.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Thomas Schaefer",
+        "hypothesis_email": "th.schaefer@bbtgruppe.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/thomas-schaefer-732185156",
+        "person_key": "person_thomas_schaefer_682ce41fde",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Klinikübergreifende Leitung Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Schaefer-Thomas.php",
+          "https://de.linkedin.com/posts/hc-s-ag_pflegedirektorin-pflege-erfahrung-activity-7445349358394388482-jspI",
+          "https://de.linkedin.com/in/thomas-schaefer-732185156",
+          "https://bk-julia-lanz.de/bkjl/ansprechpartner/personen/Schaefer-Thomas.php"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo",
+        "other_management",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Stellvertretende Pflegedirektorin",
+        "Geschäftsführer",
+        "Kaufmännische Direktorin",
+        "Geschäftsführerin",
+        "Klinikübergreifende Leitung Personal"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Andrea-Albrecht.php",
+      "https://bk-julia-lanz.de/bkjl/impressum/",
+      "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+      "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+      "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Buhles-Anette.php",
+      "false",
+      "https://theologie-trier.de/fileadmin/theofak/Alumni/Textdokumente/Alumni_Zils.pdf",
+      "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Zils-Frank.php",
+      "https://www.bk-julia-lanz.de/bkjl/impressum/",
+      "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+      "https://www.bk-julia-lanz.de/media-bkjl/docs/24-12-03_Pressemitteilung_Zentrierung_Fachabteilungen.pdf",
+      "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+      "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Julia-Bergmann.php",
+      "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+      "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Anspach-Sabine.php",
+      "https://www.bbtgruppe.de/media-bkjl/docs/24-12-03_Pressemitteilung_Zentrierung_Fachabteilungen.pdf",
+      "https://www.mvz-kirchberg.de/mvzkb/impressum/",
+      "https://de.linkedin.com/in/sabine-anspach-10215724",
+      "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Schaefer-Thomas.php",
+      "https://de.linkedin.com/posts/hc-s-ag_pflegedirektorin-pflege-erfahrung-activity-7445349358394388482-jspI",
+      "https://de.linkedin.com/in/thomas-schaefer-732185156",
+      "https://bk-julia-lanz.de/bkjl/ansprechpartner/personen/Schaefer-Thomas.php"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heidelberg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thoraxklinik heidelberg|http://www.thoraxklinik-heidelberg.de/|heidelberg|germany",
+    "company_name": "Thoraxklinik Heidelberg",
+    "company_website": "http://www.thoraxklinik-heidelberg.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Brigitte Radovanovic",
+          "person_key": "",
+          "role": "Pflegemanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "Brigitte.Radovanovic@thoraxklinik-heidelberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Brigitte Radovanovic",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_brigitte_radovanovic_346baae145",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegemanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.thoraxklinik-heidelberg.de/personen/brigitte-radovanovic-6248/",
+          "https://www.thoraxklinik-heidelberg.de/fachbereiche/pflegedienst/pflegemanagement/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "Sebastian.Frank@thoraxklinik-heidelberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sebastian Frank",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sebastian_frank_2c19795deb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.thoraxklinik-heidelberg.de/personen/sebastian-frank-6361",
+          "https://www.thoraxklinik-heidelberg.de/ueber-uns/geschaeftsfuehrung/",
+          "https://www.klinikum.uni-heidelberg.de/newsroom/seit-38-jahren-der-thoraxklinik-eng-verbunden/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "Stefan.Bauer@thoraxklinik-heidelberg.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Stefan Bauer",
+        "hypothesis_email": "Stefan.Bauer@thoraxklinik-heidelberg.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefan-bauer-7320a5b0",
+        "person_key": "person_stefan_bauer_d6a448e180",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Leiter Personal / Stellvertretender Geschäftsführer",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://de.linkedin.com/in/stefan-bauer-7320a5b0",
+          "https://www.thoraxklinik-heidelberg.de/ueber-uns/geschaeftsfuehrung/",
+          "https://www.yumpu.com/de/document/view/8335023/thoraxchirurgie-thoraxklinik-heidelberg",
+          "https://www.thoraxklinik-heidelberg.de/personen/sebastian-frank-6361",
+          "https://www.thoraxklinik-heidelberg.de/footer-meta-navigation/impressum/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Felix.Herth@thoraxklinik-heidelberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Univ.-Prof. Dr. med. Felix Herth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/felix-jf-herth-58a93414",
+        "person_key": "person_univ_prof_dr_med_felix_herth_ab8abced21",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Medizinischer Geschäftsführer",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.thoraxklinik-heidelberg.de/personen/univ-prof-dr-med-felix-herth-6199/",
+          "https://eabip.org/honorary-members/",
+          "https://pubmed.ncbi.nlm.nih.gov/19923880/",
+          "https://de.linkedin.com/in/felix-jf-herth-58a93414"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo",
+        "hr_recruiting",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegemanagement",
+        "Kaufmännischer Geschäftsführer",
+        "Leiter Personal / Stellvertretender Geschäftsführer",
+        "Medizinischer Geschäftsführer"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.thoraxklinik-heidelberg.de/personen/brigitte-radovanovic-6248/",
+      "https://www.thoraxklinik-heidelberg.de/fachbereiche/pflegedienst/pflegemanagement/",
+      "https://www.thoraxklinik-heidelberg.de/personen/sebastian-frank-6361",
+      "https://www.thoraxklinik-heidelberg.de/ueber-uns/geschaeftsfuehrung/",
+      "https://www.klinikum.uni-heidelberg.de/newsroom/seit-38-jahren-der-thoraxklinik-eng-verbunden/",
+      "https://de.linkedin.com/in/stefan-bauer-7320a5b0",
+      "https://www.yumpu.com/de/document/view/8335023/thoraxchirurgie-thoraxklinik-heidelberg",
+      "https://www.thoraxklinik-heidelberg.de/footer-meta-navigation/impressum/",
+      "https://www.thoraxklinik-heidelberg.de/personen/univ-prof-dr-med-felix-herth-6199/",
+      "https://eabip.org/honorary-members/",
+      "https://pubmed.ncbi.nlm.nih.gov/19923880/",
+      "https://de.linkedin.com/in/felix-jf-herth-58a93414"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Singen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik singen|https://www.zfp-reichenau.de|singen|germany",
+    "company_name": "Tagesklinik Singen",
+    "company_website": "https://www.zfp-reichenau.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Ute Claudia Bing",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "jochen.reutter@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jochen Reutter",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jochen_reutter_11a1921b59",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Betriebsdirektor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/ueber-uns/organisation-und-struktur",
+          "https://www.zfp-reichenau.de/ueber-uns/zentrale-dienste",
+          "https://de.linkedin.com/posts/redaktionsbuero-hagenlocher_hier-arbeiten-menschen-f%C3%BCr-menschen-activity-7145684771396866048-7lZ1",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/2924d576560d6d15/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "oliver.mueller@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Oliver Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/oliver-mueller-230868178",
+        "person_key": "person_oliver_m_ller_c91ef4be81",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztlicher Direktor Psychosomatik und Psychotherapie",
+        "role_category": "unknown",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/sinova-klinik-fuer-psychosomatische-medizin-und-psychotherapie/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/tagesklinik_singen_2024.pdf",
+          "https://de.linkedin.com/in/oliver-mueller-230868178"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "uteclaudia.bing@zfp-reichenau.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ute Claudia Bing",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+        "person_key": "person_ute_claudia_bing_a576543e3c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.zfp-reichenau.de/einrichtungen/kliniken/sinova-klinik-fuer-psychosomatische-medizin-und-psychotherapie/klinik",
+          "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/tagesklinik_singen_2024.pdf",
+          "https://de.linkedin.com/in/ute-claudia-bing-a8756b258",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/2924d576560d6d15/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "unknown",
+        "operations"
+      ],
+      "roles": [
+        "Betriebsdirektor",
+        "Ärztlicher Direktor Psychosomatik und Psychotherapie",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.zfp-reichenau.de/ueber-uns/organisation-und-struktur",
+      "https://www.zfp-reichenau.de/ueber-uns/zentrale-dienste",
+      "https://de.linkedin.com/posts/redaktionsbuero-hagenlocher_hier-arbeiten-menschen-f%C3%BCr-menschen-activity-7145684771396866048-7lZ1",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/2924d576560d6d15/start",
+      "https://www.zfp-reichenau.de/einrichtungen/kliniken/sinova-klinik-fuer-psychosomatische-medizin-und-psychotherapie/klinik",
+      "https://www.zfp-reichenau.de/fileadmin/zfp-reichenau.de/ueber_uns/qualitaetsmanagement/qualitaetsberichte/tagesklinik_singen_2024.pdf",
+      "https://de.linkedin.com/in/oliver-mueller-230868178",
+      "https://de.linkedin.com/in/ute-claudia-bing-a8756b258"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Vaihingen an der Enz",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|tagesklinik vaihingen|https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/|vaihingen an der enz|germany",
+    "company_name": "Tagesklinik Vaihingen",
+    "company_website": "https://www.rkh-gesundheit.de/kliniken-zentren/fachbereiche/bietigheim-vaihingen/klinik-fuer-innere-medizin-geriatrie-endokrinologie-und-diabetologie/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Manfred Müller",
+          "person_key": "",
+          "role": "Pflegerische Klinikleitung Bietigheim"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "janina.oehrle@rkh-gesundheit.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Janina Oehrle",
+        "hypothesis_email": "janina.oehrle@rkh-gesundheit.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/janina-oehrle-470078195",
+        "person_key": "person_janina_oehrle_c299eac3aa",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Klinikleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Bietigheim_2024.pdf",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Ludwigsburg_2024.pdf",
+          "https://www.rkh-gesundheit.de/ueber-uns/geschaeftsfuehrung/",
+          "https://www.rkh-gesundheit.de/",
+          "https://de.linkedin.com/in/janina-oehrle-470078195"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "manfred.mueller@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Manfred Müller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_manfred_m_ller_c7a9455279",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegerische Klinikleitung Bietigheim",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Bietigheim_2024.pdf",
+          "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Vaihingen_2023.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marcus.herbst@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marcus Herbst",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marcus-herbst-508a822b3",
+        "person_key": "person_marcus_herbst_89fe274b3c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinikgeschäftsführer",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/media/pressemitteilungen/detailseite/news/marcus-herbst-neuer-klinikgeschaeftsfuehrer-fuer-die-rkh-kliniken-ludwigsburg-bietigheim/",
+          "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Ludwigsburg_2024.pdf",
+          "https://de.linkedin.com/posts/medconweb_marcus-herbst-wird-neuer-klinikgesch%C3%A4ftsf%C3%BChrer-activity-7322634874484416515-MvPK",
+          "https://de.linkedin.com/in/marcus-herbst-508a822b3",
+          "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Klinikleitung",
+        "Pflegerische Klinikleitung Bietigheim",
+        "Klinikgeschäftsführer"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/unternehmen/geschaeftsfuehrung/",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Bietigheim_2024.pdf",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Ludwigsburg_2024.pdf",
+      "https://www.rkh-gesundheit.de/ueber-uns/geschaeftsfuehrung/",
+      "https://www.rkh-gesundheit.de/",
+      "https://de.linkedin.com/in/janina-oehrle-470078195",
+      "https://www.rkh-gesundheit.de/klinikum-ludwigsburg/behandlung/pflege/",
+      "https://www.rkh-gesundheit.de/fileadmin/user_upload/Qualitaet/AOK/Ludwigsburg/Qualit%C3%A4tsbericht_Vaihingen_2023.pdf",
+      "https://www.rkh-gesundheit.de/media/pressemitteilungen/detailseite/news/marcus-herbst-neuer-klinikgeschaeftsfuehrer-fuer-die-rkh-kliniken-ludwigsburg-bietigheim/",
+      "https://de.linkedin.com/posts/medconweb_marcus-herbst-wird-neuer-klinikgesch%C3%A4ftsf%C3%BChrer-activity-7322634874484416515-MvPK",
+      "https://de.linkedin.com/in/marcus-herbst-508a822b3"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 3,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 6,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Mannheim",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|theresienkrankenhaus in mannheim|https://www.bk-julia-lanz.de/bkjl/|mannheim|germany",
+    "company_name": "Theresienkrankenhaus in Mannheim",
+    "company_website": "https://www.bk-julia-lanz.de/bkjl/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Andrea Albrecht",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Andrea Albrecht",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Anette Buhles",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Andrea Albrecht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+        "person_key": "person_andrea_albrecht_f850a6fd16",
+        "primary_channel": "LINKEDIN",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Andrea-Albrecht.php",
+          "https://bk-julia-lanz.de/bkjl/impressum/",
+          "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "LINKEDIN|COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Andrea Albrecht",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+        "person_key": "person_andrea_albrecht_c7aa1239c4",
+        "primary_channel": "LINKEDIN",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Andrea-Albrecht.php",
+          "https://bk-julia-lanz.de/bkjl/impressum/",
+          "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Anette Buhles",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anette_buhles_b4e872b116",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Buhles-Anette.php",
+          "https://bk-julia-lanz.de/bkjl/impressum/",
+          "false",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "f.zils@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Frank Zils",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+        "person_key": "person_dr_frank_zils_c61aac42f1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://theologie-trier.de/fileadmin/theofak/Alumni/Textdokumente/Alumni_Zils.pdf",
+          "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Zils-Frank.php",
+          "https://www.bk-julia-lanz.de/bkjl/impressum/",
+          "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/24-12-03_Pressemitteilung_Zentrierung_Fachabteilungen.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "ju.bergmann@bbtgruppe.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Julia Bergmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+        "person_key": "person_julia_bergmann_bb918f7e99",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Direktorin",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+          "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Julia-Bergmann.php",
+          "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+          "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "s.anspach@bbtgruppe.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Sabine Anspach",
+        "hypothesis_email": "s.anspach@bbtgruppe.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sabine-anspach-10215724",
+        "person_key": "person_sabine_anspach_778a8e1c60",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Anspach-Sabine.php",
+          "https://www.bbtgruppe.de/media-bkjl/docs/24-12-03_Pressemitteilung_Zentrierung_Fachabteilungen.pdf",
+          "https://www.mvz-kirchberg.de/mvzkb/impressum/",
+          "https://de.linkedin.com/in/sabine-anspach-10215724",
+          "https://www.bk-julia-lanz.de/media-bkjl/docs/24-12-03_Pressemitteilung_Zentrierung_Fachabteilungen.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "th.schaefer@bbtgruppe.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Thomas Schaefer",
+        "hypothesis_email": "th.schaefer@bbtgruppe.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/thomas-schaefer-732185156",
+        "person_key": "person_thomas_schaefer_682ce41fde",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Klinikübergreifende Leitung Personal",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Schaefer-Thomas.php",
+          "https://de.linkedin.com/posts/hc-s-ag_pflegedirektorin-pflege-erfahrung-activity-7445349358394388482-jspI",
+          "https://de.linkedin.com/in/thomas-schaefer-732185156",
+          "https://bk-julia-lanz.de/bkjl/ansprechpartner/personen/Schaefer-Thomas.php"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo",
+        "other_management",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Stellvertretende Pflegedirektorin",
+        "Geschäftsführer",
+        "Kaufmännische Direktorin",
+        "Geschäftsführerin",
+        "Klinikübergreifende Leitung Personal"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Andrea-Albrecht.php",
+      "https://bk-julia-lanz.de/bkjl/impressum/",
+      "https://de.linkedin.com/in/andrea-albrecht-2a7774143",
+      "https://bk-julia-lanz.de/bkjl/ueber-uns/direktorium-leitung/",
+      "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Buhles-Anette.php",
+      "false",
+      "https://theologie-trier.de/fileadmin/theofak/Alumni/Textdokumente/Alumni_Zils.pdf",
+      "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Zils-Frank.php",
+      "https://www.bk-julia-lanz.de/bkjl/impressum/",
+      "https://de.linkedin.com/in/dr-frank-zils-bab9618",
+      "https://www.bk-julia-lanz.de/media-bkjl/docs/24-12-03_Pressemitteilung_Zentrierung_Fachabteilungen.pdf",
+      "https://www.bk-julia-lanz.de/media-bkjl/docs/SQB_GBA-Referenzbericht-2024_Diako.pdf",
+      "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Julia-Bergmann.php",
+      "https://de.linkedin.com/in/julia-bergmann-143b9b1b6",
+      "https://www.bbtgruppe.de/zentrale/ansprechpartner/personen/Anspach-Sabine.php",
+      "https://www.bbtgruppe.de/media-bkjl/docs/24-12-03_Pressemitteilung_Zentrierung_Fachabteilungen.pdf",
+      "https://www.mvz-kirchberg.de/mvzkb/impressum/",
+      "https://de.linkedin.com/in/sabine-anspach-10215724",
+      "https://www.bk-julia-lanz.de/bkjl/ansprechpartner/personen/Schaefer-Thomas.php",
+      "https://de.linkedin.com/posts/hc-s-ag_pflegedirektorin-pflege-erfahrung-activity-7445349358394388482-jspI",
+      "https://de.linkedin.com/in/thomas-schaefer-732185156",
+      "https://bk-julia-lanz.de/bkjl/ansprechpartner/personen/Schaefer-Thomas.php"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heidelberg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|thoraxklinik heidelberg|http://www.thoraxklinik-heidelberg.de/|heidelberg|germany",
+    "company_name": "Thoraxklinik Heidelberg",
+    "company_website": "http://www.thoraxklinik-heidelberg.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Brigitte Radovanovic",
+          "person_key": "",
+          "role": "Pflegemanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "Brigitte.Radovanovic@thoraxklinik-heidelberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Brigitte Radovanovic",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_brigitte_radovanovic_346baae145",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegemanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.thoraxklinik-heidelberg.de/personen/brigitte-radovanovic-6248/",
+          "https://www.thoraxklinik-heidelberg.de/fachbereiche/pflegedienst/pflegemanagement/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "Sebastian.Frank@thoraxklinik-heidelberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sebastian Frank",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sebastian_frank_2c19795deb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.thoraxklinik-heidelberg.de/personen/sebastian-frank-6361",
+          "https://www.thoraxklinik-heidelberg.de/ueber-uns/geschaeftsfuehrung/",
+          "https://www.klinikum.uni-heidelberg.de/newsroom/seit-38-jahren-der-thoraxklinik-eng-verbunden/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "Stefan.Bauer@thoraxklinik-heidelberg.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Stefan Bauer",
+        "hypothesis_email": "Stefan.Bauer@thoraxklinik-heidelberg.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/stefan-bauer-7320a5b0",
+        "person_key": "person_stefan_bauer_d6a448e180",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Leiter Personal / Stellvertretender Geschäftsführer",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://de.linkedin.com/in/stefan-bauer-7320a5b0",
+          "https://www.thoraxklinik-heidelberg.de/ueber-uns/geschaeftsfuehrung/",
+          "https://www.yumpu.com/de/document/view/8335023/thoraxchirurgie-thoraxklinik-heidelberg",
+          "https://www.thoraxklinik-heidelberg.de/personen/sebastian-frank-6361",
+          "https://www.thoraxklinik-heidelberg.de/footer-meta-navigation/impressum/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Felix.Herth@thoraxklinik-heidelberg.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Univ.-Prof. Dr. med. Felix Herth",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/felix-jf-herth-58a93414",
+        "person_key": "person_univ_prof_dr_med_felix_herth_ab8abced21",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Medizinischer Geschäftsführer",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.thoraxklinik-heidelberg.de/personen/univ-prof-dr-med-felix-herth-6199/",
+          "https://eabip.org/honorary-members/",
+          "https://pubmed.ncbi.nlm.nih.gov/19923880/",
+          "https://de.linkedin.com/in/felix-jf-herth-58a93414"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo",
+        "hr_recruiting",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegemanagement",
+        "Kaufmännischer Geschäftsführer",
+        "Leiter Personal / Stellvertretender Geschäftsführer",
+        "Medizinischer Geschäftsführer"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.thoraxklinik-heidelberg.de/personen/brigitte-radovanovic-6248/",
+      "https://www.thoraxklinik-heidelberg.de/fachbereiche/pflegedienst/pflegemanagement/",
+      "https://www.thoraxklinik-heidelberg.de/personen/sebastian-frank-6361",
+      "https://www.thoraxklinik-heidelberg.de/ueber-uns/geschaeftsfuehrung/",
+      "https://www.klinikum.uni-heidelberg.de/newsroom/seit-38-jahren-der-thoraxklinik-eng-verbunden/",
+      "https://de.linkedin.com/in/stefan-bauer-7320a5b0",
+      "https://www.yumpu.com/de/document/view/8335023/thoraxchirurgie-thoraxklinik-heidelberg",
+      "https://www.thoraxklinik-heidelberg.de/footer-meta-navigation/impressum/",
+      "https://www.thoraxklinik-heidelberg.de/personen/univ-prof-dr-med-felix-herth-6199/",
+      "https://eabip.org/honorary-members/",
+      "https://pubmed.ncbi.nlm.nih.gov/19923880/",
+      "https://de.linkedin.com/in/felix-jf-herth-58a93414"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
