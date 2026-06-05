@@ -1,0 +1,84 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_019_20260605T191504Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_019_20260605T191504Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_collect70_20260605_145433_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_collect70_20260605_145433/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Sankt Rochus Kliniken in Bad Schönborn | company_website: https://www.sankt-rochus-kliniken.de | first_name: Kerstin | last_name: Walther | full_name: Kerstin Walther | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official site lists Pflegedirektorin
+2. batch_id: batch_001 | company_name: Sankt Rochus Kliniken in Bad Schönborn | company_website: https://www.sankt-rochus-kliniken.de | first_name: Christian | last_name: Busche | full_name: Christian Busche | role: Geschäftsführer cts RehaVerbund | role_category: founder_ceo | confidence: high | notes: Official clinic leadership page
+3. batch_id: batch_001 | company_name: Sankt Rochus Kliniken in Bad Schönborn | company_website: https://www.sankt-rochus-kliniken.de | first_name: Ralf | last_name: Ullrich | full_name: Ralf Ullrich | role: Kaufmännischer Direktor | role_category: other_management | confidence: high | notes: Official Kaufmännische Direktion page
+4. batch_id: batch_001 | company_name: Tagesklinik Bernsteinstraße in Stuttgart | company_website: http://www.kjp-bernsteinstrasse.de | first_name: Tobia | last_name: Portolano | full_name: Tobia Portolano | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Hospital Directory lists PDL
+5. batch_id: batch_001 | company_name: Tagesklinik Bernsteinstraße in Stuttgart | company_website: http://www.kjp-bernsteinstrasse.de | first_name: Maria | last_name: Geisse | full_name: Maria Geisse | role: Verwaltungsleitung | role_category: other_management | confidence: high | notes: Hospital Directory lists administrative leadership
+6. batch_id: batch_001 | company_name: Tagesklinik Bernsteinstraße in Stuttgart | company_website: http://www.kjp-bernsteinstrasse.de | first_name: Andreas | last_name: Scheffner | full_name: Andreas Scheffner | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official carrier page lists Geschäftsführer
+7. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Lahr | company_website: https://www.zfp-emmendingen.de/psychiatrische-tagesklinik-lahr | first_name: Jeton | last_name: Himaj | full_name: Jeton Himaj | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official clinic page lists PDL contact
+8. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Lahr | company_website: https://www.zfp-emmendingen.de/psychiatrische-tagesklinik-lahr | first_name: Eveline | last_name: Hug | full_name: Eveline Hug | role: Ärztliche Leiterin | role_category: unknown | confidence: medium | notes: Fallback clinical leader on official page
+9. batch_id: batch_001 | company_name: Tagesklinik Friedrichshafen | company_website: http://www.tagesklinik-fn.de | first_name: Werner | last_name: Nuber | full_name: Werner Nuber | role: Geschäftsführer Arkade-Pauline 13 gGmbH | role_category: founder_ceo | confidence: high | notes: Operator site lists Geschäftsleitung
+10. batch_id: batch_001 | company_name: Tagesklinik Friedrichshafen | company_website: http://www.tagesklinik-fn.de | first_name: Matthias | last_name: Krüger | full_name: Matthias Krüger | role: Leiter der Tagesklinik | role_category: other_management | confidence: high | notes: Operator site lists Tagesklinik leader
+11. batch_id: batch_001 | company_name: Tagesklinik Friedrichshafen | company_website: http://www.tagesklinik-fn.de | first_name: Erik | last_name: Dollinger | full_name: Erik Dollinger | role: Fachärztliche Verantwortung | role_category: unknown | confidence: medium | notes: Hospital Directory lists medical responsibility
+12. batch_id: batch_001 | company_name: Tagesklinik Singen | company_website: https://www.zfp-reichenau.de | first_name: Ute Claudia | last_name: Bing | full_name: Ute Claudia Bing | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Hospital Directory lists PDL for Singen
+13. batch_id: batch_001 | company_name: Tagesklinik Singen | company_website: https://www.zfp-reichenau.de | first_name: Jochen | last_name: Reutter | full_name: Jochen Reutter | role: Betriebsdirektor | role_category: other_management | confidence: high | notes: Hospital Directory lists administrative leadership
+14. batch_id: batch_001 | company_name: Tagesklinik Singen | company_website: https://www.zfp-reichenau.de | first_name: Oliver | last_name: Müller | full_name: Oliver Müller | role: Ärztlicher Direktor Psychosomatik und Psychotherapie | role_category: unknown | confidence: medium | notes: Official SINOVA leadership page
+15. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Bad Säckingen | company_website: https://www.psychiatrische-tagesklinik-saeckingen.de | first_name: Angela | last_name: Häusling | full_name: Angela Häusling | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Hospital Directory lists PDL
+16. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Bad Säckingen | company_website: https://www.psychiatrische-tagesklinik-saeckingen.de | first_name: Simon | last_name: Kappl | full_name: Simon Kappl | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official clinic page lists Geschäftsführung
+17. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Bad Säckingen | company_website: https://www.psychiatrische-tagesklinik-saeckingen.de | first_name: Katja | last_name: Siefert | full_name: Katja Siefert | role: Ärztliche Leitung | role_category: unknown | confidence: medium | notes: Fallback clinical leader on official page
+18. batch_id: batch_001 | company_name: BlausteinKLINIK | company_website: http://www.blausteinklinik.de | first_name: Sabine | last_name: Sailer | full_name: Sabine Sailer | role: Pflegeleitung | role_category: operations | confidence: high | notes: Official team page lists Pflegeleitung
+19. batch_id: batch_001 | company_name: BlausteinKLINIK | company_website: http://www.blausteinklinik.de | first_name: Simon | last_name: Astfäller | full_name: Simon Astfäller | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official team page lists Geschäftsführer
+20. batch_id: batch_001 | company_name: BlausteinKLINIK | company_website: http://www.blausteinklinik.de | first_name: Nadine | last_name: Dirner | full_name: Nadine Dirner | role: Verwaltungsleitung | role_category: other_management | confidence: high | notes: Official team page lists Verwaltungsleitung
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_019_20260605T191504Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
