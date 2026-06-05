@@ -1,0 +1,89 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_urlfix_20260605_144923_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_005_20260605T144923Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_005_20260605T144923Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_urlfix_20260605_144923
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_urlfix_20260605_144923_batch_001_stage_01_people_discovery
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_urlfix_20260605_144923/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Krankenhaus Salem in Heidelberg | company_website: http://www.krankenhaus-salem.de | city: Heidelberg | country: Germany | source_url: https://klinikradar.de/kliniken/krankenhaus-salem | pflegekraefte: 248
+2. company_name: GRN-Klinik Sinsheim | company_website: http://www.grn.de | city: Sinsheim | country: Germany | source_url: https://klinikradar.de/kliniken/grn-klinik-sinsheim | pflegekraefte: 417
+3. company_name: Westallgäu-Klinikum in Wangen im Allgäu | company_website: http://www.oberschwabenklinik.de | city: Wangen im Allgäu | country: Germany | source_url: https://klinikradar.de/kliniken/westallgaeu-klinikum | pflegekraefte: 159
+4. company_name: Kliniken Schmieder Stuttgart-Gerlingen | company_website: http://www.kliniken-schmieder.de | city: Gerlingen | country: Germany | source_url: https://klinikradar.de/kliniken/kliniken-schmieder-stuttgart-gerlingen | pflegekraefte: 104
+5. company_name: Kliniken Nagold | company_website: https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-nagold/ | city: Nagold | country: Germany | source_url: https://klinikradar.de/kliniken/kliniken-nagold | pflegekraefte: 257
+6. company_name: Universitätsklinikum Heidelberg: Zentrum für Psychosoziale Medizin | company_website: https://www.klinikum.uni-heidelberg.de/ | city: Heidelberg | country: Germany | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-heidelberg-zentrum-fuer-psychosoziale-medizin | pflegekraefte: 205
+7. company_name: Zollernalb Klinikum Albstadt | company_website: http://www.zollernalb-klinikum.de | city: Albstadt | country: Germany | source_url: https://klinikradar.de/kliniken/zollernalb-klinikum-albstadt | pflegekraefte: 177
+8. company_name: Die Filderklinik in Filderstadt | company_website: http://www.filderklinik.de/ | city: Filderstadt | country: Germany | source_url: https://klinikradar.de/kliniken/die-filderklinik | pflegekraefte: 309
+9. company_name: BDH-Klinik Elzach | company_website: http://www.bdh-klinik-elzach.de/ | city: Elzach | country: Germany | source_url: https://klinikradar.de/kliniken/bdh-klinik-elzach | pflegekraefte: 232
+10. company_name: Schwarzwald-Baar Klinikum Standort Donaueschingen | company_website: http://www.sbk-vs.de | city: Donaueschingen | country: Germany | source_url: https://klinikradar.de/kliniken/schwarzwald-baar-klinikum-standort-donaueschingen | pflegekraefte: 132
+11. company_name: GRN-Klinik Weinheim | company_website: http://www.grn.de | city: Weinheim | country: Germany | source_url: https://klinikradar.de/kliniken/grn-klinik-weinheim | pflegekraefte: 369
+12. company_name: ZfP Südwürttemberg Zwiefalten | company_website: http://www.zfp-web.de/ | city: Zwiefalten | country: Germany | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-zwiefalten | pflegekraefte: 149
+13. company_name: Orthopädische Klinik Markgröningen | company_website: https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/orthopaedische-klinik-markgroeningen/ | city: Markgröningen | country: Germany | source_url: https://klinikradar.de/kliniken/orthopaedische-klinik-markgroeningen | pflegekraefte: 284
+14. company_name: Loretto-Krankenhaus in Freiburg im Breisgau | company_website: https://www.lorettokrankenhaus-freiburg.de | city: Freiburg im Breisgau | country: Germany | source_url: https://klinikradar.de/kliniken/loretto-krankenhaus | pflegekraefte: 202
+15. company_name: Hohenloher Krankenhaus Öhringen | company_website: http://www.hohenloher-krankenhaus.net | city: Öhringen | country: Germany | source_url: https://klinikradar.de/kliniken/hohenloher-krankenhaus-oehringen | pflegekraefte: 98
+16. company_name: Fachklinik Löwenstein | company_website: http://www.slk-kliniken.de/ueber-uns/standorte/fachklinik-loewenstein | city: Löwenstein | country: Germany | source_url: https://klinikradar.de/kliniken/fachklinik-loewenstein | pflegekraefte: 184
+17. company_name: Kliniken Calw | company_website: https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/kliniken-calw/ | city: Calw | country: Germany | source_url: https://klinikradar.de/kliniken/kliniken-calw | pflegekraefte: 232
+18. company_name: St. Elisabethen-Krankenhaus Lörrach | company_website: https://klinloe.de | city: Lörrach | country: Germany | source_url: https://klinikradar.de/kliniken/st-elisabethen-krankenhaus-loerrach | pflegekraefte: 195
+19. company_name: Neckar-Odenwald-Kliniken (Standort Buchen) | company_website: http://www.neckar-odenwald-kliniken.de | city: Buchen | country: Germany | source_url: https://klinikradar.de/kliniken/neckar-odenwald-kliniken-standort-buchen | pflegekraefte: 196
+20. company_name: Universitätsklinikum Heidelberg: Zentrum für Orthopädie, Unfallchirurgie und Paraplegiologie | company_website: https://www.klinikum.uni-heidelberg.de/ | city: Heidelberg | country: Germany | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-heidelberg-zentrum-fuer-orthopaedie-unfallchirurgie-und-paraplegiologie | pflegekraefte: 295
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_005_20260605T144923Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
