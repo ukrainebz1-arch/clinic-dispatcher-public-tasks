@@ -1,0 +1,1782 @@
+TASK_ID: stage05_task_0006
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinik mosbach|http://www.diakonie-klinik-mosbach.de|mosbach|germany",
+    "company_name": "Diakonie-Klinik Mosbach",
+    "full_name": "Wolfgang Schweikert",
+    "message_target_id": "stage05_task_0006::person_wolfgang_schweikert_bf8600941c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_wolfgang_schweikert_bf8600941c",
+    "recipient_value": "wolfgang.schweikert@johannes-diakonie.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinik mosbach|http://www.diakonie-klinik-mosbach.de|mosbach|germany",
+    "company_name": "Diakonie-Klinik Mosbach",
+    "full_name": "Wolfgang Schweikert",
+    "message_target_id": "stage05_task_0006::person_wolfgang_schweikert_bf8600941c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_wolfgang_schweikert_bf8600941c",
+    "recipient_value": "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinik mosbach|http://www.diakonie-klinik-mosbach.de|mosbach|germany",
+    "company_name": "Diakonie-Klinik Mosbach",
+    "full_name": "Wolfgang Schweikert",
+    "message_target_id": "stage05_task_0006::person_wolfgang_schweikert_bf8600941c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_wolfgang_schweikert_bf8600941c",
+    "recipient_value": "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "full_name": "Dorothea Lehmann",
+    "message_target_id": "stage05_task_0006::person_dorothea_lehmann_30dd28d549::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dorothea_lehmann_30dd28d549",
+    "recipient_value": "dorothea.lehmann@diak-klinikum.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "full_name": "Georg Schmitz",
+    "message_target_id": "stage05_task_0006::person_georg_schmitz_19a9b14032::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_georg_schmitz_19a9b14032",
+    "recipient_value": "georg.schmitz@diak-klinikum.de",
+    "role_title": "Kaufmännischer Direktor",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "full_name": "Sofia Kreuzberger",
+    "message_target_id": "stage05_task_0006::person_sofia_kreuzberger_239627c7f7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sofia_kreuzberger_239627c7f7",
+    "recipient_value": "sophia.kreuzberger@diak-klinikum.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "full_name": "Sofia Kreuzberger",
+    "message_target_id": "stage05_task_0006::person_sofia_kreuzberger_239627c7f7::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sofia_kreuzberger_239627c7f7",
+    "recipient_value": "https://de.linkedin.com/in/sophia-kreuzberger-455267222",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "full_name": "Sofia Kreuzberger",
+    "message_target_id": "stage05_task_0006::person_sofia_kreuzberger_239627c7f7::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_sofia_kreuzberger_239627c7f7",
+    "recipient_value": "https://de.linkedin.com/in/sophia-kreuzberger-455267222",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "full_name": "Thomas Grumann",
+    "message_target_id": "stage05_task_0006::person_thomas_grumann_e79b10c5f3::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_thomas_grumann_e79b10c5f3",
+    "recipient_value": "thomas.grumann@diak-klinikum.de",
+    "role_title": "Klinischer Direktor und Prokurist",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "full_name": "Thomas Grumann",
+    "message_target_id": "stage05_task_0006::person_thomas_grumann_83f922cd82::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_thomas_grumann_83f922cd82",
+    "recipient_value": "thomas.grumann@diak-klinikum.de",
+    "role_title": "Prokurist",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "full_name": "Werner Schmidt",
+    "message_target_id": "stage05_task_0006::person_werner_schmidt_367041b0fd::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_werner_schmidt_367041b0fd",
+    "recipient_value": "werner.schmidt@diak-klinikum.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "full_name": "Werner Schmidt",
+    "message_target_id": "stage05_task_0006::person_werner_schmidt_94abe60b43::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_werner_schmidt_94abe60b43",
+    "recipient_value": "werner.schmidt@diak-klinikum.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "full_name": "Dorothea Vischer",
+    "message_target_id": "stage05_task_0006::person_dorothea_vischer_e65027805d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dorothea_vischer_e65027805d",
+    "recipient_value": "dorothea.vischer@diak-stuttgart.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "full_name": "Dorothea Vischer",
+    "message_target_id": "stage05_task_0006::person_dorothea_vischer_e65027805d::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dorothea_vischer_e65027805d",
+    "recipient_value": "https://de.linkedin.com/in/dorothea-vischer",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "full_name": "Dorothea Vischer",
+    "message_target_id": "stage05_task_0006::person_dorothea_vischer_e65027805d::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dorothea_vischer_e65027805d",
+    "recipient_value": "https://de.linkedin.com/in/dorothea-vischer",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "full_name": "Lukas Adam-Schmiedel",
+    "message_target_id": "stage05_task_0006::person_lukas_adam_schmiedel_8a41eb1b0c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_lukas_adam_schmiedel_8a41eb1b0c",
+    "recipient_value": "lukas.schmiedel@diak-stuttgart.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "full_name": "Lukas Adam-Schmiedel",
+    "message_target_id": "stage05_task_0006::person_lukas_adam_schmiedel_8a41eb1b0c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_lukas_adam_schmiedel_8a41eb1b0c",
+    "recipient_value": "https://de.linkedin.com/in/lukas-schmiedel-m-a-028681147",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "full_name": "Lukas Adam-Schmiedel",
+    "message_target_id": "stage05_task_0006::person_lukas_adam_schmiedel_8a41eb1b0c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_lukas_adam_schmiedel_8a41eb1b0c",
+    "recipient_value": "https://de.linkedin.com/in/lukas-schmiedel-m-a-028681147",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "full_name": "Marius Reinhardt",
+    "message_target_id": "stage05_task_0006::person_marius_reinhardt_40e8939e85::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_marius_reinhardt_40e8939e85",
+    "recipient_value": "marius.reinhardt@diak-stuttgart.de",
+    "role_title": "Leiter Personalabteilung und Prokurist",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "full_name": "Marius Reinhardt",
+    "message_target_id": "stage05_task_0006::person_marius_reinhardt_40e8939e85::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marius_reinhardt_40e8939e85",
+    "recipient_value": "https://de.linkedin.com/in/marius-reinhardt-64b511171",
+    "role_title": "Leiter Personalabteilung und Prokurist",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "full_name": "Marius Reinhardt",
+    "message_target_id": "stage05_task_0006::person_marius_reinhardt_40e8939e85::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_marius_reinhardt_40e8939e85",
+    "recipient_value": "https://de.linkedin.com/in/marius-reinhardt-64b511171",
+    "role_title": "Leiter Personalabteilung und Prokurist",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Barbara Sayer",
+    "message_target_id": "stage05_task_0006::person_barbara_sayer_8a0cc6bdd4::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_barbara_sayer_8a0cc6bdd4",
+    "recipient_value": "barbara.sayer@vidia-akademie.de",
+    "role_title": "Personalentwicklung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Barbara Sayer",
+    "message_target_id": "stage05_task_0006::person_barbara_sayer_8a0cc6bdd4::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_barbara_sayer_8a0cc6bdd4",
+    "recipient_value": "https://de.linkedin.com/in/barbara-sayer-31aa47155",
+    "role_title": "Personalentwicklung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Barbara Sayer",
+    "message_target_id": "stage05_task_0006::person_barbara_sayer_8a0cc6bdd4::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_barbara_sayer_8a0cc6bdd4",
+    "recipient_value": "https://de.linkedin.com/in/barbara-sayer-31aa47155",
+    "role_title": "Personalentwicklung",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Caroline Schubert",
+    "message_target_id": "stage05_task_0006::person_caroline_schubert_e2566197b1::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_caroline_schubert_e2566197b1",
+    "recipient_value": "caroline.schubert@vidia-kliniken.de",
+    "role_title": "Vorstand",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Caroline Schubert",
+    "message_target_id": "stage05_task_0006::person_caroline_schubert_e2566197b1::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_caroline_schubert_e2566197b1",
+    "recipient_value": "https://de.linkedin.com/in/caroline-schubert-4bb68a104",
+    "role_title": "Vorstand",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Caroline Schubert",
+    "message_target_id": "stage05_task_0006::person_caroline_schubert_e2566197b1::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_caroline_schubert_e2566197b1",
+    "recipient_value": "https://de.linkedin.com/in/caroline-schubert-4bb68a104",
+    "role_title": "Vorstand",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Jürgen Schnebel",
+    "message_target_id": "stage05_task_0006::person_j_rgen_schnebel_f0afc7e5e6::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_j_rgen_schnebel_f0afc7e5e6",
+    "recipient_value": "juergen.schnebel@vidia-kliniken.de",
+    "role_title": "Pflegedirektor",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Michael Ohlenschläger",
+    "message_target_id": "stage05_task_0006::person_michael_ohlenschl_ger_aef665ee8b::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_michael_ohlenschl_ger_aef665ee8b",
+    "recipient_value": "michael.ohlenschlaeger@vidia-kliniken.de",
+    "role_title": "Personalleiter und Prokurist",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Michael Ohlenschläger",
+    "message_target_id": "stage05_task_0006::person_michael_ohlenschl_ger_aef665ee8b::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_michael_ohlenschl_ger_aef665ee8b",
+    "recipient_value": "https://de.linkedin.com/in/michael-ohlenschl%C3%A4ger-241a381b9",
+    "role_title": "Personalleiter und Prokurist",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Michael Ohlenschläger",
+    "message_target_id": "stage05_task_0006::person_michael_ohlenschl_ger_aef665ee8b::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_michael_ohlenschl_ger_aef665ee8b",
+    "recipient_value": "https://de.linkedin.com/in/michael-ohlenschl%C3%A4ger-241a381b9",
+    "role_title": "Personalleiter und Prokurist",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Richard Wentges",
+    "message_target_id": "stage05_task_0006::person_richard_wentges_8896e2a48e::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_richard_wentges_8896e2a48e",
+    "recipient_value": "richard.wentges@vidia-kliniken.de",
+    "role_title": "Vorstandsvorsitzender",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Tina Rihm",
+    "message_target_id": "stage05_task_0006::person_tina_rihm_44fe901eda::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_tina_rihm_44fe901eda",
+    "recipient_value": "tina.rihm@vidia-kliniken.de",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Tina Rihm",
+    "message_target_id": "stage05_task_0006::person_tina_rihm_44fe901eda::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tina_rihm_44fe901eda",
+    "recipient_value": "https://de.linkedin.com/in/tina-rihm-67aa08371",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0006"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "full_name": "Tina Rihm",
+    "message_target_id": "stage05_task_0006::person_tina_rihm_44fe901eda::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tina_rihm_44fe901eda",
+    "recipient_value": "https://de.linkedin.com/in/tina-rihm-67aa08371",
+    "role_title": "Stellvertretende Pflegedirektorin",
+    "task_id": "stage05_task_0006"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Mosbach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinik mosbach|http://www.diakonie-klinik-mosbach.de|mosbach|germany",
+    "company_name": "Diakonie-Klinik Mosbach",
+    "company_website": "http://www.diakonie-klinik-mosbach.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Wolfgang Schweikert",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "wolfgang.schweikert@johannes-diakonie.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Wolfgang Schweikert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+        "person_key": "person_wolfgang_schweikert_bf8600941c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakonie-klinik-mosbach.de/fileadmin/user_upload/diakonie-klinik-mosbach/PDF/MOS_260822275-771413000-2022-xml__1_.pdf",
+          "https://www.bundesfreiwilligendienst.de/bundesfreiwilligendienst/platz-einsatzstellensuche/platzangebot-suchen/1597",
+          "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+          "https://www.diakonie-klinik-mosbach.de/ueber-uns.html"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.diakonie-klinik-mosbach.de/fileadmin/user_upload/diakonie-klinik-mosbach/PDF/MOS_260822275-771413000-2022-xml__1_.pdf",
+      "https://www.bundesfreiwilligendienst.de/bundesfreiwilligendienst/platz-einsatzstellensuche/platzangebot-suchen/1597",
+      "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+      "https://www.diakonie-klinik-mosbach.de/ueber-uns.html"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 7,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Schwäbisch Hall",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "company_website": "https://www.diak-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Dorothea Lehmann",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Sofia Kreuzberger",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "dorothea.lehmann@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dorothea Lehmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dorothea_lehmann_30dd28d549",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "https://www.diak-klinikum.de/pflege-beratung/pflege-und-funktionsdienst"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "georg.schmitz@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Georg Schmitz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_georg_schmitz_19a9b14032",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "https://www.diak-klinikum.de/media/05_UeberUns/Qualitaetsbericht_2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "sophia.kreuzberger@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sofia Kreuzberger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sophia-kreuzberger-455267222",
+        "person_key": "person_sofia_kreuzberger_239627c7f7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diak-klinikum.de/pflege-beratung/pflege-und-funktionsdienst",
+          "https://de.linkedin.com/in/sophia-kreuzberger-455267222"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "thomas.grumann@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Grumann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_grumann_e79b10c5f3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinischer Direktor und Prokurist",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://klinikfuehrer.tk.de/Diakoneo-Diak-Klinikum-in-74523-Schwaebisch-Hall/umgang-mit-risiken/krankenhaus/26081119200",
+          "https://www.diak-klinikum.de/impressum",
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "https://www.diak-klinikum.de/media/05_UeberUns/Qualitaetsbericht_2024.pdf",
+          "https://de.linkedin.com/posts/diak-klinikum_neue-wege-f%C3%BCr-die-gesundheitsversorgung-activity-7275565924072443905-jAC8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "thomas.grumann@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Grumann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_grumann_83f922cd82",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Prokurist",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://klinikfuehrer.tk.de/Diakoneo-Diak-Klinikum-in-74523-Schwaebisch-Hall/umgang-mit-risiken/krankenhaus/26081119200",
+          "https://www.diak-klinikum.de/impressum",
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "https://www.diak-klinikum.de/media/05_UeberUns/Qualitaetsbericht_2024.pdf",
+          "https://de.linkedin.com/posts/diak-klinikum_neue-wege-f%C3%BCr-die-gesundheitsversorgung-activity-7275565924072443905-jAC8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "werner.schmidt@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Werner Schmidt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_werner_schmidt_367041b0fd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.diak-klinikum.de/ueber-us/klinikumsleitung",
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "false"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "werner.schmidt@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Werner Schmidt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_werner_schmidt_94abe60b43",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.diak-klinikum.de/ueber-us/klinikumsleitung",
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "false"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Kaufmännischer Direktor",
+        "Pflegedienstleitung",
+        "Klinischer Direktor und Prokurist",
+        "Prokurist",
+        "Geschäftsführer"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+      "https://www.diak-klinikum.de/pflege-beratung/pflege-und-funktionsdienst",
+      "https://www.diak-klinikum.de/media/05_UeberUns/Qualitaetsbericht_2024.pdf",
+      "https://de.linkedin.com/in/sophia-kreuzberger-455267222",
+      "https://klinikfuehrer.tk.de/Diakoneo-Diak-Klinikum-in-74523-Schwaebisch-Hall/umgang-mit-risiken/krankenhaus/26081119200",
+      "https://www.diak-klinikum.de/impressum",
+      "https://de.linkedin.com/posts/diak-klinikum_neue-wege-f%C3%BCr-die-gesundheitsversorgung-activity-7275565924072443905-jAC8",
+      "https://www.diak-klinikum.de/ueber-us/klinikumsleitung",
+      "false"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "company_website": "https://www.diakonie-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Dorothea Vischer",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Lukas Adam-Schmiedel",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "dorothea.vischer@diak-stuttgart.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dorothea Vischer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dorothea-vischer",
+        "person_key": "person_dorothea_vischer_e65027805d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.qigbw.de/index.php?eID=dumpFile&f=5266&t=f&token=5d46c7175736faf4a4b3fd0366ac24b167ede895",
+          "https://www.diakonie-klinikum.de/pflege/pflegeleitbild/leitungsteam.html",
+          "https://de.linkedin.com/in/dorothea-vischer",
+          "https://www.diakonie-klinikum.de/ueber-uns/krankenhausleitung.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "lukas.schmiedel@diak-stuttgart.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lukas Adam-Schmiedel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lukas-schmiedel-m-a-028681147",
+        "person_key": "person_lukas_adam_schmiedel_8a41eb1b0c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakonie-klinikum.de/pflege/pflegeleitbild/leitungsteam.html",
+          "https://www.diakonie-klinikum.de/ueber-uns/krankenhausleitung.html",
+          "https://de.linkedin.com/in/lukas-schmiedel-m-a-028681147"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marius.reinhardt@diak-stuttgart.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marius Reinhardt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marius-reinhardt-64b511171",
+        "person_key": "person_marius_reinhardt_40e8939e85",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leiter Personalabteilung und Prokurist",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.diakonie-klinikum.de/ueber-uns/klinikleitung-und-verwaltung/verwaltung.html",
+          "https://www.diakonie-klinikum.de/ueber-uns/krankenhausleitung.html",
+          "https://de.linkedin.com/in/marius-reinhardt-64b511171"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Pflegedienstleitung",
+        "Leiter Personalabteilung und Prokurist"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.qigbw.de/index.php?eID=dumpFile&f=5266&t=f&token=5d46c7175736faf4a4b3fd0366ac24b167ede895",
+      "https://www.diakonie-klinikum.de/pflege/pflegeleitbild/leitungsteam.html",
+      "https://de.linkedin.com/in/dorothea-vischer",
+      "https://www.diakonie-klinikum.de/ueber-uns/krankenhausleitung.html",
+      "https://de.linkedin.com/in/lukas-schmiedel-m-a-028681147",
+      "https://www.diakonie-klinikum.de/ueber-uns/klinikleitung-und-verwaltung/verwaltung.html",
+      "https://de.linkedin.com/in/marius-reinhardt-64b511171"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Karlsruhe",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "company_website": "http://www.vidia-kliniken.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Jürgen Schnebel",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Tina Rihm",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "barbara.sayer@vidia-akademie.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Sayer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/barbara-sayer-31aa47155",
+        "person_key": "person_barbara_sayer_8a0cc6bdd4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalentwicklung",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/ueber-uns/verwaltung-und-dienstleistungen/",
+          "https://www.vidia-kliniken.de/jobs-karriere/fort-und-weiterbildung/",
+          "https://de.linkedin.com/in/barbara-sayer-31aa47155"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "caroline.schubert@vidia-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Caroline Schubert",
+        "hypothesis_email": "caroline.schubert@vidia-kliniken.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/caroline-schubert-4bb68a104",
+        "person_key": "person_caroline_schubert_e2566197b1",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Vorstand",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/ueber-uns/vorstand/",
+          "https://www.vidia-kliniken.de/medizin-pflege/pflege-therapie/pflege-in-den-vidia-kliniken/pflegedirektionen/",
+          "https://www.vidia-kliniken.de/ueber-uns/verwaltung-und-dienstleistungen/",
+          "https://www.linkedin.com/posts/caroline-schubert-4bb68a104_moments-like-this-danke-an-mein-team-activity-7327289597950935040-Z0Tl",
+          "https://de.linkedin.com/in/caroline-schubert-4bb68a104",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820137-771802000-2024-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "juergen.schnebel@vidia-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jürgen Schnebel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_j_rgen_schnebel_f0afc7e5e6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/medizin-pflege/pflege-therapie/pflege-in-den-vidia-kliniken/pflegedirektionen/",
+          "https://www.vidia-kliniken.de/jobs-karriere/pflege-assistenz/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "michael.ohlenschlaeger@vidia-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michael Ohlenschläger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/michael-ohlenschl%C3%A4ger-241a381b9",
+        "person_key": "person_michael_ohlenschl_ger_aef665ee8b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleiter und Prokurist",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/ueber-uns/verwaltung-und-dienstleistungen/",
+          "https://de.linkedin.com/in/michael-ohlenschl%C3%A4ger-241a381b9",
+          "https://www.vidia-kliniken.de/jobs-karriere/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "richard.wentges@vidia-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Richard Wentges",
+        "hypothesis_email": "richard.wentges@vidia-kliniken.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_richard_wentges_8896e2a48e",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Vorstandsvorsitzender",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/ueber-uns/vorstand/",
+          "https://www.vidia-kliniken.de/medizin-pflege/pflege-therapie/pflege-in-den-vidia-kliniken/pflegedirektionen/",
+          "https://www.vidia-kliniken.de/ueber-uns/verwaltung-und-dienstleistungen/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820137-771802000-2024-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "tina.rihm@vidia-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tina Rihm",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/tina-rihm-67aa08371",
+        "person_key": "person_tina_rihm_44fe901eda",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/medizin-pflege/pflege-therapie/pflege-in-den-vidia-kliniken/pflegedirektionen/",
+          "https://de.linkedin.com/posts/tina-rihm-67aa08371_herzlichen-dank-f%C3%BCr-den-beitrag-und-die-gl%C3%BCckw%C3%BCnsche-activity-7445556671491366912-p7Jn",
+          "https://de.linkedin.com/in/tina-rihm-67aa08371"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Personalentwicklung",
+        "Vorstand",
+        "Pflegedirektor",
+        "Personalleiter und Prokurist",
+        "Vorstandsvorsitzender",
+        "Stellvertretende Pflegedirektorin"
+      ],
+      "total_people": 6
+    },
+    "source_urls": [
+      "https://www.vidia-kliniken.de/ueber-uns/verwaltung-und-dienstleistungen/",
+      "https://www.vidia-kliniken.de/jobs-karriere/fort-und-weiterbildung/",
+      "https://de.linkedin.com/in/barbara-sayer-31aa47155",
+      "https://www.vidia-kliniken.de/ueber-uns/vorstand/",
+      "https://www.vidia-kliniken.de/medizin-pflege/pflege-therapie/pflege-in-den-vidia-kliniken/pflegedirektionen/",
+      "https://www.linkedin.com/posts/caroline-schubert-4bb68a104_moments-like-this-danke-an-mein-team-activity-7327289597950935040-Z0Tl",
+      "https://de.linkedin.com/in/caroline-schubert-4bb68a104",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260820137-771802000-2024-xml.pdf",
+      "https://www.vidia-kliniken.de/jobs-karriere/pflege-assistenz/",
+      "https://de.linkedin.com/in/michael-ohlenschl%C3%A4ger-241a381b9",
+      "https://www.vidia-kliniken.de/jobs-karriere/",
+      "https://de.linkedin.com/posts/tina-rihm-67aa08371_herzlichen-dank-f%C3%BCr-den-beitrag-und-die-gl%C3%BCckw%C3%BCnsche-activity-7445556671491366912-p7Jn",
+      "https://de.linkedin.com/in/tina-rihm-67aa08371"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Mosbach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinik mosbach|http://www.diakonie-klinik-mosbach.de|mosbach|germany",
+    "company_name": "Diakonie-Klinik Mosbach",
+    "company_website": "http://www.diakonie-klinik-mosbach.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Wolfgang Schweikert",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "wolfgang.schweikert@johannes-diakonie.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Wolfgang Schweikert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+        "person_key": "person_wolfgang_schweikert_bf8600941c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakonie-klinik-mosbach.de/fileadmin/user_upload/diakonie-klinik-mosbach/PDF/MOS_260822275-771413000-2022-xml__1_.pdf",
+          "https://www.bundesfreiwilligendienst.de/bundesfreiwilligendienst/platz-einsatzstellensuche/platzangebot-suchen/1597",
+          "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+          "https://www.diakonie-klinik-mosbach.de/ueber-uns.html"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.diakonie-klinik-mosbach.de/fileadmin/user_upload/diakonie-klinik-mosbach/PDF/MOS_260822275-771413000-2022-xml__1_.pdf",
+      "https://www.bundesfreiwilligendienst.de/bundesfreiwilligendienst/platz-einsatzstellensuche/platzangebot-suchen/1597",
+      "https://de.linkedin.com/in/wolfgang-schweikert-3a952b146",
+      "https://www.diakonie-klinik-mosbach.de/ueber-uns.html"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 7,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Schwäbisch Hall",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum schwäbisch hall|https://www.diak-klinikum.de/|schwäbisch hall|germany",
+    "company_name": "Diakonie-Klinikum Schwäbisch Hall",
+    "company_website": "https://www.diak-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Dorothea Lehmann",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Sofia Kreuzberger",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "dorothea.lehmann@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dorothea Lehmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dorothea_lehmann_30dd28d549",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "https://www.diak-klinikum.de/pflege-beratung/pflege-und-funktionsdienst"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "georg.schmitz@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Georg Schmitz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_georg_schmitz_19a9b14032",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännischer Direktor",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "https://www.diak-klinikum.de/media/05_UeberUns/Qualitaetsbericht_2024.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "sophia.kreuzberger@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sofia Kreuzberger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/sophia-kreuzberger-455267222",
+        "person_key": "person_sofia_kreuzberger_239627c7f7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diak-klinikum.de/pflege-beratung/pflege-und-funktionsdienst",
+          "https://de.linkedin.com/in/sophia-kreuzberger-455267222"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "thomas.grumann@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Grumann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_grumann_e79b10c5f3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Klinischer Direktor und Prokurist",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://klinikfuehrer.tk.de/Diakoneo-Diak-Klinikum-in-74523-Schwaebisch-Hall/umgang-mit-risiken/krankenhaus/26081119200",
+          "https://www.diak-klinikum.de/impressum",
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "https://www.diak-klinikum.de/media/05_UeberUns/Qualitaetsbericht_2024.pdf",
+          "https://de.linkedin.com/posts/diak-klinikum_neue-wege-f%C3%BCr-die-gesundheitsversorgung-activity-7275565924072443905-jAC8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "thomas.grumann@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Grumann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_grumann_83f922cd82",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Prokurist",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://klinikfuehrer.tk.de/Diakoneo-Diak-Klinikum-in-74523-Schwaebisch-Hall/umgang-mit-risiken/krankenhaus/26081119200",
+          "https://www.diak-klinikum.de/impressum",
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "https://www.diak-klinikum.de/media/05_UeberUns/Qualitaetsbericht_2024.pdf",
+          "https://de.linkedin.com/posts/diak-klinikum_neue-wege-f%C3%BCr-die-gesundheitsversorgung-activity-7275565924072443905-jAC8"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "werner.schmidt@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Werner Schmidt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_werner_schmidt_367041b0fd",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.diak-klinikum.de/ueber-us/klinikumsleitung",
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "false"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "werner.schmidt@diak-klinikum.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Werner Schmidt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_werner_schmidt_94abe60b43",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.diak-klinikum.de/ueber-us/klinikumsleitung",
+          "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+          "false"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Kaufmännischer Direktor",
+        "Pflegedienstleitung",
+        "Klinischer Direktor und Prokurist",
+        "Prokurist",
+        "Geschäftsführer"
+      ],
+      "total_people": 7
+    },
+    "source_urls": [
+      "https://www.diak-klinikum.de/ueber-uns/klinikumsleitung",
+      "https://www.diak-klinikum.de/pflege-beratung/pflege-und-funktionsdienst",
+      "https://www.diak-klinikum.de/media/05_UeberUns/Qualitaetsbericht_2024.pdf",
+      "https://de.linkedin.com/in/sophia-kreuzberger-455267222",
+      "https://klinikfuehrer.tk.de/Diakoneo-Diak-Klinikum-in-74523-Schwaebisch-Hall/umgang-mit-risiken/krankenhaus/26081119200",
+      "https://www.diak-klinikum.de/impressum",
+      "https://de.linkedin.com/posts/diak-klinikum_neue-wege-f%C3%BCr-die-gesundheitsversorgung-activity-7275565924072443905-jAC8",
+      "https://www.diak-klinikum.de/ueber-us/klinikumsleitung",
+      "false"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 3,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Stuttgart",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonie-klinikum stuttgart|https://www.diakonie-klinikum.de/|stuttgart|germany",
+    "company_name": "Diakonie-Klinikum Stuttgart",
+    "company_website": "https://www.diakonie-klinikum.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Dorothea Vischer",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Lukas Adam-Schmiedel",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "dorothea.vischer@diak-stuttgart.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dorothea Vischer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/dorothea-vischer",
+        "person_key": "person_dorothea_vischer_e65027805d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.qigbw.de/index.php?eID=dumpFile&f=5266&t=f&token=5d46c7175736faf4a4b3fd0366ac24b167ede895",
+          "https://www.diakonie-klinikum.de/pflege/pflegeleitbild/leitungsteam.html",
+          "https://de.linkedin.com/in/dorothea-vischer",
+          "https://www.diakonie-klinikum.de/ueber-uns/krankenhausleitung.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "lukas.schmiedel@diak-stuttgart.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Lukas Adam-Schmiedel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/lukas-schmiedel-m-a-028681147",
+        "person_key": "person_lukas_adam_schmiedel_8a41eb1b0c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.diakonie-klinikum.de/pflege/pflegeleitbild/leitungsteam.html",
+          "https://www.diakonie-klinikum.de/ueber-uns/krankenhausleitung.html",
+          "https://de.linkedin.com/in/lukas-schmiedel-m-a-028681147"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "marius.reinhardt@diak-stuttgart.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Marius Reinhardt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/marius-reinhardt-64b511171",
+        "person_key": "person_marius_reinhardt_40e8939e85",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leiter Personalabteilung und Prokurist",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.diakonie-klinikum.de/ueber-uns/klinikleitung-und-verwaltung/verwaltung.html",
+          "https://www.diakonie-klinikum.de/ueber-uns/krankenhausleitung.html",
+          "https://de.linkedin.com/in/marius-reinhardt-64b511171"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "hr_recruiting"
+      ],
+      "roles": [
+        "Pflegedirektorin",
+        "Pflegedienstleitung",
+        "Leiter Personalabteilung und Prokurist"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.qigbw.de/index.php?eID=dumpFile&f=5266&t=f&token=5d46c7175736faf4a4b3fd0366ac24b167ede895",
+      "https://www.diakonie-klinikum.de/pflege/pflegeleitbild/leitungsteam.html",
+      "https://de.linkedin.com/in/dorothea-vischer",
+      "https://www.diakonie-klinikum.de/ueber-uns/krankenhausleitung.html",
+      "https://de.linkedin.com/in/lukas-schmiedel-m-a-028681147",
+      "https://www.diakonie-klinikum.de/ueber-uns/klinikleitung-und-verwaltung/verwaltung.html",
+      "https://de.linkedin.com/in/marius-reinhardt-64b511171"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 4,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Karlsruhe",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|diakonissenkrankenhaus karlsruhe|http://www.vidia-kliniken.de/|karlsruhe|germany",
+    "company_name": "Diakonissenkrankenhaus Karlsruhe",
+    "company_website": "http://www.vidia-kliniken.de/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Jürgen Schnebel",
+          "person_key": "",
+          "role": "Pflegedirektor"
+        },
+        {
+          "full_name": "Tina Rihm",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "barbara.sayer@vidia-akademie.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Barbara Sayer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/barbara-sayer-31aa47155",
+        "person_key": "person_barbara_sayer_8a0cc6bdd4",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalentwicklung",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/ueber-uns/verwaltung-und-dienstleistungen/",
+          "https://www.vidia-kliniken.de/jobs-karriere/fort-und-weiterbildung/",
+          "https://de.linkedin.com/in/barbara-sayer-31aa47155"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "caroline.schubert@vidia-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Caroline Schubert",
+        "hypothesis_email": "caroline.schubert@vidia-kliniken.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/caroline-schubert-4bb68a104",
+        "person_key": "person_caroline_schubert_e2566197b1",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Vorstand",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/ueber-uns/vorstand/",
+          "https://www.vidia-kliniken.de/medizin-pflege/pflege-therapie/pflege-in-den-vidia-kliniken/pflegedirektionen/",
+          "https://www.vidia-kliniken.de/ueber-uns/verwaltung-und-dienstleistungen/",
+          "https://www.linkedin.com/posts/caroline-schubert-4bb68a104_moments-like-this-danke-an-mein-team-activity-7327289597950935040-Z0Tl",
+          "https://de.linkedin.com/in/caroline-schubert-4bb68a104",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820137-771802000-2024-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "juergen.schnebel@vidia-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jürgen Schnebel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_j_rgen_schnebel_f0afc7e5e6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektor",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/medizin-pflege/pflege-therapie/pflege-in-den-vidia-kliniken/pflegedirektionen/",
+          "https://www.vidia-kliniken.de/jobs-karriere/pflege-assistenz/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "michael.ohlenschlaeger@vidia-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michael Ohlenschläger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/michael-ohlenschl%C3%A4ger-241a381b9",
+        "person_key": "person_michael_ohlenschl_ger_aef665ee8b",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Personalleiter und Prokurist",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/ueber-uns/verwaltung-und-dienstleistungen/",
+          "https://de.linkedin.com/in/michael-ohlenschl%C3%A4ger-241a381b9",
+          "https://www.vidia-kliniken.de/jobs-karriere/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "richard.wentges@vidia-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Richard Wentges",
+        "hypothesis_email": "richard.wentges@vidia-kliniken.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_richard_wentges_8896e2a48e",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Vorstandsvorsitzender",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/ueber-uns/vorstand/",
+          "https://www.vidia-kliniken.de/medizin-pflege/pflege-therapie/pflege-in-den-vidia-kliniken/pflegedirektionen/",
+          "https://www.vidia-kliniken.de/ueber-uns/verwaltung-und-dienstleistungen/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820137-771802000-2024-xml.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "tina.rihm@vidia-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Tina Rihm",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/tina-rihm-67aa08371",
+        "person_key": "person_tina_rihm_44fe901eda",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.vidia-kliniken.de/medizin-pflege/pflege-therapie/pflege-in-den-vidia-kliniken/pflegedirektionen/",
+          "https://de.linkedin.com/posts/tina-rihm-67aa08371_herzlichen-dank-f%C3%BCr-den-beitrag-und-die-gl%C3%BCckw%C3%BCnsche-activity-7445556671491366912-p7Jn",
+          "https://de.linkedin.com/in/tina-rihm-67aa08371"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Personalentwicklung",
+        "Vorstand",
+        "Pflegedirektor",
+        "Personalleiter und Prokurist",
+        "Vorstandsvorsitzender",
+        "Stellvertretende Pflegedirektorin"
+      ],
+      "total_people": 6
+    },
+    "source_urls": [
+      "https://www.vidia-kliniken.de/ueber-uns/verwaltung-und-dienstleistungen/",
+      "https://www.vidia-kliniken.de/jobs-karriere/fort-und-weiterbildung/",
+      "https://de.linkedin.com/in/barbara-sayer-31aa47155",
+      "https://www.vidia-kliniken.de/ueber-uns/vorstand/",
+      "https://www.vidia-kliniken.de/medizin-pflege/pflege-therapie/pflege-in-den-vidia-kliniken/pflegedirektionen/",
+      "https://www.linkedin.com/posts/caroline-schubert-4bb68a104_moments-like-this-danke-an-mein-team-activity-7327289597950935040-Z0Tl",
+      "https://de.linkedin.com/in/caroline-schubert-4bb68a104",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260820137-771802000-2024-xml.pdf",
+      "https://www.vidia-kliniken.de/jobs-karriere/pflege-assistenz/",
+      "https://de.linkedin.com/in/michael-ohlenschl%C3%A4ger-241a381b9",
+      "https://www.vidia-kliniken.de/jobs-karriere/",
+      "https://de.linkedin.com/posts/tina-rihm-67aa08371_herzlichen-dank-f%C3%BCr-den-beitrag-und-die-gl%C3%BCckw%C3%BCnsche-activity-7445556671491366912-p7Jn",
+      "https://de.linkedin.com/in/tina-rihm-67aa08371"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
+
+RETRY_ATTEMPT_INSTRUCTIONS:
+This is a Stage05 retry for unresolved/invalid targets only.
+Return rows only for ALLOWED_MESSAGE_TARGETS in this retry task.
+For email rows that previously failed length validation, keep the email body between 500 and 800 characters.
+Keep the locked style: write from the wir perspective, do not use “ich habe mir”, do not use “ich habe gesehen”, and do not use “Vertriebsliste”.
+Return CSV only. No markdown. No explanations.
