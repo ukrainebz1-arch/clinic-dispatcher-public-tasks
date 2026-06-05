@@ -1,0 +1,1194 @@
+TASK_ID: stage05_task_0002
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (blaubeuren)|http://www.adk-gmbh.de|blaubeuren|germany",
+    "company_name": "Alb-Donau Klinikum (Blaubeuren)",
+    "full_name": "Thomas Thernes",
+    "message_target_id": "stage05_task_0002::person_thomas_thernes_aa0614057a::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_thomas_thernes_aa0614057a",
+    "recipient_value": "t.thernes@adk-gmbh.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (ehingen)|http://www.adk-gmbh.de|ehingen|germany",
+    "company_name": "Alb-Donau Klinikum (Ehingen)",
+    "full_name": "Michael Dahlmann",
+    "message_target_id": "stage05_task_0002::person_michael_dahlmann_7119132601::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_michael_dahlmann_7119132601",
+    "recipient_value": "m.dahlmann@adk-gmbh.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (ehingen)|http://www.adk-gmbh.de|ehingen|germany",
+    "company_name": "Alb-Donau Klinikum (Ehingen)",
+    "full_name": "Nadine Hirschle",
+    "message_target_id": "stage05_task_0002::person_nadine_hirschle_dbd0118b05::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_nadine_hirschle_dbd0118b05",
+    "recipient_value": "n.hirschle@adk-gmbh.de",
+    "role_title": "Pflegedienstleitung Alb-Donau Klinikum Ehingen",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (ehingen)|http://www.adk-gmbh.de|ehingen|germany",
+    "company_name": "Alb-Donau Klinikum (Ehingen)",
+    "full_name": "Regine Deutschle",
+    "message_target_id": "stage05_task_0002::person_regine_deutschle_61ba574ed2::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_regine_deutschle_61ba574ed2",
+    "recipient_value": "r.deutschle@adk-gmbh.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (ehingen)|http://www.adk-gmbh.de|ehingen|germany",
+    "company_name": "Alb-Donau Klinikum (Ehingen)",
+    "full_name": "Regine Deutschle",
+    "message_target_id": "stage05_task_0002::person_regine_deutschle_61ba574ed2::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_regine_deutschle_61ba574ed2",
+    "recipient_value": "https://de.linkedin.com/in/regine-deutschle-7b0244287",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (ehingen)|http://www.adk-gmbh.de|ehingen|germany",
+    "company_name": "Alb-Donau Klinikum (Ehingen)",
+    "full_name": "Regine Deutschle",
+    "message_target_id": "stage05_task_0002::person_regine_deutschle_61ba574ed2::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_regine_deutschle_61ba574ed2",
+    "recipient_value": "https://de.linkedin.com/in/regine-deutschle-7b0244287",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (langenau)|http://www.adk-gmbh.de|langenau|germany",
+    "company_name": "Alb-Donau Klinikum (Langenau)",
+    "full_name": "Birgit Junginger",
+    "message_target_id": "stage05_task_0002::person_birgit_junginger_42cb0eaca2::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_birgit_junginger_42cb0eaca2",
+    "recipient_value": "b.junginger@adk-gmbh.de",
+    "role_title": "Pflegedienstleitung Alb-Donau Klinikum Langenau",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (langenau)|http://www.adk-gmbh.de|langenau|germany",
+    "company_name": "Alb-Donau Klinikum (Langenau)",
+    "full_name": "Michael Dahlmann",
+    "message_target_id": "stage05_task_0002::person_michael_dahlmann_5a01503dee::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_michael_dahlmann_5a01503dee",
+    "recipient_value": "m.dahlmann@adk-gmbh.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (langenau)|http://www.adk-gmbh.de|langenau|germany",
+    "company_name": "Alb-Donau Klinikum (Langenau)",
+    "full_name": "Regine Deutschle",
+    "message_target_id": "stage05_task_0002::person_regine_deutschle_d8941a82a5::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_regine_deutschle_d8941a82a5",
+    "recipient_value": "r.deutschle@adk-gmbh.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (langenau)|http://www.adk-gmbh.de|langenau|germany",
+    "company_name": "Alb-Donau Klinikum (Langenau)",
+    "full_name": "Regine Deutschle",
+    "message_target_id": "stage05_task_0002::person_regine_deutschle_d8941a82a5::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_regine_deutschle_d8941a82a5",
+    "recipient_value": "https://de.linkedin.com/in/regine-deutschle-7b0244287",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (langenau)|http://www.adk-gmbh.de|langenau|germany",
+    "company_name": "Alb-Donau Klinikum (Langenau)",
+    "full_name": "Regine Deutschle",
+    "message_target_id": "stage05_task_0002::person_regine_deutschle_d8941a82a5::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_regine_deutschle_d8941a82a5",
+    "recipient_value": "https://de.linkedin.com/in/regine-deutschle-7b0244287",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|albklinik münsingen|http://www.kreiskliniken-reutlingen.de|münsingen|germany",
+    "company_name": "Albklinik Münsingen",
+    "full_name": "Anja Fujan",
+    "message_target_id": "stage05_task_0002::person_anja_fujan_88529fdb52::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_anja_fujan_88529fdb52",
+    "recipient_value": "anja.fujan@kliniken-rt.de",
+    "role_title": "Leitung Personal und Recht",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|albklinik münsingen|http://www.kreiskliniken-reutlingen.de|münsingen|germany",
+    "company_name": "Albklinik Münsingen",
+    "full_name": "Anja Fujan",
+    "message_target_id": "stage05_task_0002::person_anja_fujan_88529fdb52::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anja_fujan_88529fdb52",
+    "recipient_value": "https://de.linkedin.com/in/anjafujan",
+    "role_title": "Leitung Personal und Recht",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|albklinik münsingen|http://www.kreiskliniken-reutlingen.de|münsingen|germany",
+    "company_name": "Albklinik Münsingen",
+    "full_name": "Anja Fujan",
+    "message_target_id": "stage05_task_0002::person_anja_fujan_88529fdb52::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_anja_fujan_88529fdb52",
+    "recipient_value": "https://de.linkedin.com/in/anjafujan",
+    "role_title": "Leitung Personal und Recht",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|albklinik münsingen|http://www.kreiskliniken-reutlingen.de|münsingen|germany",
+    "company_name": "Albklinik Münsingen",
+    "full_name": "Stefanie Hempt",
+    "message_target_id": "stage05_task_0002::person_stefanie_hempt_94555dbd78::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_stefanie_hempt_94555dbd78",
+    "recipient_value": "stefanie.hempt@kliniken-rt.de",
+    "role_title": "Pflegedirektorin",
+    "task_id": "stage05_task_0002"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|albklinik münsingen|http://www.kreiskliniken-reutlingen.de|münsingen|germany",
+    "company_name": "Albklinik Münsingen",
+    "full_name": "Thomas Heinzelmann",
+    "message_target_id": "stage05_task_0002::person_thomas_heinzelmann_4a706b4eb0::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_thomas_heinzelmann_4a706b4eb0",
+    "recipient_value": "thomas.heinzelmann@kliniken-rt.de",
+    "role_title": "Stellvertretender Pflegedirektor und Verwaltungsleitung Münsingen",
+    "task_id": "stage05_task_0002"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Blaubeuren",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (blaubeuren)|http://www.adk-gmbh.de|blaubeuren|germany",
+    "company_name": "Alb-Donau Klinikum (Blaubeuren)",
+    "company_website": "http://www.adk-gmbh.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Thomas Thernes",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.thernes@adk-gmbh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Thernes",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_thernes_aa0614057a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ehingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (ehingen)|http://www.adk-gmbh.de|ehingen|germany",
+    "company_name": "Alb-Donau Klinikum (Ehingen)",
+    "company_website": "http://www.adk-gmbh.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Nadine Hirschle",
+          "person_key": "",
+          "role": "Pflegedienstleitung Alb-Donau Klinikum Ehingen"
+        },
+        {
+          "full_name": "Regine Deutschle",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "m.dahlmann@adk-gmbh.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Michael Dahlmann",
+        "hypothesis_email": "m.dahlmann@adk-gmbh.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_dahlmann_7119132601",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "n.hirschle@adk-gmbh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nadine Hirschle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nadine_hirschle_dbd0118b05",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Alb-Donau Klinikum Ehingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "r.deutschle@adk-gmbh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Regine Deutschle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/regine-deutschle-7b0244287",
+        "person_key": "person_regine_deutschle_61ba574ed2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege",
+          "https://de.linkedin.com/in/regine-deutschle-7b0244287"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedienstleitung Alb-Donau Klinikum Ehingen",
+        "Pflegedirektorin"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+      "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege",
+      "https://de.linkedin.com/in/regine-deutschle-7b0244287"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Langenau",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (langenau)|http://www.adk-gmbh.de|langenau|germany",
+    "company_name": "Alb-Donau Klinikum (Langenau)",
+    "company_website": "http://www.adk-gmbh.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Birgit Junginger",
+          "person_key": "",
+          "role": "Pflegedienstleitung Alb-Donau Klinikum Langenau"
+        },
+        {
+          "full_name": "Regine Deutschle",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "b.junginger@adk-gmbh.de",
+        "confirmed_email": "b.junginger@adk-gmbh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Birgit Junginger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_birgit_junginger_42cb0eaca2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Alb-Donau Klinikum Langenau",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege",
+          "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+          "https://www.adk-gmbh.de/medizin-gesundheit/alb-donau-klinikum/klinik-fuer-innere-medizin-und-kardiologie/team-ansprechpartner",
+          "https://www.adk-gmbh.de/media/30_die-adk/Qualitaetsbericht_Alb-Donau-Klinikum_Langenau.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "m.dahlmann@adk-gmbh.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Michael Dahlmann",
+        "hypothesis_email": "m.dahlmann@adk-gmbh.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_dahlmann_5a01503dee",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+          "https://www.adk-gmbh.de/medizin-gesundheit/alb-donau-klinikum/klinik-fuer-innere-medizin-und-kardiologie/team-ansprechpartner",
+          "https://www.adk-gmbh.de/media/30_die-adk/Qualitaetsbericht_Alb-Donau-Klinikum_Langenau.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "r.deutschle@adk-gmbh.de",
+        "confirmed_email": "r.deutschle@adk-gmbh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Regine Deutschle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/regine-deutschle-7b0244287",
+        "person_key": "person_regine_deutschle_d8941a82a5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege",
+          "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+          "https://www.adk-gmbh.de/medizin-gesundheit/alb-donau-klinikum/klinik-fuer-innere-medizin-und-kardiologie/team-ansprechpartner",
+          "https://de.linkedin.com/in/regine-deutschle-7b0244287",
+          "https://www.adk-gmbh.de/media/30_die-adk/Qualitaetsbericht_Alb-Donau-Klinikum_Langenau.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedienstleitung Alb-Donau Klinikum Langenau",
+        "Geschäftsführer",
+        "Pflegedirektorin"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege",
+      "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+      "https://www.adk-gmbh.de/medizin-gesundheit/alb-donau-klinikum/klinik-fuer-innere-medizin-und-kardiologie/team-ansprechpartner",
+      "https://www.adk-gmbh.de/media/30_die-adk/Qualitaetsbericht_Alb-Donau-Klinikum_Langenau.pdf",
+      "https://de.linkedin.com/in/regine-deutschle-7b0244287"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Münsingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|albklinik münsingen|http://www.kreiskliniken-reutlingen.de|münsingen|germany",
+    "company_name": "Albklinik Münsingen",
+    "company_website": "http://www.kreiskliniken-reutlingen.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Stefanie Hempt",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Thomas Heinzelmann",
+          "person_key": "",
+          "role": "Stellvertretender Pflegedirektor und Verwaltungsleitung Münsingen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "anja.fujan@kliniken-rt.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Anja Fujan",
+        "hypothesis_email": "anja.fujan@kliniken-rt.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anjafujan",
+        "person_key": "person_anja_fujan_88529fdb52",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Leitung Personal und Recht",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.kreiskliniken-reutlingen.de/kontakt/detail/anja-fujan/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840017-771544000-2024-xml.pdf",
+          "https://de.linkedin.com/in/anjafujan"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "stefanie.hempt@kliniken-rt.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefanie Hempt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefanie_hempt_94555dbd78",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840017-771544000-2024-xml.pdf",
+          "https://de.linkedin.com/posts/michael-thieme-a7b6b323_stefanie-hempt-wird-pflegedirektorin-in-reutlingen-activity-7282635195671871488-7UyR",
+          "https://www.kreiskliniken-reutlingen.de/kontakt/detail/stefanie-hempt/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "thomas.heinzelmann@kliniken-rt.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Heinzelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_heinzelmann_4a706b4eb0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretender Pflegedirektor und Verwaltungsleitung Münsingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840017-771544000-2024-xml.pdf",
+          "https://de.linkedin.com/posts/kreiskliniken-rt_pflegedirektor-verwaltungschef-krankenpfleger-activity-7064828330759344128-Qbi0",
+          "https://www.kreiskliniken-reutlingen.de/kontakt/detail/thomas-heinzelmann/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "operations"
+      ],
+      "roles": [
+        "Leitung Personal und Recht",
+        "Pflegedirektorin",
+        "Stellvertretender Pflegedirektor und Verwaltungsleitung Münsingen"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kreiskliniken-reutlingen.de/kontakt/detail/anja-fujan/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260840017-771544000-2024-xml.pdf",
+      "https://de.linkedin.com/in/anjafujan",
+      "https://de.linkedin.com/posts/michael-thieme-a7b6b323_stefanie-hempt-wird-pflegedirektorin-in-reutlingen-activity-7282635195671871488-7UyR",
+      "https://www.kreiskliniken-reutlingen.de/kontakt/detail/stefanie-hempt/",
+      "https://de.linkedin.com/posts/kreiskliniken-rt_pflegedirektor-verwaltungschef-krankenpfleger-activity-7064828330759344128-Qbi0",
+      "https://www.kreiskliniken-reutlingen.de/kontakt/detail/thomas-heinzelmann/"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Blaubeuren",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (blaubeuren)|http://www.adk-gmbh.de|blaubeuren|germany",
+    "company_name": "Alb-Donau Klinikum (Blaubeuren)",
+    "company_website": "http://www.adk-gmbh.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Thomas Thernes",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "t.thernes@adk-gmbh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Thernes",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_thernes_aa0614057a",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ehingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (ehingen)|http://www.adk-gmbh.de|ehingen|germany",
+    "company_name": "Alb-Donau Klinikum (Ehingen)",
+    "company_website": "http://www.adk-gmbh.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Nadine Hirschle",
+          "person_key": "",
+          "role": "Pflegedienstleitung Alb-Donau Klinikum Ehingen"
+        },
+        {
+          "full_name": "Regine Deutschle",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "m.dahlmann@adk-gmbh.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Michael Dahlmann",
+        "hypothesis_email": "m.dahlmann@adk-gmbh.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_dahlmann_7119132601",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "n.hirschle@adk-gmbh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nadine Hirschle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nadine_hirschle_dbd0118b05",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Alb-Donau Klinikum Ehingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "r.deutschle@adk-gmbh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Regine Deutschle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/regine-deutschle-7b0244287",
+        "person_key": "person_regine_deutschle_61ba574ed2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege",
+          "https://de.linkedin.com/in/regine-deutschle-7b0244287"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführer",
+        "Pflegedienstleitung Alb-Donau Klinikum Ehingen",
+        "Pflegedirektorin"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+      "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege",
+      "https://de.linkedin.com/in/regine-deutschle-7b0244287"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Langenau",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|alb-donau klinikum (langenau)|http://www.adk-gmbh.de|langenau|germany",
+    "company_name": "Alb-Donau Klinikum (Langenau)",
+    "company_website": "http://www.adk-gmbh.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Birgit Junginger",
+          "person_key": "",
+          "role": "Pflegedienstleitung Alb-Donau Klinikum Langenau"
+        },
+        {
+          "full_name": "Regine Deutschle",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "b.junginger@adk-gmbh.de",
+        "confirmed_email": "b.junginger@adk-gmbh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Birgit Junginger",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_birgit_junginger_42cb0eaca2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung Alb-Donau Klinikum Langenau",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege",
+          "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+          "https://www.adk-gmbh.de/medizin-gesundheit/alb-donau-klinikum/klinik-fuer-innere-medizin-und-kardiologie/team-ansprechpartner",
+          "https://www.adk-gmbh.de/media/30_die-adk/Qualitaetsbericht_Alb-Donau-Klinikum_Langenau.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "m.dahlmann@adk-gmbh.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Michael Dahlmann",
+        "hypothesis_email": "m.dahlmann@adk-gmbh.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_michael_dahlmann_5a01503dee",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+          "https://www.adk-gmbh.de/medizin-gesundheit/alb-donau-klinikum/klinik-fuer-innere-medizin-und-kardiologie/team-ansprechpartner",
+          "https://www.adk-gmbh.de/media/30_die-adk/Qualitaetsbericht_Alb-Donau-Klinikum_Langenau.pdf"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "r.deutschle@adk-gmbh.de",
+        "confirmed_email": "r.deutschle@adk-gmbh.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Regine Deutschle",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/regine-deutschle-7b0244287",
+        "person_key": "person_regine_deutschle_d8941a82a5",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege",
+          "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+          "https://www.adk-gmbh.de/medizin-gesundheit/alb-donau-klinikum/klinik-fuer-innere-medizin-und-kardiologie/team-ansprechpartner",
+          "https://de.linkedin.com/in/regine-deutschle-7b0244287",
+          "https://www.adk-gmbh.de/media/30_die-adk/Qualitaetsbericht_Alb-Donau-Klinikum_Langenau.pdf"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Pflegedienstleitung Alb-Donau Klinikum Langenau",
+        "Geschäftsführer",
+        "Pflegedirektorin"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.adk-gmbh.de/medizin-gesundheit/patienten-infos/pflege-beratung/pflege",
+      "https://www.adk-gmbh.de/die-adk/unternehmen-adk/ansprechpartner",
+      "https://www.adk-gmbh.de/medizin-gesundheit/alb-donau-klinikum/klinik-fuer-innere-medizin-und-kardiologie/team-ansprechpartner",
+      "https://www.adk-gmbh.de/media/30_die-adk/Qualitaetsbericht_Alb-Donau-Klinikum_Langenau.pdf",
+      "https://de.linkedin.com/in/regine-deutschle-7b0244287"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Münsingen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|albklinik münsingen|http://www.kreiskliniken-reutlingen.de|münsingen|germany",
+    "company_name": "Albklinik Münsingen",
+    "company_website": "http://www.kreiskliniken-reutlingen.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Stefanie Hempt",
+          "person_key": "",
+          "role": "Pflegedirektorin"
+        },
+        {
+          "full_name": "Thomas Heinzelmann",
+          "person_key": "",
+          "role": "Stellvertretender Pflegedirektor und Verwaltungsleitung Münsingen"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "anja.fujan@kliniken-rt.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Anja Fujan",
+        "hypothesis_email": "anja.fujan@kliniken-rt.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/anjafujan",
+        "person_key": "person_anja_fujan_88529fdb52",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Leitung Personal und Recht",
+        "role_category": "hr_recruiting",
+        "source_urls": [
+          "https://www.kreiskliniken-reutlingen.de/kontakt/detail/anja-fujan/",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840017-771544000-2024-xml.pdf",
+          "https://de.linkedin.com/in/anjafujan"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "stefanie.hempt@kliniken-rt.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Stefanie Hempt",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_stefanie_hempt_94555dbd78",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840017-771544000-2024-xml.pdf",
+          "https://de.linkedin.com/posts/michael-thieme-a7b6b323_stefanie-hempt-wird-pflegedirektorin-in-reutlingen-activity-7282635195671871488-7UyR",
+          "https://www.kreiskliniken-reutlingen.de/kontakt/detail/stefanie-hempt/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "thomas.heinzelmann@kliniken-rt.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Thomas Heinzelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_thomas_heinzelmann_4a706b4eb0",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretender Pflegedirektor und Verwaltungsleitung Münsingen",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840017-771544000-2024-xml.pdf",
+          "https://de.linkedin.com/posts/kreiskliniken-rt_pflegedirektor-verwaltungschef-krankenpfleger-activity-7064828330759344128-Qbi0",
+          "https://www.kreiskliniken-reutlingen.de/kontakt/detail/thomas-heinzelmann/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "hr_recruiting",
+        "operations"
+      ],
+      "roles": [
+        "Leitung Personal und Recht",
+        "Pflegedirektorin",
+        "Stellvertretender Pflegedirektor und Verwaltungsleitung Münsingen"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.kreiskliniken-reutlingen.de/kontakt/detail/anja-fujan/",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260840017-771544000-2024-xml.pdf",
+      "https://de.linkedin.com/in/anjafujan",
+      "https://de.linkedin.com/posts/michael-thieme-a7b6b323_stefanie-hempt-wird-pflegedirektorin-in-reutlingen-activity-7282635195671871488-7UyR",
+      "https://www.kreiskliniken-reutlingen.de/kontakt/detail/stefanie-hempt/",
+      "https://de.linkedin.com/posts/kreiskliniken-rt_pflegedirektor-verwaltungschef-krankenpfleger-activity-7064828330759344128-Qbi0",
+      "https://www.kreiskliniken-reutlingen.de/kontakt/detail/thomas-heinzelmann/"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
