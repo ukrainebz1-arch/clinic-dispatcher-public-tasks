@@ -1,0 +1,1432 @@
+TASK_ID: stage05_task_0017
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "full_name": "Arne Greiner",
+    "message_target_id": "stage05_task_0017::person_arne_greiner_4fec513812::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_arne_greiner_4fec513812",
+    "recipient_value": "arne.greiner@sankt-elisabeth.de",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "full_name": "Arne Greiner",
+    "message_target_id": "stage05_task_0017::person_arne_greiner_4fec513812::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_arne_greiner_4fec513812",
+    "recipient_value": "https://de.linkedin.com/in/arne-greiner-38532bb7",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "full_name": "Arne Greiner",
+    "message_target_id": "stage05_task_0017::person_arne_greiner_4fec513812::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_arne_greiner_4fec513812",
+    "recipient_value": "https://de.linkedin.com/in/arne-greiner-38532bb7",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "full_name": "Arne Greiner",
+    "message_target_id": "stage05_task_0017::person_arne_greiner_b89e82ea4e::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_arne_greiner_b89e82ea4e",
+    "recipient_value": "arne.greiner@sankt-elisabeth.de",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "full_name": "Arne Greiner",
+    "message_target_id": "stage05_task_0017::person_arne_greiner_b89e82ea4e::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_arne_greiner_b89e82ea4e",
+    "recipient_value": "https://de.linkedin.com/in/arne-greiner-38532bb7",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "full_name": "Arne Greiner",
+    "message_target_id": "stage05_task_0017::person_arne_greiner_b89e82ea4e::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_arne_greiner_b89e82ea4e",
+    "recipient_value": "https://de.linkedin.com/in/arne-greiner-38532bb7",
+    "role_title": "Geschäftsführung",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "full_name": "Karina Wiesner",
+    "message_target_id": "stage05_task_0017::person_karina_wiesner_4f6a186c46::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_karina_wiesner_4f6a186c46",
+    "recipient_value": "karina.wiesner@sankt-elisabeth.de",
+    "role_title": "PDL Bereich Geburtshilfe",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "full_name": "Karina Wiesner",
+    "message_target_id": "stage05_task_0017::person_karina_wiesner_33859604b8::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_karina_wiesner_33859604b8",
+    "recipient_value": "karina.wiesner@sankt-elisabeth.de",
+    "role_title": "PDL Bereich Geburtshilfe",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "full_name": "Regina Tretzka",
+    "message_target_id": "stage05_task_0017::person_regina_tretzka_0b0a1fdad2::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_regina_tretzka_0b0a1fdad2",
+    "recipient_value": "regina.tretzka@sankt-elisabeth.de",
+    "role_title": "PDL Bereich operativ",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "full_name": "Regina Tretzka",
+    "message_target_id": "stage05_task_0017::person_regina_tretzka_2c2e2fd4de::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_regina_tretzka_2c2e2fd4de",
+    "recipient_value": "regina.tretzka@sankt-elisabeth.de",
+    "role_title": "PDL Bereich operativ",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik tettnang|http://www.medizin-campus-bodensee.de|tettnang|germany",
+    "company_name": "Klinik Tettnang",
+    "full_name": "Annick Ochel",
+    "message_target_id": "stage05_task_0017::person_annick_ochel_11368dc33c::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_annick_ochel_11368dc33c",
+    "recipient_value": "ochel.annick@medizincampus.de",
+    "role_title": "Stellvertretende Pflegedirektorin Medizin Campus Bodensee",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik tettnang|http://www.medizin-campus-bodensee.de|tettnang|germany",
+    "company_name": "Klinik Tettnang",
+    "full_name": "Annick Ochel",
+    "message_target_id": "stage05_task_0017::person_annick_ochel_11368dc33c::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_annick_ochel_11368dc33c",
+    "recipient_value": "https://de.linkedin.com/in/annick-ochel-678bb2302",
+    "role_title": "Stellvertretende Pflegedirektorin Medizin Campus Bodensee",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik tettnang|http://www.medizin-campus-bodensee.de|tettnang|germany",
+    "company_name": "Klinik Tettnang",
+    "full_name": "Annick Ochel",
+    "message_target_id": "stage05_task_0017::person_annick_ochel_11368dc33c::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_annick_ochel_11368dc33c",
+    "recipient_value": "https://de.linkedin.com/in/annick-ochel-678bb2302",
+    "role_title": "Stellvertretende Pflegedirektorin Medizin Campus Bodensee",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik tettnang|http://www.medizin-campus-bodensee.de|tettnang|germany",
+    "company_name": "Klinik Tettnang",
+    "full_name": "Claudia Keller",
+    "message_target_id": "stage05_task_0017::person_claudia_keller_04f105de99::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_claudia_keller_04f105de99",
+    "recipient_value": "keller.claudia@medizincampus.de",
+    "role_title": "Pflegedirektorin Medizin Campus Bodensee",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik tettnang|http://www.medizin-campus-bodensee.de|tettnang|germany",
+    "company_name": "Klinik Tettnang",
+    "full_name": "Gabriele Hesse",
+    "message_target_id": "stage05_task_0017::person_gabriele_hesse_97f9c6e486::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_gabriele_hesse_97f9c6e486",
+    "recipient_value": "hesse.gabriele@medizincampus.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik tettnang|http://www.medizin-campus-bodensee.de|tettnang|germany",
+    "company_name": "Klinik Tettnang",
+    "full_name": "Jan-Ove Faust",
+    "message_target_id": "stage05_task_0017::person_jan_ove_faust_75cd243970::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_jan_ove_faust_75cd243970",
+    "recipient_value": "faust.jan-ove@medizincampus.de",
+    "role_title": "Geschäftsführer",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik öschelbronn in niefern-öschelbronn|http://www.klinik-oeschelbronn.de|niefern-öschelbronn|germany",
+    "company_name": "Klinik Öschelbronn in Niefern-Öschelbronn",
+    "full_name": "Maria Wert",
+    "message_target_id": "stage05_task_0017::person_maria_wert_160de239c3::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_maria_wert_160de239c3",
+    "recipient_value": "m.wert@klinik-oeschelbronn.de",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik öschelbronn in niefern-öschelbronn|http://www.klinik-oeschelbronn.de|niefern-öschelbronn|germany",
+    "company_name": "Klinik Öschelbronn in Niefern-Öschelbronn",
+    "full_name": "Maria Wert",
+    "message_target_id": "stage05_task_0017::person_maria_wert_160de239c3::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_maria_wert_160de239c3",
+    "recipient_value": "https://de.linkedin.com/in/maria-wert-208b59252",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik öschelbronn in niefern-öschelbronn|http://www.klinik-oeschelbronn.de|niefern-öschelbronn|germany",
+    "company_name": "Klinik Öschelbronn in Niefern-Öschelbronn",
+    "full_name": "Maria Wert",
+    "message_target_id": "stage05_task_0017::person_maria_wert_160de239c3::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_maria_wert_160de239c3",
+    "recipient_value": "https://de.linkedin.com/in/maria-wert-208b59252",
+    "role_title": "Geschäftsführerin",
+    "task_id": "stage05_task_0017"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik öschelbronn in niefern-öschelbronn|http://www.klinik-oeschelbronn.de|niefern-öschelbronn|germany",
+    "company_name": "Klinik Öschelbronn in Niefern-Öschelbronn",
+    "full_name": "Nicki Erb",
+    "message_target_id": "stage05_task_0017::person_nicki_erb_d2b5e376d2::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_nicki_erb_d2b5e376d2",
+    "recipient_value": "n.erb@klinik-oeschelbronn.de",
+    "role_title": "PDL",
+    "task_id": "stage05_task_0017"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 2,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Hinterzarten",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik in der zarten in hinterzarten|http://klinik-in-der-zarten.de|hinterzarten|germany",
+    "company_name": "Klinik in der Zarten in Hinterzarten",
+    "company_website": "http://klinik-in-der-zarten.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Regine Striegel",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Nicoline v. Brasch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nicoline_v_brasch_24315442b8",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832552-773743000-2022-xml.pdf",
+          "https://www.klinik-in-der-zarten.de/ueber-uns",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b927c0553ee4dd5d/start"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Regine Striegel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_regine_striegel_34ae4265e9",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832552-773743000-2022-xml.pdf",
+          "https://www.klinik-in-der-zarten.de/kontakt",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b927c0553ee4dd5d/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführung",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260832552-773743000-2022-xml.pdf",
+      "https://www.klinik-in-der-zarten.de/ueber-uns",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b927c0553ee4dd5d/start",
+      "https://www.klinik-in-der-zarten.de/kontakt"
+    ],
+    "warnings": [
+      "Company has only weak channels: hypotheses or generic routes."
+    ]
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heidelberg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "company_website": "http://www.sankt-elisabeth.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Karina Wiesner",
+          "person_key": "",
+          "role": "PDL Bereich Geburtshilfe"
+        },
+        {
+          "full_name": "Karina Wiesner",
+          "person_key": "",
+          "role": "PDL Bereich Geburtshilfe"
+        },
+        {
+          "full_name": "Regina Tretzka",
+          "person_key": "",
+          "role": "PDL Bereich operativ"
+        },
+        {
+          "full_name": "Regina Tretzka",
+          "person_key": "",
+          "role": "PDL Bereich operativ"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "arne.greiner@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Arne Greiner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/arne-greiner-38532bb7",
+        "person_key": "person_arne_greiner_4fec513812",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820514-773704000-2023-xml.pdf",
+          "https://de.linkedin.com/in/arne-greiner-38532bb7"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "arne.greiner@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Arne Greiner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/arne-greiner-38532bb7",
+        "person_key": "person_arne_greiner_b89e82ea4e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820514-773704000-2023-xml.pdf",
+          "https://de.linkedin.com/in/arne-greiner-38532bb7"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karina.wiesner@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karina Wiesner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karina_wiesner_4f6a186c46",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "PDL Bereich Geburtshilfe",
+        "role_category": "operations",
+        "source_urls": [
+          "https://klinikfinder.bkk-dachverband.de/St-Elisabeth-Klinik-in-69121-Heidelberg/uebersicht/krankenhaus/26082051400?from=fanav"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karina.wiesner@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karina Wiesner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karina_wiesner_33859604b8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "PDL Bereich Geburtshilfe",
+        "role_category": "operations",
+        "source_urls": [
+          "https://klinikfinder.bkk-dachverband.de/St-Elisabeth-Klinik-in-69121-Heidelberg/uebersicht/krankenhaus/26082051400?from=fanav"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "regina.tretzka@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Regina Tretzka",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_regina_tretzka_0b0a1fdad2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "PDL Bereich operativ",
+        "role_category": "operations",
+        "source_urls": [
+          "https://klinikfinder.bkk-dachverband.de/St-Elisabeth-Klinik-in-69121-Heidelberg/uebersicht/krankenhaus/26082051400?from=fanav"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "regina.tretzka@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Regina Tretzka",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_regina_tretzka_2c2e2fd4de",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "PDL Bereich operativ",
+        "role_category": "operations",
+        "source_urls": [
+          "https://klinikfinder.bkk-dachverband.de/St-Elisabeth-Klinik-in-69121-Heidelberg/uebersicht/krankenhaus/26082051400?from=fanav"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführung",
+        "PDL Bereich Geburtshilfe",
+        "PDL Bereich operativ"
+      ],
+      "total_people": 6
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260820514-773704000-2023-xml.pdf",
+      "https://de.linkedin.com/in/arne-greiner-38532bb7",
+      "https://klinikfinder.bkk-dachverband.de/St-Elisabeth-Klinik-in-69121-Heidelberg/uebersicht/krankenhaus/26082051400?from=fanav"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Tettnang",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik tettnang|http://www.medizin-campus-bodensee.de|tettnang|germany",
+    "company_name": "Klinik Tettnang",
+    "company_website": "http://www.medizin-campus-bodensee.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Annick Ochel",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin Medizin Campus Bodensee"
+        },
+        {
+          "full_name": "Claudia Keller",
+          "person_key": "",
+          "role": "Pflegedirektorin Medizin Campus Bodensee"
+        },
+        {
+          "full_name": "Gabriele Hesse",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "ochel.annick@medizincampus.de",
+        "confirmed_email": "ochel.annick@medizincampus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Annick Ochel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/annick-ochel-678bb2302",
+        "person_key": "person_annick_ochel_11368dc33c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin Medizin Campus Bodensee",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medizin-campus-bodensee.de/leistungen-angebote/pflege/team",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840493-771843000-2022-xml.pdf",
+          "https://www.medizin-campus-bodensee.de/ueber-uns/organisation/geschaeftsfuehrung",
+          "https://www.medizin-campus-bodensee.de/fileadmin/user_upload/downloads/ausbildung/Flyer_Ausbildung_Studium_MCB_2023.pdf",
+          "https://de.linkedin.com/in/annick-ochel-678bb2302"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "keller.claudia@medizincampus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Claudia Keller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_claudia_keller_04f105de99",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Medizin Campus Bodensee",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medizin-campus-bodensee.de/ueber-uns/organisation/geschaeftsfuehrung",
+          "https://www.medizin-campus-bodensee.de/leistungen-angebote/pflege/team",
+          "https://de.linkedin.com/posts/medizin-campus-bodensee_herzlichengl%C3%BCckwunsch-pflegefachkr%C3%A4ften-activity-7229769800342786048-fUkN"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "hesse.gabriele@medizincampus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Gabriele Hesse",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_gabriele_hesse_97f9c6e486",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medizin-campus-bodensee.de/fileadmin/user_upload/downloads/ausbildung/Flyer_Ausbildung_Studium_MCB_2023.pdf",
+          "https://www.medizin-campus-bodensee.de/ueber-uns/freunde-und-foerderer/tettnang"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "faust.jan-ove@medizincampus.de",
+        "confirmed_email": "faust.jan-ove@medizincampus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jan-Ove Faust",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jan_ove_faust_75cd243970",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.medizin-campus-bodensee.de/ueber-uns/organisation/geschaeftsfuehrung",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840610-771606000-2024-xml.pdf",
+          "https://www.medizin-campus-bodensee.de/fileadmin/user_upload/downloads/ausbildung/Flyer_Ausbildung_Studium_MCB_2023.pdf",
+          "https://de.linkedin.com/posts/kmaonline_medizin-campus-bodensee-jan-ove-faust-gesch%C3%A4ftsf%C3%BChrer-activity-7362826279328317440-_Ryr"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin Medizin Campus Bodensee",
+        "Pflegedirektorin Medizin Campus Bodensee",
+        "Pflegedienstleitung",
+        "Geschäftsführer"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.medizin-campus-bodensee.de/leistungen-angebote/pflege/team",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260840493-771843000-2022-xml.pdf",
+      "https://www.medizin-campus-bodensee.de/ueber-uns/organisation/geschaeftsfuehrung",
+      "https://www.medizin-campus-bodensee.de/fileadmin/user_upload/downloads/ausbildung/Flyer_Ausbildung_Studium_MCB_2023.pdf",
+      "https://de.linkedin.com/in/annick-ochel-678bb2302",
+      "https://de.linkedin.com/posts/medizin-campus-bodensee_herzlichengl%C3%BCckwunsch-pflegefachkr%C3%A4ften-activity-7229769800342786048-fUkN",
+      "https://www.medizin-campus-bodensee.de/ueber-uns/freunde-und-foerderer/tettnang",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260840610-771606000-2024-xml.pdf",
+      "https://de.linkedin.com/posts/kmaonline_medizin-campus-bodensee-jan-ove-faust-gesch%C3%A4ftsf%C3%BChrer-activity-7362826279328317440-_Ryr"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Niefern-Öschelbronn",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik öschelbronn in niefern-öschelbronn|http://www.klinik-oeschelbronn.de|niefern-öschelbronn|germany",
+    "company_name": "Klinik Öschelbronn in Niefern-Öschelbronn",
+    "company_website": "http://www.klinik-oeschelbronn.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Nicki Erb",
+          "person_key": "",
+          "role": "PDL"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "m.wert@klinik-oeschelbronn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Maria Wert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/maria-wert-208b59252",
+        "person_key": "person_maria_wert_160de239c3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://klinik-oeschelbronn.de/wp-content/uploads/2026/02/Qualitaetsbericht_2024.pdf.pdf",
+          "https://klinik-oeschelbronn.de/impressum/",
+          "https://de.linkedin.com/in/maria-wert-208b59252",
+          "https://klinik-oeschelbronn.de/ueber-uns/klinikleitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "n.erb@klinik-oeschelbronn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicki Erb",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nicki_erb_d2b5e376d2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "PDL",
+        "role_category": "operations",
+        "source_urls": [
+          "https://klinik-oeschelbronn.de/wp-content/uploads/2026/02/Qualitaetsbericht_2024.pdf.pdf",
+          "https://klinik-oeschelbronn.de/impressum/",
+          "https://de.linkedin.com/in/nicki-erb-a25a34331",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/83daeeb623d0e66d/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "PDL"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://klinik-oeschelbronn.de/wp-content/uploads/2026/02/Qualitaetsbericht_2024.pdf.pdf",
+      "https://klinik-oeschelbronn.de/impressum/",
+      "https://de.linkedin.com/in/maria-wert-208b59252",
+      "https://klinik-oeschelbronn.de/ueber-uns/klinikleitung/",
+      "https://de.linkedin.com/in/nicki-erb-a25a34331",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/83daeeb623d0e66d/start"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 2,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Hinterzarten",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik in der zarten in hinterzarten|http://klinik-in-der-zarten.de|hinterzarten|germany",
+    "company_name": "Klinik in der Zarten in Hinterzarten",
+    "company_website": "http://klinik-in-der-zarten.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Regine Striegel",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Nicoline v. Brasch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nicoline_v_brasch_24315442b8",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832552-773743000-2022-xml.pdf",
+          "https://www.klinik-in-der-zarten.de/ueber-uns",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b927c0553ee4dd5d/start"
+        ]
+      },
+      {
+        "available_channels": "COMPANY_ROUTE",
+        "candidate_email": "",
+        "confirmed_email": "",
+        "contact_evidence_status": "generic_route",
+        "email_status": "FOUND_GENERIC_COMPANY_EMAIL",
+        "full_name": "Regine Striegel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_regine_striegel_34ae4265e9",
+        "primary_channel": "COMPANY_ROUTE",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260832552-773743000-2022-xml.pdf",
+          "https://www.klinik-in-der-zarten.de/kontakt",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b927c0553ee4dd5d/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführung",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260832552-773743000-2022-xml.pdf",
+      "https://www.klinik-in-der-zarten.de/ueber-uns",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/b927c0553ee4dd5d/start",
+      "https://www.klinik-in-der-zarten.de/kontakt"
+    ],
+    "warnings": [
+      "Company has only weak channels: hypotheses or generic routes."
+    ]
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 6,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Heidelberg",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik sankt elisabeth in heidelberg|http://www.sankt-elisabeth.de|heidelberg|germany",
+    "company_name": "Klinik Sankt Elisabeth in Heidelberg",
+    "company_website": "http://www.sankt-elisabeth.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 4,
+      "decision_makers": [
+        {
+          "full_name": "Karina Wiesner",
+          "person_key": "",
+          "role": "PDL Bereich Geburtshilfe"
+        },
+        {
+          "full_name": "Karina Wiesner",
+          "person_key": "",
+          "role": "PDL Bereich Geburtshilfe"
+        },
+        {
+          "full_name": "Regina Tretzka",
+          "person_key": "",
+          "role": "PDL Bereich operativ"
+        },
+        {
+          "full_name": "Regina Tretzka",
+          "person_key": "",
+          "role": "PDL Bereich operativ"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "arne.greiner@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Arne Greiner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/arne-greiner-38532bb7",
+        "person_key": "person_arne_greiner_4fec513812",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820514-773704000-2023-xml.pdf",
+          "https://de.linkedin.com/in/arne-greiner-38532bb7"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "arne.greiner@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Arne Greiner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/arne-greiner-38532bb7",
+        "person_key": "person_arne_greiner_b89e82ea4e",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260820514-773704000-2023-xml.pdf",
+          "https://de.linkedin.com/in/arne-greiner-38532bb7"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karina.wiesner@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karina Wiesner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karina_wiesner_4f6a186c46",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "PDL Bereich Geburtshilfe",
+        "role_category": "operations",
+        "source_urls": [
+          "https://klinikfinder.bkk-dachverband.de/St-Elisabeth-Klinik-in-69121-Heidelberg/uebersicht/krankenhaus/26082051400?from=fanav"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "karina.wiesner@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Karina Wiesner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_karina_wiesner_33859604b8",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "PDL Bereich Geburtshilfe",
+        "role_category": "operations",
+        "source_urls": [
+          "https://klinikfinder.bkk-dachverband.de/St-Elisabeth-Klinik-in-69121-Heidelberg/uebersicht/krankenhaus/26082051400?from=fanav"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "regina.tretzka@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Regina Tretzka",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_regina_tretzka_0b0a1fdad2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "PDL Bereich operativ",
+        "role_category": "operations",
+        "source_urls": [
+          "https://klinikfinder.bkk-dachverband.de/St-Elisabeth-Klinik-in-69121-Heidelberg/uebersicht/krankenhaus/26082051400?from=fanav"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "regina.tretzka@sankt-elisabeth.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Regina Tretzka",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_regina_tretzka_2c2e2fd4de",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "PDL Bereich operativ",
+        "role_category": "operations",
+        "source_urls": [
+          "https://klinikfinder.bkk-dachverband.de/St-Elisabeth-Klinik-in-69121-Heidelberg/uebersicht/krankenhaus/26082051400?from=fanav"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführung",
+        "PDL Bereich Geburtshilfe",
+        "PDL Bereich operativ"
+      ],
+      "total_people": 6
+    },
+    "source_urls": [
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260820514-773704000-2023-xml.pdf",
+      "https://de.linkedin.com/in/arne-greiner-38532bb7",
+      "https://klinikfinder.bkk-dachverband.de/St-Elisabeth-Klinik-in-69121-Heidelberg/uebersicht/krankenhaus/26082051400?from=fanav"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 4,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Tettnang",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik tettnang|http://www.medizin-campus-bodensee.de|tettnang|germany",
+    "company_name": "Klinik Tettnang",
+    "company_website": "http://www.medizin-campus-bodensee.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Annick Ochel",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedirektorin Medizin Campus Bodensee"
+        },
+        {
+          "full_name": "Claudia Keller",
+          "person_key": "",
+          "role": "Pflegedirektorin Medizin Campus Bodensee"
+        },
+        {
+          "full_name": "Gabriele Hesse",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "ochel.annick@medizincampus.de",
+        "confirmed_email": "ochel.annick@medizincampus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Annick Ochel",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/annick-ochel-678bb2302",
+        "person_key": "person_annick_ochel_11368dc33c",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedirektorin Medizin Campus Bodensee",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medizin-campus-bodensee.de/leistungen-angebote/pflege/team",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840493-771843000-2022-xml.pdf",
+          "https://www.medizin-campus-bodensee.de/ueber-uns/organisation/geschaeftsfuehrung",
+          "https://www.medizin-campus-bodensee.de/fileadmin/user_upload/downloads/ausbildung/Flyer_Ausbildung_Studium_MCB_2023.pdf",
+          "https://de.linkedin.com/in/annick-ochel-678bb2302"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "keller.claudia@medizincampus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Claudia Keller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_claudia_keller_04f105de99",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedirektorin Medizin Campus Bodensee",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medizin-campus-bodensee.de/ueber-uns/organisation/geschaeftsfuehrung",
+          "https://www.medizin-campus-bodensee.de/leistungen-angebote/pflege/team",
+          "https://de.linkedin.com/posts/medizin-campus-bodensee_herzlichengl%C3%BCckwunsch-pflegefachkr%C3%A4ften-activity-7229769800342786048-fUkN"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "hesse.gabriele@medizincampus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Gabriele Hesse",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_gabriele_hesse_97f9c6e486",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.medizin-campus-bodensee.de/fileadmin/user_upload/downloads/ausbildung/Flyer_Ausbildung_Studium_MCB_2023.pdf",
+          "https://www.medizin-campus-bodensee.de/ueber-uns/freunde-und-foerderer/tettnang"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "faust.jan-ove@medizincampus.de",
+        "confirmed_email": "faust.jan-ove@medizincampus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Jan-Ove Faust",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_jan_ove_faust_75cd243970",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführer",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.medizin-campus-bodensee.de/ueber-uns/organisation/geschaeftsfuehrung",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/260840610-771606000-2024-xml.pdf",
+          "https://www.medizin-campus-bodensee.de/fileadmin/user_upload/downloads/ausbildung/Flyer_Ausbildung_Studium_MCB_2023.pdf",
+          "https://de.linkedin.com/posts/kmaonline_medizin-campus-bodensee-jan-ove-faust-gesch%C3%A4ftsf%C3%BChrer-activity-7362826279328317440-_Ryr"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "founder_ceo"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedirektorin Medizin Campus Bodensee",
+        "Pflegedirektorin Medizin Campus Bodensee",
+        "Pflegedienstleitung",
+        "Geschäftsführer"
+      ],
+      "total_people": 4
+    },
+    "source_urls": [
+      "https://www.medizin-campus-bodensee.de/leistungen-angebote/pflege/team",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260840493-771843000-2022-xml.pdf",
+      "https://www.medizin-campus-bodensee.de/ueber-uns/organisation/geschaeftsfuehrung",
+      "https://www.medizin-campus-bodensee.de/fileadmin/user_upload/downloads/ausbildung/Flyer_Ausbildung_Studium_MCB_2023.pdf",
+      "https://de.linkedin.com/in/annick-ochel-678bb2302",
+      "https://de.linkedin.com/posts/medizin-campus-bodensee_herzlichengl%C3%BCckwunsch-pflegefachkr%C3%A4ften-activity-7229769800342786048-fUkN",
+      "https://www.medizin-campus-bodensee.de/ueber-uns/freunde-und-foerderer/tettnang",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/260840610-771606000-2024-xml.pdf",
+      "https://de.linkedin.com/posts/kmaonline_medizin-campus-bodensee-jan-ove-faust-gesch%C3%A4ftsf%C3%BChrer-activity-7362826279328317440-_Ryr"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Niefern-Öschelbronn",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|klinik öschelbronn in niefern-öschelbronn|http://www.klinik-oeschelbronn.de|niefern-öschelbronn|germany",
+    "company_name": "Klinik Öschelbronn in Niefern-Öschelbronn",
+    "company_website": "http://www.klinik-oeschelbronn.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Nicki Erb",
+          "person_key": "",
+          "role": "PDL"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "m.wert@klinik-oeschelbronn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Maria Wert",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/maria-wert-208b59252",
+        "person_key": "person_maria_wert_160de239c3",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Geschäftsführerin",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://klinik-oeschelbronn.de/wp-content/uploads/2026/02/Qualitaetsbericht_2024.pdf.pdf",
+          "https://klinik-oeschelbronn.de/impressum/",
+          "https://de.linkedin.com/in/maria-wert-208b59252",
+          "https://klinik-oeschelbronn.de/ueber-uns/klinikleitung/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "n.erb@klinik-oeschelbronn.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Nicki Erb",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_nicki_erb_d2b5e376d2",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "PDL",
+        "role_category": "operations",
+        "source_urls": [
+          "https://klinik-oeschelbronn.de/wp-content/uploads/2026/02/Qualitaetsbericht_2024.pdf.pdf",
+          "https://klinik-oeschelbronn.de/impressum/",
+          "https://de.linkedin.com/in/nicki-erb-a25a34331",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/83daeeb623d0e66d/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Geschäftsführerin",
+        "PDL"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://klinik-oeschelbronn.de/wp-content/uploads/2026/02/Qualitaetsbericht_2024.pdf.pdf",
+      "https://klinik-oeschelbronn.de/impressum/",
+      "https://de.linkedin.com/in/maria-wert-208b59252",
+      "https://klinik-oeschelbronn.de/ueber-uns/klinikleitung/",
+      "https://de.linkedin.com/in/nicki-erb-a25a34331",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/83daeeb623d0e66d/start"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
