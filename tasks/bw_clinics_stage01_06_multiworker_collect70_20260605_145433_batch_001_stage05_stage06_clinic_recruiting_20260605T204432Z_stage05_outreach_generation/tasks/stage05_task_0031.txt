@@ -1,0 +1,1191 @@
+TASK_ID: stage05_task_0031
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen (psychiatrische tagesklinik)|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik)",
+    "full_name": "Alexandra Heinzelmann",
+    "message_target_id": "stage05_task_0031::person_alexandra_heinzelmann_7c94c24aa9::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_alexandra_heinzelmann_7c94c24aa9",
+    "recipient_value": "alexandra.heinzelmann@median-kliniken.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen (psychiatrische tagesklinik)|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik)",
+    "full_name": "Simon Baltes",
+    "message_target_id": "stage05_task_0031::person_simon_baltes_8d8eadc558::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_simon_baltes_8d8eadc558",
+    "recipient_value": "simon.baltes@median-kliniken.de",
+    "role_title": "Kaufmännische Leitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen (psychiatrische tagesklinik)|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik)",
+    "full_name": "Simon Baltes",
+    "message_target_id": "stage05_task_0031::person_simon_baltes_8d8eadc558::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_simon_baltes_8d8eadc558",
+    "recipient_value": "https://de.linkedin.com/in/simon-baltes-264b67386",
+    "role_title": "Kaufmännische Leitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen (psychiatrische tagesklinik)|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik)",
+    "full_name": "Simon Baltes",
+    "message_target_id": "stage05_task_0031::person_simon_baltes_8d8eadc558::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_simon_baltes_8d8eadc558",
+    "recipient_value": "https://de.linkedin.com/in/simon-baltes-264b67386",
+    "role_title": "Kaufmännische Leitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "Median Achertal-Klinik Ottenhöfen",
+    "full_name": "Alexandra Heinzelmann",
+    "message_target_id": "stage05_task_0031::person_alexandra_heinzelmann_4a23c47ad1::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_alexandra_heinzelmann_4a23c47ad1",
+    "recipient_value": "alexandra.heinzelmann@median-kliniken.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "Median Achertal-Klinik Ottenhöfen",
+    "full_name": "Katrin Schmiederer",
+    "message_target_id": "stage05_task_0031::person_katrin_schmiederer_114acaad77::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_katrin_schmiederer_114acaad77",
+    "recipient_value": "katrin.schmiederer@median-kliniken.de",
+    "role_title": "Stationsleitung Station 4",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "Median Achertal-Klinik Ottenhöfen",
+    "full_name": "Sergej Greb",
+    "message_target_id": "stage05_task_0031::person_sergej_greb_e837161f45::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_sergej_greb_e837161f45",
+    "recipient_value": "sergej.greb@median-kliniken.de",
+    "role_title": "Stationsleitung Station 5",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median franz-alexander-klinik nordrach|https://www.median-kliniken.de//de/standorte/median-franz-alexander-klinik-nordrach/klinikprofil/|nordrach|germany",
+    "company_name": "Median Franz-Alexander-Klinik Nordrach",
+    "full_name": "Tobias Willfang",
+    "message_target_id": "stage05_task_0031::person_tobias_willfang_de30ef6999::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tobias_willfang_de30ef6999",
+    "recipient_value": "https://de.linkedin.com/in/tobiaswillfang",
+    "role_title": "Kaufmännischer Leiter",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median franz-alexander-klinik nordrach|https://www.median-kliniken.de//de/standorte/median-franz-alexander-klinik-nordrach/klinikprofil/|nordrach|germany",
+    "company_name": "Median Franz-Alexander-Klinik Nordrach",
+    "full_name": "Tobias Willfang",
+    "message_target_id": "stage05_task_0031::person_tobias_willfang_de30ef6999::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tobias_willfang_de30ef6999",
+    "recipient_value": "https://de.linkedin.com/in/tobiaswillfang",
+    "role_title": "Kaufmännischer Leiter",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median franz-alexander-klinik nordrach|https://www.median-kliniken.de//de/standorte/median-franz-alexander-klinik-nordrach/klinikprofil/|nordrach|germany",
+    "company_name": "Median Franz-Alexander-Klinik Nordrach",
+    "full_name": "Ute Schuler",
+    "message_target_id": "stage05_task_0031::person_ute_schuler_26132b31b7::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_ute_schuler_26132b31b7",
+    "recipient_value": "ute.schuler@median-kliniken.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median klinik gunzenbachhof baden-baden|http://www.median-kliniken.de|baden-baden|germany",
+    "company_name": "Median Klinik Gunzenbachhof Baden-Baden",
+    "full_name": "Anne Marie Gläsner",
+    "message_target_id": "stage05_task_0031::person_anne_marie_gl_sner_ce23766ebb::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_anne_marie_gl_sner_ce23766ebb",
+    "recipient_value": "annemarie.glaesner@median-kliniken.de",
+    "role_title": "Stellvertretende Pflegedienstleitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median klinik gunzenbachhof baden-baden|http://www.median-kliniken.de|baden-baden|germany",
+    "company_name": "Median Klinik Gunzenbachhof Baden-Baden",
+    "full_name": "Philipp Daum",
+    "message_target_id": "stage05_task_0031::person_philipp_daum_74e86062ea::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_philipp_daum_74e86062ea",
+    "recipient_value": "philipp.daum@median-kliniken.de",
+    "role_title": "Kaufmännische Leitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median klinik gunzenbachhof baden-baden|http://www.median-kliniken.de|baden-baden|germany",
+    "company_name": "Median Klinik Gunzenbachhof Baden-Baden",
+    "full_name": "Philipp Daum",
+    "message_target_id": "stage05_task_0031::person_philipp_daum_74e86062ea::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_philipp_daum_74e86062ea",
+    "recipient_value": "https://de.linkedin.com/in/philipp-daum-9782498",
+    "role_title": "Kaufmännische Leitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median klinik gunzenbachhof baden-baden|http://www.median-kliniken.de|baden-baden|germany",
+    "company_name": "Median Klinik Gunzenbachhof Baden-Baden",
+    "full_name": "Philipp Daum",
+    "message_target_id": "stage05_task_0031::person_philipp_daum_74e86062ea::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_philipp_daum_74e86062ea",
+    "recipient_value": "https://de.linkedin.com/in/philipp-daum-9782498",
+    "role_title": "Kaufmännische Leitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median klinik gunzenbachhof baden-baden|http://www.median-kliniken.de|baden-baden|germany",
+    "company_name": "Median Klinik Gunzenbachhof Baden-Baden",
+    "full_name": "Torsten Kraft",
+    "message_target_id": "stage05_task_0031::person_torsten_kraft_f38fbe4fca::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_torsten_kraft_f38fbe4fca",
+    "recipient_value": "torsten.kraft@median-kliniken.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median klinik gunzenbachhof baden-baden|http://www.median-kliniken.de|baden-baden|germany",
+    "company_name": "Median Klinik Gunzenbachhof Baden-Baden",
+    "full_name": "Torsten Kraft",
+    "message_target_id": "stage05_task_0031::person_torsten_kraft_f38fbe4fca::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_torsten_kraft_f38fbe4fca",
+    "recipient_value": "https://de.linkedin.com/in/torsten-kraft-7517852b7",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0031"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median klinik gunzenbachhof baden-baden|http://www.median-kliniken.de|baden-baden|germany",
+    "company_name": "Median Klinik Gunzenbachhof Baden-Baden",
+    "full_name": "Torsten Kraft",
+    "message_target_id": "stage05_task_0031::person_torsten_kraft_f38fbe4fca::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_torsten_kraft_f38fbe4fca",
+    "recipient_value": "https://de.linkedin.com/in/torsten-kraft-7517852b7",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0031"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ottenhöfen im Schwarzwald",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen (psychiatrische tagesklinik)|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik)",
+    "company_website": "http://www.median-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Alexandra Heinzelmann",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "alexandra.heinzelmann@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Alexandra Heinzelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_alexandra_heinzelmann_7c94c24aa9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://karriere.median-kliniken.de/de/standorte/details/median-achertal-klinik-ottenhoefen/",
+          "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "simon.baltes@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Simon Baltes",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/simon-baltes-264b67386",
+        "person_key": "person_simon_baltes_8d8eadc558",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Leitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/",
+          "https://de.linkedin.com/in/simon-baltes-264b67386"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Kaufmännische Leitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://karriere.median-kliniken.de/de/standorte/details/median-achertal-klinik-ottenhoefen/",
+      "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/",
+      "https://de.linkedin.com/in/simon-baltes-264b67386"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ottenhöfen im Schwarzwald",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "Median Achertal-Klinik Ottenhöfen",
+    "company_website": "http://www.median-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Alexandra Heinzelmann",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Katrin Schmiederer",
+          "person_key": "",
+          "role": "Stationsleitung Station 4"
+        },
+        {
+          "full_name": "Sergej Greb",
+          "person_key": "",
+          "role": "Stationsleitung Station 5"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "alexandra.heinzelmann@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Alexandra Heinzelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_alexandra_heinzelmann_4a23c47ad1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/",
+          "https://karriere.median-kliniken.de/de/standorte/details/median-achertal-klinik-ottenhoefen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "katrin.schmiederer@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Katrin Schmiederer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_katrin_schmiederer_114acaad77",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stationsleitung Station 4",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sergej.greb@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sergej Greb",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sergej_greb_e837161f45",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stationsleitung Station 5",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Stationsleitung Station 4",
+        "Stationsleitung Station 5"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/",
+      "https://karriere.median-kliniken.de/de/standorte/details/median-achertal-klinik-ottenhoefen/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Nordrach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median franz-alexander-klinik nordrach|https://www.median-kliniken.de//de/standorte/median-franz-alexander-klinik-nordrach/klinikprofil/|nordrach|germany",
+    "company_name": "Median Franz-Alexander-Klinik Nordrach",
+    "company_website": "https://www.median-kliniken.de//de/standorte/median-franz-alexander-klinik-nordrach/klinikprofil/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Ute Schuler",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN",
+        "candidate_email": "tobias.willfang@median-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "UNVERIFIED_PROVIDER_EMAIL",
+        "full_name": "Tobias Willfang",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/tobiaswillfang",
+        "person_key": "person_tobias_willfang_de30ef6999",
+        "primary_channel": "LINKEDIN",
+        "role": "Kaufmännischer Leiter",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.dak-klinikfinder.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700",
+          "https://www.median-kliniken.de/de/franz-alexander-klinik-nordrach/unsere-klinik/wer-wir-sind/",
+          "https://www.vdek-kliniklotse.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/7b39df2edc1a7741/start",
+          "https://de.linkedin.com/in/tobiaswillfang"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "ute.schuler@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ute Schuler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ute_schuler_26132b31b7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/franz-alexander-klinik-nordrach/unsere-klinik/wer-wir-sind/",
+          "https://klinikfuehrer.tk.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/7b39df2edc1a7741/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Kaufmännischer Leiter",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.dak-klinikfinder.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700",
+      "https://www.median-kliniken.de/de/franz-alexander-klinik-nordrach/unsere-klinik/wer-wir-sind/",
+      "https://www.vdek-kliniklotse.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/7b39df2edc1a7741/start",
+      "https://de.linkedin.com/in/tobiaswillfang",
+      "https://klinikfuehrer.tk.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Baden-Baden",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median klinik gunzenbachhof baden-baden|http://www.median-kliniken.de|baden-baden|germany",
+    "company_name": "Median Klinik Gunzenbachhof Baden-Baden",
+    "company_website": "http://www.median-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Anne Marie Gläsner",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedienstleitung"
+        },
+        {
+          "full_name": "Torsten Kraft",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "annemarie.glaesner@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anne Marie Gläsner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anne_marie_gl_sner_ce23766ebb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/klinik-gunzenbachhof-baden-baden/unsere-klinik/wer-wir-sind/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "philipp.daum@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Philipp Daum",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/philipp-daum-9782498",
+        "person_key": "person_philipp_daum_74e86062ea",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Leitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/klinik-gunzenbachhof-baden-baden/unsere-klinik/wer-wir-sind/",
+          "https://de.linkedin.com/in/philipp-daum-9782498"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "torsten.kraft@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Torsten Kraft",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/torsten-kraft-7517852b7",
+        "person_key": "person_torsten_kraft_f38fbe4fca",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/klinik-gunzenbachhof-baden-baden/unsere-klinik/wer-wir-sind/",
+          "https://de.linkedin.com/in/torsten-kraft-7517852b7"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedienstleitung",
+        "Kaufmännische Leitung",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.median-kliniken.de/de/klinik-gunzenbachhof-baden-baden/unsere-klinik/wer-wir-sind/",
+      "https://de.linkedin.com/in/philipp-daum-9782498",
+      "https://de.linkedin.com/in/torsten-kraft-7517852b7"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ottenhöfen im Schwarzwald",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen (psychiatrische tagesklinik)|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik)",
+    "company_website": "http://www.median-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Alexandra Heinzelmann",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "alexandra.heinzelmann@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Alexandra Heinzelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_alexandra_heinzelmann_7c94c24aa9",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://karriere.median-kliniken.de/de/standorte/details/median-achertal-klinik-ottenhoefen/",
+          "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "simon.baltes@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Simon Baltes",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/simon-baltes-264b67386",
+        "person_key": "person_simon_baltes_8d8eadc558",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Leitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/",
+          "https://de.linkedin.com/in/simon-baltes-264b67386"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Kaufmännische Leitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://karriere.median-kliniken.de/de/standorte/details/median-achertal-klinik-ottenhoefen/",
+      "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/",
+      "https://de.linkedin.com/in/simon-baltes-264b67386"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Ottenhöfen im Schwarzwald",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median achertal-klinik ottenhöfen|http://www.median-kliniken.de|ottenhöfen im schwarzwald|germany",
+    "company_name": "Median Achertal-Klinik Ottenhöfen",
+    "company_website": "http://www.median-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 3,
+      "decision_makers": [
+        {
+          "full_name": "Alexandra Heinzelmann",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Katrin Schmiederer",
+          "person_key": "",
+          "role": "Stationsleitung Station 4"
+        },
+        {
+          "full_name": "Sergej Greb",
+          "person_key": "",
+          "role": "Stationsleitung Station 5"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "alexandra.heinzelmann@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Alexandra Heinzelmann",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_alexandra_heinzelmann_4a23c47ad1",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/",
+          "https://karriere.median-kliniken.de/de/standorte/details/median-achertal-klinik-ottenhoefen/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "katrin.schmiederer@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Katrin Schmiederer",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_katrin_schmiederer_114acaad77",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stationsleitung Station 4",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "sergej.greb@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Sergej Greb",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_sergej_greb_e837161f45",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stationsleitung Station 5",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung",
+        "Stationsleitung Station 4",
+        "Stationsleitung Station 5"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.median-kliniken.de/de/achertal-klinik-ottenhoefen/unsere-klinik/wer-wir-sind/",
+      "https://karriere.median-kliniken.de/de/standorte/details/median-achertal-klinik-ottenhoefen/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Nordrach",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median franz-alexander-klinik nordrach|https://www.median-kliniken.de//de/standorte/median-franz-alexander-klinik-nordrach/klinikprofil/|nordrach|germany",
+    "company_name": "Median Franz-Alexander-Klinik Nordrach",
+    "company_website": "https://www.median-kliniken.de//de/standorte/median-franz-alexander-klinik-nordrach/klinikprofil/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Ute Schuler",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "LINKEDIN",
+        "candidate_email": "tobias.willfang@median-kliniken.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "UNVERIFIED_PROVIDER_EMAIL",
+        "full_name": "Tobias Willfang",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/tobiaswillfang",
+        "person_key": "person_tobias_willfang_de30ef6999",
+        "primary_channel": "LINKEDIN",
+        "role": "Kaufmännischer Leiter",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.dak-klinikfinder.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700",
+          "https://www.median-kliniken.de/de/franz-alexander-klinik-nordrach/unsere-klinik/wer-wir-sind/",
+          "https://www.vdek-kliniklotse.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/7b39df2edc1a7741/start",
+          "https://de.linkedin.com/in/tobiaswillfang"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "ute.schuler@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Ute Schuler",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_ute_schuler_26132b31b7",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/franz-alexander-klinik-nordrach/unsere-klinik/wer-wir-sind/",
+          "https://klinikfuehrer.tk.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/7b39df2edc1a7741/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management",
+        "operations"
+      ],
+      "roles": [
+        "Kaufmännischer Leiter",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.dak-klinikfinder.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700",
+      "https://www.median-kliniken.de/de/franz-alexander-klinik-nordrach/unsere-klinik/wer-wir-sind/",
+      "https://www.vdek-kliniklotse.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/7b39df2edc1a7741/start",
+      "https://de.linkedin.com/in/tobiaswillfang",
+      "https://klinikfuehrer.tk.de/Franz-Alexander-Klinik-in-77787-Nordrach/uebersicht/krankenhaus/26083086700"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 3,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Baden-Baden",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|median klinik gunzenbachhof baden-baden|http://www.median-kliniken.de|baden-baden|germany",
+    "company_name": "Median Klinik Gunzenbachhof Baden-Baden",
+    "company_website": "http://www.median-kliniken.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Anne Marie Gläsner",
+          "person_key": "",
+          "role": "Stellvertretende Pflegedienstleitung"
+        },
+        {
+          "full_name": "Torsten Kraft",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "annemarie.glaesner@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anne Marie Gläsner",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anne_marie_gl_sner_ce23766ebb",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Stellvertretende Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/klinik-gunzenbachhof-baden-baden/unsere-klinik/wer-wir-sind/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "philipp.daum@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Philipp Daum",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/philipp-daum-9782498",
+        "person_key": "person_philipp_daum_74e86062ea",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Kaufmännische Leitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/klinik-gunzenbachhof-baden-baden/unsere-klinik/wer-wir-sind/",
+          "https://de.linkedin.com/in/philipp-daum-9782498"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "torsten.kraft@median-kliniken.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Torsten Kraft",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/torsten-kraft-7517852b7",
+        "person_key": "person_torsten_kraft_f38fbe4fca",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.median-kliniken.de/de/klinik-gunzenbachhof-baden-baden/unsere-klinik/wer-wir-sind/",
+          "https://de.linkedin.com/in/torsten-kraft-7517852b7"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations",
+        "other_management"
+      ],
+      "roles": [
+        "Stellvertretende Pflegedienstleitung",
+        "Kaufmännische Leitung",
+        "Pflegedienstleitung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.median-kliniken.de/de/klinik-gunzenbachhof-baden-baden/unsere-klinik/wer-wir-sind/",
+      "https://de.linkedin.com/in/philipp-daum-9782498",
+      "https://de.linkedin.com/in/torsten-kraft-7517852b7"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
