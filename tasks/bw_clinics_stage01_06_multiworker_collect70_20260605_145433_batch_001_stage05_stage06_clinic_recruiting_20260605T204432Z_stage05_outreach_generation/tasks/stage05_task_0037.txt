@@ -1,0 +1,1094 @@
+TASK_ID: stage05_task_0037
+
+You generate German clinic recruiting outreach assets.
+
+CRITICAL OUTPUT FORMAT — MUST FOLLOW EXACTLY:
+Return CSV only.
+No markdown.
+No explanations.
+No text before the CSV.
+No text after the CSV.
+
+Every CSV field MUST be double-quoted, including header cells.
+The output MUST start exactly with this double-quoted header:
+
+"task_id","message_target_id","company_identity_key","company_name","person_key","full_name","role_title","asset_type","channel","outreach_bucket","recipient_value","subject","message_body","connection_note","company_hook","personalization_reason","message_status","warning_code","warning_message","is_intermediate","not_snowready"
+
+Every listed message_target_id from ALLOWED_MESSAGE_TARGETS must appear exactly once.
+Use the exact task_id, message_target_id, company_identity_key, person_key, asset_type, channel, outreach_bucket and recipient_value from ALLOWED_MESSAGE_TARGETS.
+Do not add rows.
+Do not skip rows.
+Do not invent recipient_value.
+Do not invent email addresses.
+Do not invent LinkedIn URLs.
+Do not choose other people from COMPANY_CONTEXT.
+
+CSV rules:
+- Escape internal quotes by doubling them.
+- Do not use real physical line breaks inside fields.
+- If paragraph breaks are needed inside message_body, write literal \n\n.
+- No markdown links.
+- No mailto links.
+- Emails must be plain text only.
+- URLs must be plain text only.
+
+Allowed values:
+- asset_type: email, linkedin_connection, linkedin_message
+- channel: confirmed_email, hypothesis_email, linkedin
+- outreach_bucket: confirmed_email_campaign, hypothesis_email_campaign, linkedin_outreach
+- message_status: GENERATED or NEEDS_REVIEW
+- is_intermediate: true
+- not_snowready: true
+
+SERVICE:
+Wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig in Kliniken eingesetzt werden können.
+
+OFFER TO COMMUNICATE:
+- examinierte Pflegefachkräfte
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in der Region / beim jeweiligen Haus
+- Direktvermittlung, keine langfristige Auslandsrekrutierung
+- konkrete Lösung für aktuellen Personalbedarf
+
+TARGET ROLES:
+Priority 1:
+- Pflegedirektion
+- Pflegedienstleitung / PDL
+- Leitung Pflege
+- Direktion Pflege
+
+Priority 2:
+- Personalleitung
+- HR / Recruiting
+- Leitung Personal
+
+Priority 3:
+- Geschäftsführung
+- Kaufmännische Direktion
+- Verwaltungsdirektion
+- Klinikleitung
+
+WRITING STYLE:
+Write short, concrete, professional German.
+Use wir perspective.
+Do not sound like AI marketing.
+Do not over-explain.
+Do not mention scraping, database, automation, AI, lead lists or patterns.
+Do not use “ich habe mir”.
+Do not use “ich habe gesehen”.
+Do not use “Vertriebsliste”.
+Do not promise guaranteed hires.
+Do not claim that a specific vacancy exists unless COMPANY_CONTEXT clearly says so.
+If job/vacancy evidence is weak, write more generally: “falls Sie aktuell oder in den nächsten Monaten Pflegepersonal suchen”.
+
+EMAIL STYLE:
+Subject examples:
+- Examinierte Pflegefachkräfte für {{company_short}}
+- Pflegefachkräfte für {{company_short}}
+- Kurzfristig verfügbare Pflegefachkräfte
+- Pflegepersonal für {{company_short}}
+
+Preferred email body structure:
+Sehr geehrte Frau {{last_name}} / Sehr geehrter Herr {{last_name}} / Guten Tag {{full_name}},
+
+wir haben uns {{company_short}} kurz angeschaut und gesehen, dass Pflegepersonal für Ihr Haus ein relevantes Thema sein dürfte.
+
+Wir haben derzeit examinierte Pflegefachkräfte, die für {{company_short}} interessant sein könnten:
+
+- deutsche Anerkennung als Pflegefachkraft
+- bereits in Deutschland
+- stationäre Erfahrung in deutschen Kliniken
+- kurzfristig einsetzbar
+- Interesse an einer Tätigkeit in {{location_or_region}}
+
+Das ist keine langfristige Auslandsrekrutierung und keine teure Arbeitnehmerüberlassung, sondern Direktvermittlung – eine konkrete Lösung für aktuellen Personalbedarf.
+
+Hätten Sie nächste oder übernächste Woche Zeit für ein kurzes Telefonat oder einen Videocall?
+
+Mit freundlichen Grüßen
+Valentyn Vihandt
+
+EMAIL RULES:
+- Keep email message_body around 500–900 characters.
+- subject max 70 characters.
+- Use literal \n\n for paragraph breaks.
+- Mention the company name naturally.
+- Use location only if available from COMPANY_CONTEXT; otherwise write “Ihrer Region”.
+- For Pflegeleitung / Pflegedirektion: focus on operational staffing need.
+- For HR / Personalleitung: focus on process, contract, candidate fit.
+- For Geschäftsführung / kaufmännische Direktion: focus on practical staffing solution and budget-safe direct placement.
+- If recipient is a hypothesis email, keep message_status GENERATED but make wording slightly more general.
+
+LINKEDIN CONNECTION NOTE:
+Short and natural, max 220 characters.
+Example:
+Hallo Frau {{last_name}}, wir unterstützen Kliniken bei examinierten Pflegefachkräften, die bereits in Deutschland sind. Ich würde mich gerne vernetzen.
+
+LINKEDIN FOLLOW-UP:
+Hard limit: 220–320 characters.
+One paragraph only.
+Maximum 3 short sentences.
+Do not use the full email structure.
+Example:
+Hallo Frau {{last_name}}, wir vermitteln examinierte Pflegefachkräfte, die bereits in Deutschland sind und kurzfristig starten können. Falls Pflegepersonal bei {{company_short}} aktuell ein Thema ist, können wir uns kurz austauschen?
+
+ADDRESS:
+If gender is clear:
+- male: Sehr geehrter Herr {{last_name}}
+- female: Sehr geehrte Frau {{last_name}}
+If unclear:
+- Guten Tag {{full_name}}
+
+COMPANY_CONTEXT:
+Use COMPANY_CONTEXT only for safe personalization:
+- company_short
+- location/region
+- role/title
+- visible staffing signal if clearly present
+Do not invent precise facts.
+
+QUALITY:
+For every target, generate a usable outreach asset.
+If there is not enough personalization data, use the fallback clinic wording.
+
+STRICT_OUTPUT_CSV_HEADER:
+task_id,message_target_id,company_identity_key,company_name,person_key,full_name,role_title,asset_type,channel,outreach_bucket,recipient_value,subject,message_body,connection_note,company_hook,personalization_reason,message_status,warning_code,warning_message,is_intermediate,not_snowready
+
+ALLOWED_MESSAGE_TARGETS:
+[
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|orthopädische klinik markgröningen|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/orthopaedische-klinik-markgroeningen/|markgröningen|germany",
+    "company_name": "Orthopädische Klinik Markgröningen",
+    "full_name": "Anna-Maria Wolfram",
+    "message_target_id": "stage05_task_0037::person_anna_maria_wolfram_f67621dc65::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_anna_maria_wolfram_f67621dc65",
+    "recipient_value": "anna-maria.wolfram@rkh-gesundheit.de",
+    "role_title": "Referentin Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|orthopädische klinik markgröningen|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/orthopaedische-klinik-markgroeningen/|markgröningen|germany",
+    "company_name": "Orthopädische Klinik Markgröningen",
+    "full_name": "Fariba Khatib-Haghyghy",
+    "message_target_id": "stage05_task_0037::person_fariba_khatib_haghyghy_d955184be6::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_fariba_khatib_haghyghy_d955184be6",
+    "recipient_value": "fariba.khatib-haghyghy@rkh-gesundheit.de",
+    "role_title": "Direktorin Pflege- und Prozessmanagement",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ostalb-klinikum aalen|http://www.ostalbklinikum.de|aalen|germany",
+    "company_name": "Ostalb-Klinikum Aalen",
+    "full_name": "Tobias Kinzl",
+    "message_target_id": "stage05_task_0037::person_tobias_kinzl_6868a91931::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_tobias_kinzl_6868a91931",
+    "recipient_value": "tobias.kinzl@kliniken-ostalb.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ostalb-klinikum aalen|http://www.ostalbklinikum.de|aalen|germany",
+    "company_name": "Ostalb-Klinikum Aalen",
+    "full_name": "Tobias Kinzl",
+    "message_target_id": "stage05_task_0037::person_tobias_kinzl_6868a91931::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tobias_kinzl_6868a91931",
+    "recipient_value": "https://de.linkedin.com/in/tobias-kinzl-423145347",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ostalb-klinikum aalen|http://www.ostalbklinikum.de|aalen|germany",
+    "company_name": "Ostalb-Klinikum Aalen",
+    "full_name": "Tobias Kinzl",
+    "message_target_id": "stage05_task_0037::person_tobias_kinzl_6868a91931::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tobias_kinzl_6868a91931",
+    "recipient_value": "https://de.linkedin.com/in/tobias-kinzl-423145347",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ostalb-klinikum aalen|http://www.ostalbklinikum.de|aalen|germany",
+    "company_name": "Ostalb-Klinikum Aalen",
+    "full_name": "Tobias Kinzl",
+    "message_target_id": "stage05_task_0037::person_tobias_kinzl_5d7dfbb5a8::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_tobias_kinzl_5d7dfbb5a8",
+    "recipient_value": "tobias.kinzl@kliniken-ostalb.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ostalb-klinikum aalen|http://www.ostalbklinikum.de|aalen|germany",
+    "company_name": "Ostalb-Klinikum Aalen",
+    "full_name": "Tobias Kinzl",
+    "message_target_id": "stage05_task_0037::person_tobias_kinzl_5d7dfbb5a8::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tobias_kinzl_5d7dfbb5a8",
+    "recipient_value": "https://de.linkedin.com/in/tobias-kinzl-423145347",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ostalb-klinikum aalen|http://www.ostalbklinikum.de|aalen|germany",
+    "company_name": "Ostalb-Klinikum Aalen",
+    "full_name": "Tobias Kinzl",
+    "message_target_id": "stage05_task_0037::person_tobias_kinzl_5d7dfbb5a8::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_tobias_kinzl_5d7dfbb5a8",
+    "recipient_value": "https://de.linkedin.com/in/tobias-kinzl-423145347",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|panoramaklinik esslingen||esslingen am neckar|germany",
+    "company_name": "Panoramaklinik Esslingen",
+    "full_name": "Dr. med. Peter Czisch",
+    "message_target_id": "stage05_task_0037::person_dr_med_peter_czisch_fa71703914::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_med_peter_czisch_fa71703914",
+    "recipient_value": "Peter.Czisch@samariterstiftung.de",
+    "role_title": "Leitender Arzt / Klinikleitung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "linkedin_connection",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|panoramaklinik esslingen||esslingen am neckar|germany",
+    "company_name": "Panoramaklinik Esslingen",
+    "full_name": "Dr. med. Peter Czisch",
+    "message_target_id": "stage05_task_0037::person_dr_med_peter_czisch_fa71703914::linkedin_connection::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_med_peter_czisch_fa71703914",
+    "recipient_value": "https://de.linkedin.com/in/peter-czisch-87bb4789",
+    "role_title": "Leitender Arzt / Klinikleitung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "linkedin_message",
+    "channel": "linkedin",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|panoramaklinik esslingen||esslingen am neckar|germany",
+    "company_name": "Panoramaklinik Esslingen",
+    "full_name": "Dr. med. Peter Czisch",
+    "message_target_id": "stage05_task_0037::person_dr_med_peter_czisch_fa71703914::linkedin_message::linkedin",
+    "outreach_bucket": "linkedin_outreach",
+    "person_key": "person_dr_med_peter_czisch_fa71703914",
+    "recipient_value": "https://de.linkedin.com/in/peter-czisch-87bb4789",
+    "role_title": "Leitender Arzt / Klinikleitung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|paracelsus krankenhaus in bad liebenzell|http://www.paracelsus-krankenhaus.de|bad liebenzell|germany",
+    "company_name": "Paracelsus Krankenhaus in Bad Liebenzell",
+    "full_name": "Dr. Thomas Breitkreuz",
+    "message_target_id": "stage05_task_0037::person_dr_thomas_breitkreuz_2efe8e2916::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_dr_thomas_breitkreuz_2efe8e2916",
+    "recipient_value": "t.breitkreuz@paracelsus-krankenhaus.de",
+    "role_title": "Ärztliche Leitung Vorstand und Geschäftsführung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "email",
+    "channel": "confirmed_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|paracelsus krankenhaus in bad liebenzell|http://www.paracelsus-krankenhaus.de|bad liebenzell|germany",
+    "company_name": "Paracelsus Krankenhaus in Bad Liebenzell",
+    "full_name": "Michaela Zeller",
+    "message_target_id": "stage05_task_0037::person_michaela_zeller_570374477d::email::confirmed_email",
+    "outreach_bucket": "confirmed_email_campaign",
+    "person_key": "person_michaela_zeller_570374477d",
+    "recipient_value": "m.zeller@paracelsus-krankenhaus.de",
+    "role_title": "Pflegedienstleitung",
+    "task_id": "stage05_task_0037"
+  },
+  {
+    "asset_type": "email",
+    "channel": "hypothesis_email",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|paracelsus krankenhaus in bad liebenzell|http://www.paracelsus-krankenhaus.de|bad liebenzell|germany",
+    "company_name": "Paracelsus Krankenhaus in Bad Liebenzell",
+    "full_name": "Volker Ernst",
+    "message_target_id": "stage05_task_0037::person_volker_ernst_f80344e45d::email::hypothesis_email",
+    "outreach_bucket": "hypothesis_email_campaign",
+    "person_key": "person_volker_ernst_f80344e45d",
+    "recipient_value": "v.ernst@paracelsus-krankenhaus.de",
+    "role_title": "Vorstand Kaufmännische Geschäftsführung",
+    "task_id": "stage05_task_0037"
+  }
+]
+
+COMPANY_PACKS:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Markgröningen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|orthopädische klinik markgröningen|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/orthopaedische-klinik-markgroeningen/|markgröningen|germany",
+    "company_name": "Orthopädische Klinik Markgröningen",
+    "company_website": "https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/orthopaedische-klinik-markgroeningen/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Anna-Maria Wolfram",
+          "person_key": "",
+          "role": "Referentin Pflege- und Prozessmanagement"
+        },
+        {
+          "full_name": "Fariba Khatib-Haghyghy",
+          "person_key": "",
+          "role": "Direktorin Pflege- und Prozessmanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "anna-maria.wolfram@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anna-Maria Wolfram",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anna_maria_wolfram_f67621dc65",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Referentin Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/team/",
+          "https://www.rkh-karriere.de/studium/studium-in-der-pflege/studiengang-pflege-bsc/",
+          "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "fariba.khatib-haghyghy@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Fariba Khatib-Haghyghy",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_fariba_khatib_haghyghy_d955184be6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktorin Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/team/",
+          "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Referentin Pflege- und Prozessmanagement",
+        "Direktorin Pflege- und Prozessmanagement"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/team/",
+      "https://www.rkh-karriere.de/studium/studium-in-der-pflege/studiengang-pflege-bsc/",
+      "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Aalen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ostalb-klinikum aalen|http://www.ostalbklinikum.de|aalen|germany",
+    "company_name": "Ostalb-Klinikum Aalen",
+    "company_website": "http://www.ostalbklinikum.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Tobias Kinzl",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Tobias Kinzl",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "tobias.kinzl@kliniken-ostalb.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Tobias Kinzl",
+        "hypothesis_email": "tobias.kinzl@kliniken-ostalb.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/tobias-kinzl-423145347",
+        "person_key": "person_tobias_kinzl_6868a91931",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-ostalb.de/pflege-therapie/pflegedirektion",
+          "https://www.kliniken-ostalb.de/uploads/press_release/download/899/PM_Zentral-OP_im_Ostalb-Klinikum_weiterhin_geschlossen.pdf",
+          "https://www.mediportal-ostalbkreis.de/sixcms/detail.php?id=332939",
+          "https://de.linkedin.com/in/tobias-kinzl-423145347"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "tobias.kinzl@kliniken-ostalb.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Tobias Kinzl",
+        "hypothesis_email": "tobias.kinzl@kliniken-ostalb.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/tobias-kinzl-423145347",
+        "person_key": "person_tobias_kinzl_5d7dfbb5a8",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-ostalb.de/pflege-therapie/pflegedirektion",
+          "https://www.kliniken-ostalb.de/uploads/press_release/download/899/PM_Zentral-OP_im_Ostalb-Klinikum_weiterhin_geschlossen.pdf",
+          "https://www.mediportal-ostalbkreis.de/sixcms/detail.php?id=332939",
+          "https://de.linkedin.com/in/tobias-kinzl-423145347"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.kliniken-ostalb.de/pflege-therapie/pflegedirektion",
+      "https://www.kliniken-ostalb.de/uploads/press_release/download/899/PM_Zentral-OP_im_Ostalb-Klinikum_weiterhin_geschlossen.pdf",
+      "https://www.mediportal-ostalbkreis.de/sixcms/detail.php?id=332939",
+      "https://de.linkedin.com/in/tobias-kinzl-423145347"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Esslingen am Neckar",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|panoramaklinik esslingen||esslingen am neckar|germany",
+    "company_name": "Panoramaklinik Esslingen",
+    "company_website": "",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 0,
+      "decision_makers": []
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Peter.Czisch@samariterstiftung.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. med. Peter Czisch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/peter-czisch-87bb4789",
+        "person_key": "person_dr_med_peter_czisch_fa71703914",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitender Arzt / Klinikleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.dpg-stuttgart.de/CMS2014/upload/TP-Dokumente/allgemeine%20Dokumente/Kooperierende%20Psychiatrische%20Kliniken%20f%C3%BCr%20PiA%20Praktikum%20DPG%20Stuttgart%202024%2005.pdf",
+          "https://www.samariterstiftung.de/standorte/sozialpsychiatrie/esslingen/panoramaklinik-esslingen.html",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/510814300-773080000-2023-xml.pdf",
+          "https://de.linkedin.com/in/peter-czisch-87bb4789"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management"
+      ],
+      "roles": [
+        "Leitender Arzt / Klinikleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.dpg-stuttgart.de/CMS2014/upload/TP-Dokumente/allgemeine%20Dokumente/Kooperierende%20Psychiatrische%20Kliniken%20f%C3%BCr%20PiA%20Praktikum%20DPG%20Stuttgart%202024%2005.pdf",
+      "https://www.samariterstiftung.de/standorte/sozialpsychiatrie/esslingen/panoramaklinik-esslingen.html",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/510814300-773080000-2023-xml.pdf",
+      "https://de.linkedin.com/in/peter-czisch-87bb4789"
+    ],
+    "warnings": [
+      "Missing stable company identity fields: company_website"
+    ]
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Liebenzell",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|paracelsus krankenhaus in bad liebenzell|http://www.paracelsus-krankenhaus.de|bad liebenzell|germany",
+    "company_name": "Paracelsus Krankenhaus in Bad Liebenzell",
+    "company_website": "http://www.paracelsus-krankenhaus.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Michaela Zeller",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "t.breitkreuz@paracelsus-krankenhaus.de",
+        "confirmed_email": "t.breitkreuz@paracelsus-krankenhaus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Thomas Breitkreuz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_thomas_breitkreuz_2efe8e2916",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Leitung Vorstand und Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.krebsverband-bw.de/fuer-fachpersonal/arbeitsgemeinschaft-der-transdisziplinaeren-onkologischen-versorgung-ato/",
+          "https://www.paracelsus-krankenhaus.de/unser-haus/vorstand-/-aerztliche-leitung",
+          "https://www.paracelsus-krankenhaus.de/fileadmin/Content/Downloads/Qualitaetsbericht_2024.pdf",
+          "https://www.kim-bw.de/newpageeda01f2f",
+          "https://de.linkedin.com/pub/dir/Thomas/Breitkreuz",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/68926ba8ea3085b2/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.zeller@paracelsus-krankenhaus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michaela Zeller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michaela_zeller_570374477d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kim-bw.de/newpageeda01f2f",
+          "https://www.paracelsus-krankenhaus.de/fileadmin/Content/Downloads/Qualitaetsbericht_2024.pdf",
+          "https://salutemyjob.com/jobs/pflegefachkraft-m-w-d-fur-anthroposophische-medizin-bad-liebenzell-baden-wurttemberg/2744820566-2/",
+          "https://www.stepstone.de/stellenangebote--Pflegefachkraft-m-w-d-Bad-Liebenzell-Paracelsus-Krankenhaus-Unterlengenhardt-e-V--13701241-inline.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "v.ernst@paracelsus-krankenhaus.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Volker Ernst",
+        "hypothesis_email": "v.ernst@paracelsus-krankenhaus.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_volker_ernst_f80344e45d",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Vorstand Kaufmännische Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.paracelsus-krankenhaus.de/fileadmin/Content/Downloads/Qualitaetsbericht_2024.pdf",
+          "https://www.kim-bw.de/newpageeda01f2f",
+          "https://www.paracelsus-krankenhaus.de/unser-haus/vorstand-/-aerztliche-leitung",
+          "https://www.paracelsus-krankenhaus.de/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/68926ba8ea3085b2/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Ärztliche Leitung Vorstand und Geschäftsführung",
+        "Pflegedienstleitung",
+        "Vorstand Kaufmännische Geschäftsführung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.krebsverband-bw.de/fuer-fachpersonal/arbeitsgemeinschaft-der-transdisziplinaeren-onkologischen-versorgung-ato/",
+      "https://www.paracelsus-krankenhaus.de/unser-haus/vorstand-/-aerztliche-leitung",
+      "https://www.paracelsus-krankenhaus.de/fileadmin/Content/Downloads/Qualitaetsbericht_2024.pdf",
+      "https://www.kim-bw.de/newpageeda01f2f",
+      "https://de.linkedin.com/pub/dir/Thomas/Breitkreuz",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/68926ba8ea3085b2/start",
+      "https://salutemyjob.com/jobs/pflegefachkraft-m-w-d-fur-anthroposophische-medizin-bad-liebenzell-baden-wurttemberg/2744820566-2/",
+      "https://www.stepstone.de/stellenangebote--Pflegefachkraft-m-w-d-Bad-Liebenzell-Paracelsus-Krankenhaus-Unterlengenhardt-e-V--13701241-inline.html",
+      "https://www.paracelsus-krankenhaus.de/"
+    ],
+    "warnings": []
+  }
+]
+
+COMPANY_CONTEXT:
+[
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Markgröningen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|orthopädische klinik markgröningen|https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/orthopaedische-klinik-markgroeningen/|markgröningen|germany",
+    "company_name": "Orthopädische Klinik Markgröningen",
+    "company_website": "https://www.rkh-gesundheit.de/kliniken-zentren/unsere-kliniken/orthopaedische-klinik-markgroeningen/",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Anna-Maria Wolfram",
+          "person_key": "",
+          "role": "Referentin Pflege- und Prozessmanagement"
+        },
+        {
+          "full_name": "Fariba Khatib-Haghyghy",
+          "person_key": "",
+          "role": "Direktorin Pflege- und Prozessmanagement"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "anna-maria.wolfram@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Anna-Maria Wolfram",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_anna_maria_wolfram_f67621dc65",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Referentin Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/team/",
+          "https://www.rkh-karriere.de/studium/studium-in-der-pflege/studiengang-pflege-bsc/",
+          "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "fariba.khatib-haghyghy@rkh-gesundheit.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Fariba Khatib-Haghyghy",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_fariba_khatib_haghyghy_d955184be6",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Direktorin Pflege- und Prozessmanagement",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/team/",
+          "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Referentin Pflege- und Prozessmanagement",
+        "Direktorin Pflege- und Prozessmanagement"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/team/",
+      "https://www.rkh-karriere.de/studium/studium-in-der-pflege/studiengang-pflege-bsc/",
+      "https://www.rkh-gesundheit.de/orthopaedische-klinik-markgroeningen/behandlung/pflege/"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 0,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 2,
+      "linkedin_count": 2,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Aalen",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|ostalb-klinikum aalen|http://www.ostalbklinikum.de|aalen|germany",
+    "company_name": "Ostalb-Klinikum Aalen",
+    "company_website": "http://www.ostalbklinikum.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 2,
+      "decision_makers": [
+        {
+          "full_name": "Tobias Kinzl",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        },
+        {
+          "full_name": "Tobias Kinzl",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "tobias.kinzl@kliniken-ostalb.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Tobias Kinzl",
+        "hypothesis_email": "tobias.kinzl@kliniken-ostalb.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/tobias-kinzl-423145347",
+        "person_key": "person_tobias_kinzl_6868a91931",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-ostalb.de/pflege-therapie/pflegedirektion",
+          "https://www.kliniken-ostalb.de/uploads/press_release/download/899/PM_Zentral-OP_im_Ostalb-Klinikum_weiterhin_geschlossen.pdf",
+          "https://www.mediportal-ostalbkreis.de/sixcms/detail.php?id=332939",
+          "https://de.linkedin.com/in/tobias-kinzl-423145347"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS|LINKEDIN",
+        "candidate_email": "tobias.kinzl@kliniken-ostalb.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "linkedin",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Tobias Kinzl",
+        "hypothesis_email": "tobias.kinzl@kliniken-ostalb.de",
+        "linkedin_profile_url": "https://de.linkedin.com/in/tobias-kinzl-423145347",
+        "person_key": "person_tobias_kinzl_5d7dfbb5a8",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kliniken-ostalb.de/pflege-therapie/pflegedirektion",
+          "https://www.kliniken-ostalb.de/uploads/press_release/download/899/PM_Zentral-OP_im_Ostalb-Klinikum_weiterhin_geschlossen.pdf",
+          "https://www.mediportal-ostalbkreis.de/sixcms/detail.php?id=332939",
+          "https://de.linkedin.com/in/tobias-kinzl-423145347"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "operations"
+      ],
+      "roles": [
+        "Pflegedienstleitung"
+      ],
+      "total_people": 2
+    },
+    "source_urls": [
+      "https://www.kliniken-ostalb.de/pflege-therapie/pflegedirektion",
+      "https://www.kliniken-ostalb.de/uploads/press_release/download/899/PM_Zentral-OP_im_Ostalb-Klinikum_weiterhin_geschlossen.pdf",
+      "https://www.mediportal-ostalbkreis.de/sixcms/detail.php?id=332939",
+      "https://de.linkedin.com/in/tobias-kinzl-423145347"
+    ],
+    "warnings": []
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 1,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 0,
+      "linkedin_count": 1,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Esslingen am Neckar",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|panoramaklinik esslingen||esslingen am neckar|germany",
+    "company_name": "Panoramaklinik Esslingen",
+    "company_website": "",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 0,
+      "decision_makers": []
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED|LINKEDIN",
+        "candidate_email": "",
+        "confirmed_email": "Peter.Czisch@samariterstiftung.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. med. Peter Czisch",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "https://de.linkedin.com/in/peter-czisch-87bb4789",
+        "person_key": "person_dr_med_peter_czisch_fa71703914",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Leitender Arzt / Klinikleitung",
+        "role_category": "other_management",
+        "source_urls": [
+          "https://www.dpg-stuttgart.de/CMS2014/upload/TP-Dokumente/allgemeine%20Dokumente/Kooperierende%20Psychiatrische%20Kliniken%20f%C3%BCr%20PiA%20Praktikum%20DPG%20Stuttgart%202024%2005.pdf",
+          "https://www.samariterstiftung.de/standorte/sozialpsychiatrie/esslingen/panoramaklinik-esslingen.html",
+          "https://qb-referenzdatenbank.g-ba.de/api/download/510814300-773080000-2023-xml.pdf",
+          "https://de.linkedin.com/in/peter-czisch-87bb4789"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "other_management"
+      ],
+      "roles": [
+        "Leitender Arzt / Klinikleitung"
+      ],
+      "total_people": 1
+    },
+    "source_urls": [
+      "https://www.dpg-stuttgart.de/CMS2014/upload/TP-Dokumente/allgemeine%20Dokumente/Kooperierende%20Psychiatrische%20Kliniken%20f%C3%BCr%20PiA%20Praktikum%20DPG%20Stuttgart%202024%2005.pdf",
+      "https://www.samariterstiftung.de/standorte/sozialpsychiatrie/esslingen/panoramaklinik-esslingen.html",
+      "https://qb-referenzdatenbank.g-ba.de/api/download/510814300-773080000-2023-xml.pdf",
+      "https://de.linkedin.com/in/peter-czisch-87bb4789"
+    ],
+    "warnings": [
+      "Missing stable company identity fields: company_website"
+    ]
+  },
+  {
+    "channel_summary": {
+      "confirmed_email_count": 2,
+      "generic_route_count": 0,
+      "hypothesis_email_count": 1,
+      "linkedin_count": 0,
+      "no_channel_count": 0,
+      "phone_route_count": 0
+    },
+    "city": "Bad Liebenzell",
+    "company_identity_key": "bw_clinics_stage01_06_multiworker_collect70_20260605_145433|batch_001|paracelsus krankenhaus in bad liebenzell|http://www.paracelsus-krankenhaus.de|bad liebenzell|germany",
+    "company_name": "Paracelsus Krankenhaus in Bad Liebenzell",
+    "company_website": "http://www.paracelsus-krankenhaus.de",
+    "country": "Germany",
+    "decision_maker_summary": {
+      "decision_maker_count": 1,
+      "decision_makers": [
+        {
+          "full_name": "Michaela Zeller",
+          "person_key": "",
+          "role": "Pflegedienstleitung"
+        }
+      ]
+    },
+    "entry_signal": {
+      "notes": "",
+      "source": "",
+      "type": "",
+      "url": ""
+    },
+    "people": [
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "t.breitkreuz@paracelsus-krankenhaus.de",
+        "confirmed_email": "t.breitkreuz@paracelsus-krankenhaus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Dr. Thomas Breitkreuz",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_dr_thomas_breitkreuz_2efe8e2916",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Ärztliche Leitung Vorstand und Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.krebsverband-bw.de/fuer-fachpersonal/arbeitsgemeinschaft-der-transdisziplinaeren-onkologischen-versorgung-ato/",
+          "https://www.paracelsus-krankenhaus.de/unser-haus/vorstand-/-aerztliche-leitung",
+          "https://www.paracelsus-krankenhaus.de/fileadmin/Content/Downloads/Qualitaetsbericht_2024.pdf",
+          "https://www.kim-bw.de/newpageeda01f2f",
+          "https://de.linkedin.com/pub/dir/Thomas/Breitkreuz",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/68926ba8ea3085b2/start"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_CONFIRMED",
+        "candidate_email": "",
+        "confirmed_email": "m.zeller@paracelsus-krankenhaus.de",
+        "contact_evidence_status": "confirmed_email",
+        "email_status": "FOUND_PERSON_COMPANY_EMAIL",
+        "full_name": "Michaela Zeller",
+        "hypothesis_email": "",
+        "linkedin_profile_url": "",
+        "person_key": "person_michaela_zeller_570374477d",
+        "primary_channel": "EMAIL_CONFIRMED",
+        "role": "Pflegedienstleitung",
+        "role_category": "operations",
+        "source_urls": [
+          "https://www.kim-bw.de/newpageeda01f2f",
+          "https://www.paracelsus-krankenhaus.de/fileadmin/Content/Downloads/Qualitaetsbericht_2024.pdf",
+          "https://salutemyjob.com/jobs/pflegefachkraft-m-w-d-fur-anthroposophische-medizin-bad-liebenzell-baden-wurttemberg/2744820566-2/",
+          "https://www.stepstone.de/stellenangebote--Pflegefachkraft-m-w-d-Bad-Liebenzell-Paracelsus-Krankenhaus-Unterlengenhardt-e-V--13701241-inline.html"
+        ]
+      },
+      {
+        "available_channels": "EMAIL_HYPOTHESIS",
+        "candidate_email": "v.ernst@paracelsus-krankenhaus.de",
+        "confirmed_email": "",
+        "contact_evidence_status": "hypothesis_email",
+        "email_status": "STRONG_PATTERN_HYPOTHESIS",
+        "full_name": "Volker Ernst",
+        "hypothesis_email": "v.ernst@paracelsus-krankenhaus.de",
+        "linkedin_profile_url": "",
+        "person_key": "person_volker_ernst_f80344e45d",
+        "primary_channel": "EMAIL_HYPOTHESIS",
+        "role": "Vorstand Kaufmännische Geschäftsführung",
+        "role_category": "founder_ceo",
+        "source_urls": [
+          "https://www.paracelsus-krankenhaus.de/fileadmin/Content/Downloads/Qualitaetsbericht_2024.pdf",
+          "https://www.kim-bw.de/newpageeda01f2f",
+          "https://www.paracelsus-krankenhaus.de/unser-haus/vorstand-/-aerztliche-leitung",
+          "https://www.paracelsus-krankenhaus.de/",
+          "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/68926ba8ea3085b2/start"
+        ]
+      }
+    ],
+    "people_summary": {
+      "role_categories": [
+        "founder_ceo",
+        "operations"
+      ],
+      "roles": [
+        "Ärztliche Leitung Vorstand und Geschäftsführung",
+        "Pflegedienstleitung",
+        "Vorstand Kaufmännische Geschäftsführung"
+      ],
+      "total_people": 3
+    },
+    "source_urls": [
+      "https://www.krebsverband-bw.de/fuer-fachpersonal/arbeitsgemeinschaft-der-transdisziplinaeren-onkologischen-versorgung-ato/",
+      "https://www.paracelsus-krankenhaus.de/unser-haus/vorstand-/-aerztliche-leitung",
+      "https://www.paracelsus-krankenhaus.de/fileadmin/Content/Downloads/Qualitaetsbericht_2024.pdf",
+      "https://www.kim-bw.de/newpageeda01f2f",
+      "https://de.linkedin.com/pub/dir/Thomas/Breitkreuz",
+      "https://www.deutsches-krankenhaus-verzeichnis.de/app/portrait/68926ba8ea3085b2/start",
+      "https://salutemyjob.com/jobs/pflegefachkraft-m-w-d-fur-anthroposophische-medizin-bad-liebenzell-baden-wurttemberg/2744820566-2/",
+      "https://www.stepstone.de/stellenangebote--Pflegefachkraft-m-w-d-Bad-Liebenzell-Paracelsus-Krankenhaus-Unterlengenhardt-e-V--13701241-inline.html",
+      "https://www.paracelsus-krankenhaus.de/"
+    ],
+    "warnings": []
+  }
+]
+
+Return CSV only. No markdown. No explanations.
