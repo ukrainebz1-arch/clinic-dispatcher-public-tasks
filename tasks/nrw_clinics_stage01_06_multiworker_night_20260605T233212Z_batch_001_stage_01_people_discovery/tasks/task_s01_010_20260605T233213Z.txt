@@ -1,0 +1,89 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260605T233212Z_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_010_20260605T233213Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_010_20260605T233213Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260605T233212Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260605T233212Z_batch_001_stage_01_people_discovery
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260605T233212Z/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: St. Antonius-Hospital Gronau | company_website: http://www.st-antonius-gronau.de | city: Gronau | country: Germany | source_url: https://klinikradar.de/kliniken/st-antonius-hospital-gronau | pflegekraefte: 266.0
+2. company_name: Waldkrankenhaus Bonn | company_website: https://www.johanniter.de/johanniter-kliniken/johanniter-kliniken-bonn/ | city: Bonn | country: Germany | source_url: https://klinikradar.de/kliniken/waldkrankenhaus-bonn | pflegekraefte: 229.0
+3. company_name: Evangelisches Krankenhaus Hagen-Haspe | company_website: http://www.evk-haspe.de | city: Hagen | country: Germany | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-hagen-haspe | pflegekraefte: 290.0
+4. company_name: GFO Klinik Engelskirchen - St. Josef Krankenhaus | company_website: http://www.k-k-o.de | city: Engelskirchen | country: Germany | source_url: https://klinikradar.de/kliniken/gfo-klinik-engelskirchen-st-josef-krankenhaus | pflegekraefte: 165.0
+5. company_name: Katholisches Krankenhaus Dortmund-West | company_website: http://www.krankenhaus-kirchlinde.de | city: Dortmund | country: Germany | source_url: https://klinikradar.de/kliniken/katholisches-krankenhaus-dortmund-west | pflegekraefte: 192.0
+6. company_name: Bethlehem Gesundheitszentrum Stolberg | company_website: http://www.bethlehem.de | city: Stolberg | country: Germany | source_url: https://klinikradar.de/kliniken/bethlehem-gesundheitszentrum-stolberg | pflegekraefte: 308.0
+7. company_name: Raphaelsklinik in Münster | company_website: https://www.raphaelsklinik.de | city: Münster | country: Germany | source_url: https://klinikradar.de/kliniken/raphaelsklinik | pflegekraefte: 239.0
+8. company_name: LWL-Klinik Lengerich | company_website: http://www.lwl-klinik-lengerich.de | city: Lengerich | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-lengerich | pflegekraefte: 213.0
+9. company_name: Sportklinik Hellersen in Lüdenscheid | company_website: http://www.sportklinik-hellersen.de | city: Lüdenscheid | country: Germany | source_url: https://klinikradar.de/kliniken/sportklinik-hellersen | pflegekraefte: 146.0
+10. company_name: St. Franziskus-Hospital Ahlen in Ahlen, Westfalen | company_website: http://www.sfh-ahlen.de | city: Ahlen | country: Germany | source_url: https://klinikradar.de/kliniken/st-franziskus-hospital-ahlen | pflegekraefte: 289.0
+11. company_name: KEM Evang. Krankenhaus Essen-Steele | company_website: http://www.kem-med.com | city: Essen | country: Germany | source_url: https://klinikradar.de/kliniken/kem-evang-krankenhaus-essen-steele | pflegekraefte: 150.0
+12. company_name: Sankt Marien-Hospital Buer in Gelsenkirchen | company_website: https://www.kern.ruhr/ | city: Gelsenkirchen | country: Germany | source_url: https://klinikradar.de/kliniken/sankt-marien-hospital-buer | pflegekraefte: 265.0
+13. company_name: St. Remigius Krankenhaus Opladen in Leverkusen | company_website: http://www.remigius.de | city: Leverkusen | country: Germany | source_url: https://klinikradar.de/kliniken/st-remigius-krankenhaus-opladen | pflegekraefte: 178.0
+14. company_name: Johanniter-Krankenhaus Rheinhausen in Duisburg | company_website: http://www.johanniter-rheinhausen.de/ | city: Duisburg | country: Germany | source_url: https://klinikradar.de/kliniken/johanniter-krankenhaus-rheinhausen | pflegekraefte: 285.0
+15. company_name: St. Josef Hospital Bad Driburg | company_website: http://www.khwe.de/ | city: Bad Driburg | country: Germany | source_url: https://klinikradar.de/kliniken/st-josef-hospital-bad-driburg | pflegekraefte: 179.0
+16. company_name: Evangelisches Krankenhaus Mettmann | company_website: http://www.evk-mettmann.de | city: Mettmann | country: Germany | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-mettmann | pflegekraefte: 229.0
+17. company_name: St. Elisabeth-Krankenhaus Geilenkirchen | company_website: https://www.krankenhaus-geilenkirchen.de | city: Geilenkirchen | country: Germany | source_url: https://klinikradar.de/kliniken/st-elisabeth-krankenhaus-geilenkirchen | pflegekraefte: 296.0
+18. company_name: Vestische Kinder- und Jugendklinik Datteln | company_website: http://www.kinderklinik-datteln.de | city: Datteln | country: Germany | source_url: https://klinikradar.de/kliniken/vestische-kinder-und-jugendklinik-datteln | pflegekraefte: 296.0
+19. company_name: Hospital zum Heiligen Geist Kempen in Kempen, Niederrhein | company_website: http://www.krankenhaus-kempen.de | city: Kempen | country: Germany | source_url: https://klinikradar.de/kliniken/hospital-zum-heiligen-geist-kempen | pflegekraefte: 312.0
+20. company_name: Josephs-Hospital Warendorf | company_website: http://www.jhwaf.de | city: Warendorf | country: Germany | source_url: https://klinikradar.de/kliniken/josephs-hospital-warendorf | pflegekraefte: 392.0
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_010_20260605T233213Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
