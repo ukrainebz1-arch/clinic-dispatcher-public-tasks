@@ -1,0 +1,89 @@
+RUN_ID: bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_004_20260605T144317Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_004_20260605T144317Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317
+- batch_id: batch_001
+- run_id: bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317_batch_001_stage_01_people_discovery
+- input_csv: campaigns/bw_clinics_stage01_06_multiworker_wave_restart_20260605_144317/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Thoraxklinik Heidelberg | company_website: http://www.thoraxklinik-heidelberg.de/ | city: Heidelberg | country: Germany | source_url: https://klinikradar.de/kliniken/thoraxklinik-heidelberg | pflegekraefte: 237
+2. company_name: Klinikum Hochrhein in Waldshut-Tiengen | company_website: http://www.klinikum-hochrhein.de | city: Waldshut-Tiengen | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-hochrhein | pflegekraefte: 232
+3. company_name: Universitäts-Herzzentrum Freiburg (Bad Krozingen) | company_website: https://www.uniklinik-freiburg.de/de.html | city: Bad Krozingen | country: Germany | source_url: https://klinikradar.de/kliniken/universitaets-herzzentrum-freiburg-bad-krozingen | pflegekraefte: 438
+4. company_name: St. Josefskrankenhaus in Freiburg im Breisgau | company_website: https://www.josefskrankenhaus-freiburg.de | city: Freiburg im Breisgau | country: Germany | source_url: https://klinikradar.de/kliniken/st-josefskrankenhaus | pflegekraefte: 326
+5. company_name: Medius Klinik Ostfildern-Ruit | company_website: http://www.medius-kliniken.de | city: Ostfildern | country: Germany | source_url: https://klinikradar.de/kliniken/medius-klinik-ostfildern-ruit | pflegekraefte: 473
+6. company_name: GRN-Klinik Schwetzingen | company_website: https://www.grn.de/ | city: Schwetzingen | country: Germany | source_url: https://klinikradar.de/kliniken/grn-klinik-schwetzingen | pflegekraefte: 348
+7. company_name: Kreiskrankenhaus Emmendingen | company_website: http://www.krankenhaus-emmendingen.de | city: Emmendingen | country: Germany | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-emmendingen | pflegekraefte: 251
+8. company_name: BG Klinik Tübingen | company_website: https://www.bg-kliniken.de/klinik-tuebingen/ | city: Tübingen | country: Germany | source_url: https://klinikradar.de/kliniken/bg-klinik-tuebingen | pflegekraefte: 343
+9. company_name: Zentrum für Psychiatrie Reichenau | company_website: https://www.zfp-reichenau.de/ | city: Reichenau | country: Germany | source_url: https://klinikradar.de/kliniken/zentrum-fuer-psychiatrie-reichenau | pflegekraefte: 208
+10. company_name: Diakonissenkrankenhaus Karlsruhe | company_website: http://www.vidia-kliniken.de/ | city: Karlsruhe | country: Germany | source_url: https://klinikradar.de/kliniken/diakonissenkrankenhaus-karlsruhe | pflegekraefte: 167
+11. company_name: Helios Klinik Rottweil | city: Rottweil | country: Germany | source_url: https://klinikradar.de/kliniken/helios-klinik-rottweil | pflegekraefte: 163
+12. company_name: St. Josefskrankenhaus Heidelberg | company_website: http://www.st.josefskrankenhaus.de | city: Heidelberg | country: Germany | source_url: https://klinikradar.de/kliniken/st-josefskrankenhaus-heidelberg | pflegekraefte: 203
+13. company_name: Klinikum Mittelbaden Rastatt | company_website: http://www.klinikum-mittelbaden.de | city: Rastatt | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-mittelbaden-rastatt | pflegekraefte: 296
+14. company_name: Rems-Murr-Klinik Schorndorf | company_website: https://www.rems-murr-kliniken.de | city: Schorndorf | country: Germany | source_url: https://klinikradar.de/kliniken/rems-murr-klinik-schorndorf | pflegekraefte: 333
+15. company_name: Zollernalb Klinikum Bahlingen in Balingen | company_website: http://www.zollernalb-klinikum.de | city: Balingen | country: Germany | source_url: https://klinikradar.de/kliniken/zollernalb-klinikum-bahlingen | pflegekraefte: 238
+16. company_name: St. Anna-Virngrund-Klinik in Ellwangen (Jagst) | company_website: https://www.klinik-ellwangen.de | city: Ellwangen | country: Germany | source_url: https://klinikradar.de/kliniken/st-anna-virngrund-klinik | pflegekraefte: 203
+17. company_name: RKU - Universitäts- und Rehabilitationskliniken Ulm | company_website: http://www.rku.de | city: Ulm | country: Germany | source_url: https://klinikradar.de/kliniken/rku-universitaets-und-rehabilitationskliniken-ulm | pflegekraefte: 369
+18. company_name: Krankenhaus Tauberbischofsheim | company_website: https://www.khtbb.de/khtbb/index.php | city: Tauberbischofsheim | country: Germany | source_url: https://klinikradar.de/kliniken/krankenhaus-tauberbischofsheim | pflegekraefte: 153
+19. company_name: Ortenau Klinikum Achern-Oberkirch (Achern) | company_website: https://achern.ortenau-klinikum.de/ | city: Achern | country: Germany | source_url: https://klinikradar.de/kliniken/ortenau-klinikum-achern-oberkirch-achern | pflegekraefte: 271
+20. company_name: Krankenhaus Leonberg | company_website: https://www.klinikverbund-suedwest.de/der-klinikverbund-suedwest/standorte-kontakt/krankenhaus-leonberg/ | city: Leonberg | country: Germany | source_url: https://klinikradar.de/kliniken/krankenhaus-leonberg | pflegekraefte: 226
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_004_20260605T144317Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
