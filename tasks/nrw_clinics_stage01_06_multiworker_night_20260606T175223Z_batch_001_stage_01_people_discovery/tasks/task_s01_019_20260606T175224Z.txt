@@ -1,0 +1,89 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_019_20260606T175224Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_019_20260606T175224Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: St. Antonius Krankenhaus Hörstel | company_website: http://www.alexianer-hoerstel.de/ | city: Hörstel | country: Germany | source_url: https://klinikradar.de/kliniken/st-antonius-krankenhaus-hoerstel | pflegekraefte: 15.0
+2. company_name: LWL-Klinik Dortmund Psychiatrie - Psychotherapie - Psychosomatische Medizin - Rehabilitation - Prävention - Standort 3 | company_website: https://www.lwl-klinik-dortmund.de/de/ | city: Dortmund | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-dortmund-psychiatrie-psychotherapie-psychosomatische-medizin-rehabilitation-praevention-standort-3 | pflegekraefte: 29.0
+3. company_name: LVR-Klinik Langenfeld Behandlungszentrum Solingen | company_website: http://www.klinik-langenfeld.lvr.de | city: Solingen | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-langenfeld-behandlungszentrum-solingen | pflegekraefte: 43.0
+4. company_name: LWL-Klinik Lengerich Standort Rheine | company_website: http://www.lwl-klinik-lengerich.de | city: Rheine | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-lengerich-standort-rheine | pflegekraefte: 53.0
+5. company_name: LWL-Klinik Marsberg Kinder- und Jugendpsychiatrie | company_website: http://www.lwl.org/LWL/Gesundheit/psychiatrieverbund/K/klinik_marsberg_ki_u_ju_psychiatrie/ | city: Marsberg | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-marsberg-kinder-und-jugendpsychiatrie | pflegekraefte: 53.0
+6. company_name: MediClin Robert Janker Klinik in Bonn | company_website: http://www.Robert-Janker-Klinik.de | city: Bonn | country: Germany | source_url: https://klinikradar.de/kliniken/mediclin-robert-janker-klinik | pflegekraefte: 27.0
+7. company_name: Klinik für Psychosomatik und Psychotherapie Emsdetten in Münster | company_website: https://ukm-marienhospital.de | city: Münster | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-fuer-psychosomatik-und-psychotherapie-emsdetten | pflegekraefte: 25.0
+8. company_name: Neurologische Klinik Sorpesee in Sundern (Sauerland) | company_website: http://www.klinik-sorpesee.de | city: Sundern | country: Germany | source_url: https://klinikradar.de/kliniken/neurologische-klinik-sorpesee | pflegekraefte: 26.0
+9. company_name: Fachklinik St. Camillus in Duisburg | company_website: https://www.gfo-kliniken-niederrhein.de/startseite.html | city: Duisburg | country: Germany | source_url: https://klinikradar.de/kliniken/fachklinik-st-camillus | pflegekraefte: 44.0
+10. company_name: LVR-Klinik Viersen, Süchtelner Strasse | company_website: http://www.klinik-viersen.lvr.de | city: Viersen | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-viersen-suechtelner-strasse | pflegekraefte: 20.0
+11. company_name: Augusta-Kranken-Anstalt (Bochum-Linden) | company_website: http://www.augusta-kliniken.de/ | city: Bochum | country: Germany | source_url: https://klinikradar.de/kliniken/augusta-kranken-anstalt-bochum-linden | pflegekraefte: 45.0
+12. company_name: Remigius Klinik im Park in Hilden | company_website: http://www.bergmanclinics.de | city: Hilden | country: Germany | source_url: https://klinikradar.de/kliniken/remigius-klinik-im-park | pflegekraefte: 18.0
+13. company_name: Psychosomatische Klinik Bergisch Gladbach | company_website: http://www.klinikum-oberberg.de | city: Bergisch Gladbach | country: Germany | source_url: https://klinikradar.de/kliniken/psychosomatische-klinik-bergisch-gladbach | pflegekraefte: 37.0
+14. company_name: GPHS Tagesklinik Schwerte | company_website: http://www.tagesklinik-schwerte.de/ | city: Schwerte | country: Germany | source_url: https://klinikradar.de/kliniken/gphs-tagesklinik-schwerte | pflegekraefte: 6.0
+15. company_name: Valeara Bochum - Klinik für Kinder- und Jugendpsychiatrie | company_website: https://www.valeara.de/standorte-leistungen/valeara-bochum | city: Bochum | country: Germany | source_url: https://klinikradar.de/kliniken/valeara-bochum-klinik-fuer-kinder-und-jugendpsychiatrie | pflegekraefte: 39.0
+16. company_name: Neurologisches Rehabilitationszentrum Godeshöhe in Bonn | company_website: https://www.johanniter.de/johanniter-kliniken/neurologisches-rehabilitationszentrum-godeshoehe | city: Bonn | country: Germany | source_url: https://klinikradar.de/kliniken/neurologisches-rehabilitationszentrum-godeshoehe | pflegekraefte: 65.0
+17. company_name: Fachklinik für Kinderneurologie und Sozialpädiatrie Königsborn in Unna | company_website: https://www.lebenszentrum-koenigsborn.de/ | city: Unna | country: Germany | source_url: https://klinikradar.de/kliniken/fachklinik-fuer-kinderneurologie-und-sozialpaediatrie-koenigsborn | pflegekraefte: 28.0
+18. company_name: Tagesklinik Netphen | company_website: http://www.klinik-wittgenstein.de | city: Netphen | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-netphen | pflegekraefte: 6.0
+19. company_name: LVR-Klinik Bonn / Dependance Eitorf | company_website: http://www.klinik-bonn.lvr.de | city: Eitorf | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-bonn-dependance-eitorf | pflegekraefte: 19.0
+20. company_name: LVR-Klinik Köln (Psychiatrische Tagesklinik Köln-Mülheim) | company_website: http://www.klinik-koeln.lvr.de | city: Köln | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-koeln-psychiatrische-tagesklinik-koeln-muelheim | pflegekraefte: 14.0
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_019_20260606T175224Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
