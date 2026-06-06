@@ -1,0 +1,89 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_018_20260606T175224Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_018_20260606T175224Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Therapiezentrum Bergheim in Bergheim, Erft | company_website: https://klinik-dueren.lvr.de/de/nav_main/fachgebiete___behandlungsangebote/therapiezentrum_bergheim__tzb_/therapiezentrum_bergheim_tzb.html | city: Bergheim | country: Germany | source_url: https://klinikradar.de/kliniken/therapiezentrum-bergheim | pflegekraefte: 47.0
+2. company_name: St. Elisabeth-Hospital Meerbusch-Lank | company_website: http://www.rrz-meerbusch.de | city: Meerbusch | country: Germany | source_url: https://klinikradar.de/kliniken/st-elisabeth-hospital-meerbusch-lank | pflegekraefte: 70.0
+3. company_name: St.-Elisabeth-Krankenhaus Dortmund | company_website: http://www.elisabeth-dortmund.de | city: Dortmund | country: Germany | source_url: https://klinikradar.de/kliniken/st-elisabeth-krankenhaus-dortmund | pflegekraefte: 50.0
+4. company_name: Paracelsus-Klinik Golzheim in Düsseldorf | company_website: http://www.paracelsus-kliniken.de/duesseldorf | city: Düsseldorf | country: Germany | source_url: https://klinikradar.de/kliniken/paracelsus-klinik-golzheim | pflegekraefte: 69.0
+5. company_name: LVR-Klinik Langenfeld Behandlungszentrum Leverkusen | company_website: http://www.klinik-langenfeld.lvr.de | city: Leverkusen | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-langenfeld-behandlungszentrum-leverkusen | pflegekraefte: 50.0
+6. company_name: Bertha Krankenhaus in Duisburg | company_website: https://www.sana-duisburg.de/home.html | city: Duisburg | country: Germany | source_url: https://klinikradar.de/kliniken/bertha-krankenhaus | pflegekraefte: 79.0
+7. company_name: VITREA Klinik Hagen Ambrock | company_website: https://www.vitrea-gesundheit.de/kliniken/hagen-ambrock/unser-angebot/unser-fachbereich-pneumologie/ | city: Hagen | country: Germany | source_url: https://klinikradar.de/kliniken/vitrea-klinik-hagen-ambrock | pflegekraefte: 95.0
+8. company_name: St. Hubertus-Stift in Bedburg, Erft | company_website: http://www.st-hubertusstift.de | city: Bedburg | country: Germany | source_url: https://klinikradar.de/kliniken/st-hubertus-stift | pflegekraefte: 49.0
+9. company_name: Sankt Lucia Hospital Harsewinkel | company_website: https://www.sankt-elisabeth-hospital.de | city: Harsewinkel | country: Germany | source_url: https://klinikradar.de/kliniken/sankt-lucia-hospital-harsewinkel | pflegekraefte: 44.0
+10. company_name: Klinik für Kinder- und Jugendpsychiatrie und Psychotherapie in Köln | company_website: http://www.kliniken-koeln.de | city: Köln | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-fuer-kinder-und-jugendpsychiatrie-und-psychotherapie | pflegekraefte: 46.0
+11. company_name: LVR-Klinik für Orthopädie Viersen | company_website: http://www.orthopaedie-viersen.lvr.de | city: Viersen | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-fuer-orthopaedie-viersen | pflegekraefte: 61.0
+12. company_name: Krankenhaus Rahden in Rahden, Westfalen | company_website: https://www.muehlenkreiskliniken.de/krankenhaus-rahden | city: Rahden | country: Germany | source_url: https://klinikradar.de/kliniken/krankenhaus-rahden | pflegekraefte: 32.0
+13. company_name: Zentrum für Seelische Gesundheit Elsey in Hagen | company_website: http://www.kkh-hagen.de | city: Hagen | country: Germany | source_url: https://klinikradar.de/kliniken/zentrum-fuer-seelische-gesundheit-elsey | pflegekraefte: 136.0
+14. company_name: St. Agatha Fachklinik für Seelische Gesundheit in Köln | company_website: https://www.st-agatha-krankenhaus.de/ | city: Köln | country: Germany | source_url: https://klinikradar.de/kliniken/st-agatha-fachklinik-fuer-seelische-gesundheit | pflegekraefte: 90.0
+15. company_name: Psychiatrische Klinik Langenberg in Velbert | company_website: http://www.stiftung-tannenhof.de | city: Velbert | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-klinik-langenberg | pflegekraefte: 68.0
+16. company_name: St. Josef-Hospital in Gelsenkirchen | company_website: https://www.kern.ruhr/ | city: Gelsenkirchen | country: Germany | source_url: https://klinikradar.de/kliniken/st-josef-hospital | pflegekraefte: 53.0
+17. company_name: St. Nikolaus-Hospital in Kalkar, Niederrhein | company_website: http://www.kkle.de | city: Kalkar | country: Germany | source_url: https://klinikradar.de/kliniken/st-nikolaus-hospital | pflegekraefte: 61.0
+18. company_name: Ev. Krankenhaus Enger in Enger, Westfalen | company_website: http://www.krankenhaus-enger.de | city: Enger | country: Germany | source_url: https://klinikradar.de/kliniken/ev-krankenhaus-enger | pflegekraefte: 53.0
+19. company_name: Psychiatrische Klinik Wuppertal | company_website: http://www.stiftung-tannenhof.de | city: Wuppertal | country: Germany | source_url: https://klinikradar.de/kliniken/psychiatrische-klinik-wuppertal | pflegekraefte: 53.0
+20. company_name: Hospital zum Heiligen Geist in Frankfurt am Main | company_website: http://www.hospital-zum-heiligen-geist.de/ | city: Frankfurt am Main | country: Germany | source_url: https://klinikradar.de/kliniken/hospital-zum-heiligen-geist | pflegekraefte: 170.0
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_018_20260606T175224Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
