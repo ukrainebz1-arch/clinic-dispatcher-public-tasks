@@ -1,0 +1,89 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_008_20260606T175224Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_008_20260606T175224Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: LVR-Klinik für Psychiatrie, Psychosomatik und Psychotherapie des Kindes- und Jugendalters in Essen | company_website: http://www.universitaetsklinik-essen.lvr.de | city: Essen | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-fuer-psychiatrie-psychosomatik-und-psychotherapie-des-kindes-und-jugendalters | pflegekraefte: 101.0
+2. company_name: Alfried Krupp Krankenhaus Steele in Essen | company_website: https://www.krupp-krankenhaus.de/essen-steele.html | city: Essen | country: Germany | source_url: https://klinikradar.de/kliniken/alfried-krupp-krankenhaus-steele | pflegekraefte: 443.0
+3. company_name: Christliches Klinikum Unna WEST | company_website: https://www.christliches-klinikum.de/ | city: Unna | country: Germany | source_url: https://klinikradar.de/kliniken/christliches-klinikum-unna-west | pflegekraefte: 292.0
+4. company_name: Kreiskrankenhaus Waldbröl | company_website: http://www.klinikum-oberberg.de | city: Waldbröl | country: Germany | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-waldbroel | pflegekraefte: 264.0
+5. company_name: Klinikum Stadt Soest | company_website: http://www.klinikumstadtsoest.de | city: Soest | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-stadt-soest | pflegekraefte: 428.0
+6. company_name: St. Marien-Hospital Borken | company_website: http://www.klinikum-westmuensterland.de/borken/ | city: Borken | country: Germany | source_url: https://klinikradar.de/kliniken/st-marien-hospital-borken | pflegekraefte: 294.0
+7. company_name: St. Vincenz-Krankenhaus in Datteln | company_website: http://www.vincenz-datteln.de | city: Datteln | country: Germany | source_url: https://klinikradar.de/kliniken/st-vincenz-krankenhaus | pflegekraefte: 445.0
+8. company_name: Allgemeines Krankenhaus Viersen | company_website: http://www.akh-viersen.de | city: Viersen | country: Germany | source_url: https://klinikradar.de/kliniken/allgemeines-krankenhaus-viersen | pflegekraefte: 503.0
+9. company_name: Evangelische Stiftung Tannenhof in Remscheid | company_website: http://www.stiftung-tannenhof.de | city: Remscheid | country: Germany | source_url: https://klinikradar.de/kliniken/evangelische-stiftung-tannenhof | pflegekraefte: 264.0
+10. company_name: Krankenhaus Neuwerk (Maria von den Aposteln) in Mönchengladbach | company_website: https://www.kh-neuwerk.de | city: Mönchengladbach | country: Germany | source_url: https://klinikradar.de/kliniken/krankenhaus-neuwerk-maria-von-den-aposteln | pflegekraefte: 245.0
+11. company_name: Marienhospital Aachen | company_website: https://www.marienhospital.de | city: Aachen | country: Germany | source_url: https://klinikradar.de/kliniken/marienhospital-aachen | pflegekraefte: 335.0
+12. company_name: Evangelisches Krankenhaus Herne (Herne-Mitte) | company_website: http://www.evk-herne.de | city: Herne | country: Germany | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-herne-herne-mitte | pflegekraefte: 452.0
+13. company_name: Marienhospital Bottrop | company_website: http://www.mhb-bottrop.de | city: Bottrop | country: Germany | source_url: https://klinikradar.de/kliniken/marienhospital-bottrop | pflegekraefte: 295.0
+14. company_name: Marien-Krankenhaus in Bergisch Gladbach | company_website: https://www.gfo-kliniken-rhein-berg.de/startseite.html | city: Bergisch Gladbach | country: Germany | source_url: https://klinikradar.de/kliniken/marien-krankenhaus | pflegekraefte: 206.0
+15. company_name: St. Elisabeth-Hospital Herten | company_website: https://www.proselis.de/ | city: Herten | country: Germany | source_url: https://klinikradar.de/kliniken/st-elisabeth-hospital-herten | pflegekraefte: 262.0
+16. company_name: LVR-Klinik Langenfeld (1) | company_website: http://www.klinik-langenfeld.lvr.de | city: Langenfeld | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-langenfeld-1 | pflegekraefte: 349.0
+17. company_name: Klinikum Bielefeld (Rosenhöhe) | company_website: http://www.klinikumbielefeld.de/ | city: Bielefeld | country: Germany | source_url: https://klinikradar.de/kliniken/klinikum-bielefeld-rosenhoehe | pflegekraefte: 289.0
+18. company_name: Rheinland Klinikum Grevenbroich Elisabethkrankenhaus | company_website: https://rheinlandklinikum.de/ | city: Grevenbroich | country: Germany | source_url: https://klinikradar.de/kliniken/rheinland-klinikum-grevenbroich-elisabethkrankenhaus | pflegekraefte: 223.0
+19. company_name: St.-Clemens-Hospital Geldern | company_website: http://www.clemens-hospital.de | city: Geldern | country: Germany | source_url: https://klinikradar.de/kliniken/st-clemens-hospital-geldern | pflegekraefte: 461.0
+20. company_name: St. Josef-Krankenhaus Kupferdreh in Essen | company_website: https://www.contilia.de/einrichtungen/katholische-kliniken-ruhrhalbinsel.html | city: Essen | country: Germany | source_url: https://klinikradar.de/kliniken/st-josef-krankenhaus-kupferdreh | pflegekraefte: 373.0
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_008_20260606T175224Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
