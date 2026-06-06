@@ -1,0 +1,89 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_007_20260606T175224Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_007_20260606T175224Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Evangelisches Krankenhaus Wesel | company_website: https://gesundheitscampuswesel.de/ | city: Wesel | country: Germany | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-wesel | pflegekraefte: 239.0
+2. company_name: Evangelisches Krankenhaus Duisburg Nord | company_website: http://www.evkln.de/ | city: Duisburg | country: Germany | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-duisburg-nord | pflegekraefte: 494.0
+3. company_name: Herz-Jesu-Krankenhaus Hiltrup in Münster | company_website: https://www.hjk-muenster.de/startseite.html | city: Münster | country: Germany | source_url: https://klinikradar.de/kliniken/herz-jesu-krankenhaus-hiltrup | pflegekraefte: 448.0
+4. company_name: Marien Hospital Witten | company_website: http://www.marien-hospital-witten.de | city: Witten | country: Germany | source_url: https://klinikradar.de/kliniken/marien-hospital-witten | pflegekraefte: 535.0
+5. company_name: St.-Antonius-Hospital in Kleve, Niederrhein | company_website: http://www.kkle.de | city: Kleve | country: Germany | source_url: https://klinikradar.de/kliniken/st-antonius-hospital | pflegekraefte: 464.0
+6. company_name: LWL-Klinik Hemer − Hans-Prinzhorn-Klinik | company_website: https://www.lwl-klinik-hemer.de | city: Hemer | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-hemer-hans-prinzhorn-klinik | pflegekraefte: 287.0
+7. company_name: Knappschaft Kliniken Gelsenkirchen-Buer | company_website: http://www.bergmannsheil-buer.de | city: Gelsenkirchen | country: Germany | source_url: https://klinikradar.de/kliniken/knappschaft-kliniken-gelsenkirchen-buer | pflegekraefte: 349.0
+8. company_name: LVR-Klinik Viersen, Johannisstrasse | company_website: http://www.klinik-viersen.lvr.de | city: Viersen | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-viersen-johannisstrasse | pflegekraefte: 269.0
+9. company_name: Johanniter Krankenhaus Bonn | company_website: http://www.johanniter.de/einrichtungen/krankenhaus/bonn/ | city: Bonn | country: Germany | source_url: https://klinikradar.de/kliniken/johanniter-krankenhaus-bonn | pflegekraefte: 280.0
+10. company_name: Sankt Elisabeth Hospital in Gütersloh | company_website: https://www.sankt-elisabeth-hospital.de | city: Gütersloh | country: Germany | source_url: https://klinikradar.de/kliniken/sankt-elisabeth-hospital | pflegekraefte: 369.0
+11. company_name: BG Klinikum Duisburg | company_website: http://www.bg-klinikum-duisburg.de | city: bei Umbau der Nasszellen umgesetzt | country: Germany | source_url: https://klinikradar.de/kliniken/bg-klinikum-duisburg | pflegekraefte: 305.0
+12. company_name: St. Marien-Hospital Hamm Klinik Knappenstraße | company_website: https://www.marienhospital-hamm.de/ | city: Hamm | country: Germany | source_url: https://klinikradar.de/kliniken/st-marien-hospital-hamm-klinik-knappenstrasse | pflegekraefte: 271.0
+13. company_name: Christophorus-Kliniken Coesfeld | company_website: http://www.christophorus-kliniken.de | city: Coesfeld | country: Germany | source_url: https://klinikradar.de/kliniken/christophorus-kliniken-coesfeld | pflegekraefte: 404.0
+14. company_name: Evangelisches Krankenhaus Lippstadt | company_website: http://www.ev-krankenhaus.de/ | city: Lippstadt | country: Germany | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-lippstadt | pflegekraefte: 338.0
+15. company_name: Evangelisches Krankenhaus Kalk in Köln | company_website: https://www.evkk.de | city: Köln | country: Germany | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-kalk | pflegekraefte: 258.0
+16. company_name: AMEOS Klinikum St. Clemens Oberhausen | company_website: https://www.ameos.eu/standorte/ameos-west/oberhausen/ | city: Oberhausen | country: Germany | source_url: https://klinikradar.de/kliniken/ameos-klinikum-st-clemens-oberhausen | pflegekraefte: 254.0
+17. company_name: St. Josef Hospital in Troisdorf | company_website: https://kliniken-troisdorf.gfo-online.de/ | city: Troisdorf | country: Germany | source_url: https://klinikradar.de/kliniken/st-josef-hospital-huerth | pflegekraefte: 220.0
+18. company_name: St. Barbara-Hospital in Gladbeck | company_website: https://www.kern.ruhr/ | city: Gladbeck | country: Germany | source_url: https://klinikradar.de/kliniken/st-barbara-hospital | pflegekraefte: 436.0
+19. company_name: St. Vinzenz-Krankenhaus in Düsseldorf | company_website: http://www.vinzenz-duesseldorf.de | city: Düsseldorf | country: Germany | source_url: https://klinikradar.de/kliniken/st-vinzenz-krankenhaus | pflegekraefte: 159.0
+20. company_name: LVR-Klinikum Essen - Standort Virchowstraße | company_website: http://www.universitaetsklinik-essen.lvr.de | city: Essen | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinikum-essen-standort-virchowstrasse | pflegekraefte: 125.0
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_007_20260606T175224Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
