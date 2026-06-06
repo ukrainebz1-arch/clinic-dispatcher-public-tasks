@@ -1,0 +1,89 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_015_20260606T175224Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_015_20260606T175224Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: St. Elisabeth-Krankenhaus Jülich | company_website: http://www.krankenhaus-juelich.de/ | city: Jülich | country: Germany | source_url: https://klinikradar.de/kliniken/st-elisabeth-krankenhaus-juelich | pflegekraefte: 184.0
+2. company_name: Mariannen-Hospital in Werl | company_website: https://www.mariannen-hospital.de | city: Werl | country: Germany | source_url: https://klinikradar.de/kliniken/mariannen-hospital | pflegekraefte: 173.0
+3. company_name: Christophorus-Kliniken Dülmen | company_website: http://www.christophorus-kliniken.de | city: Dülmen | country: Germany | source_url: https://klinikradar.de/kliniken/christophorus-kliniken-duelmen | pflegekraefte: 173.0
+4. company_name: Gertrudis-Hospital Westerholt in Herten | company_website: https://kern.ruhr/ | city: Herten | country: Germany | source_url: https://klinikradar.de/kliniken/gertrudis-hospital-westerholt | pflegekraefte: 187.0
+5. company_name: Evangelisches Lukas-Krankenhaus Gronau | company_website: http://www.lukas-gronau.de | city: Gronau | country: Germany | source_url: https://klinikradar.de/kliniken/evangelisches-lukas-krankenhaus-gronau | pflegekraefte: 77.0
+6. company_name: Helios Klinik Wipperfürth | company_website: http://www.helios-gesundheit.de/wipperfuerth | city: Wipperfürth | country: Germany | source_url: https://klinikradar.de/kliniken/helios-klinik-wipperfuerth | pflegekraefte: 161.0
+7. company_name: Klinik für Manuelle Therapie in Hamm | company_website: http://www.kmt-hamm.de/ | city: Hamm | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-fuer-manuelle-therapie | pflegekraefte: 34.0
+8. company_name: Helios Universitätsklinikum Wuppertal, Campus Elberfeld | company_website: https://www.helios-gesundheit.de/kliniken/wuppertal/ | city: Wuppertal | country: Germany | source_url: https://klinikradar.de/kliniken/helios-universitaetsklinikum-wuppertal-campus-elberfeld | pflegekraefte: 185.0
+9. company_name: Rheumazentrum Ruhrgebiet in Herne | company_website: http://www.rheumazentrum-ruhrgebiet.de/ | city: Herne | country: Germany | source_url: https://klinikradar.de/kliniken/rheumazentrum-ruhrgebiet | pflegekraefte: 104.0
+10. company_name: LWL-Klinik Lippstadt | company_website: http://www.lwl-klinik-lippstadt.de/de/ | city: Lippstadt | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-lippstadt | pflegekraefte: 129.0
+11. company_name: St.-Laurentius-Stift in Waltrop | company_website: http://www.laurentius-stift.de | city: Waltrop | country: Germany | source_url: https://klinikradar.de/kliniken/st-laurentius-stift | pflegekraefte: 159.0
+12. company_name: Fachklinik Hornheide in Münster | company_website: https://www.fachklinik-hornheide.de | city: Münster | country: Germany | source_url: https://klinikradar.de/kliniken/fachklinik-hornheide | pflegekraefte: 160.0
+13. company_name: Sana-Krankenhaus Hürth in Hürth, Rheinland | company_website: http://www.sana-huerth.de | city: Hürth | country: Germany | source_url: https://klinikradar.de/kliniken/sana-krankenhaus-huerth | pflegekraefte: 109.0
+14. company_name: Sana Krankenhaus Radevormwald | company_website: https://www.sana.de/radevormwald | city: Radevormwald | country: Germany | source_url: https://klinikradar.de/kliniken/sana-krankenhaus-radevormwald | pflegekraefte: 69.0
+15. company_name: Helios Klinikum Warburg | company_website: http://www.helios-gesundheit.de/warburg | city: Warburg | country: Germany | source_url: https://klinikradar.de/kliniken/helios-klinikum-warburg | pflegekraefte: 149.0
+16. company_name: Krankenhaus Maria Hilf in Warstein | company_website: http://www.krankenhaus-warstein.de/ | city: Warstein | country: Germany | source_url: https://klinikradar.de/kliniken/krankenhaus-maria-hilf | pflegekraefte: 55.0
+17. company_name: St. Vincenz Hospital Brakel in Brakel, Westfalen | company_website: http://www.khwe.de | city: Brakel | country: Germany | source_url: https://klinikradar.de/kliniken/st-vincenz-hospital-brakel | pflegekraefte: 93.0
+18. company_name: Helios Klinik Lengerich | company_website: https://www.helios-gesundheit.de/kliniken/lengerich/ | city: Lengerich | country: Germany | source_url: https://klinikradar.de/kliniken/helios-klinik-lengerich | pflegekraefte: 175.0
+19. company_name: DGD Stadtklinik Hemer | company_website: https://www.stadtklinik-hemer.de/ | city: Hemer | country: Germany | source_url: https://klinikradar.de/kliniken/dgd-stadtklinik-hemer | pflegekraefte: 93.0
+20. company_name: Evangelisches Krankenhaus Herne (Eickel) | company_website: http://www.evk-herne.de | city: Herne | country: Germany | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-herne-eickel | pflegekraefte: 126.0
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_015_20260606T175224Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
