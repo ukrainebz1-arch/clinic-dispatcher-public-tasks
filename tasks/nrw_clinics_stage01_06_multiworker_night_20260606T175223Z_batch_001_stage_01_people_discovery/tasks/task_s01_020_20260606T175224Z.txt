@@ -1,0 +1,89 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_020_20260606T175224Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_020_20260606T175224Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: LVR-Klinik Bonn - Behandlungszentrum Meckenheim in Meckenheim, Rheinland | company_website: http://www.klinik-bonn.lvr.de | city: Meckenheim | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-bonn-behandlungszentrum-meckenheim | pflegekraefte: 6.0
+2. company_name: LVR-Klinik Köln Chorweiler | company_website: http://www.klinik-koeln.lvr.de | city: Köln | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-koeln-chorweiler | pflegekraefte: 10.0
+3. company_name: LWL-Klinik Dortmund Elisabeth-Klinik | company_website: http://lwl-jugendpsychiatrie-dortmund.de | city: Dortmund | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-dortmund-elisabeth-klinik | pflegekraefte: 49.0
+4. company_name: Johanniter-Tagesklinik Düsseldorf | company_website: http://www.jtk-duesseldorf.de | city: Düsseldorf | country: Germany | source_url: https://klinikradar.de/kliniken/johanniter-tagesklinik-duesseldorf | pflegekraefte: 6.0
+5. company_name: Klinik am Schlossgarte Nottuln | company_website: http://www.kas-duelmen.de | city: Nottuln | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-am-schlossgarte-nottuln | pflegekraefte: 33.0
+6. company_name: Fachklinik Kamillushaus Heidhausen in Essen | company_website: https://www.contilia.de/einrichtungen/katholische-kliniken-ruhrhalbinsel.html | city: Essen | country: Germany | source_url: https://klinikradar.de/kliniken/fachklinik-kamillushaus-heidhausen | pflegekraefte: 19.0
+7. company_name: LWL-Klinik Marsberg Paderborn Kinder- und Jugendpsychiatrie | company_website: http://www.lwl.org/LWL/Gesundheit/psychiatrieverbund/K/klinik_marsberg_ki_u_ju_psychiatrie/ | city: Paderborn | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-marsberg-paderborn-kinder-und-jugendpsychiatrie | pflegekraefte: 40.0
+8. company_name: St. Mauritius Therapieklinik in Meerbusch | company_website: http://www.stmtk.de | city: Meerbusch | country: Germany | source_url: https://klinikradar.de/kliniken/st-mauritius-therapieklinik | pflegekraefte: 63.0
+9. company_name: Heilpädagogisch-Psychotherapeutisches Zentrum in Wülfrath | company_website: http://www.bergische-diakonie.de | city: Wülfrath | country: Germany | source_url: https://klinikradar.de/kliniken/heilpaedagogisch-psychotherapeutisches-zentrum | pflegekraefte: 3.0
+10. company_name: Helios Universitätsklinikum Wuppertal Schmerzklinik Bergisch Land | company_website: https://www.helios-gesundheit.de/wuppertal | city: Wuppertal | country: Germany | source_url: https://klinikradar.de/kliniken/helios-universitaetsklinikum-wuppertal-schmerzklinik-bergisch-land | pflegekraefte: 27.0
+11. company_name: Alexianer Krankenhaus Rodenkirchen in Köln | company_website: http://www.alexianer-koeln.de | city: Köln | country: Germany | source_url: https://klinikradar.de/kliniken/alexianer-krankenhaus-rodenkirchen | pflegekraefte: 5.0
+12. company_name: Universitätsklinikum Essen - Herzzentrum Essen-Huttrop | company_website: http://www.herzchirurgie-huttrop.de | city: Essen | country: Germany | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-essen-herzzentrum-essen-huttrop | pflegekraefte: 39.0
+13. company_name: Tagesklinik für Psychiatrie und Psychotherapie Herford | company_website: http://www.klinikum-herford.de | city: Herford | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-herford | pflegekraefte: 3.0
+14. company_name: Tagesklinik für Psychiatrie und Psychotherapie Bünde | company_website: http://www.klinikum-herford.de | city: Bünde | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-buende | pflegekraefte: 4.0
+15. company_name: Tagesklink Witten für Psychiatrie und Psychotherapie | company_website: https://www.gemeinschaftskrankenhaus.de/ | city: Witten | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklink-witten-fuer-psychiatrie-und-psychotherapie | pflegekraefte: 4.0
+16. company_name: Tagesklinik 2 in Aachen | company_website: http://www.alexianer-aachen.de | city: Aachen | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-2 | pflegekraefte: 3.0
+17. company_name: Tagesklinik St. Bernhard in Neuss | company_website: http://www.psychiatrie-neuss.de | city: Neuss | country: Germany | source_url: https://klinikradar.de/kliniken/tagesklinik-st-bernhard | pflegekraefte: 4.0
+18. company_name: Luisenkrankenhaus in Düsseldorf | company_website: https://luisenkrankenhaus.de/ | city: Düsseldorf | country: Germany | source_url: https://klinikradar.de/kliniken/luisenkrankenhaus | pflegekraefte: 22.0
+19. company_name: RehaNova Köln | company_website: https://www.rehanova.de/index.php?id=23 | city: Köln | country: Germany | source_url: https://klinikradar.de/kliniken/rehanova-koeln | pflegekraefte: 29.0
+20. company_name: LVR-Klinik Mönchengladbach - Tagesklinik Regentenstraße | company_website: http://www.klinik-moenchengladbach.lvr.de | city: Mönchengladbach | country: Germany | source_url: https://klinikradar.de/kliniken/lvr-klinik-moenchengladbach-tagesklinik-regentenstrasse | pflegekraefte: 4.0
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_020_20260606T175224Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
