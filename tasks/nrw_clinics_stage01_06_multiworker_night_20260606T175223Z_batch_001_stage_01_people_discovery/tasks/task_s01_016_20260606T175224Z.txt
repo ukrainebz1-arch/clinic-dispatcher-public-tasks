@@ -1,0 +1,89 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+TASK_ID: task_s01_016_20260606T175224Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s01_016_20260606T175224Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_01_people_discovery / Clinic people discovery for hospital recruiting
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_01_people_discovery
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_01_people_discovery/input.csv
+
+You receive clinic / hospital rows. For each company, find publicly available named people who are relevant for Pflegekräfte recruiting, staffing, HR, or clinic management.
+
+Priority roles:
+1. Pflegedirektion / Pflegedirektor / Pflegedirektorin
+2. Stellvertretende Pflegedirektion
+3. Pflegedienstleitung / Pflegeleitung / PDL / Leitung Pflege / Direktion Pflege
+4. Personalleitung / HR-Leitung / Recruiting-Leitung
+5. Stellvertretende Personalleitung
+6. Klinikleitung / Geschäftsführung / Standortleitung / Verwaltungsdirektion / Kaufmännische Direktion
+7. Ärztliche Direktion only as fallback when no nursing / HR / management contact is publicly available
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target clinic / hospital / operator.
+- Prefer nursing leadership, HR leadership, and clinic management over random doctors.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- Do not treat info@, kontakt@, bewerbung@, pflege@ or generic mailboxes as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target clinic/company through a public source.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Column guidance:
+- batch_id: use batch_001
+- company_name/company_website/city/country: copy from input when present.
+- role_category: use hr_recruiting for HR/recruiting, operations for Pflegeleitung/Pflegedirektion, founder_ceo for Geschäftsführung, other_management for clinic management, unknown if unclear.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_name: Klinik Blankenstein in Hattingen | company_website: http://www.klinikum-bochum.de | city: Hattingen | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-blankenstein | pflegekraefte: 84.0
+2. company_name: ViaNobis in Gangelt | company_website: http://www.vianobis-fachklinik.de | city: Gangelt | country: Germany | source_url: https://klinikradar.de/kliniken/vianobis | pflegekraefte: 110.0
+3. company_name: AMEOS Klinikum Bad Salzuflen | company_website: https://www.ameos.eu/standorte/ameos-west/bad-salzuflen/ameos-klinikum-bad-salzuflen/ | city: Bad Salzuflen | country: Germany | source_url: https://klinikradar.de/kliniken/ameos-klinikum-bad-salzuflen | pflegekraefte: 56.0
+4. company_name: Klinik Wittgenstein in Bad Berleburg | company_website: http://www.klinik-wittgenstein.de | city: Bad Berleburg | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-wittgenstein | pflegekraefte: 82.0
+5. company_name: Klinik Königshof in Krefeld | company_website: https://www.klinik-koenigshof-krefeld.de | city: Krefeld | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-koenigshof | pflegekraefte: 109.0
+6. company_name: Klinik am Schlossgarten Dülmen | company_website: http://www.kas-duelmen.de | city: Dülmen | country: Germany | source_url: https://klinikradar.de/kliniken/klinik-am-schlossgarten-duelmen | pflegekraefte: 82.0
+7. company_name: LWL-Klinik Marsberg | company_website: http://www.lwl-klinik-marsberg.de | city: Marsberg | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-marsberg | pflegekraefte: 92.0
+8. company_name: VITREA Klinik Bad Berleburg | company_website: https://www.vitrea-gesundheit.de/kliniken/bad-berleburg/ | city: Bad Berleburg | country: Germany | source_url: https://klinikradar.de/kliniken/vitrea-klinik-bad-berleburg | pflegekraefte: 116.0
+9. company_name: St. Johannes-Hospital in Hagen | company_website: http://www.kkh-hagen.de | city: Hagen | country: Germany | source_url: https://klinikradar.de/kliniken/st-johannes-hospital | pflegekraefte: 69.0
+10. company_name: Gemeindepsychiatrisches Zentrum gpz in Detmold | company_website: http://www.gpz-lippe.de | city: Detmold | country: Germany | source_url: https://klinikradar.de/kliniken/gemeindepsychiatrisches-zentrum-gpz | pflegekraefte: 88.0
+11. company_name: Sauerlandklinik Hachen in Sundern (Sauerland) | company_website: http://www.sauerlandklinik.de | city: Sundern | country: Germany | source_url: https://klinikradar.de/kliniken/sauerlandklinik-hachen | pflegekraefte: 69.0
+12. company_name: St.-Marien-Hospital Marsberg | company_website: http://www.bk-marsberg.de | city: Marsberg | country: Germany | source_url: https://klinikradar.de/kliniken/st-marien-hospital-marsberg | pflegekraefte: 127.0
+13. company_name: Eifelklinik St. Brigida in Simmerath | company_website: https://www.st-brigida.de | city: Simmerath | country: Germany | source_url: https://klinikradar.de/kliniken/eifelklinik-st-brigida | pflegekraefte: 253.0
+14. company_name: AMEOS Klinikum St. Marien Oberhausen | company_website: https://www.ameos.eu/standorte/ameos-west/oberhausen/ | city: Oberhausen | country: Germany | source_url: https://klinikradar.de/kliniken/ameos-klinikum-st-marien-oberhausen | pflegekraefte: 5.0
+15. company_name: LWL-Universitätsklinik Hamm | company_website: http://www.lwl-uk-hamm.de | city: Hamm | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-universitaetsklinik-hamm | pflegekraefte: 72.0
+16. company_name: St. Antonius-Krankenhaus in Bottrop | company_website: https://www.kern.ruhr/ | city: Bottrop | country: Germany | source_url: https://klinikradar.de/kliniken/st-antonius-krankenhaus | pflegekraefte: 98.0
+17. company_name: Fachklinik 360° in Ratingen | company_website: http://www.fachklinik360grad.de/ | city: Ratingen | country: Germany | source_url: https://klinikradar.de/kliniken/fachklinik-360 | pflegekraefte: 153.0
+18. company_name: LWL-Klinik Marl-Sinsen, Haardklinik; Kinder- und Jugendpsychiatrie – Psychotherapie –Psychosomatik | company_website: https://www.lwl-klinik-marl.de/de/ | city: Marl | country: Germany | source_url: https://klinikradar.de/kliniken/lwl-klinik-marl-sinsen-haardklinik-kinder-und-jugendpsychiatrie-psychotherapie-psychosomatik | pflegekraefte: 155.0
+19. company_name: St. Nikolaus Hospital Rheinberg | company_website: http://www.st-josef-moers.de | city: Rheinberg | country: Germany | source_url: https://klinikradar.de/kliniken/st-nikolaus-hospital-rheinberg | pflegekraefte: 71.0
+20. company_name: Krankenhaus Plettenberg | company_website: https://www.radprax.de | city: Plettenberg | country: Germany | source_url: https://klinikradar.de/kliniken/krankenhaus-plettenberg | pflegekraefte: 116.0
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s01_016_20260606T175224Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
