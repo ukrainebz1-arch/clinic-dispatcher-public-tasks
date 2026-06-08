@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_031_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_031_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Kinderkrankenhaus Amsterdamer Straße | company_website: http://www.kliniken-koeln.de | first_name: Daniel | last_name: Dellmann | full_name: Daniel Dellmann | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official management page lists executive leadership.
+2. batch_id: batch_001 | company_name: Kinderkrankenhaus Amsterdamer Straße | company_website: http://www.kliniken-koeln.de | first_name: Axel | last_name: Goßmann | full_name: Prof. Dr. med. Axel Goßmann | role: Geschäftsleitung | role_category: other_management | confidence: high | notes: Official management page lists executive leadership.
+3. batch_id: batch_001 | company_name: Kinderkrankenhaus Amsterdamer Straße | company_website: http://www.kliniken-koeln.de | first_name: Michael | last_name: Weiß | full_name: Prof. Michael Weiß | role: Ärztlicher Direktor Kinderkrankenhaus | role_category: other_management | confidence: high | notes: Official children’s clinic page lists site medical director.
+4. batch_id: batch_001 | company_name: St. Rochus-Hospital | company_website: http://www.rochus-hospital.de/ | first_name: Axel | last_name: Westermann | full_name: Dipl. Pflegewirt (FH) Axel Westermann | role: Pflegedirektor / Standortleitung St. Rochus Hospital | role_category: operations | confidence: high | notes: Official hospital page lists nursing director and site leadership.
+5. batch_id: batch_001 | company_name: St. Rochus-Hospital | company_website: http://www.rochus-hospital.de/ | first_name: Sabrina | last_name: Meder-Conrad | full_name: Sabrina Meder-Conrad | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official nursing service page lists site nursing management.
+6. batch_id: batch_001 | company_name: St. Rochus-Hospital | company_website: http://www.rochus-hospital.de/ | first_name: Regina | last_name: Luckner | full_name: Dipl.-Kff. Regina Luckner | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official hospital page lists managing director.
+7. batch_id: batch_001 | company_name: St. Rochus-Hospital | company_website: http://www.rochus-hospital.de/ | first_name: Hinrich | last_name: Böhner | full_name: Dr. med. Hinrich Böhner | role: Ärztlicher Direktor St. Rochus Hospital | role_category: other_management | confidence: high | notes: Official hospital page lists site medical director.
+8. batch_id: batch_001 | company_name: Schön Klinik Düsseldorf | company_website: https://www.schoen-klinik.de/duesseldorf | first_name: Sophie | last_name: Pohr | full_name: Sophie Pohr | role: Pflegedirektorin | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/sophie-pohr-201ba185 | confidence: high | notes: Official clinic leadership page lists nursing director.
+9. batch_id: batch_001 | company_name: Schön Klinik Düsseldorf | company_website: https://www.schoen-klinik.de/duesseldorf | first_name: Anke | last_name: Bachmann | full_name: Anke Bachmann | role: Krankenpflegeausbildung | role_category: hr_recruiting | confidence: medium | notes: Official nursing careers page lists nursing training contact.
+10. batch_id: batch_001 | company_name: Schön Klinik Düsseldorf | company_website: https://www.schoen-klinik.de/duesseldorf | first_name: Martin | last_name: Wiesel | full_name: Martin Wiesel | role: Klinikgeschäftsführer ab 1. Juli 2026 | role_category: founder_ceo | confidence: medium | notes: Public 2026 report names incoming clinic managing director.
+11. batch_id: batch_001 | company_name: Karl-Hansen-Klinik | company_website: http://www.medizinisches-zentrum.de | first_name: Niclas | last_name: Frie | full_name: Niclas Frie | role: Pflege-Direktor Campus Ost | role_category: operations | confidence: high | notes: Official MZG company page lists nursing director.
+12. batch_id: batch_001 | company_name: Karl-Hansen-Klinik | company_website: http://www.medizinisches-zentrum.de | first_name: Christiane | last_name: Funkenmeier | full_name: Christiane Funkenmeier | role: Pflegedienstleitung Akut, Karl-Hansen-Klinik | role_category: operations | confidence: high | notes: Official MZG company page lists acute nursing management.
+13. batch_id: batch_001 | company_name: Karl-Hansen-Klinik | company_website: http://www.medizinisches-zentrum.de | first_name: Markus | last_name: Finkeldei | full_name: Markus Finkeldei | role: Direktor Personal und Recht/Organisation | role_category: hr_recruiting | confidence: high | notes: Official MZG company page lists HR/legal director.
+14. batch_id: batch_001 | company_name: Karl-Hansen-Klinik | company_website: http://www.medizinisches-zentrum.de | first_name: Michael | last_name: Schröder | full_name: Michael Schröder | role: Kaufmännischer Direktor Campus-Ost | role_category: other_management | confidence: high | notes: Official MZG page lists Karl-Hansen commercial director.
+15. batch_id: batch_001 | company_name: UKM Marienhospital Steinfurt in Münster | company_website: https://ukm-marienhospital.de/ | first_name: Jennifer | last_name: Hues | full_name: Jennifer Hues | role: Prokuristin - Pflegedienstleitung | role_category: operations | confidence: high | notes: Official Pflege page names her PDL.
+16. batch_id: batch_001 | company_name: UKM Marienhospital Steinfurt in Münster | company_website: https://ukm-marienhospital.de/ | first_name: Georg | last_name: Westkamp | full_name: Georg Westkamp | role: stellvertretende Pflegedienstleitung | role_category: operations | confidence: high | notes: Official Pflege page names deputy PDL.
+17. batch_id: batch_001 | company_name: Augusta-Krankenhaus in Düsseldorf | company_website: http://www.augusta-duesseldorf.de | first_name: Niklas | last_name: Benedix | full_name: Niklas Benedix | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official Pflege page names PDL.
+18. batch_id: batch_001 | company_name: Städt. Krankenhaus Maria-Hilf Brilon | company_website: http://www.krankenhaus-brilon.de | first_name: Thomas | last_name: Pape | full_name: Thomas Pape | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official contacts page names Pflegedirektor.
+19. batch_id: batch_001 | company_name: Städt. Krankenhaus Maria-Hilf Brilon | company_website: http://www.krankenhaus-brilon.de | first_name: Ludger | last_name: Weber | full_name: Ludger Weber | role: Leitung Personal; Verwaltungs- und Personalleiter | role_category: hr_recruiting | confidence: high | notes: Official contacts page names HR lead.
+20. batch_id: batch_001 | company_name: Helios St. Elisabeth Klinik Oberhausen | company_website: https://www.helios-gesundheit.de/kliniken/oberhausen | first_name: Christoph | last_name: Wilde | full_name: Christoph Wilde | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official Helios profile names role.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_031_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
