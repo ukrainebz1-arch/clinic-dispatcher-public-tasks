@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_044_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_044_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Sana Dreifaltigkeits-Krankenhaus Köln | company_website: http://sana.de/koeln | first_name: Laura | last_name: Zurybida | full_name: Laura Zurybida | role: Kaufmännische Direktorin | role_category: other_management | confidence: high | notes: Official Sana Köln contact page lists her.
+2. batch_id: batch_001 | company_name: Christophorus-Kliniken Nottuln | company_website: http://www.christophorus-kliniken.de | first_name: Sascha | last_name: Söhnlein | full_name: Sascha Söhnlein | role: Pflegedirektor Standort Nottuln | role_category: operations | confidence: high | notes: Official Pflegeexpert:innen page names him for Nottuln.
+3. batch_id: batch_001 | company_name: Christophorus-Kliniken Nottuln | company_website: http://www.christophorus-kliniken.de | first_name: Dr. Jan | last_name: Deitmer | full_name: Dr. Jan Deitmer | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Hospital directory lists him for Nottuln hospital management.
+4. batch_id: batch_001 | company_name: Christophorus-Kliniken Nottuln | company_website: http://www.christophorus-kliniken.de | first_name: Christian | last_name: Gutendorf | full_name: Christian Gutendorf | role: Geschäftsführung | role_category: founder_ceo | confidence: medium | notes: 2026 personnel article says he joined Christophorus management.
+5. batch_id: batch_001 | company_name: St. Franziskus-Hospital in Winterberg | company_website: http://www.gesundheitszentrum-winterberg.de/ | first_name: Christine | last_name: Wick | full_name: Christine Wick | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflege page lists her.
+6. batch_id: batch_001 | company_name: St. Franziskus-Hospital in Winterberg | company_website: http://www.gesundheitszentrum-winterberg.de/ | first_name: Carsten | last_name: Röder | full_name: Carsten Röder | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official about page lists him.
+7. batch_id: batch_001 | company_name: St. Franziskus-Hospital in Winterberg | company_website: http://www.gesundheitszentrum-winterberg.de/ | first_name: Oliver | last_name: Timpanaro | full_name: Oliver Timpanaro | role: Personalwesen | role_category: hr_recruiting | confidence: high | notes: Official about page lists him under HR.
+8. batch_id: batch_001 | company_name: Stadtklinik Werdohl | company_website: http://www.maerkische-kliniken.de | first_name: Christine | last_name: Lehnert | full_name: Christine Lehnert | role: Pflegedienst- und Verwaltungsleitung | role_category: operations | confidence: high | notes: Official Stadtklinik Werdohl leadership page.
+9. batch_id: batch_001 | company_name: Stadtklinik Werdohl | company_website: http://www.maerkische-kliniken.de | first_name: Thorsten | last_name: Kehe | full_name: Dr. Thorsten Kehe | role: Vorsitzender der Geschäftsführung Märkische Kliniken | role_category: founder_ceo | confidence: high | notes: Official Werdohl leadership page.
+10. batch_id: batch_001 | company_name: St. Franziskus Krankenhaus in Eitorf | company_website: https://www.krankenhaus-eitorf.de/ | first_name: Heidrun | last_name: Schaffrath | full_name: Heidrun Schaffrath | role: Pflegedienstleitung / Qualitätsmanagement Pflege | role_category: operations | confidence: high | notes: Hospital directory lists her as nursing service lead.
+11. batch_id: batch_001 | company_name: St. Franziskus Krankenhaus in Eitorf | company_website: https://www.krankenhaus-eitorf.de/ | first_name: Petra | last_name: Nöhring | full_name: Petra Nöhring | role: Geschäftsführerin / Verwaltungsleitung | role_category: founder_ceo | confidence: high | notes: Hospital directory lists her in management.
+12. batch_id: batch_001 | company_name: Rhein-Klinik in Bad Honnef | company_website: https://www.rhein-klinik.de | first_name: Ralf | last_name: Weinz | full_name: Ralf Weinz | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official Rhein-Klinik leadership team page.
+13. batch_id: batch_001 | company_name: Rhein-Klinik in Bad Honnef | company_website: https://www.rhein-klinik.de | first_name: Ludger | last_name: Greulich | full_name: Ludger Greulich | role: Geschäftsleiter Rhein-Klinik | role_category: other_management | confidence: high | notes: Official Rhein-Klinik page lists him as clinic lead.
+14. batch_id: batch_001 | company_name: Artemed Fachklinik Prof. Dr. Dr. Salfeld in Bad Oeynhausen | company_website: http://www.artemed-oeynhausen.de | first_name: Birgit | last_name: Zurheide-Gerkensmeyer | full_name: Birgit Zurheide-Gerkensmeyer | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Hospital directory lists her as nursing service lead.
+15. batch_id: batch_001 | company_name: Artemed Fachklinik Prof. Dr. Dr. Salfeld in Bad Oeynhausen | company_website: http://www.artemed-oeynhausen.de | first_name: Stephanie | last_name: Witzke | full_name: Stephanie Witzke | role: Klinikleitung | role_category: other_management | confidence: high | notes: Official clinic leadership page lists her.
+16. batch_id: batch_001 | company_name: Artemed Fachklinik Prof. Dr. Dr. Salfeld in Bad Oeynhausen | company_website: http://www.artemed-oeynhausen.de | first_name: Kurt | last_name: Salfeld | full_name: Prof. Dr. med. Dr. rer. nat. Kurt Salfeld | role: Gründer und Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official clinic leadership page lists him.
+17. batch_id: batch_001 | company_name: Klinikum Lippe (Bad Salzuflen) | company_website: http://www.klinikum-lippe.de | first_name: Sascha | last_name: Hetmeier | full_name: Sascha Hetmeier | role: Pflegedienstleitung Standorte Lemgo und Bad Salzuflen | role_category: operations | confidence: high | notes: Official Klinikum Lippe nursing page names him for Bad Salzuflen.
+18. batch_id: batch_001 | company_name: Klinikum Lippe (Bad Salzuflen) | company_website: http://www.klinikum-lippe.de | first_name: Andreas | last_name: Zeisberg | full_name: Andreas Zeisberg | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official nursing page lists him as Pflegedirektor.
+19. batch_id: batch_001 | company_name: Klinikum Lippe (Bad Salzuflen) | company_website: http://www.klinikum-lippe.de | first_name: Niklas | last_name: Cruse | full_name: Dr. Niklas Cruse | role: Kaufmännischer Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official management page lists him.
+20. batch_id: batch_001 | company_name: Therapiezentrum Bergheim in Bergheim, Erft | company_website: https://klinik-dueren.lvr.de/de/nav_main/fachgebiete___behandlungsangebote/therapiezentrum_bergheim__tzb_/therapiezentrum_bergheim_tzb.html | first_name: Kurt | last_name: Königs | full_name: Kurt Königs | role: Pflegedirektor | role_category: operations | confidence: high | notes: LVR board role covers the Bergheim therapy center operator.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_044_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
