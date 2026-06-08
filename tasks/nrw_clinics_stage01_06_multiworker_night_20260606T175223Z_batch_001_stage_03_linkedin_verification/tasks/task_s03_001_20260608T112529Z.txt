@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_001_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_001_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Evangelisches Klinikum Bethel Standort Johannesstift (Bielefeld) | company_website: http://www.evkb.de | first_name: Petra | last_name: Krause | full_name: Petra Krause | role: Pflegedirektorin des EvKB und Krankenhaus Mara | role_category: operations | confidence: high | notes: Official EvKB page names her Pflegedirektorin
+2. batch_id: batch_001 | company_name: Evangelisches Klinikum Bethel Standort Bethel (Bielefeld) | company_website: http://www.evkb.de | first_name: Petra | last_name: Krause | full_name: Petra Krause | role: Pflegedirektorin des EvKB und Krankenhaus Mara | role_category: operations | confidence: high | notes: Official EvKB page names her Pflegedirektorin
+3. batch_id: batch_001 | company_name: St.-Katharinen-Hospital in Frechen | company_website: http://www.st-katharinen-hospital.de/ | first_name: T. | last_name: Ratbi | full_name: T. Ratbi | role: Pflegedienstleitung | role_category: operations | confidence: medium | notes: Official page lists initial and surname only
+4. batch_id: batch_001 | company_name: St.-Katharinen-Hospital in Frechen | company_website: http://www.st-katharinen-hospital.de/ | first_name: Jakob-Josef | last_name: Schall | full_name: Jakob-Josef Schall | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official administration page lists Geschäftsführer
+5. batch_id: batch_001 | company_name: Universitätsklinikum Köln | company_website: https://www.uk-koeln.de/ | first_name: Marina | last_name: Filipović | full_name: Marina Filipović | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflegedirektion team page
+6. batch_id: batch_001 | company_name: Universitätsklinikum Köln | company_website: https://www.uk-koeln.de/ | first_name: Kai-Uwe | last_name: Buschina | full_name: Kai-Uwe Buschina | role: Stellvertretender Pflegedirektor | role_category: operations | confidence: high | notes: Official Pflegedirektion team page
+7. batch_id: batch_001 | company_name: Universitätsklinikum Bonn | company_website: https://www.ukbonn.de | first_name: Alexander | last_name: Pröbstl | full_name: Alexander Pröbstl | role: Vorstand Pflege und Patientenservice | role_category: operations | confidence: high | notes: Official UKB leadership page
+8. batch_id: batch_001 | company_name: Universitätsklinikum Bonn | company_website: https://www.ukbonn.de | first_name: Nadia | last_name: Storm | full_name: Nadia Storm | role: Stellv. Vorständin für Pflege und Patientenservice | role_category: operations | confidence: high | notes: Official UKB page lists deputy
+9. batch_id: batch_001 | company_name: Universitätsklinikum Münster | company_website: http://www.ukm.de | first_name: Thomas | last_name: van den Hooven | full_name: Thomas van den Hooven | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official UKM Pflege page
+10. batch_id: batch_001 | company_name: Universitätsklinikum Münster | company_website: http://www.ukm.de | first_name: Stephanie | last_name: Krähe | full_name: Stephanie Krähe | role: Stellvertretende Pflegedirektorin | role_category: operations | confidence: high | notes: Official UKM Pflege page
+11. batch_id: batch_001 | company_name: Uniklinik RWTH Aachen | company_website: http://www.ukaachen.de/ | first_name: Jasmin | last_name: Shmalia | full_name: Jasmin Shmalia | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflegedirektion page
+12. batch_id: batch_001 | company_name: Uniklinik RWTH Aachen | company_website: http://www.ukaachen.de/ | first_name: Mario | last_name: Hoben | full_name: Mario Hoben | role: Stellv. Pflegedirektor | role_category: operations | confidence: high | notes: Official Pflegedirektion page
+13. batch_id: batch_001 | company_name: Universitätsklinikum Düsseldorf | company_website: https://www.uniklinik-duesseldorf.de/ | first_name: Torsten | last_name: Rantzsch | full_name: Torsten Rantzsch | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official Pflegedirektion page
+14. batch_id: batch_001 | company_name: Universitätsklinikum Düsseldorf | company_website: https://www.uniklinik-duesseldorf.de/ | first_name: Liliana | last_name: da Silva Nunes | full_name: Liliana da Silva Nunes | role: Referentin der Pflegedirektion | role_category: operations | confidence: high | notes: Official Pflegedirektion page
+15. batch_id: batch_001 | company_name: Universitätsklinikum Essen | company_website: https://www.uk-essen.de | first_name: Andrea | last_name: Schmidt-Rumposch | full_name: Andrea Schmidt-Rumposch | role: Pflegedirektorin Vorstand | role_category: operations | confidence: high | notes: Official UK Essen Pflegedirektion page
+16. batch_id: batch_001 | company_name: Helios Klinikum Krefeld | company_website: https://www.helios-gesundheit.de/kliniken/krefeld/ | first_name: Nicola | last_name: Küppers | full_name: Nicola Küppers | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Helios Ansprechpartner page
+17. batch_id: batch_001 | company_name: Helios Klinikum Krefeld | company_website: https://www.helios-gesundheit.de/kliniken/krefeld/ | first_name: Lisa | last_name: Schramm | full_name: Lisa Schramm | role: Stellv. Pflegedirektorin | role_category: operations | confidence: high | notes: Official Helios Ansprechpartner page
+18. batch_id: batch_001 | company_name: Klinikum Dortmund Mitte | company_website: http://www.klinikumdo.de/ | first_name: Georg | last_name: Schneider | full_name: Georg Schneider | role: Pflegedirektor und Prokurist | role_category: operations | confidence: high | notes: Official Klinikum Dortmund Pflege team
+19. batch_id: batch_001 | company_name: Klinikum Dortmund Mitte | company_website: http://www.klinikumdo.de/ | first_name: Stefan | last_name: Strutz | full_name: Stefan Strutz | role: Stellv. Pflegedirektor Operative Pflegebereiche Mitte | role_category: operations | confidence: high | notes: Official Klinikum Dortmund Pflege team
+20. batch_id: batch_001 | company_name: Klinikum Lüdenscheid | company_website: http://www.maerkische-kliniken.de | first_name: Dagmar | last_name: Keggenhoff | full_name: Dagmar Keggenhoff | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflegedirektion page
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_001_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
