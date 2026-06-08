@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_027_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_027_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: St. Rochus-Hospital Telgte | company_website: http://www.srh-telgte.de | first_name: Matthias | last_name: Schulte | full_name: Matthias Schulte | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official nursing page lists nursing director.
+2. batch_id: batch_001 | company_name: St. Rochus-Hospital Telgte | company_website: http://www.srh-telgte.de | first_name: Marion | last_name: Rowald | full_name: Marion Rowald | role: Stellvertretende Pflegedirektorin | role_category: operations | confidence: high | notes: Official nursing page lists deputy nursing director.
+3. batch_id: batch_001 | company_name: St. Walburga-Krankenhaus in Meschede | company_website: https://www.klinikum-hochsauerland.de/klinikum-hochsauerland/standorte/st-walburga-krankenhaus/ | first_name: Jürgen | last_name: Kleinschmidt | full_name: Jürgen Kleinschmidt | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official Klinikum Hochsauerland page lists nursing director.
+4. batch_id: batch_001 | company_name: St. Walburga-Krankenhaus in Meschede | company_website: https://www.klinikum-hochsauerland.de/klinikum-hochsauerland/standorte/st-walburga-krankenhaus/ | first_name: Kerstin | last_name: Leiße | full_name: Kerstin Leiße | role: Pflegedienstleitung Standortsprecherin | role_category: operations | confidence: high | notes: Official site lists St. Walburga nursing site lead.
+5. batch_id: batch_001 | company_name: Elisabeth Krankenhaus Recklinghausen | company_website: http://www.ekonline.de | first_name: Andreas | last_name: Schellig | full_name: Andreas Schellig | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official nursing page lists nursing director.
+6. batch_id: batch_001 | company_name: Elisabeth Krankenhaus Recklinghausen | company_website: http://www.ekonline.de | first_name: Jochem | last_name: Kalthegener | full_name: Jochem Kalthegener | role: Personalleitung | role_category: hr_recruiting | confidence: high | notes: Official contact page lists HR leadership.
+7. batch_id: batch_001 | company_name: LWL-Klinik Herten | company_website: http://www.lwl-klinik-herten.de | first_name: Andrea Marie | last_name: Kleditzsch | full_name: Andrea Marie Kleditzsch | role: Komm. Pflegedirektorin | role_category: operations | confidence: high | notes: Official contact page lists acting nursing director.
+8. batch_id: batch_001 | company_name: LWL-Klinik Herten | company_website: http://www.lwl-klinik-herten.de | first_name: Harald | last_name: Sammetinger | full_name: Harald Sammetinger | role: Stellvertretender Pflegedirektor | role_category: operations | confidence: high | notes: Official contact page lists deputy nursing director.
+9. batch_id: batch_001 | company_name: Ruhrlandklinik in Essen | company_website: http://www.ruhrlandklinik.de/ | first_name: Dagmar | last_name: Wittek | full_name: Dagmar Wittek | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official nursing contact page lists nursing director.
+10. batch_id: batch_001 | company_name: St. Vincenz Krankenhaus (Menden) | company_website: https://www.kkimk.de | first_name: Thomas | last_name: Mende | full_name: Thomas Mende | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official hospital nursing page lists nursing director.
+11. batch_id: batch_001 | company_name: St. Vincenz Krankenhaus (Menden) | company_website: https://www.kkimk.de | first_name: André | last_name: Knabe | full_name: André Knabe | role: Klinikmanager | role_category: other_management | confidence: high | notes: Official location page lists clinic manager.
+12. batch_id: batch_001 | company_name: Ev. Krankenhaus Bethesda Mönchengladbach | company_website: http://www.johanniter-kliniken.de | first_name: Michaela | last_name: Lammich | full_name: Michaela Lammich | role: Oberin | role_category: operations | confidence: high | notes: Official leadership page lists nursing leadership role.
+13. batch_id: batch_001 | company_name: Ev. Krankenhaus Bethesda Mönchengladbach | company_website: http://www.johanniter-kliniken.de | first_name: Andreas | last_name: Ulrich | full_name: Andreas Ulrich | role: Personalleitung | role_category: hr_recruiting | confidence: high | notes: Official contacts page lists HR leadership.
+14. batch_id: batch_001 | company_name: Elisabeth-Krankenhaus in Gelsenkirchen | company_website: https://www.kern.ruhr/ | first_name: Herma | last_name: Osthaus | full_name: Herma Osthaus | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official directorate page lists nursing director.
+15. batch_id: batch_001 | company_name: Elisabeth-Krankenhaus in Gelsenkirchen | company_website: https://www.kern.ruhr/ | first_name: Eva | last_name: Wilhelm | full_name: Eva Wilhelm | role: Krankenhausgeschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official directorate page lists hospital managing director.
+16. batch_id: batch_001 | company_name: DGD Lungenklinik Hemer | company_website: https://www.lungenklinik-hemer.de | first_name: Gudrun | last_name: Strohdeicher | full_name: Gudrun Strohdeicher | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official nursing page lists nursing director.
+17. batch_id: batch_001 | company_name: DGD Lungenklinik Hemer | company_website: https://www.lungenklinik-hemer.de | first_name: Toralf | last_name: Kerndt | full_name: Toralf Kerndt | role: Standortleitung Pflege | role_category: operations | confidence: high | notes: Official nursing page lists site nursing lead.
+18. batch_id: batch_001 | company_name: St. Antonius Krankenhaus in Köln | company_website: http://www.antonius-koeln.de | first_name: Ansgar | last_name: Holzkamp | full_name: Ansgar Holzkamp | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official hospital leadership page lists nursing director.
+19. batch_id: batch_001 | company_name: St. Antonius Krankenhaus in Köln | company_website: http://www.antonius-koeln.de | first_name: Anne-Katrin | last_name: Peters | full_name: Anne-Katrin Peters | role: Kaufmännische Direktorin | role_category: other_management | confidence: high | notes: Official hospital leadership page lists commercial director.
+20. batch_id: batch_001 | company_name: LWL-Klinik Paderborn (Agathastraße) | company_website: http://www.lwl-klinik-paderborn.de | first_name: Monika | last_name: Seewald | full_name: Monika Seewald | role: Pflegedirektorin | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/seewald-monika-244b25123 | confidence: high | notes: Official clinic page lists nursing director.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_027_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
