@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_033_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_033_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Helios St. Josefshospital Uerdingen in Krefeld | company_website: https://www.helios-gesundheit.de/kliniken/krefeld-uerdingen/ | first_name: Meike | last_name: Hagemann | full_name: Meike Hagemann | role: Kfm. Standortleiterin St. Josefshospital Uerdingen | role_category: other_management | confidence: high | notes: Official Helios contacts page names site lead.
+2. batch_id: batch_001 | company_name: Sana Kliniken Düsseldorf (Benrath) | company_website: https://www.sana-benrath.de | first_name: Lisa | last_name: Lolli | full_name: Lisa Lolli | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Sana Pflegedirektion page names role.
+3. batch_id: batch_001 | company_name: Sana Kliniken Düsseldorf (Benrath) | company_website: https://www.sana-benrath.de | first_name: Friederike | last_name: Bergmann | full_name: Friederike Bergmann | role: Bereichsleitung Pflegedienst Standort Benrath | role_category: operations | confidence: high | notes: Official Sana page is Standort-specific.
+4. batch_id: batch_001 | company_name: St. Martinus Krankenhaus in Langenfeld (Rheinland) | company_website: http://www.stmartinus-langenfeld.de | first_name: Annika | last_name: Weidinger | full_name: Annika Weidinger | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official GFO Pflege team page names PDL.
+5. batch_id: batch_001 | company_name: St. Martinus Krankenhaus in Langenfeld (Rheinland) | company_website: http://www.stmartinus-langenfeld.de | first_name: Sven | last_name: Mitteldorf | full_name: Sven Mitteldorf | role: Kaufmännischer Direktor; Betriebsleitung | role_category: other_management | confidence: high | notes: Official GFO leadership page names director.
+6. batch_id: batch_001 | company_name: Krankenhaus Mara (Bielefeld) | company_website: http://www.evkb.de | first_name: Katja | last_name: Rosenthal-Schleicher | full_name: Katja Rosenthal-Schleicher | role: Pflegerische Fachbereichsleitung | role_category: operations | confidence: high | notes: Official Mara page names nursing lead.
+7. batch_id: batch_001 | company_name: Krankenhaus Mara (Bielefeld) | company_website: http://www.evkb.de | first_name: Petra | last_name: Krause | full_name: Petra Krause | role: Pflegedirektorin am EvKB und Krankenhaus Mara | role_category: operations | confidence: medium | notes: EVKB Pflege page links her to Mara.
+8. batch_id: batch_001 | company_name: Hüttenhospital Dortmund | company_website: http://www.huettenhospital.de | first_name: Thomas | last_name: Pape | full_name: Thomas Pape | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official Pflege page names Pflegedirektor.
+9. batch_id: batch_001 | company_name: Hüttenhospital Dortmund | company_website: http://www.huettenhospital.de | first_name: René | last_name: Thiemann | full_name: René Thiemann | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official organisation page names Geschäftsführer.
+10. batch_id: batch_001 | company_name: Marienborn Tagesklinik für Psychiatrie und Psychotherapie in Hürth, Rheinland | company_website: http://www.marienborn-psychiatrie.de | first_name: Natascha | last_name: Nehrig-Dalhoff | full_name: Natascha Nehrig-Dalhoff | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official contact page names Pflegedirektorin.
+11. batch_id: batch_001 | company_name: Marienborn Tagesklinik für Psychiatrie und Psychotherapie in Hürth, Rheinland | company_website: http://www.marienborn-psychiatrie.de | first_name: Andrea | last_name: Heines | full_name: Andrea Heines | role: Bereichsleitung Tageskliniken und Institutsambulanzen | role_category: operations | confidence: high | notes: Official contact page links role to day clinics.
+12. batch_id: batch_001 | company_name: Zentrum für Seelische Gesundheit Marienheide | company_website: http://www.klinikum-oberberg.de | first_name: Raphael | last_name: Lüdenbach | full_name: Raphael Lüdenbach | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official ZSG Pflegedirektion page.
+13. batch_id: batch_001 | company_name: Zentrum für Seelische Gesundheit Marienheide | company_website: http://www.klinikum-oberberg.de | first_name: Miriam | last_name: Sischka | full_name: Miriam Sischka | role: Stellvertretende Pflegedirektorin | role_category: operations | confidence: high | notes: Official ZSG Pflegedirektion page.
+14. batch_id: batch_001 | company_name: Marienborn Fachklinik für Psychiatrie und Psychotherapie in Zülpich | company_website: http://www.marienborn-psychiatrie.de | first_name: Natascha | last_name: Nehrig-Dalhoff | full_name: Natascha Nehrig-Dalhoff | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official contact page lists Pflegedirektion.
+15. batch_id: batch_001 | company_name: Marienborn Fachklinik für Psychiatrie und Psychotherapie in Zülpich | company_website: http://www.marienborn-psychiatrie.de | first_name: Karina | last_name: Lopardo | full_name: Karina Lopardo | role: Stellvertretende Pflegedirektorin | role_category: operations | confidence: high | notes: Official contact page lists deputy Pflegedirektion.
+16. batch_id: batch_001 | company_name: Marienborn Fachklinik für Psychiatrie und Psychotherapie in Zülpich | company_website: http://www.marienborn-psychiatrie.de | first_name: Stefan | last_name: Wirtz | full_name: Stefan Wirtz | role: Ressortleiter Personal | role_category: hr_recruiting | confidence: high | notes: Official Marienborn contact page lists personnel lead.
+17. batch_id: batch_001 | company_name: Marien Hospital Dortmund-Hombruch | company_website: http://www.marien-hospital-dortmund.de | first_name: Matthias | last_name: Krake | full_name: Matthias Krake | role: Pflegedienstleitung Psychiatrie | role_category: operations | confidence: high | notes: Official Pflege page lists nursing management.
+18. batch_id: batch_001 | company_name: Städtisches Krankenhaus Nettetal | company_website: http://krankenhaus-nettetal.de | first_name: David | last_name: Girbig | full_name: David Girbig | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official Pflegedienstleitung page.
+19. batch_id: batch_001 | company_name: Städtisches Krankenhaus Nettetal | company_website: http://krankenhaus-nettetal.de | first_name: Stefan | last_name: Russmann | full_name: Stefan Russmann | role: Stellvertretender Pflegedienstleiter | role_category: operations | confidence: high | notes: Official Pflegedienstleitung page.
+20. batch_id: batch_001 | company_name: Städtisches Krankenhaus Nettetal | company_website: http://krankenhaus-nettetal.de | first_name: Jörg | last_name: Schneider | full_name: Jörg Schneider | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official Krankenhausstruktur page.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_033_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
