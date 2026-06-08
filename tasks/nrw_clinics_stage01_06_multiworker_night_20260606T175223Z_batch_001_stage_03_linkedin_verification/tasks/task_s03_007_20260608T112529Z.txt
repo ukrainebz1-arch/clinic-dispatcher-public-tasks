@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_007_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_007_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Düsseldorf | company_website: https://www.evk-duesseldorf.de | first_name: Stefanie | last_name: Mette | full_name: Stefanie Mette | role: Personalleiterin | role_category: hr_recruiting | confidence: high | notes: Official Betriebsleitung page lists her as Personalleiterin.
+2. batch_id: batch_001 | company_name: Karolinen-Hospital Hüsten in Arnsberg | company_website: https://klinikum-hochsauerland.de/das-klinikum/standorte/karolinen-hospital | first_name: Jürgen | last_name: Kleinschmidt | full_name: Jürgen Kleinschmidt | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official Pflegedirektion page lists him as Pflegedirektor.
+3. batch_id: batch_001 | company_name: Karolinen-Hospital Hüsten in Arnsberg | company_website: https://klinikum-hochsauerland.de/das-klinikum/standorte/karolinen-hospital | first_name: Holger | last_name: Zens-Gerke | full_name: Holger Zens-Gerke | role: Stellvertretender Pflegedirektor | role_category: operations | confidence: high | notes: Official Pflegedirektion page lists him as deputy.
+4. batch_id: batch_001 | company_name: Karolinen-Hospital Hüsten in Arnsberg | company_website: https://klinikum-hochsauerland.de/das-klinikum/standorte/karolinen-hospital | first_name: Lisanne | last_name: Wiese | full_name: Lisanne Wiese | role: Leitung Personal Alexianer Klinikum Hochsauerland | role_category: hr_recruiting | confidence: high | notes: Official Personalwesen page lists her as HR lead.
+5. batch_id: batch_001 | company_name: Herz- und Diabeteszentrum NRW in Bad Oeynhausen | company_website: http://www.hdz-nrw.de | first_name: Christian | last_name: Siegling | full_name: Christian Siegling | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official HDZ nursing contacts page lists him as Pflegedirektor.
+6. batch_id: batch_001 | company_name: Herz- und Diabeteszentrum NRW in Bad Oeynhausen | company_website: http://www.hdz-nrw.de | first_name: Esther | last_name: Mertins | full_name: Esther Mertins M.Sc. | role: Stellvertretende Pflegedirektorin | role_category: operations | confidence: high | notes: Official HDZ nursing contacts page lists her as deputy.
+7. batch_id: batch_001 | company_name: Luisenhospital Aachen | company_website: http://www.luisenhospital.de | first_name: Oliver | last_name: Wittig | full_name: Oliver Wittig, BBA | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official Direktorium page lists him as Pflegedirektor.
+8. batch_id: batch_001 | company_name: Luisenhospital Aachen | company_website: http://www.luisenhospital.de | first_name: Ralf | last_name: Wenzel | full_name: Dipl.-Betriebswirt Ralf Wenzel | role: Vorstandsvorsitzender | role_category: founder_ceo | confidence: high | notes: Official leadership page lists him as Vorstandsvorsitzender.
+9. batch_id: batch_001 | company_name: Luisenhospital Aachen | company_website: http://www.luisenhospital.de | first_name: Biljana | last_name: Benic | full_name: Biljana Benic M.A. | role: Pflegerische Fachbereichsleitung | role_category: operations | confidence: high | notes: Official page lists her as pflegerische Fachbereichsleitung.
+10. batch_id: batch_001 | company_name: Agaplesion Allgemeines Krankenhaus Hagen | company_website: http://www.akh-hagen.de/ | first_name: Christian | last_name: Engelbert | full_name: Christian Engelbert | role: Kommissarischer Pflegedirektor | role_category: operations | confidence: high | notes: Official care page lists him as kommissarischer Pflegedirektor.
+11. batch_id: batch_001 | company_name: Agaplesion Allgemeines Krankenhaus Hagen | company_website: http://www.akh-hagen.de/ | first_name: Marco | last_name: Kempka | full_name: Marco Kempka | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official management page lists him under Geschäftsführung.
+12. batch_id: batch_001 | company_name: Knappschaft Kliniken Recklinghausen | company_website: http://www.klinikum-vest.de | first_name: Mario | last_name: Löblein | full_name: Mario Löblein | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official Pflegedirektion page lists him as Pflegedirektor.
+13. batch_id: batch_001 | company_name: Knappschaft Kliniken Recklinghausen | company_website: http://www.klinikum-vest.de | first_name: Uwe | last_name: Graw | full_name: Uwe Graw | role: Stellvertretender Pflegedirektor | role_category: operations | confidence: high | notes: Official Pflegedirektion page lists him as deputy.
+14. batch_id: batch_001 | company_name: Diakonie Klinikum Jung-Stilling in Siegen | company_website: http://www.diakonie-klinikum.com | first_name: Jörg | last_name: Engel | full_name: Jörg Engel | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official contact page lists him as Pflegedirektor.
+15. batch_id: batch_001 | company_name: Diakonie Klinikum Jung-Stilling in Siegen | company_website: http://www.diakonie-klinikum.com | first_name: Frank | last_name: Grümbel | full_name: Frank Grümbel | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official contact page lists him as Pflegedienstleiter.
+16. batch_id: batch_001 | company_name: Diakonie Klinikum Jung-Stilling in Siegen | company_website: http://www.diakonie-klinikum.com | first_name: Jörn | last_name: Baaske | full_name: Dr. Jörn Baaske | role: Personaldirektor | role_category: hr_recruiting | confidence: high | notes: Official contact page lists him as Personaldirektor.
+17. batch_id: batch_001 | company_name: Universitätsklinikum Bochum | company_website: http://www.kk-bochum.de | first_name: Christian | last_name: Fehr | full_name: Christian Fehr | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official leadership page lists him as Pflegedirektor.
+18. batch_id: batch_001 | company_name: Universitätsklinikum Bochum | company_website: http://www.kk-bochum.de | first_name: Alexandra | last_name: Zimmermann | full_name: Alexandra Zimmermann | role: Stellvertretende Pflegedirektorin | role_category: operations | confidence: high | notes: Official leadership page lists her as deputy Pflegedirektorin.
+19. batch_id: batch_001 | company_name: Universitätsklinikum Bochum | company_website: http://www.kk-bochum.de | first_name: Hans Christian | last_name: Atzpodien | full_name: Dr. Hans Christian Atzpodien | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official leadership page lists him as Geschäftsführer.
+20. batch_id: batch_001 | company_name: St. Vinzenz-Hospital in Dinslaken | company_website: https://kliniken-niederrhein.gfo-online.de | first_name: Susanne | last_name: Krawath | full_name: Susanne Krawath | role: Pflegedienstleitung Somatik | role_category: operations | confidence: high | notes: Official leadership page lists her in hospital Betriebsleitung.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_007_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
