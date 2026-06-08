@@ -1,0 +1,147 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_02_public_email_lookup_resend2
+TASK_ID: task_stage_007_20260608T103942Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_007_20260608T103942Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / RESEND 2: deep email variant recovery for B2B email enrichment.
+
+Role:
+You are doing a deep recovery pass for unresolved or high-value rows after previous Stage 02 passes. Your task is to find missed person-company emails by searching variants, older sources, and deeper email evidence.
+
+Important routing context:
+The input rows are not all original people. They are remaining unresolved rows after SEND 1 and RESEND 1 have already been merged. Use all previous email-relevant fields as context: email_status, email, candidate_email, alternative_emails, source_urls, company_email_examples, pattern_examples_found, next_recovery_action, merge_history, validation_issues, and notes. Ignore route-only context unless it contains actual email evidence.
+
+Identity preservation rules:
+- Copy these fields exactly from the input row: campaign_id, batch_id, input_row_id, person_key, company_key.
+- Do not invent, normalize, shorten, translate, regenerate, or renumber these fields.
+- Do not use the numbered list index as input_row_id.
+- If an identity field is present in the input, the same exact value must appear in the output row.
+
+Goal:
+Return the best improved email result and the actionable recovery_signal / next_recovery_action that tells the pipeline what should happen next.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Search style:
+Use broad web search and older-source recovery. Look for email variants across PDFs, old event pages, association records, newsletters, speaker bios, partner pages, press pages, cached snippets, public documents, company pages, and visible snippets.
+
+Do not search for routes. Search for email evidence.
+Good evidence includes:
+- exact candidate email appearances;
+- concrete same-domain person emails at the target company;
+- older PDFs/newsletters/speaker bios exposing email addresses;
+- obfuscated emails such as name(at)domain or name [at] domain;
+- source snippets containing email addresses;
+- domain-specific examples that prove a stable format.
+
+Useful email identity variants:
+- firstname.lastname@domain
+- firstinitial.lastname@domain
+- firstname@domain
+- lastname@domain
+- firstname_lastname@domain
+- firstname-lastname@domain
+- formal-name variants such as Nick/Nicolas/Nicholas, Ben/Benjamin, Chris/Christopher
+- German character variants such as ä/ae, ö/oe, ü/ue, ß/ss
+- hyphen and compound surname variants
+- compound first-name or surname variants when visible in the person's public name.
+
+Recovery-signal logic:
+Use judgment. Do not mechanically complete a checklist. Do not produce auditability for its own sake. A recovery signal is useful only if it changes email routing.
+
+Useful recovery signals include:
+- exact person-company email found;
+- exact candidate still plausible but not verified;
+- 3+ same-domain pattern examples found;
+- only weak pattern evidence found;
+- provider candidate found but not confirmed;
+- no useful email signal.
+
+Do NOT treat these as useful recovery signals unless they expose an email:
+- booking route found;
+- contact button exists;
+- team profile exists;
+- LinkedIn/Xing/profile route exists;
+- generic contact form exists.
+
+Allowed next_recovery_action values and when to use them:
+- close_as_found_person_email: exact person-company email found.
+- send_to_exact_candidate_verification: exact candidate remains plausible and should be verified.
+- send_to_pattern_decision: 3+ same-domain pattern examples or strong candidate-pattern evidence exists.
+- keep_as_unverified_candidate: only weak pattern/provider evidence remains.
+- close_as_not_found_email: no useful email/candidate/pattern evidence remains.
+- keep_generic_route: only if a concrete generic company email was found quickly and no person email exists.
+- keep_named_route: compatibility fallback only; do not use for ordinary route-only findings.
+- send_to_technical_source_extraction: only if a source appears to hide an actual email address, such as obfuscated email/source email clue; not for simple contact forms or booking pages.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Core rules:
+- Generated/pattern emails are not FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found.
+- STRONG_PATTERN_HYPOTHESIS should normally be finalized in RESEND 3 pattern decision, not guessed here unless the evidence is already decisive.
+- Do not overwrite a stronger previous result with a weaker result.
+- Prefer NOT_FOUND_EMAIL over route-only output.
+- Do not create FOUND_NAMED_COMPANY_ROUTE as a search goal.
+
+Input format:
+You will receive CURRENT CHUNK INPUT as numbered rows generated by the dispatcher. Each row already contains the previous merged result and context fields. Do not require placeholder blocks.
+
+Output CSV only. Preserve one output row per input row. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- cascade_pass: RESEND_2_DEEP_VARIANT_RECOVERY.
+- email: only exact found confirmed person-company email or generic company email.
+- candidate_email: candidate that remains unconfirmed.
+- company_email_examples / pattern_examples_found: concrete same-domain examples if found.
+- source_urls: pipe-separated supporting URLs if multiple sources exist.
+- route_url / route_label: normally blank; do not fill route fields unless preserving unavoidable compatibility evidence.
+- next_recovery_action: must be one allowed value and should express the next email-routing decision.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true only for FOUND_GENERIC_COMPANY_EMAIL; false for FOUND_NAMED_COMPANY_ROUTE.
+- notes: short actionable email audit note, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Wuppertal - Barmen | first_name: Claudia | last_name: Rocholl | full_name: Claudia Rocholl | role: Leitung Personal und Recht | role_category: hr_recruiting | email: personalabteilung@stiftung-tannenhof.de | email_type: generic_company | email_source_url: https://www.stiftung-tannenhof.de/ueber-uns/menschen | notes: Official people page gives HR role mailbox only. | alt: HR leadership for Stiftung Tannenhof. | alt: Exact person email not found; official page lists HR mailbox only. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::psychiatrischetagesklinikwuppertalbarmen::claudia::rocholl | person_key: batch001::psychiatrischetagesklinikwuppertalbarmen::claudia::rocholl | company_key: batch001::psychiatrischetagesklinikwuppertalbarmen | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: stiftung-tannenhof.de | source_urls: https://www.stiftung-tannenhof.de/ueber-uns/menschen|https://www.stiftung-tannenhof.de/karriere/in-die-pflege-zu-uns | company_email_examples: pdl@stiftung-tannenhof.de|personalabteilung@stiftung-tannenhof.de|info@stiftung-tannenhof.de | alternative_emails: personalabteilung@stiftung-tannenhof.de | email_confidence: high | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|stage02_send1_email_lookup|RESEND_1_EXACT_CANDIDATE_VERIFICATION kept FOUND_GENERIC_COMPANY_EMAIL over FOUND_GENERIC_COMPANY_EMAIL|RESEND_1_EXACT_CANDIDATE_VERIFICATION no_exact_person_email | validation_issues: no_person_level_email_found | recovery_signal: route_without_confirmed_person_email
+2. batch_id: batch_001 | company_name: Tagesklinik Kinder- und Jugendpsychiatrie Gummersbach | company_website: http://www.klinikum-oberberg.de | first_name: Raphael | last_name: Lüdenbach | full_name: Raphael Lüdenbach | role: Pflegedirektor | role_category: operations | email: info@klinikum-oberberg.de | email_type: generic_company | email_source_url: https://www.klinikum-oberberg.de/impressum | notes: 2026 sources show move to Kliniken Köln so only generic retained. | alt: Quality report names him Pflegedirektor for KJP Tagesklinik. | alt: Exact old Oberberg email found but 2026 move to Köln prevents person-company upgrade. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikkinderundjugendpsychiatriegummersbach::klinikumoberbergde::raphael::ldenbach | person_key: batch001::tagesklinikkinderundjugendpsychiatriegummersbach::klinikumoberbergde::raphael::ldenbach | company_key: batch001::tagesklinikkinderundjugendpsychiatriegummersbach::klinikumoberbergde | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: klinikum-oberberg.de | source_urls: https://www.klinikum-oberberg.de/impressum|https://www.klinikum-oberberg.de/ueber-uns/pflegedirektion|https://www.bibliomed-pflege.de/news/raphael-luedenbach-ist-neuer-pflegedirektor | company_email_examples: info@klinikum-oberberg.de|michael.brinkhaus@klinikum-oberberg.de|sabine.krause@klinikum-oberberg.de | alternative_emails: info@klinikum-oberberg.de | email_confidence: medium | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|stage02_send1_email_lookup|RESEND_1_EXACT_CANDIDATE_VERIFICATION kept FOUND_GENERIC_COMPANY_EMAIL over FOUND_GENERIC_COMPANY_EMAIL|RESEND_1_EXACT_CANDIDATE_VERIFICATION current_company_mismatch_not_upgraded | validation_issues: current_company_mismatch | recovery_signal: route_without_confirmed_person_email
+3. batch_id: batch_001 | company_name: Johanniter-Tagesklinik Siegburg | company_website: http://www.tagesklinik-siegburg.de | first_name: Detlef | last_name: Koenig | full_name: Detlef Koenig | role: Geschäftsführer | role_category: founder_ceo | email: info@tagesklinik-siegburg.de | email_type: generic_company | email_source_url: https://www.johanniter.de/johanniter-kliniken/johanniter-tagesklinik-siegburg/impressum/ | notes: Official imprint exposes generic email; no Detlef Koenig person email found. | alt: Official imprint lists Geschäftsführer. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::johannitertageskliniksiegburg::tageskliniksiegburgde::detlef::koenig | person_key: batch001::johannitertageskliniksiegburg::tageskliniksiegburgde::detlef::koenig | company_key: batch001::johannitertageskliniksiegburg::tageskliniksiegburgde | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: tagesklinik-siegburg.de | source_urls: https://www.johanniter.de/johanniter-kliniken/johanniter-tagesklinik-siegburg/impressum/ | email_confidence: high | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|stage_02_send1_email_lookup | recovery_signal: route_without_confirmed_person_email
+4. batch_id: batch_001 | company_name: Alexianer Krankenhaus Köln | company_website: http://www.alexianer-koeln.de | first_name: Sabine | last_name: Olbrück | full_name: Sabine Olbrück | role: Pflegedienstleitung | role_category: operations | email: alexianer.koeln@alexianer.de | email_type: generic_company | email_source_url: https://www.alexianer-koeln.de/fileadmin/user_upload/Koeln_Rhein-Sieg/Unternehmen/Qualit%C3%A4tsberichte/Qualit%C3%A4tsbericht_2024_RD.pdf | notes: 2024 quality report lists generic hospital email for Sabine Olbrück row. | alt: Official Alexianer leadership page lists hospital nursing leadership. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::alexianerkrankenhauskln::alexianerkoelnde::sabine::olbrck | person_key: batch001::alexianerkrankenhauskln::alexianerkoelnde::sabine::olbrck | company_key: batch001::alexianerkrankenhauskln::alexianerkoelnde | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: alexianer.de | source_urls: https://www.alexianer-koeln.de/fileadmin/user_upload/Koeln_Rhein-Sieg/Unternehmen/Qualit%C3%A4tsberichte/Qualit%C3%A4tsbericht_2024_RD.pdf | email_confidence: high | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|stage_02_send1_email_lookup | recovery_signal: route_without_confirmed_person_email
+5. batch_id: batch_001 | company_name: Alexianer Krankenhaus Köln | company_website: http://www.alexianer-koeln.de | first_name: Peter | last_name: Scharfe | full_name: Peter Scharfe | role: Regional Geschäftsführer Alexianer Köln/Rhein-Sieg | role_category: founder_ceo | email: alexianer.koeln@alexianer.de | email_type: generic_company | email_source_url: https://www.alexianer-koeln.de/fileadmin/user_upload/Koeln_Rhein-Sieg/Unternehmen/Qualit%C3%A4tsberichte/Qualit%C3%A4tsbericht_2024_RD.pdf | notes: Official quality report lists generic email for Peter Scharfe; no person email found. | alt: Official Alexianer leadership page lists regional Geschäftsführer. | alt: Exact Peter Scharfe email not found; official sources support generic and secretariat addresses. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::alexianerkrankenhauskln::alexianerkoelnde::peter::scharfe | person_key: batch001::alexianerkrankenhauskln::alexianerkoelnde::peter::scharfe | company_key: batch001::alexianerkrankenhauskln::alexianerkoelnde | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: alexianer.de | source_urls: https://www.alexianer-koeln.de/fileadmin/user_upload/Koeln_Rhein-Sieg/Unternehmen/Qualit%C3%A4tsberichte/Qualit%C3%A4tsbericht_2024_RD.pdf|https://www.alexianer-koeln.de/unternehmen/wir-ueber-uns/unternehmensleitung | company_email_examples: alexianer.koeln@alexianer.de|sekretariat-gf.koeln@alexianer.de|chefarztsekretariat.koeln@alexianer.de | alternative_emails: sekretariat-gf.koeln@alexianer.de|alexianer.koeln@alexianer.de | email_confidence: high | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|stage_02_send1_email_lookup|RESEND_1_EXACT_CANDIDATE_VERIFICATION kept FOUND_GENERIC_COMPANY_EMAIL over FOUND_GENERIC_COMPANY_EMAIL|RESEND_1_EXACT_CANDIDATE_VERIFICATION no_exact_person_email | recovery_signal: route_without_confirmed_person_email
+6. batch_id: batch_001 | company_name: Alexianer Krankenhaus Köln | company_website: http://www.alexianer-koeln.de | first_name: Jens | last_name: Kuhn | full_name: Jens Kuhn | role: Ärztlicher Direktor und Chefarzt | role_category: other_management | email: chefarztsekretariat.koeln@alexianer.de | email_type: generic_company | email_source_url: https://www.alexianer-koeln.de/fileadmin/user_upload/Koeln_Rhein-Sieg/Unternehmen/Qualit%C3%A4tsberichte/Qualit%C3%A4tsbericht_2024_RD.pdf | notes: 2024 quality report lists chief physician secretariat email for Jens Kuhn row. | alt: Medical leadership fallback from official page. | alt: Exact Jens Kuhn email not found; quality report supports chief physician secretariat mailbox. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::alexianerkrankenhauskln::alexianerkoelnde::jens::kuhn | person_key: batch001::alexianerkrankenhauskln::alexianerkoelnde::jens::kuhn | company_key: batch001::alexianerkrankenhauskln::alexianerkoelnde | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: alexianer.de | source_urls: https://www.alexianer-koeln.de/fileadmin/user_upload/Koeln_Rhein-Sieg/Unternehmen/Qualit%C3%A4tsberichte/Qualit%C3%A4tsbericht_2024_RD.pdf | company_email_examples: alexianer.koeln@alexianer.de|sekretariat-gf.koeln@alexianer.de|chefarztsekretariat.koeln@alexianer.de | alternative_emails: alexianer.koeln@alexianer.de|chefarztsekretariat.koeln@alexianer.de | email_confidence: high | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|stage_02_send1_email_lookup|RESEND_1_EXACT_CANDIDATE_VERIFICATION kept FOUND_GENERIC_COMPANY_EMAIL over FOUND_GENERIC_COMPANY_EMAIL|RESEND_1_EXACT_CANDIDATE_VERIFICATION no_exact_person_email | recovery_signal: route_without_confirmed_person_email
+7. batch_id: batch_001 | company_name: Rheuma-Klinik Dr. Lauven in Bad Oeynhausen | company_website: http://www.rheumaklinik-drlauven.de | first_name: Erika | last_name: Penner | full_name: Erika Penner | role: Pflegedienstleiterin | role_category: operations | email: info@rheumaklinik-drlauven.de | email_type: generic_company | email_source_url: https://www.aok.de/pk/magazin/cms/fileadmin/pk/pdf/referenzbericht-2023-rheuma-klinik-dr-lauven.pdf | notes: 2023 report lists generic company email; role email uses provider domain. | alt: 2023 quality report; clinic status may be affected by liquidation. | alt: No exact person-domain email found; report lists provider-domain role mailbox. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende::erika::penner | person_key: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende::erika::penner | company_key: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: rheumaklinik-drlauven.de | source_urls: https://www.aok.de/pk/magazin/cms/fileadmin/pk/pdf/referenzbericht-2023-rheuma-klinik-dr-lauven.pdf | company_email_examples: info@rheumaklinik-drlauven.de|geschaeftsfuehrung@rheumaklinik-drlauven.de | alternative_emails: dr.lauven@teleos-web.de|info@rheumaklinik-drlauven.de | email_confidence: medium | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|stage_02_send1_email_lookup|RESEND_1_EXACT_CANDIDATE_VERIFICATION kept FOUND_GENERIC_COMPANY_EMAIL over FOUND_GENERIC_COMPANY_EMAIL|RESEND_1_EXACT_CANDIDATE_VERIFICATION no_exact_person_company_domain_email | validation_issues: exact_person_company_domain_not_found | recovery_signal: route_without_confirmed_person_email
+8. batch_id: batch_001 | company_name: Rheuma-Klinik Dr. Lauven in Bad Oeynhausen | company_website: http://www.rheumaklinik-drlauven.de | first_name: Susanne | last_name: Bernhards-Sulewski | full_name: Susanne Bernhards-Sulewski | role: Verwaltungsleiterin | role_category: other_management | email: geschaeftsfuehrung@rheumaklinik-drlauven.de | email_type: generic_company | email_source_url: https://www.aok.de/pk/magazin/cms/fileadmin/pk/pdf/referenzbericht-2023-rheuma-klinik-dr-lauven.pdf | notes: 2023 report lists management email; no exact person-domain email found. | alt: 2023 quality report; clinic status may be affected by liquidation. | alt: No exact Susanne domain email found; report supports provider-domain and generic clinic mailboxes. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende::susanne::bernhardssulewski | person_key: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende::susanne::bernhardssulewski | company_key: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: rheumaklinik-drlauven.de | source_urls: https://www.aok.de/pk/magazin/cms/fileadmin/pk/pdf/referenzbericht-2023-rheuma-klinik-dr-lauven.pdf | company_email_examples: info@rheumaklinik-drlauven.de|geschaeftsfuehrung@rheumaklinik-drlauven.de | alternative_emails: dr.lauven@teleos-web.de|info@rheumaklinik-drlauven.de|geschaeftsfuehrung@rheumaklinik-drlauven.de | email_confidence: medium | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|stage_02_send1_email_lookup|RESEND_1_EXACT_CANDIDATE_VERIFICATION kept FOUND_GENERIC_COMPANY_EMAIL over FOUND_GENERIC_COMPANY_EMAIL|RESEND_1_EXACT_CANDIDATE_VERIFICATION no_exact_person_company_domain_email | validation_issues: exact_person_company_domain_not_found | recovery_signal: route_without_confirmed_person_email
+9. batch_id: batch_001 | company_name: Rheuma-Klinik Dr. Lauven in Bad Oeynhausen | company_website: http://www.rheumaklinik-drlauven.de | first_name: Henriette | last_name: Muraközy | full_name: Henriette Muraközy | role: Chefärztin | role_category: other_management | email: info@rheumaklinik-drlauven.de | email_type: generic_company | email_source_url: https://www.aok.de/pk/magazin/cms/fileadmin/pk/pdf/referenzbericht-2023-rheuma-klinik-dr-lauven.pdf | notes: 2023 report lists generic company email; role email uses provider domain. | alt: Source lists Dr. title in 2023 quality report. | alt: No exact Henriette domain email found; report supports provider-domain and generic clinic mailboxes. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende::henriette::murakzy | person_key: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende::henriette::murakzy | company_key: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: rheumaklinik-drlauven.de | source_urls: https://www.aok.de/pk/magazin/cms/fileadmin/pk/pdf/referenzbericht-2023-rheuma-klinik-dr-lauven.pdf | company_email_examples: info@rheumaklinik-drlauven.de|geschaeftsfuehrung@rheumaklinik-drlauven.de | alternative_emails: dr.lauven@teleos-web.de|info@rheumaklinik-drlauven.de | email_confidence: medium | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|stage_02_send1_email_lookup|RESEND_1_EXACT_CANDIDATE_VERIFICATION kept FOUND_GENERIC_COMPANY_EMAIL over FOUND_GENERIC_COMPANY_EMAIL|RESEND_1_EXACT_CANDIDATE_VERIFICATION no_exact_person_company_domain_email | validation_issues: exact_person_company_domain_not_found | recovery_signal: route_without_confirmed_person_email
+10. batch_id: batch_001 | company_name: Rheuma-Klinik Dr. Lauven in Bad Oeynhausen | company_website: http://www.rheumaklinik-drlauven.de | first_name: Dieter | last_name: Fürste | full_name: Dieter Fürste | role: Vorstandsvorsitzender | role_category: other_management | email: info@rheumaklinik-drlauven.de | email_type: generic_company | email_source_url: https://www.aok.de/pk/magazin/cms/fileadmin/pk/pdf/referenzbericht-2023-rheuma-klinik-dr-lauven.pdf | notes: Official imprint names Dieter Fürste; report exposes generic company email. | alt: Official imprint lists carrier in liquidation and Vorstandsvorsitzender. | alt: No exact Dieter Fürste company-domain email found; official sources only support generic clinic addresses. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende::dieter::frste | person_key: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende::dieter::frste | company_key: batch001::rheumaklinikdrlauveninbadoeynhausen::rheumaklinikdrlauvende | email_status: FOUND_GENERIC_COMPANY_EMAIL | email_domain: rheumaklinik-drlauven.de | source_urls: https://www.aok.de/pk/magazin/cms/fileadmin/pk/pdf/referenzbericht-2023-rheuma-klinik-dr-lauven.pdf|https://www.rheumaklinik-drlauven.de/about/ | company_email_examples: info@rheumaklinik-drlauven.de|geschaeftsfuehrung@rheumaklinik-drlauven.de | alternative_emails: geschaeftsfuehrung@rheumaklinik-drlauven.de|info@rheumaklinik-drlauven.de | email_confidence: medium | next_recovery_action: keep_generic_route | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: true | cascade_pass: SEND_1_DEEP_ROUTE_SEARCH | merge_history: initialized_from_input_spine|SEND_1_DEEP_ROUTE_SEARCH upgraded NOT_FOUND_EMAIL->FOUND_GENERIC_COMPANY_EMAIL|stage_02_send1_email_lookup|RESEND_1_EXACT_CANDIDATE_VERIFICATION kept FOUND_GENERIC_COMPANY_EMAIL over FOUND_GENERIC_COMPANY_EMAIL|RESEND_1_EXACT_CANDIDATE_VERIFICATION no_exact_person_company_domain_email | validation_issues: exact_person_company_domain_not_found | recovery_signal: route_without_confirmed_person_email
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_007_20260608T103942Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
