@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_003_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_003_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Klinikum Bielefeld (Mitte) | company_website: http://www.klinikumbielefeld.de/ | first_name: Claudia | last_name: Witte | full_name: Claudia Witte | role: Stellv. Direktorin für Pflege- und klinisches Prozessmanagement | role_category: operations | confidence: high | notes: Official page lists deputy nursing leadership
+2. batch_id: batch_001 | company_name: Klinikum Bielefeld (Mitte) | company_website: http://www.klinikumbielefeld.de/ | first_name: Henrik | last_name: van Gellekom | full_name: Henrik van Gellekom | role: Pflegedienstleitung Klinikum Bielefeld - Mitte | role_category: operations | confidence: high | notes: Official page lists Mitte site PDL
+3. batch_id: batch_001 | company_name: Städtisches Klinikum Solingen | company_website: https://www.klinikumsolingen.de | first_name: Heike | last_name: Zinn | full_name: Heike Zinn | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflege page lists role
+4. batch_id: batch_001 | company_name: Städtisches Klinikum Solingen | company_website: https://www.klinikumsolingen.de | first_name: Simone | last_name: Pandya | full_name: Simone Pandya | role: Stellv. Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflege page lists deputy role
+5. batch_id: batch_001 | company_name: Städtisches Klinikum Solingen | company_website: https://www.klinikumsolingen.de | first_name: Ulrike | last_name: Clotten | full_name: Ulrike Clotten | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official Pflege page lists PDL
+6. batch_id: batch_001 | company_name: Klinikum Lippe (Detmold) | company_website: http://www.klinikum-lippe.de | first_name: Helene | last_name: Tammert | full_name: Helene Tammert | role: Pflegedienstleitung Standort Detmold | role_category: operations | confidence: high | notes: Official page lists Detmold PDL
+7. batch_id: batch_001 | company_name: Klinikum Lippe (Detmold) | company_website: http://www.klinikum-lippe.de | first_name: Christina | last_name: Kleine | full_name: Christina Kleine | role: Stellvertretende Pflegedienstleitung Standort Detmold | role_category: operations | confidence: high | notes: Official page lists deputy Detmold PDL
+8. batch_id: batch_001 | company_name: Klinikum Lippe (Detmold) | company_website: http://www.klinikum-lippe.de | first_name: Andreas | last_name: Zeisberg | full_name: Andreas Zeisberg | role: Pflegedirektor | role_category: operations | confidence: medium | notes: Official news names Pflegedirektor
+9. batch_id: batch_001 | company_name: Franziskus Hospital Bielefeld | company_website: http://www.franziskus.de | first_name: Nicole | last_name: Beck | full_name: Nicole Beck | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official structure page lists PDL
+10. batch_id: batch_001 | company_name: Franziskus Hospital Bielefeld | company_website: http://www.franziskus.de | first_name: Philipp | last_name: Herzog | full_name: Philipp Herzog | role: Krankenhausdirektor und stellv. Geschäftsführer | role_category: other_management | confidence: high | notes: Official structure page lists hospital director
+11. batch_id: batch_001 | company_name: Franziskus Hospital Bielefeld | company_website: http://www.franziskus.de | first_name: Matthias | last_name: Bitter | full_name: Matthias Bitter | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official structure page lists Geschäftsführer
+12. batch_id: batch_001 | company_name: St. Josef-Hospital in Bochum | company_website: http://www.klinikum-bochum.de | first_name: Sabine | last_name: Kesting | full_name: Sabine Kesting | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflege page lists role
+13. batch_id: batch_001 | company_name: St. Josef-Hospital in Bochum | company_website: http://www.klinikum-bochum.de | first_name: Silke | last_name: Schmidt-Biele | full_name: Silke Schmidt-Biele | role: Stellv. Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflege page lists deputy role
+14. batch_id: batch_001 | company_name: St. Josef-Hospital in Bochum | company_website: http://www.klinikum-bochum.de | first_name: Christiane | last_name: Bunse-Elsner | full_name: Christiane Bunse-Elsner | role: Stellv. Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflege page lists deputy role
+15. batch_id: batch_001 | company_name: Mathilden Hospital in Herford | company_website: http://www.mathilden-hospital.de | first_name: Nicole | last_name: Beck | full_name: Nicole Beck | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official Pflege page lists PDL
+16. batch_id: batch_001 | company_name: Mathilden Hospital in Herford | company_website: http://www.mathilden-hospital.de | first_name: Sarah | last_name: Krüger | full_name: Sarah Krüger | role: Stellvertretende Pflegedienstleitung | role_category: operations | confidence: high | notes: Official Pflege page lists deputy PDL
+17. batch_id: batch_001 | company_name: Mathilden Hospital in Herford | company_website: http://www.mathilden-hospital.de | first_name: Matthias | last_name: Bitter | full_name: Matthias Bitter | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official structure page lists Geschäftsführer
+18. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Mülheim an der Ruhr | company_website: https://www.evkmh.de/ | first_name: Jens | last_name: Gorgs | full_name: Jens Gorgs | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official team page lists Pflegedirektor
+19. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Mülheim an der Ruhr | company_website: https://www.evkmh.de/ | first_name: Simon | last_name: Härtel | full_name: Simon Härtel | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official team page lists Pflegedirektor
+20. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Mülheim an der Ruhr | company_website: https://www.evkmh.de/ | first_name: Jan | last_name: Dickmann | full_name: Jan Dickmann | role: Kaufmännischer Direktor | role_category: other_management | confidence: high | notes: Official leadership page lists director
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_003_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
