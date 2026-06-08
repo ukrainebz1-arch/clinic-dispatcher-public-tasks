@@ -1,0 +1,156 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_02_public_email_lookup_send1
+TASK_ID: task_stage_053_20260608T090556Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_053_20260608T090556Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / SEND 1: email-first deep search for B2B email enrichment.
+
+Role:
+You are a senior B2B sales intelligence researcher. Your task is to find real person-company email evidence or useful email candidates for each input person.
+
+Primary goal for every input person:
+1. Find a person-company email if it is available.
+2. If exact email is not found, preserve only email-useful evidence: candidate_email, alternative_emails, company_email_examples, pattern_examples_found.
+3. Do NOT spend search budget finding contact routes, booking pages, profile pages, generic contact forms, LinkedIn/Xing routes, or named routes. Routes are not useful output for this campaign.
+4. If no exact email, no candidate email, and no strong pattern evidence exists, return NOT_FOUND_EMAIL.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Core rules:
+- Generated or pattern-only emails are NOT FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found.
+- Strong pattern hypotheses are useful, but must remain separate from confirmed person-company emails.
+- Do not add a philosophical/publicity filter. If email/source evidence is found through search/web/source_url, that is enough for audit. Focus on the 3 criteria above.
+- Preserve one output row per input person.
+- Email yield is the priority. Do not return a route just because a contact page or profile exists.
+
+Identity preservation rules:
+- Copy these fields exactly from the input row: campaign_id, batch_id, input_row_id, person_key, company_key.
+- Do not invent, normalize, shorten, translate, regenerate, or renumber these fields.
+- Do not use the numbered list index as input_row_id.
+- If an identity field is present in the input, the same exact value must appear in the output row.
+
+Search deeply before finalizing each row, but keep the search email-first:
+- quoted exact email-style searches for likely formats;
+- person name + company domain;
+- person name + company name + email;
+- company domain + email examples;
+- official company pages only when they may expose email addresses;
+- PDFs and public documents;
+- event/speaker pages;
+- association/member directories;
+- partner pages, newsletters, press pages, old pages, and visible snippets;
+- source snippets that expose emails or pattern examples.
+
+Useful candidate variants to check or preserve:
+- firstname.lastname@domain
+- firstinitial.lastname@domain
+- firstname@domain
+- lastname@domain
+- firstname_lastname@domain
+- firstname-lastname@domain
+- formal-name variants such as Nick/Nicolas/Nicholas, Ben/Benjamin, Chris/Christopher
+- German character variants such as ä/ae, ö/oe, ü/ue, ß/ss
+- hyphen and compound surname variants
+
+Route suppression:
+- Do not search for named routes as a goal.
+- Do not return FOUND_NAMED_COMPANY_ROUTE for ordinary contact forms, booking buttons, team profiles, LinkedIn/Xing pages, or contact pages.
+- route_url and route_label should normally stay blank.
+- Use FOUND_NAMED_COMPANY_ROUTE only as a compatibility fallback if a previous row already contains a named route that must be preserved and no email/candidate/pattern evidence exists. In SEND 1 this should almost never happen.
+- Prefer NOT_FOUND_EMAIL over a route-only result.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Status meaning:
+- FOUND_PERSON_COMPANY_EMAIL: exact person-level email found and matches person/company/domain criteria.
+- FOUND_NAMED_COMPANY_ROUTE: compatibility-only route status; do not actively search for it.
+- FOUND_GENERIC_COMPANY_EMAIL: only a concrete company-level email such as info@, kontakt@, hallo@, sales@, office@ is available. Do not spend extra time looking for generic emails.
+- STRONG_PATTERN_HYPOTHESIS: exact email is not found, but candidate is supported by 3+ concrete same-domain person emails following the same format.
+- UNVERIFIED_GENERATED_EMAIL: likely email generated from pattern, but exact email itself has not been found.
+- UNVERIFIED_PROVIDER_EMAIL: email appears only in provider/database-style source and needs stronger confirmation.
+- NOT_FOUND_EMAIL / NOT_FOUND: no useful person email result; use NOT_FOUND_EMAIL when the person-email search was exhausted.
+
+Allowed next_recovery_action values:
+close_as_found_person_email
+keep_named_route
+keep_generic_route
+send_to_exact_candidate_verification
+send_to_pattern_decision
+send_to_technical_source_extraction
+keep_as_unverified_candidate
+close_as_not_found_email
+
+Input format:
+You will receive CURRENT CHUNK INPUT as numbered rows generated by the dispatcher. Use the row fields as the input people. Do not require placeholder blocks.
+
+Output CSV only. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- email_status: one allowed status.
+- email: only exact found confirmed person email or generic company email. Do not put generated emails here.
+- candidate_email: generated/provider/pattern candidate only.
+- company_email_examples or pattern_examples_found: pipe-separated concrete same-domain examples if used.
+- source_urls: pipe-separated URLs when several sources exist.
+- email_source_url: strongest URL supporting the exact email result, candidate, or pattern evidence.
+- route_url / route_label: normally blank; do not fill route fields unless preserving unavoidable compatibility evidence.
+- email_confidence: high / medium / low / unknown.
+- cascade_pass: SEND_1_DEEP_ROUTE_SEARCH.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true only for FOUND_GENERIC_COMPANY_EMAIL; false for FOUND_NAMED_COMPANY_ROUTE.
+- notes: short audit note focused on email search, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Kreisklinikum Siegen - Standort Wellersbergstraße | company_website: https://www.klinikum-siegen.de/ | first_name: Daniel | last_name: Weber | full_name: Daniel Weber | role: Leitung Personalmanagement | role_category: hr_recruiting | email_type: not_found | confidence: high | notes: Clinic contact page lists him as head of personnel management. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::kreisklinikumsiegenstandortwellersbergstrae::klinikumsiegende::daniel::weber | person_key: batch001::kreisklinikumsiegenstandortwellersbergstrae::klinikumsiegende::daniel::weber | company_key: batch001::kreisklinikumsiegenstandortwellersbergstrae::klinikumsiegende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+2. batch_id: batch_001 | company_name: Tagesklinik St. Fabiola in Korschenbroich | company_website: http://www.psychiatrie-neuss.de | first_name: Dorota | last_name: Weißenfels | full_name: Dorota Weißenfels | role: Pfleg. Departmentleitung Tageskliniken | role_category: operations | email_type: not_found | confidence: high | notes: Official leadership page lists her for Tageskliniken. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikstfabiolainkorschenbroich::psychiatrieneussde::dorota::weienfels | person_key: batch001::tagesklinikstfabiolainkorschenbroich::psychiatrieneussde::dorota::weienfels | company_key: batch001::tagesklinikstfabiolainkorschenbroich::psychiatrieneussde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+3. batch_id: batch_001 | company_name: Tagesklinik St. Fabiola in Korschenbroich | company_website: http://www.psychiatrie-neuss.de | first_name: Heidrun | last_name: Lundie | full_name: Heidrun Lundie | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: DKV portrait names nursing leadership for this site. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikstfabiolainkorschenbroich::psychiatrieneussde::heidrun::lundie | person_key: batch001::tagesklinikstfabiolainkorschenbroich::psychiatrieneussde::heidrun::lundie | company_key: batch001::tagesklinikstfabiolainkorschenbroich::psychiatrieneussde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+4. batch_id: batch_001 | company_name: LWL-Klinik Marsberg - Standort Meschede | company_website: https://www.lwl-klinik-marsberg.de/de/tageskliniken/tagesklinik-meschede/ | first_name: Peter | last_name: Thiemann | full_name: Peter Thiemann | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: DKV portrait names him Pflegedirektor for Meschede. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lwlklinikmarsbergstandortmeschede::lwlklinikmarsbergde::peter::thiemann | person_key: batch001::lwlklinikmarsbergstandortmeschede::lwlklinikmarsbergde::peter::thiemann | company_key: batch001::lwlklinikmarsbergstandortmeschede::lwlklinikmarsbergde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+5. batch_id: batch_001 | company_name: LWL-Tagesklinik Schmallenberg-Bad Fredeburg | company_website: https://www.lwl.org/LWL/Gesundheit/psychiatrieverbund/K/klinik_marsberg/teilstat_behandlung/tagesklinik_schmallenberg | first_name: Jacqueline | last_name: Friedrich | full_name: Jacqueline Friedrich | role: Pflegerische Leitung | role_category: operations | email_type: not_found | confidence: high | notes: Quality report names her nursing lead for Schmallenberg-Fredeburg. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lwltagesklinikschmallenbergbadfredeburg::lwlorg::jacqueline::friedrich | person_key: batch001::lwltagesklinikschmallenbergbadfredeburg::lwlorg::jacqueline::friedrich | company_key: batch001::lwltagesklinikschmallenbergbadfredeburg::lwlorg | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+6. batch_id: batch_001 | company_name: LWL-Tagesklinik Schmallenberg-Bad Fredeburg | company_website: https://www.lwl.org/LWL/Gesundheit/psychiatrieverbund/K/klinik_marsberg/teilstat_behandlung/tagesklinik_schmallenberg | first_name: Peter | last_name: Thiemann | full_name: Peter Thiemann | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: DKV portrait links the site to Marsberg nursing director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lwltagesklinikschmallenbergbadfredeburg::lwlorg::peter::thiemann | person_key: batch001::lwltagesklinikschmallenbergbadfredeburg::lwlorg::peter::thiemann | company_key: batch001::lwltagesklinikschmallenbergbadfredeburg::lwlorg | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+7. batch_id: batch_001 | company_name: LVR-Klinik Viersen, Mönchengladbach, Mathildenstrasse | company_website: http://www.klinik-viersen.lvr.de | first_name: Jörg | last_name: Mielke | full_name: Jörg Mielke | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: DKV day-clinic profile names him Pflegedirektor. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lvrklinikviersenmnchengladbachmathildenstrasse::klinikviersenlvrde::jrg::mielke | person_key: batch001::lvrklinikviersenmnchengladbachmathildenstrasse::klinikviersenlvrde::jrg::mielke | company_key: batch001::lvrklinikviersenmnchengladbachmathildenstrasse::klinikviersenlvrde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+8. batch_id: batch_001 | company_name: LVR-Klinik Viersen, Krefeld, Vom Bruck Platz | company_website: http://www.klinik-viersen.lvr.de | first_name: Jörg | last_name: Mielke | full_name: Jörg Mielke | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: DKV day-clinic profile names him Pflegedirektor. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lvrklinikviersenkrefeldvombruckplatz::klinikviersenlvrde::jrg::mielke | person_key: batch001::lvrklinikviersenkrefeldvombruckplatz::klinikviersenlvrde::jrg::mielke | company_key: batch001::lvrklinikviersenkrefeldvombruckplatz::klinikviersenlvrde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+9. batch_id: batch_001 | company_name: Klinik Königshof Tagesklinik Hüls am Cäcilien-Hospital Helios Hüls in Krefeld | company_website: https://www.klinik-koenigshof-krefeld.de | first_name: Andreas | last_name: Fucken | full_name: Andreas Fucken | role: Pflegedienstleiter | role_category: operations | email_type: not_found | confidence: high | notes: Official care-team page names him Pflegedienstleiter. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::klinikknigshoftagesklinikhlsamccilienhospitalhelioshlsinkrefeld::klinikkoenigshofkrefeldde::andreas::fucken | person_key: batch001::klinikknigshoftagesklinikhlsamccilienhospitalhelioshlsinkrefeld::klinikkoenigshofkrefeldde::andreas::fucken | company_key: batch001::klinikknigshoftagesklinikhlsamccilienhospitalhelioshlsinkrefeld::klinikkoenigshofkrefeldde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+10. batch_id: batch_001 | company_name: Klinik Königshof Tagesklinik Hüls am Cäcilien-Hospital Helios Hüls in Krefeld | company_website: https://www.klinik-koenigshof-krefeld.de | first_name: Michael | last_name: Novotny | full_name: Michael Novotny | role: Geschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: DKV portrait names him Geschäftsführer for this site. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::klinikknigshoftagesklinikhlsamccilienhospitalhelioshlsinkrefeld::klinikkoenigshofkrefeldde::michael::novotny | person_key: batch001::klinikknigshoftagesklinikhlsamccilienhospitalhelioshlsinkrefeld::klinikkoenigshofkrefeldde::michael::novotny | company_key: batch001::klinikknigshoftagesklinikhlsamccilienhospitalhelioshlsinkrefeld::klinikkoenigshofkrefeldde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+11. batch_id: batch_001 | company_name: Alexianer-Klinik Meerbusch | company_website: https://www.alexianer-klinik-meerbusch.de/ | first_name: Sandra | last_name: Lübke | full_name: Sandra Lübke | role: Leitung Tagesklinik | role_category: operations | email_type: not_found | confidence: high | notes: Official team page lists her as Leitung Tagesklinik. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::alexianerklinikmeerbusch::alexianerklinikmeerbuschde::sandra::lbke | person_key: batch001::alexianerklinikmeerbusch::alexianerklinikmeerbuschde::sandra::lbke | company_key: batch001::alexianerklinikmeerbusch::alexianerklinikmeerbuschde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+12. batch_id: batch_001 | company_name: Alexianer-Klinik Meerbusch | company_website: https://www.alexianer-klinik-meerbusch.de/ | first_name: Nicole | last_name: Hilbert-Kluczkowski | full_name: Nicole Hilbert-Kluczkowski | role: Krankenpflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: DKV portrait names her nursing director for Meerbusch. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::alexianerklinikmeerbusch::alexianerklinikmeerbuschde::nicole::hilbertkluczkowski | person_key: batch001::alexianerklinikmeerbusch::alexianerklinikmeerbuschde::nicole::hilbertkluczkowski | company_key: batch001::alexianerklinikmeerbusch::alexianerklinikmeerbuschde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+13. batch_id: batch_001 | company_name: Klinik Dr. Hartog in Bielefeld | company_website: http://www.klinikdrhartog.de | first_name: Jennifer | last_name: Vielstädte | full_name: Jennifer Vielstädte | role: Pflegedienstleitung | role_category: operations | email_type: not_found | confidence: medium | notes: Public clinic finder lists her as Pflegedienstleitung. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::klinikdrhartoginbielefeld::klinikdrhartogde::jennifer::vielstdte | person_key: batch001::klinikdrhartoginbielefeld::klinikdrhartogde::jennifer::vielstdte | company_key: batch001::klinikdrhartoginbielefeld::klinikdrhartogde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+14. batch_id: batch_001 | company_name: Klinik Dr. Hartog in Bielefeld | company_website: http://www.klinikdrhartog.de | first_name: Moritz | last_name: Hartog | full_name: Moritz Hartog | role: Ärztliche Leitung / Geschäftsführung | role_category: other_management | email_type: not_found | confidence: high | notes: DKV portrait names him clinical lead and management. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::klinikdrhartoginbielefeld::klinikdrhartogde::moritz::hartog | person_key: batch001::klinikdrhartoginbielefeld::klinikdrhartogde::moritz::hartog | company_key: batch001::klinikdrhartoginbielefeld::klinikdrhartogde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+15. batch_id: batch_001 | company_name: Klinik Königshof Tagesklinik Melanchthonstraße am Helios Krefeld | company_website: https://www.klinik-koenigshof-krefeld.de/ | first_name: Andreas | last_name: Fucken | full_name: Andreas Fucken | role: Pflegedienstleitung | role_category: operations | email_type: not_found | confidence: high | notes: DKV portrait names nursing leadership for this site. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::klinikknigshoftagesklinikmelanchthonstraeamhelioskrefeld::klinikkoenigshofkrefeldde::andreas::fucken | person_key: batch001::klinikknigshoftagesklinikmelanchthonstraeamhelioskrefeld::klinikkoenigshofkrefeldde::andreas::fucken | company_key: batch001::klinikknigshoftagesklinikmelanchthonstraeamhelioskrefeld::klinikkoenigshofkrefeldde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+16. batch_id: batch_001 | company_name: Klinik Königshof Tagesklinik Melanchthonstraße am Helios Krefeld | company_website: https://www.klinik-koenigshof-krefeld.de/ | first_name: Michael | last_name: Novotny | full_name: Michael Novotny | role: Geschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: DKV portrait names him Geschäftsführer for this site. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::klinikknigshoftagesklinikmelanchthonstraeamhelioskrefeld::klinikkoenigshofkrefeldde::michael::novotny | person_key: batch001::klinikknigshoftagesklinikmelanchthonstraeamhelioskrefeld::klinikkoenigshofkrefeldde::michael::novotny | company_key: batch001::klinikknigshoftagesklinikmelanchthonstraeamhelioskrefeld::klinikkoenigshofkrefeldde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+17. batch_id: batch_001 | company_name: Tagesklinik St. Anna in Neuss | company_website: http://www.psychiatrie-neuss.de | first_name: Dorota | last_name: Weißenfels | full_name: Dorota Weißenfels | role: Pfleg. Departmentleitung Tageskliniken | role_category: operations | email_type: not_found | confidence: high | notes: Official leadership page lists her for Tageskliniken. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikstannainneuss::psychiatrieneussde::dorota::weienfels | person_key: batch001::tagesklinikstannainneuss::psychiatrieneussde::dorota::weienfels | company_key: batch001::tagesklinikstannainneuss::psychiatrieneussde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+18. batch_id: batch_001 | company_name: Tagesklinik St. Anna in Neuss | company_website: http://www.psychiatrie-neuss.de | first_name: Heidrun | last_name: Lundie | full_name: Heidrun Lundie | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: DKV portrait names nursing leadership for this site. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikstannainneuss::psychiatrieneussde::heidrun::lundie | person_key: batch001::tagesklinikstannainneuss::psychiatrieneussde::heidrun::lundie | company_key: batch001::tagesklinikstannainneuss::psychiatrieneussde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+19. batch_id: batch_001 | company_name: LVR-Klinik Viersen, Neuss, Preussenstrasse | company_website: http://www.klinik-viersen.lvr.de | first_name: Jörg | last_name: Mielke | full_name: Jörg Mielke | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: DKV day-clinic profile names him Pflegedirektor. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lvrklinikviersenneusspreussenstrasse::klinikviersenlvrde::jrg::mielke | person_key: batch001::lvrklinikviersenneusspreussenstrasse::klinikviersenlvrde::jrg::mielke | company_key: batch001::lvrklinikviersenneusspreussenstrasse::klinikviersenlvrde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+20. batch_id: batch_001 | company_name: Tagesklinik St. Augustinus in Grevenbroich | company_website: http://www.psychiatrie-neuss.de | first_name: Dorota | last_name: Weißenfels | full_name: Dorota Weißenfels | role: Pfleg. Departmentleitung Tageskliniken | role_category: operations | email_type: not_found | confidence: high | notes: Official leadership page lists her for Tageskliniken. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikstaugustinusingrevenbroich::psychiatrieneussde::dorota::weienfels | person_key: batch001::tagesklinikstaugustinusingrevenbroich::psychiatrieneussde::dorota::weienfels | company_key: batch001::tagesklinikstaugustinusingrevenbroich::psychiatrieneussde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_053_20260608T090556Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
