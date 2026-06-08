@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_042_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_042_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Krankenhaus Plettenberg | company_website: https://www.radprax.de | first_name: Heiko | last_name: Heseler | full_name: Heiko Heseler | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official hospital team page lists nursing director.
+2. batch_id: batch_001 | company_name: Krankenhaus Plettenberg | company_website: https://www.radprax.de | first_name: Laura | last_name: Gorenc | full_name: Laura Gorenc | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official hospital team page lists managing director.
+3. batch_id: batch_001 | company_name: Krankenhaus Plettenberg | company_website: https://www.radprax.de | first_name: Detlef | last_name: Badekow | full_name: Detlef Badekow | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official imprint lists managing director.
+4. batch_id: batch_001 | company_name: Krankenhaus Elbroich in Düsseldorf | company_website: http://www.krankenhaus-elbroich.de | first_name: Holger | last_name: Götze-Koch | full_name: Holger Götze-Koch | role: Pflegedienstleitung Krankenhaus / GK Elbroich | role_category: operations | confidence: high | notes: Official clinic page names him as Elbroich nursing lead.
+5. batch_id: batch_001 | company_name: Krankenhaus Elbroich in Düsseldorf | company_website: http://www.krankenhaus-elbroich.de | first_name: Christian | last_name: Kemper | full_name: Christian Kemper | role: Geschäftsführung St. Vinzenz-Krankenhaus und Krankenhaus Elbroich | role_category: founder_ceo | confidence: high | notes: VKKD organization page links him to Krankenhaus Elbroich management.
+6. batch_id: batch_001 | company_name: St. Johannes-Hospital Neheim in Arnsberg | company_website: https://klinikum-hochsauerland.de/das-klinikum/standorte/st-johannes-hospital | first_name: Alexander | last_name: Huckschlag | full_name: Alexander Huckschlag | role: Pflegedienstleitung St. Johannes-Hospital Standortsprecher | role_category: operations | confidence: high | notes: Official Klinikum Hochsauerland page names site nursing lead.
+7. batch_id: batch_001 | company_name: St. Johannes-Hospital Neheim in Arnsberg | company_website: https://klinikum-hochsauerland.de/das-klinikum/standorte/st-johannes-hospital | first_name: Gabriele | last_name: Schinner | full_name: Gabriele Schinner | role: Pflegedienstleitung St. Johannes-Hospital | role_category: operations | confidence: high | notes: Official site-specific nursing leadership listing.
+8. batch_id: batch_001 | company_name: St. Johannes-Hospital Neheim in Arnsberg | company_website: https://klinikum-hochsauerland.de/das-klinikum/standorte/st-johannes-hospital | first_name: Jürgen | last_name: Kleinschmidt | full_name: Jürgen Kleinschmidt | role: Pflegedirektor | role_category: operations | confidence: high | notes: Corporate Pflegedirektion for Klinikum Hochsauerland.
+9. batch_id: batch_001 | company_name: Helios Cäcilien-Hospital Hüls in Krefeld | company_website: http://www.helios-kliniken.de/klinik/huels.html | first_name: Florian | last_name: Rath | full_name: Florian Rath | role: Pflegerischer Standortleiter am Helios St. Josefshospital Uerdingen und Helios Cäcilien-Hospital Hüls | role_category: operations | confidence: high | notes: Official Helios page links him directly to Hüls site.
+10. batch_id: batch_001 | company_name: Helios Cäcilien-Hospital Hüls in Krefeld | company_website: http://www.helios-kliniken.de/klinik/huels.html | first_name: Nicola | last_name: Küppers | full_name: Nicola Küppers | role: Pflegedirektorin Helios Klinikum Krefeld | role_category: operations | confidence: high | notes: Official Helios Krefeld Pflegedirektion contact.
+11. batch_id: batch_001 | company_name: Helios Cäcilien-Hospital Hüls in Krefeld | company_website: http://www.helios-kliniken.de/klinik/huels.html | first_name: Birger | last_name: Meßthaler | full_name: Birger Meßthaler | role: Klinikgeschäftsführer | role_category: founder_ceo | confidence: high | notes: Official Hüls Ansprechpartner page lists clinic CEO.
+12. batch_id: batch_001 | company_name: St. Rochus Krankenhaus Steinheim | company_website: http://www.khwe.de | first_name: Wladimir | last_name: Kisselev | full_name: Wladimir Kisselev | role: Pflegedienstleitung St. Vincenz Hospital Brakel und St. Rochus Krankenhaus Steinheim | role_category: operations | confidence: high | notes: Current KHWE Pflege page names him for Steinheim.
+13. batch_id: batch_001 | company_name: St. Rochus Krankenhaus Steinheim | company_website: http://www.khwe.de | first_name: Simon | last_name: Schmale | full_name: Simon Schmale | role: Leitung Geschäftsbereich Krankenhaus / Standortleitung | role_category: other_management | confidence: high | notes: KHWE leadership page links him to hospital business area.
+14. batch_id: batch_001 | company_name: St. Rochus Krankenhaus Steinheim | company_website: http://www.khwe.de | first_name: Christian | last_name: Jostes | full_name: Christian Jostes | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official KHWE company leadership page.
+15. batch_id: batch_001 | company_name: Augustahospital Anholt in Isselburg | company_website: https://www.augustahospital.de/ | first_name: Marcel | last_name: Haupt | full_name: Marcel Haupt | role: Pflegedirektor | role_category: operations | confidence: high | notes: 2025 Augustahospital organigram names him Pflegedirektion.
+16. batch_id: batch_001 | company_name: Augustahospital Anholt in Isselburg | company_website: https://www.augustahospital.de/ | first_name: Sebastian | last_name: Lasczok | full_name: Sebastian Lasczok | role: Kaufmännischer Direktor | role_category: other_management | confidence: high | notes: Official Augustahospital structure page names him in Betriebsleitung.
+17. batch_id: batch_001 | company_name: Augustahospital Anholt in Isselburg | company_website: https://www.augustahospital.de/ | first_name: Maik | last_name: Büscher | full_name: Maik Büscher | role: Geschäftsführung | role_category: founder_ceo | confidence: high | notes: 2025 organigram names him in Geschäftsführung.
+18. batch_id: batch_001 | company_name: Orthopädische Klinik Volmarstein - Standort 1 | company_website: http://www.klinik-volmarstein.de | first_name: Karin | last_name: Kruse | full_name: Karin Kruse | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflege page lists her as Pflegedirektorin.
+19. batch_id: batch_001 | company_name: Orthopädische Klinik Volmarstein - Standort 1 | company_website: http://www.klinik-volmarstein.de | first_name: Stefanie | last_name: Fischer | full_name: Stefanie Fischer | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official team page lists her as nursing service lead.
+20. batch_id: batch_001 | company_name: Orthopädische Klinik Volmarstein - Standort 1 | company_website: http://www.klinik-volmarstein.de | first_name: Andrea | last_name: Ladwig | full_name: Andrea Ladwig | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official team page lists her as nursing service lead.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_042_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
