@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_004_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_004_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Sankt Vinzenz Hospital Rheda-Wiedenbrück | company_website: http://www.sankt-vinzenz.de | first_name: Susanne | last_name: Welp | full_name: Susanne Welp | role: Pflegedienstleiterin | role_category: operations | confidence: high | notes: Official news names PDL at Vinzenz
+2. batch_id: batch_001 | company_name: Sankt Vinzenz Hospital Rheda-Wiedenbrück | company_website: http://www.sankt-vinzenz.de | first_name: Mira-Josefine | last_name: Siefers | full_name: Mira-Josefine Siefers | role: Stellvertretende Pflegedienstleitung | role_category: operations | confidence: high | notes: Official Pflege page lists deputy PDL
+3. batch_id: batch_001 | company_name: Sankt Vinzenz Hospital Rheda-Wiedenbrück | company_website: http://www.sankt-vinzenz.de | first_name: Matthias | last_name: Bitter | full_name: Matthias Bitter | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official structure page lists Geschäftsführer
+4. batch_id: batch_001 | company_name: St.-Johannes-Hospital Dortmund | company_website: http://www.joho-dortmund.de | first_name: Peter | last_name: Jäger | full_name: Peter Jäger | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official team page lists Pflegedirektor
+5. batch_id: batch_001 | company_name: St.-Johannes-Hospital Dortmund | company_website: http://www.joho-dortmund.de | first_name: Klaus | last_name: Lutterbey | full_name: Klaus Lutterbey | role: Stellv. Pflegedirektor | role_category: operations | confidence: high | notes: Official team page lists deputy role
+6. batch_id: batch_001 | company_name: St.-Johannes-Hospital Dortmund | company_website: http://www.joho-dortmund.de | first_name: Petra | last_name: Kleine | full_name: Petra Kleine | role: Pflege- und Personalcontrolling | role_category: operations | confidence: medium | notes: Official team page lists relevant Pflege role
+7. batch_id: batch_001 | company_name: St. Franziskus-Hospital Münster | company_website: http://www.sfh-muenster.de | first_name: Markus | last_name: Wahlers | full_name: Markus Wahlers | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official Ansprechpartner page lists role
+8. batch_id: batch_001 | company_name: St. Franziskus-Hospital Münster | company_website: http://www.sfh-muenster.de | first_name: Tobias | last_name: Kohls | full_name: Tobias Kohls | role: Stellvertretender Pflegedirektor | role_category: operations | confidence: high | notes: Official Ansprechpartner page lists deputy role
+9. batch_id: batch_001 | company_name: St. Franziskus-Hospital Münster | company_website: http://www.sfh-muenster.de | first_name: Daniela | last_name: Mock-Bause | full_name: Daniela Mock-Bause | role: Referentin Pflegedirektion | role_category: operations | confidence: high | notes: Official Ansprechpartner page lists Pflege role
+10. batch_id: batch_001 | company_name: St. Franziskus-Hospital Münster | company_website: http://www.sfh-muenster.de | first_name: Thomas | last_name: Thiemann | full_name: Dr. Thomas Thiemann | role: Koordinator Internationale Pflegekräfte | role_category: hr_recruiting | confidence: high | notes: Official page lists international nursing coordinator
+11. batch_id: batch_001 | company_name: Kreisklinikum Siegen | company_website: https://klinikum-siegen.de/ | first_name: Armin | last_name: Heck | full_name: Armin Heck | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official contact page lists Pflegedirektor
+12. batch_id: batch_001 | company_name: Kreisklinikum Siegen | company_website: https://klinikum-siegen.de/ | first_name: Daniel | last_name: Weber | full_name: Daniel Weber | role: Leitung Personalmanagement | role_category: hr_recruiting | confidence: high | notes: Official contact page lists HR lead
+13. batch_id: batch_001 | company_name: Kreisklinikum Siegen | company_website: https://klinikum-siegen.de/ | first_name: Ingo | last_name: Fölsing | full_name: Ingo Fölsing | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official page lists Betriebsleitung
+14. batch_id: batch_001 | company_name: St. Marien Hospital Lünen | company_website: http://www.klinikum-luenen.de/startseite/ | first_name: Heike | last_name: Plaga | full_name: Heike Plaga | role: Sprecherin des Pflegedirektoriums | role_category: operations | confidence: high | notes: Official Pflege page lists role
+15. batch_id: batch_001 | company_name: St. Marien Hospital Lünen | company_website: http://www.klinikum-luenen.de/startseite/ | first_name: Nils | last_name: Wilkert | full_name: Nils Wilkert | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official Pflege page lists PDL
+16. batch_id: batch_001 | company_name: St. Marien Hospital Lünen | company_website: http://www.klinikum-luenen.de/startseite/ | first_name: Maice | last_name: Beilenhoff | full_name: Maice Beilenhoff | role: Referentin der Pflegedirektion | role_category: operations | confidence: high | notes: Official Pflege page lists role
+17. batch_id: batch_001 | company_name: St. Vincenz-Krankenhaus in Paderborn | company_website: http://www.vincenz.de | first_name: Daniel | last_name: Weskamp | full_name: Daniel Weskamp | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official Pflegemanagement page lists role
+18. batch_id: batch_001 | company_name: St. Vincenz-Krankenhaus in Paderborn | company_website: http://www.vincenz.de | first_name: Michaela | last_name: Kretzschmar | full_name: Michaela Kretzschmar | role: Pflegedienstleiterin | role_category: operations | confidence: high | notes: Official Pflegemanagement page lists role
+19. batch_id: batch_001 | company_name: St. Vincenz-Krankenhaus in Paderborn | company_website: http://www.vincenz.de | first_name: Tobias | last_name: Kirchberger | full_name: Tobias Kirchberger | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official Pflegemanagement page lists role
+20. batch_id: batch_001 | company_name: Rhein-Maas Klinikum in Würselen | company_website: http://www.rheinmaasklinikum.de | first_name: Beata | last_name: Fucz-Nowak | full_name: Beata Fucz-Nowak | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Pflegedirektion page lists role
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_004_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
