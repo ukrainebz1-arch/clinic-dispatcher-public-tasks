@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_017_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_017_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: St. Bernhard-Hospital Kamp-Lintfort | company_website: http://www.st-bernhard-hospital.de/ | first_name: Sabine | last_name: Richter | full_name: Sabine Richter | role: Stellvertretende Pflegedirektorin | role_category: operations | confidence: high | notes: Official site lists this person in relevant leadership role
+2. batch_id: batch_001 | company_name: St. Josef-Stift Sendenhorst | company_website: https://www.st-josef-stift.de | first_name: Niklas | last_name: Wiechert-Behm | full_name: Niklas Wiechert-Behm | role: Pflegedirektor | role_category: operations | confidence: high | notes: Official site lists this person in relevant leadership role
+3. batch_id: batch_001 | company_name: St. Josef-Stift Sendenhorst | company_website: https://www.st-josef-stift.de | first_name: Christiane | last_name: Schwering | full_name: Christiane Schwering | role: Pflegedienstleitung operative Stationen | role_category: operations | confidence: high | notes: Official site lists this person in relevant leadership role
+4. batch_id: batch_001 | company_name: St. Josef-Stift Sendenhorst | company_website: https://www.st-josef-stift.de | first_name: Aurelia | last_name: Heda | full_name: Aurelia Heda | role: Pflegedienstleitung konservative Stationen | role_category: operations | confidence: high | notes: Official site lists this person in relevant leadership role
+5. batch_id: batch_001 | company_name: St. Josef-Stift Sendenhorst | company_website: https://www.st-josef-stift.de | first_name: Dietmar | last_name: Specht | full_name: Dietmar Specht | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official site lists this person in relevant leadership role
+6. batch_id: batch_001 | company_name: St. Josef-Stift Sendenhorst | company_website: https://www.st-josef-stift.de | first_name: Ralf | last_name: Heese | full_name: Ralf Heese | role: Stellvertretender Geschäftsführer Krankenhaus und Reha-Zentrum | role_category: founder_ceo | confidence: high | notes: Official site lists this person in relevant leadership role
+7. batch_id: batch_001 | company_name: Alexius/Josef Krankenhaus in Neuss | company_website: http://www.psychiatrie-neuss.de | first_name: Heidrun | last_name: Lundie | full_name: Heidrun Lundie | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official site lists this person in relevant leadership role
+8. batch_id: batch_001 | company_name: Alexius/Josef Krankenhaus in Neuss | company_website: http://www.psychiatrie-neuss.de | first_name: Adrian | last_name: Mysliwiec | full_name: Adrian Mysliwiec | role: Stellvertretender Pflegedirektor | role_category: operations | confidence: high | notes: Official site lists this person in relevant leadership role
+9. batch_id: batch_001 | company_name: Alexius/Josef Krankenhaus in Neuss | company_website: http://www.psychiatrie-neuss.de | first_name: Simone | last_name: Palmer | full_name: Dr. Simone Palmer | role: Geschäftsführerin | role_category: founder_ceo | confidence: high | notes: Official site lists this person in relevant leadership role
+10. batch_id: batch_001 | company_name: Alexius/Josef Krankenhaus in Neuss | company_website: http://www.psychiatrie-neuss.de | first_name: Christopher | last_name: Mokwa | full_name: Dr. Christopher Mokwa | role: Geschäftsführer St. Augustinus Gruppe | role_category: founder_ceo | confidence: high | notes: Official site lists this person in relevant leadership role
+11. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Wesel | company_website: https://gesundheitscampuswesel.de/ | first_name: Jörg | last_name: Rebhun | full_name: Jörg Rebhun | role: Leitung Pflegemanagement | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/joerg-rebhun-6a2793115 | confidence: high | notes: Official EVK Betriebsleitung lists nursing leadership.
+12. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Wesel | company_website: https://gesundheitscampuswesel.de/ | first_name: Katharina | last_name: Schulte-Sasse | full_name: Katharina Schulte-Sasse | role: Stellvertretende Leitung Pflegemanagement | role_category: operations | confidence: high | notes: Official EVK Betriebsleitung lists nursing leadership.
+13. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Wesel | company_website: https://gesundheitscampuswesel.de/ | first_name: Birgit | last_name: Maaß | full_name: Birgit Maaß | role: Leitung Stabsstelle Personalentwicklung & Recruiting | role_category: hr_recruiting | confidence: high | notes: Official page lists recruiting leadership.
+14. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Duisburg Nord | company_website: http://www.evkln.de/ | first_name: Heike | last_name: Lütfring | full_name: Heike Lütfring | role: Pflegedirektorin | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/heike-l%C3%BCtfring-053aa2208 | confidence: high | notes: Official EVKLN Pflege page lists role.
+15. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Duisburg Nord | company_website: http://www.evkln.de/ | first_name: Franz | last_name: Hafner | full_name: Franz Hafner | role: Vorsitzender der Geschäftsführung | role_category: founder_ceo | confidence: high | notes: Official Geschäftsführung page lists role.
+16. batch_id: batch_001 | company_name: Herz-Jesu-Krankenhaus Hiltrup in Münster | company_website: https://www.hjk-muenster.de/startseite.html | first_name: Magnus | last_name: Engeln | full_name: Magnus Engeln | role: Pflegedirektor | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/magnus-engeln-88857621a | confidence: high | notes: Official leadership page lists role.
+17. batch_id: batch_001 | company_name: Herz-Jesu-Krankenhaus Hiltrup in Münster | company_website: https://www.hjk-muenster.de/startseite.html | first_name: David | last_name: Fuhrmann | full_name: David Fuhrmann | role: Stellvertretender Pflegedirektor | role_category: operations | confidence: high | notes: Official nursing page lists deputy role.
+18. batch_id: batch_001 | company_name: Herz-Jesu-Krankenhaus Hiltrup in Münster | company_website: https://www.hjk-muenster.de/startseite.html | first_name: Annika | last_name: Wolter | full_name: Annika Wolter | role: Regionalgeschäftsführerin | role_category: founder_ceo | confidence: high | notes: Hospital directory lists management.
+19. batch_id: batch_001 | company_name: Marien Hospital Witten | company_website: http://www.marien-hospital-witten.de | first_name: Marion | last_name: Schmitz | full_name: Marion Schmitz | role: Gesamtpflegedienstleitung St. Elisabeth Gruppe | role_category: operations | confidence: high | notes: Official clinic leadership page lists role.
+20. batch_id: batch_001 | company_name: Marien Hospital Witten | company_website: http://www.marien-hospital-witten.de | first_name: Timon | last_name: Walter | full_name: Timon Walter | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Hospital directory lists nursing leadership.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_017_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
