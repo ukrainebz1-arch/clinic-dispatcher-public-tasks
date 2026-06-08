@@ -1,0 +1,84 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+TASK_ID: task_s03_039_20260608T112529Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_s03_039_20260608T112529Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+TASK: stage_03_linkedin_verification / Verify or find the best matching public LinkedIn profile for each person without guessing unsupported matches.
+
+Run context:
+- campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z
+- batch_id: batch_001
+- run_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_03_linkedin_verification
+- input_csv: campaigns/nrw_clinics_stage01_06_multiworker_night_20260606T175223Z/batches/batch_001/stage_03_linkedin_verification/input.csv
+
+You receive people rows. Verify the best public LinkedIn profile for each exact input person.
+
+Primary goal:
+- Find and verify the LinkedIn profile of the exact person in the input row.
+- Better NOT_FOUND / REVIEW than a wrong or weak LinkedIn URL.
+
+Strict rules:
+- Use only public data.
+- Do not invent LinkedIn URLs.
+- Do not accept the first similar result without checking identity.
+- A LinkedIn match must align with full name and at least one strong company/role/history signal.
+- Verify full name + current company + role when visible.
+- If current company is not visible, use strong past-company/role evidence only with medium/low confidence and explain it in notes.
+- If the public LinkedIn title differs materially from the input role, mark linkedin_verified as false or low/medium confidence and explain the role mismatch in notes.
+- If there are multiple people with the same or similar name, verify carefully before returning a URL.
+- If the match is weak, leave linkedin_verified as false and explain briefly in notes.
+- If uncertain, return empty LinkedIn URL / NOT_FOUND rather than a wrong profile.
+
+Output rules:
+- Return CSV only, no markdown, no explanation.
+- Preserve one output row per input person whenever possible.
+- Use exactly this output header and order:
+batch_id,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,linkedin_verified,linkedin_source_url,confidence,notes
+
+Column guidance:
+- linkedin_profile_url: final best profile URL only if supported by public evidence.
+- linkedin_verified: true only for strong exact-person match; otherwise false.
+- linkedin_source_url: source URL used to verify, preferably LinkedIn or a public page linking to LinkedIn.
+- confidence: high / medium / low.
+- notes: short evidence or uncertainty, max 25 words. Mention role/company mismatch if present.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Helios Klinik Lengerich | company_website: https://www.helios-gesundheit.de/kliniken/lengerich/ | first_name: Arne | last_name: Hesselmann | full_name: Arne Hesselmann | role: Pflegedirektor und Klinikgeschäftsführer | role_category: operations | confidence: high | notes: Official Helios contacts page
+2. batch_id: batch_001 | company_name: Helios Klinik Lengerich | company_website: https://www.helios-gesundheit.de/kliniken/lengerich/ | first_name: Heike | last_name: Bludzuweit | full_name: Heike Bludzuweit | role: Personalleitung | role_category: hr_recruiting | confidence: high | notes: Official Helios contacts page
+3. batch_id: batch_001 | company_name: Helios Klinik Lengerich | company_website: https://www.helios-gesundheit.de/kliniken/lengerich/ | first_name: Lukas | last_name: Lindemann | full_name: Lukas Lindemann | role: Stellvertretende Personalleitung | role_category: hr_recruiting | confidence: high | notes: Official Helios contacts page
+4. batch_id: batch_001 | company_name: DGD Stadtklinik Hemer | company_website: https://www.stadtklinik-hemer.de/ | first_name: Gudrun | last_name: Strohdeicher | full_name: Gudrun Strohdeicher | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official clinic leadership page
+5. batch_id: batch_001 | company_name: DGD Stadtklinik Hemer | company_website: https://www.stadtklinik-hemer.de/ | first_name: Barbara | last_name: Bieding | full_name: Barbara Bieding | role: Klinikmanagerin | role_category: other_management | confidence: high | notes: Official clinic leadership page
+6. batch_id: batch_001 | company_name: DGD Stadtklinik Hemer | company_website: https://www.stadtklinik-hemer.de/ | first_name: Torsten | last_name: Schulte | full_name: Torsten Schulte | role: Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official clinic leadership page
+7. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Herne (Eickel) | company_website: http://www.evk-herne.de | first_name: Beate | last_name: Schlüter | full_name: Beate Schlüter | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Official Eickel leadership page
+8. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Herne (Eickel) | company_website: http://www.evk-herne.de | first_name: René | last_name: Vidic | full_name: René Vidic | role: Klinikmanager | role_category: other_management | confidence: high | notes: Official Eickel leadership page
+9. batch_id: batch_001 | company_name: Evangelisches Krankenhaus Herne (Eickel) | company_website: http://www.evk-herne.de | first_name: Matthias | last_name: Adler | full_name: Matthias Adler | role: Geschäftsführer | role_category: founder_ceo | confidence: medium | notes: Official news names 2023 successor
+10. batch_id: batch_001 | company_name: Klinik Blankenstein in Hattingen | company_website: http://www.klinikum-bochum.de | first_name: Sabine | last_name: Kesting | full_name: Sabine Kesting | role: Pflegedirektorin | role_category: operations | confidence: high | notes: Hospital directory names her as nursing director for Klinik Blankenstein.
+11. batch_id: batch_001 | company_name: Klinik Blankenstein in Hattingen | company_website: http://www.klinikum-bochum.de | first_name: Nicolas | last_name: Schulenburg | full_name: Nicolas Schulenburg | role: Kaufmännischer Geschäftsführer | role_category: founder_ceo | confidence: high | notes: Official operator page lists him in executive management.
+12. batch_id: batch_001 | company_name: ViaNobis in Gangelt | company_website: http://www.vianobis-fachklinik.de | first_name: Dominik | last_name: Dautzenberg | full_name: Dominik Dautzenberg | role: Regionalpflegedirektor Alexianer Zentrum für seelische Gesundheit | role_category: operations | confidence: high | notes: Official operator leadership page lists regional nursing director.
+13. batch_id: batch_001 | company_name: ViaNobis in Gangelt | company_website: http://www.vianobis-fachklinik.de | first_name: Stephan | last_name: Schmidt | full_name: Stephan Schmidt | role: Leitung Personal, Qualitätsmanagement, Unternehmenskommunikation | role_category: hr_recruiting | confidence: high | notes: Official leadership page lists him responsible for personnel.
+14. batch_id: batch_001 | company_name: ViaNobis in Gangelt | company_website: http://www.vianobis-fachklinik.de | first_name: Martin | last_name: Minten | full_name: Martin Minten | role: Verbundgeschäftsführer / Regionalgeschäftsführer | role_category: founder_ceo | confidence: high | notes: Official leadership page lists executive responsibility.
+15. batch_id: batch_001 | company_name: AMEOS Klinikum Bad Salzuflen | company_website: https://www.ameos.eu/standorte/ameos-west/bad-salzuflen/ameos-klinikum-bad-salzuflen/ | first_name: Sebastian | last_name: Enskat | full_name: Sebastian Enskat | role: Pflegedienstleitung | role_category: operations | confidence: high | notes: Official AMEOS hospital leadership page lists nursing leadership.
+16. batch_id: batch_001 | company_name: AMEOS Klinikum Bad Salzuflen | company_website: https://www.ameos.eu/standorte/ameos-west/bad-salzuflen/ameos-klinikum-bad-salzuflen/ | first_name: Lara | last_name: Sterwald | full_name: Lara Sterwald | role: Krankenhausdirektorin | role_category: other_management | confidence: high | notes: Official AMEOS page lists hospital director.
+17. batch_id: batch_001 | company_name: AMEOS Klinikum Bad Salzuflen | company_website: https://www.ameos.eu/standorte/ameos-west/bad-salzuflen/ameos-klinikum-bad-salzuflen/ | first_name: Sabrina | last_name: Zientek | full_name: Sabrina Zientek | role: Regionalgeschäftsführerin AMEOS West | role_category: other_management | confidence: high | notes: Official AMEOS page lists regional executive management.
+18. batch_id: batch_001 | company_name: Klinik Wittgenstein in Bad Berleburg | company_website: http://www.klinik-wittgenstein.de | first_name: Stefan | last_name: Schneider | full_name: Stefan Schneider | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official clinic leadership page lists nursing manager.
+19. batch_id: batch_001 | company_name: Klinik Wittgenstein in Bad Berleburg | company_website: http://www.klinik-wittgenstein.de | first_name: Ludger | last_name: Greulich | full_name: Ludger Greulich | role: Geschäftsleiter Klinik Wittgenstein | role_category: other_management | confidence: high | notes: Official clinic leadership page lists clinic business lead.
+20. batch_id: batch_001 | company_name: Klinik Königshof in Krefeld | company_website: https://www.klinik-koenigshof-krefeld.de | first_name: Andreas | last_name: Fucken | full_name: Andreas Fucken | role: Pflegedienstleiter | role_category: operations | confidence: high | notes: Official clinic page lists nursing manager.
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_s03_039_20260608T112529Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
