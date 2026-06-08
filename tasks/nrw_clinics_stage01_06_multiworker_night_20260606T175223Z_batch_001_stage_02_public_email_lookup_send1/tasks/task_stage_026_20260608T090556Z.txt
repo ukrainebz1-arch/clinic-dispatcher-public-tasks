@@ -1,0 +1,156 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_02_public_email_lookup_send1
+TASK_ID: task_stage_026_20260608T090556Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_026_20260608T090556Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / SEND 1: email-first deep search for B2B email enrichment.
+
+Role:
+You are a senior B2B sales intelligence researcher. Your task is to find real person-company email evidence or useful email candidates for each input person.
+
+Primary goal for every input person:
+1. Find a person-company email if it is available.
+2. If exact email is not found, preserve only email-useful evidence: candidate_email, alternative_emails, company_email_examples, pattern_examples_found.
+3. Do NOT spend search budget finding contact routes, booking pages, profile pages, generic contact forms, LinkedIn/Xing routes, or named routes. Routes are not useful output for this campaign.
+4. If no exact email, no candidate email, and no strong pattern evidence exists, return NOT_FOUND_EMAIL.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Core rules:
+- Generated or pattern-only emails are NOT FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found.
+- Strong pattern hypotheses are useful, but must remain separate from confirmed person-company emails.
+- Do not add a philosophical/publicity filter. If email/source evidence is found through search/web/source_url, that is enough for audit. Focus on the 3 criteria above.
+- Preserve one output row per input person.
+- Email yield is the priority. Do not return a route just because a contact page or profile exists.
+
+Identity preservation rules:
+- Copy these fields exactly from the input row: campaign_id, batch_id, input_row_id, person_key, company_key.
+- Do not invent, normalize, shorten, translate, regenerate, or renumber these fields.
+- Do not use the numbered list index as input_row_id.
+- If an identity field is present in the input, the same exact value must appear in the output row.
+
+Search deeply before finalizing each row, but keep the search email-first:
+- quoted exact email-style searches for likely formats;
+- person name + company domain;
+- person name + company name + email;
+- company domain + email examples;
+- official company pages only when they may expose email addresses;
+- PDFs and public documents;
+- event/speaker pages;
+- association/member directories;
+- partner pages, newsletters, press pages, old pages, and visible snippets;
+- source snippets that expose emails or pattern examples.
+
+Useful candidate variants to check or preserve:
+- firstname.lastname@domain
+- firstinitial.lastname@domain
+- firstname@domain
+- lastname@domain
+- firstname_lastname@domain
+- firstname-lastname@domain
+- formal-name variants such as Nick/Nicolas/Nicholas, Ben/Benjamin, Chris/Christopher
+- German character variants such as ä/ae, ö/oe, ü/ue, ß/ss
+- hyphen and compound surname variants
+
+Route suppression:
+- Do not search for named routes as a goal.
+- Do not return FOUND_NAMED_COMPANY_ROUTE for ordinary contact forms, booking buttons, team profiles, LinkedIn/Xing pages, or contact pages.
+- route_url and route_label should normally stay blank.
+- Use FOUND_NAMED_COMPANY_ROUTE only as a compatibility fallback if a previous row already contains a named route that must be preserved and no email/candidate/pattern evidence exists. In SEND 1 this should almost never happen.
+- Prefer NOT_FOUND_EMAIL over a route-only result.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Status meaning:
+- FOUND_PERSON_COMPANY_EMAIL: exact person-level email found and matches person/company/domain criteria.
+- FOUND_NAMED_COMPANY_ROUTE: compatibility-only route status; do not actively search for it.
+- FOUND_GENERIC_COMPANY_EMAIL: only a concrete company-level email such as info@, kontakt@, hallo@, sales@, office@ is available. Do not spend extra time looking for generic emails.
+- STRONG_PATTERN_HYPOTHESIS: exact email is not found, but candidate is supported by 3+ concrete same-domain person emails following the same format.
+- UNVERIFIED_GENERATED_EMAIL: likely email generated from pattern, but exact email itself has not been found.
+- UNVERIFIED_PROVIDER_EMAIL: email appears only in provider/database-style source and needs stronger confirmation.
+- NOT_FOUND_EMAIL / NOT_FOUND: no useful person email result; use NOT_FOUND_EMAIL when the person-email search was exhausted.
+
+Allowed next_recovery_action values:
+close_as_found_person_email
+keep_named_route
+keep_generic_route
+send_to_exact_candidate_verification
+send_to_pattern_decision
+send_to_technical_source_extraction
+keep_as_unverified_candidate
+close_as_not_found_email
+
+Input format:
+You will receive CURRENT CHUNK INPUT as numbered rows generated by the dispatcher. Use the row fields as the input people. Do not require placeholder blocks.
+
+Output CSV only. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- email_status: one allowed status.
+- email: only exact found confirmed person email or generic company email. Do not put generated emails here.
+- candidate_email: generated/provider/pattern candidate only.
+- company_email_examples or pattern_examples_found: pipe-separated concrete same-domain examples if used.
+- source_urls: pipe-separated URLs when several sources exist.
+- email_source_url: strongest URL supporting the exact email result, candidate, or pattern evidence.
+- route_url / route_label: normally blank; do not fill route fields unless preserving unavoidable compatibility evidence.
+- email_confidence: high / medium / low / unknown.
+- cascade_pass: SEND_1_DEEP_ROUTE_SEARCH.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true only for FOUND_GENERIC_COMPANY_EMAIL; false for FOUND_NAMED_COMPANY_ROUTE.
+- notes: short audit note focused on email search, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: St. Elisabeth-Krankenhaus Geilenkirchen | company_website: https://www.krankenhaus-geilenkirchen.de | first_name: Carsten | last_name: Konstanty | full_name: Carsten Konstanty | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official page verifies role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::stelisabethkrankenhausgeilenkirchen::krankenhausgeilenkirchende::carsten::konstanty | person_key: batch001::stelisabethkrankenhausgeilenkirchen::krankenhausgeilenkirchende::carsten::konstanty | company_key: batch001::stelisabethkrankenhausgeilenkirchen::krankenhausgeilenkirchende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+2. batch_id: batch_001 | company_name: St. Elisabeth-Krankenhaus Geilenkirchen | company_website: https://www.krankenhaus-geilenkirchen.de | first_name: Stefan | last_name: Bienert | full_name: Stefan Bienert | role: Geschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official page verifies role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::stelisabethkrankenhausgeilenkirchen::krankenhausgeilenkirchende::stefan::bienert | person_key: batch001::stelisabethkrankenhausgeilenkirchen::krankenhausgeilenkirchende::stefan::bienert | company_key: batch001::stelisabethkrankenhausgeilenkirchen::krankenhausgeilenkirchende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+3. batch_id: batch_001 | company_name: Vestische Kinder- und Jugendklinik Datteln | company_website: http://www.kinderklinik-datteln.de | first_name: Katja | last_name: Schöpe | full_name: Katja Schöpe | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official page verifies role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::vestischekinderundjugendklinikdatteln::kinderklinikdattelnde::katja::schpe | person_key: batch001::vestischekinderundjugendklinikdatteln::kinderklinikdattelnde::katja::schpe | company_key: batch001::vestischekinderundjugendklinikdatteln::kinderklinikdattelnde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+4. batch_id: batch_001 | company_name: Vestische Kinder- und Jugendklinik Datteln | company_website: http://www.kinderklinik-datteln.de | first_name: Andrea | last_name: Galda | full_name: Andrea Galda | role: Bereichsleiterin Neonatologie und Intensivmedizin | role_category: operations | email_type: not_found | confidence: high | notes: Official page verifies role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::vestischekinderundjugendklinikdatteln::kinderklinikdattelnde::andrea::galda | person_key: batch001::vestischekinderundjugendklinikdatteln::kinderklinikdattelnde::andrea::galda | company_key: batch001::vestischekinderundjugendklinikdatteln::kinderklinikdattelnde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+5. batch_id: batch_001 | company_name: Vestische Kinder- und Jugendklinik Datteln | company_website: http://www.kinderklinik-datteln.de | first_name: Martin | last_name: Meyer | full_name: Dr. med. Martin Meyer | role: Geschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official page verifies role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::vestischekinderundjugendklinikdatteln::kinderklinikdattelnde::martin::meyer | person_key: batch001::vestischekinderundjugendklinikdatteln::kinderklinikdattelnde::martin::meyer | company_key: batch001::vestischekinderundjugendklinikdatteln::kinderklinikdattelnde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+6. batch_id: batch_001 | company_name: Hospital zum Heiligen Geist Kempen in Kempen, Niederrhein | company_website: http://www.krankenhaus-kempen.de | first_name: Thomas | last_name: Denker | full_name: Thomas Denker | role: Pflegedienstleitung | role_category: operations | email_type: not_found | confidence: high | notes: Official page verifies role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::hospitalzumheiligengeistkempeninkempenniederrhein::krankenhauskempende::thomas::denker | person_key: batch001::hospitalzumheiligengeistkempeninkempenniederrhein::krankenhauskempende::thomas::denker | company_key: batch001::hospitalzumheiligengeistkempeninkempenniederrhein::krankenhauskempende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+7. batch_id: batch_001 | company_name: Hospital zum Heiligen Geist Kempen in Kempen, Niederrhein | company_website: http://www.krankenhaus-kempen.de | first_name: Maria | last_name: Henk | full_name: Maria Henk | role: Geschäftsführerin | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official page verifies role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::hospitalzumheiligengeistkempeninkempenniederrhein::krankenhauskempende::maria::henk | person_key: batch001::hospitalzumheiligengeistkempeninkempenniederrhein::krankenhauskempende::maria::henk | company_key: batch001::hospitalzumheiligengeistkempeninkempenniederrhein::krankenhauskempende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+8. batch_id: batch_001 | company_name: Josephs-Hospital Warendorf | company_website: http://www.jhwaf.de | first_name: Sigrid | last_name: Krause | full_name: Sigrid Krause | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official page verifies role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::josephshospitalwarendorf::jhwafde::sigrid::krause | person_key: batch001::josephshospitalwarendorf::jhwafde::sigrid::krause | company_key: batch001::josephshospitalwarendorf::jhwafde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+9. batch_id: batch_001 | company_name: Josephs-Hospital Warendorf | company_website: http://www.jhwaf.de | first_name: Heiner | last_name: Brechtken | full_name: Heiner Brechtken | role: Stellv. Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official page verifies role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::josephshospitalwarendorf::jhwafde::heiner::brechtken | person_key: batch001::josephshospitalwarendorf::jhwafde::heiner::brechtken | company_key: batch001::josephshospitalwarendorf::jhwafde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+10. batch_id: batch_001 | company_name: Josephs-Hospital Warendorf | company_website: http://www.jhwaf.de | first_name: Sabrina | last_name: Zientek | full_name: Sabrina Zientek | role: Regionalgeschäftsführerin AMEOS West | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official page verifies role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::josephshospitalwarendorf::jhwafde::sabrina::zientek | person_key: batch001::josephshospitalwarendorf::jhwafde::sabrina::zientek | company_key: batch001::josephshospitalwarendorf::jhwafde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+11. batch_id: batch_001 | company_name: St. Christophorus Krankenhaus Werne | company_website: https://www.krankenhaus-werne.de | first_name: Mario | last_name: Bergmann | full_name: Mario Bergmann | role: Pflegedirektor / Standortleiter | role_category: operations | email_type: not_found | confidence: high | notes: Official leadership page lists nursing and site lead. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::stchristophoruskrankenhauswerne::krankenhauswernede::mario::bergmann | person_key: batch001::stchristophoruskrankenhauswerne::krankenhauswernede::mario::bergmann | company_key: batch001::stchristophoruskrankenhauswerne::krankenhauswernede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+12. batch_id: batch_001 | company_name: Krankenhaus Bad Oeynhausen | company_website: http://www.muehlenkreiskliniken.de | first_name: Bernd | last_name: Mühlenbruch | full_name: Bernd Mühlenbruch | role: Pflegedirektor Somatische Krankenhäuser | role_category: operations | email_type: not_found | confidence: high | notes: 2026 release confirms nursing leadership for somatic hospitals. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::krankenhausbadoeynhausen::muehlenkreisklinikende::bernd::mhlenbruch | person_key: batch001::krankenhausbadoeynhausen::muehlenkreisklinikende::bernd::mhlenbruch | company_key: batch001::krankenhausbadoeynhausen::muehlenkreisklinikende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+13. batch_id: batch_001 | company_name: St. Johannes Krankenhaus in Troisdorf | company_website: https://kliniken-troisdorf.gfo-online.de/ | first_name: Mitja | last_name: Miesen | full_name: Mitja Miesen | role: Pflegedienstleiter Somatik | role_category: operations | email_type: not_found | confidence: high | notes: Official hospital leadership page lists somatic nursing lead. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::stjohanneskrankenhausintroisdorf::klinikentroisdorfgfoonlinede::mitja::miesen | person_key: batch001::stjohanneskrankenhausintroisdorf::klinikentroisdorfgfoonlinede::mitja::miesen | company_key: batch001::stjohanneskrankenhausintroisdorf::klinikentroisdorfgfoonlinede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+14. batch_id: batch_001 | company_name: St. Johannes Krankenhaus in Troisdorf | company_website: https://kliniken-troisdorf.gfo-online.de/ | first_name: Manja | last_name: Hümmler | full_name: Manja Hümmler | role: Stellvertretende Pflegedienstleitung Somatik | role_category: operations | email_type: not_found | confidence: high | notes: Official hospital leadership page lists deputy somatic nursing lead. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::stjohanneskrankenhausintroisdorf::klinikentroisdorfgfoonlinede::manja::hmmler | person_key: batch001::stjohanneskrankenhausintroisdorf::klinikentroisdorfgfoonlinede::manja::hmmler | company_key: batch001::stjohanneskrankenhausintroisdorf::klinikentroisdorfgfoonlinede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+15. batch_id: batch_001 | company_name: St. Hildegardis Krankenhaus in Köln | company_website: http://www.hildegardis-krankenhaus.de | first_name: Nicole | last_name: Dörken-Anhuth | full_name: Nicole Dörken-Anhuth | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official leadership page lists nursing director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::sthildegardiskrankenhausinkln::hildegardiskrankenhausde::nicole::drkenanhuth | person_key: batch001::sthildegardiskrankenhausinkln::hildegardiskrankenhausde::nicole::drkenanhuth | company_key: batch001::sthildegardiskrankenhausinkln::hildegardiskrankenhausde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+16. batch_id: batch_001 | company_name: St. Hildegardis Krankenhaus in Köln | company_website: http://www.hildegardis-krankenhaus.de | first_name: Bettina | last_name: Piontek | full_name: Bettina Piontek | role: Stv. Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official leadership page lists deputy nursing director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::sthildegardiskrankenhausinkln::hildegardiskrankenhausde::bettina::piontek | person_key: batch001::sthildegardiskrankenhausinkln::hildegardiskrankenhausde::bettina::piontek | company_key: batch001::sthildegardiskrankenhausinkln::hildegardiskrankenhausde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+17. batch_id: batch_001 | company_name: KEM Evang. Krankenhaus Essen-Werden | company_website: http://www.kem-med.com | first_name: Annette | last_name: Aldick | full_name: Annette Aldick | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official nursing team page lists nursing director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::kemevangkrankenhausessenwerden::kemmedcom::annette::aldick | person_key: batch001::kemevangkrankenhausessenwerden::kemmedcom::annette::aldick | company_key: batch001::kemevangkrankenhausessenwerden::kemmedcom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+18. batch_id: batch_001 | company_name: KEM Evang. Krankenhaus Essen-Werden | company_website: http://www.kem-med.com | first_name: Nicolas | last_name: Löffler | full_name: Nicolas Löffler | role: Pflegedienstleitung | role_category: operations | email_type: not_found | confidence: high | notes: Official nursing team page lists nursing management. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::kemevangkrankenhausessenwerden::kemmedcom::nicolas::lffler | person_key: batch001::kemevangkrankenhausessenwerden::kemmedcom::nicolas::lffler | company_key: batch001::kemevangkrankenhausessenwerden::kemmedcom | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+19. batch_id: batch_001 | company_name: Vinzenz Pallotti Hospital in Bergisch Gladbach | company_website: https://www.gfo-kliniken-rhein-berg.de/startseite.html | first_name: Jingsi | last_name: Wawrzyn-Lei | full_name: Jingsi Wawrzyn-Lei | role: Pflegedirektorin Rhein-Berg | role_category: operations | linkedin_profile_url: https://de.linkedin.com/in/jingsi-wawrzyn-lei-healthcare-leader | email_type: not_found | confidence: high | notes: 2026 official GFO source quotes nursing director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::vinzenzpallottihospitalinbergischgladbach::gfoklinikenrheinbergde::jingsi::wawrzynlei | person_key: batch001::vinzenzpallottihospitalinbergischgladbach::gfoklinikenrheinbergde::jingsi::wawrzynlei | company_key: batch001::vinzenzpallottihospitalinbergischgladbach::gfoklinikenrheinbergde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+20. batch_id: batch_001 | company_name: Vinzenz Pallotti Hospital in Bergisch Gladbach | company_website: https://www.gfo-kliniken-rhein-berg.de/startseite.html | first_name: Victoria | last_name: Knorr | full_name: Victoria Knorr | role: Standortübergreifende stv. Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official nursing directorate page lists deputy role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::vinzenzpallottihospitalinbergischgladbach::gfoklinikenrheinbergde::victoria::knorr | person_key: batch001::vinzenzpallottihospitalinbergischgladbach::gfoklinikenrheinbergde::victoria::knorr | company_key: batch001::vinzenzpallottihospitalinbergischgladbach::gfoklinikenrheinbergde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_026_20260608T090556Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
