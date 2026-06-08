@@ -1,0 +1,156 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_02_public_email_lookup_send1
+TASK_ID: task_stage_016_20260608T090556Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_016_20260608T090556Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / SEND 1: email-first deep search for B2B email enrichment.
+
+Role:
+You are a senior B2B sales intelligence researcher. Your task is to find real person-company email evidence or useful email candidates for each input person.
+
+Primary goal for every input person:
+1. Find a person-company email if it is available.
+2. If exact email is not found, preserve only email-useful evidence: candidate_email, alternative_emails, company_email_examples, pattern_examples_found.
+3. Do NOT spend search budget finding contact routes, booking pages, profile pages, generic contact forms, LinkedIn/Xing routes, or named routes. Routes are not useful output for this campaign.
+4. If no exact email, no candidate email, and no strong pattern evidence exists, return NOT_FOUND_EMAIL.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Core rules:
+- Generated or pattern-only emails are NOT FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found.
+- Strong pattern hypotheses are useful, but must remain separate from confirmed person-company emails.
+- Do not add a philosophical/publicity filter. If email/source evidence is found through search/web/source_url, that is enough for audit. Focus on the 3 criteria above.
+- Preserve one output row per input person.
+- Email yield is the priority. Do not return a route just because a contact page or profile exists.
+
+Identity preservation rules:
+- Copy these fields exactly from the input row: campaign_id, batch_id, input_row_id, person_key, company_key.
+- Do not invent, normalize, shorten, translate, regenerate, or renumber these fields.
+- Do not use the numbered list index as input_row_id.
+- If an identity field is present in the input, the same exact value must appear in the output row.
+
+Search deeply before finalizing each row, but keep the search email-first:
+- quoted exact email-style searches for likely formats;
+- person name + company domain;
+- person name + company name + email;
+- company domain + email examples;
+- official company pages only when they may expose email addresses;
+- PDFs and public documents;
+- event/speaker pages;
+- association/member directories;
+- partner pages, newsletters, press pages, old pages, and visible snippets;
+- source snippets that expose emails or pattern examples.
+
+Useful candidate variants to check or preserve:
+- firstname.lastname@domain
+- firstinitial.lastname@domain
+- firstname@domain
+- lastname@domain
+- firstname_lastname@domain
+- firstname-lastname@domain
+- formal-name variants such as Nick/Nicolas/Nicholas, Ben/Benjamin, Chris/Christopher
+- German character variants such as ä/ae, ö/oe, ü/ue, ß/ss
+- hyphen and compound surname variants
+
+Route suppression:
+- Do not search for named routes as a goal.
+- Do not return FOUND_NAMED_COMPANY_ROUTE for ordinary contact forms, booking buttons, team profiles, LinkedIn/Xing pages, or contact pages.
+- route_url and route_label should normally stay blank.
+- Use FOUND_NAMED_COMPANY_ROUTE only as a compatibility fallback if a previous row already contains a named route that must be preserved and no email/candidate/pattern evidence exists. In SEND 1 this should almost never happen.
+- Prefer NOT_FOUND_EMAIL over a route-only result.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Status meaning:
+- FOUND_PERSON_COMPANY_EMAIL: exact person-level email found and matches person/company/domain criteria.
+- FOUND_NAMED_COMPANY_ROUTE: compatibility-only route status; do not actively search for it.
+- FOUND_GENERIC_COMPANY_EMAIL: only a concrete company-level email such as info@, kontakt@, hallo@, sales@, office@ is available. Do not spend extra time looking for generic emails.
+- STRONG_PATTERN_HYPOTHESIS: exact email is not found, but candidate is supported by 3+ concrete same-domain person emails following the same format.
+- UNVERIFIED_GENERATED_EMAIL: likely email generated from pattern, but exact email itself has not been found.
+- UNVERIFIED_PROVIDER_EMAIL: email appears only in provider/database-style source and needs stronger confirmation.
+- NOT_FOUND_EMAIL / NOT_FOUND: no useful person email result; use NOT_FOUND_EMAIL when the person-email search was exhausted.
+
+Allowed next_recovery_action values:
+close_as_found_person_email
+keep_named_route
+keep_generic_route
+send_to_exact_candidate_verification
+send_to_pattern_decision
+send_to_technical_source_extraction
+keep_as_unverified_candidate
+close_as_not_found_email
+
+Input format:
+You will receive CURRENT CHUNK INPUT as numbered rows generated by the dispatcher. Use the row fields as the input people. Do not require placeholder blocks.
+
+Output CSV only. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- email_status: one allowed status.
+- email: only exact found confirmed person email or generic company email. Do not put generated emails here.
+- candidate_email: generated/provider/pattern candidate only.
+- company_email_examples or pattern_examples_found: pipe-separated concrete same-domain examples if used.
+- source_urls: pipe-separated URLs when several sources exist.
+- email_source_url: strongest URL supporting the exact email result, candidate, or pattern evidence.
+- route_url / route_label: normally blank; do not fill route fields unless preserving unavoidable compatibility evidence.
+- email_confidence: high / medium / low / unknown.
+- cascade_pass: SEND_1_DEEP_ROUTE_SEARCH.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true only for FOUND_GENERIC_COMPANY_EMAIL; false for FOUND_NAMED_COMPANY_ROUTE.
+- notes: short audit note focused on email search, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: Knappschaft Kliniken Bottrop | company_website: http://www.kk-bottrop.de/ | first_name: Kevin | last_name: Callenberg | full_name: Kevin Callenberg | role: Pflegedienstleitung | role_category: operations | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::knappschaftklinikenbottrop::kkbottropde::kevin::callenberg | person_key: batch001::knappschaftklinikenbottrop::kkbottropde::kevin::callenberg | company_key: batch001::knappschaftklinikenbottrop::kkbottropde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+2. batch_id: batch_001 | company_name: Knappschaft Kliniken Bottrop | company_website: http://www.kk-bottrop.de/ | first_name: Stefan | last_name: Grave | full_name: Stefan Grave | role: Hauptgeschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::knappschaftklinikenbottrop::kkbottropde::stefan::grave | person_key: batch001::knappschaftklinikenbottrop::kkbottropde::stefan::grave | company_key: batch001::knappschaftklinikenbottrop::kkbottropde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+3. batch_id: batch_001 | company_name: Cellitinnen-Krankenhaus St. Vinzenz in Köln | company_website: http://www.vinzenz-hospital.de/ | first_name: Charlotte | last_name: Schwedes | full_name: Charlotte Schwedes | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde::charlotte::schwedes | person_key: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde::charlotte::schwedes | company_key: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+4. batch_id: batch_001 | company_name: Cellitinnen-Krankenhaus St. Vinzenz in Köln | company_website: http://www.vinzenz-hospital.de/ | first_name: Andreas | last_name: Melchers | full_name: Andreas Melchers | role: Stellvertretender Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde::andreas::melchers | person_key: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde::andreas::melchers | company_key: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+5. batch_id: batch_001 | company_name: Cellitinnen-Krankenhaus St. Vinzenz in Köln | company_website: http://www.vinzenz-hospital.de/ | first_name: Pit | last_name: Zimmermann | full_name: Pit Zimmermann | role: Geschäftsführer | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde::pit::zimmermann | person_key: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde::pit::zimmermann | company_key: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+6. batch_id: batch_001 | company_name: Cellitinnen-Krankenhaus St. Vinzenz in Köln | company_website: http://www.vinzenz-hospital.de/ | first_name: Antonia | last_name: Gans-Karcz | full_name: Antonia Gans-Karcz | role: Kaufmännische Direktorin | role_category: other_management | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde::antonia::ganskarcz | person_key: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde::antonia::ganskarcz | company_key: batch001::cellitinnenkrankenhausstvinzenzinkln::vinzenzhospitalde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+7. batch_id: batch_001 | company_name: Johanniter Krankenhaus Oberhausen | company_website: http://www.evkln.de/ | first_name: Udo | last_name: Becker | full_name: Udo Becker | role: Örtliche Pflegedienstleitung Somatik | role_category: operations | email_type: not_found | confidence: medium | notes: Hospital directory lists local nursing leadership | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::johanniterkrankenhausoberhausen::evklnde::udo::becker | person_key: batch001::johanniterkrankenhausoberhausen::evklnde::udo::becker | company_key: batch001::johanniterkrankenhausoberhausen::evklnde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+8. batch_id: batch_001 | company_name: Johanniter Krankenhaus Oberhausen | company_website: http://www.evkln.de/ | first_name: Achim | last_name: Gregorius | full_name: Achim Gregorius | role: Örtliche Pflegedienstleitung Psychiatrie | role_category: operations | email_type: not_found | confidence: medium | notes: Hospital directory lists local nursing leadership | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::johanniterkrankenhausoberhausen::evklnde::achim::gregorius | person_key: batch001::johanniterkrankenhausoberhausen::evklnde::achim::gregorius | company_key: batch001::johanniterkrankenhausoberhausen::evklnde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+9. batch_id: batch_001 | company_name: Johanniter Krankenhaus Oberhausen | company_website: http://www.evkln.de/ | first_name: Franz | last_name: Hafner | full_name: Dipl.-Kfm. Franz Hafner | role: Vorsitzender der Geschäftsführung | role_category: founder_ceo | email_type: not_found | confidence: medium | notes: Hospital directory lists him as administrative lead | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::johanniterkrankenhausoberhausen::evklnde::franz::hafner | person_key: batch001::johanniterkrankenhausoberhausen::evklnde::franz::hafner | company_key: batch001::johanniterkrankenhausoberhausen::evklnde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+10. batch_id: batch_001 | company_name: LWL-Klinik Münster | company_website: https://www.lwl-klinik-muenster.de/de/ | first_name: Michael | last_name: Lison | full_name: Michael Lison | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lwlklinikmnster::lwlklinikmuensterde::michael::lison | person_key: batch001::lwlklinikmnster::lwlklinikmuensterde::michael::lison | company_key: batch001::lwlklinikmnster::lwlklinikmuensterde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+11. batch_id: batch_001 | company_name: LWL-Klinik Münster | company_website: https://www.lwl-klinik-muenster.de/de/ | first_name: Timo | last_name: Siebert | full_name: Timo Siebert | role: Kaufmännischer Direktor | role_category: other_management | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lwlklinikmnster::lwlklinikmuensterde::timo::siebert | person_key: batch001::lwlklinikmnster::lwlklinikmuensterde::timo::siebert | company_key: batch001::lwlklinikmnster::lwlklinikmuensterde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+12. batch_id: batch_001 | company_name: LWL-Klinik Münster | company_website: https://www.lwl-klinik-muenster.de/de/ | first_name: Winfried | last_name: Kock | full_name: Winfried Kock | role: Stellvertretender Pflegedirektor | role_category: operations | email_type: not_found | confidence: low | notes: Older organigram lists this deputy role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lwlklinikmnster::lwlklinikmuensterde::winfried::kock | person_key: batch001::lwlklinikmnster::lwlklinikmuensterde::winfried::kock | company_key: batch001::lwlklinikmnster::lwlklinikmuensterde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+13. batch_id: batch_001 | company_name: Agaplesion Bethesda Krankenhaus Wuppertal | company_website: http://www.bethesda-wuppertal.de/ | first_name: Stefanie | last_name: Eisenberg | full_name: Stefanie Eisenberg | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::agaplesionbethesdakrankenhauswuppertal::bethesdawuppertalde::stefanie::eisenberg | person_key: batch001::agaplesionbethesdakrankenhauswuppertal::bethesdawuppertalde::stefanie::eisenberg | company_key: batch001::agaplesionbethesdakrankenhauswuppertal::bethesdawuppertalde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+14. batch_id: batch_001 | company_name: Agaplesion Bethesda Krankenhaus Wuppertal | company_website: http://www.bethesda-wuppertal.de/ | first_name: Cornelia | last_name: Sack | full_name: Dr. Cornelia Sack | role: Geschäftsführerin | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::agaplesionbethesdakrankenhauswuppertal::bethesdawuppertalde::cornelia::sack | person_key: batch001::agaplesionbethesdakrankenhauswuppertal::bethesdawuppertalde::cornelia::sack | company_key: batch001::agaplesionbethesdakrankenhauswuppertal::bethesdawuppertalde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+15. batch_id: batch_001 | company_name: Agaplesion Bethesda Krankenhaus Wuppertal | company_website: http://www.bethesda-wuppertal.de/ | first_name: Malte | last_name: Schmitz | full_name: Malte Schmitz | role: Klinikmanager | role_category: other_management | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::agaplesionbethesdakrankenhauswuppertal::bethesdawuppertalde::malte::schmitz | person_key: batch001::agaplesionbethesdakrankenhauswuppertal::bethesdawuppertalde::malte::schmitz | company_key: batch001::agaplesionbethesdakrankenhauswuppertal::bethesdawuppertalde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+16. batch_id: batch_001 | company_name: Helios Klinikum Siegburg | company_website: https://www.helios-gesundheit.de/kliniken/siegburg/ | first_name: Mark | last_name: Bierther | full_name: Mark Bierther | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::heliosklinikumsiegburg::heliosgesundheitde::mark::bierther | person_key: batch001::heliosklinikumsiegburg::heliosgesundheitde::mark::bierther | company_key: batch001::heliosklinikumsiegburg::heliosgesundheitde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+17. batch_id: batch_001 | company_name: Helios Klinikum Siegburg | company_website: https://www.helios-gesundheit.de/kliniken/siegburg/ | first_name: Ana | last_name: Cardoso | full_name: Ana Cardoso | role: Kaufmännische Standortleitung | role_category: other_management | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::heliosklinikumsiegburg::heliosgesundheitde::ana::cardoso | person_key: batch001::heliosklinikumsiegburg::heliosgesundheitde::ana::cardoso | company_key: batch001::heliosklinikumsiegburg::heliosgesundheitde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+18. batch_id: batch_001 | company_name: Helios Klinikum Siegburg | company_website: https://www.helios-gesundheit.de/kliniken/siegburg/ | first_name: Markus | last_name: Hambach | full_name: Markus Hambach | role: Personalleiter | role_category: hr_recruiting | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::heliosklinikumsiegburg::heliosgesundheitde::markus::hambach | person_key: batch001::heliosklinikumsiegburg::heliosgesundheitde::markus::hambach | company_key: batch001::heliosklinikumsiegburg::heliosgesundheitde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+19. batch_id: batch_001 | company_name: St. Bernhard-Hospital Kamp-Lintfort | company_website: http://www.st-bernhard-hospital.de/ | first_name: Clemens | last_name: Roeling | full_name: Clemens Roeling | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::stbernhardhospitalkamplintfort::stbernhardhospitalde::clemens::roeling | person_key: batch001::stbernhardhospitalkamplintfort::stbernhardhospitalde::clemens::roeling | company_key: batch001::stbernhardhospitalkamplintfort::stbernhardhospitalde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+20. batch_id: batch_001 | company_name: St. Bernhard-Hospital Kamp-Lintfort | company_website: http://www.st-bernhard-hospital.de/ | first_name: Anna | last_name: Schäfer | full_name: Anna Schäfer | role: Stellvertretende Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official site lists this person in relevant leadership role | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::stbernhardhospitalkamplintfort::stbernhardhospitalde::anna::schfer | person_key: batch001::stbernhardhospitalkamplintfort::stbernhardhospitalde::anna::schfer | company_key: batch001::stbernhardhospitalkamplintfort::stbernhardhospitalde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_016_20260608T090556Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
