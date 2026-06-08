@@ -1,0 +1,156 @@
+RUN_ID: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z_batch_001_stage_02_public_email_lookup_send1
+TASK_ID: task_stage_050_20260608T090556Z
+PROMPT_VERSION: v1
+
+STRICT UNIQUE TASK_ID OUTPUT GUARD:
+Your final answer is imported by an automated TASK_ID guard.
+The first line of your final answer MUST be exactly:
+TASK_ID: task_stage_050_20260608T090556Z
+After this one line, return the requested stage CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+The TASK_ID line is part of the required transport envelope, not an explanation.
+
+GLOBAL TASK:
+You are running Stage 02 / SEND 1: email-first deep search for B2B email enrichment.
+
+Role:
+You are a senior B2B sales intelligence researcher. Your task is to find real person-company email evidence or useful email candidates for each input person.
+
+Primary goal for every input person:
+1. Find a person-company email if it is available.
+2. If exact email is not found, preserve only email-useful evidence: candidate_email, alternative_emails, company_email_examples, pattern_examples_found.
+3. Do NOT spend search budget finding contact routes, booking pages, profile pages, generic contact forms, LinkedIn/Xing routes, or named routes. Routes are not useful output for this campaign.
+4. If no exact email, no candidate email, and no strong pattern evidence exists, return NOT_FOUND_EMAIL.
+
+Valid FOUND_PERSON_COMPANY_EMAIL requires all 3 criteria:
+1. the person is currently connected to the company;
+2. the email identity matches the person's name, surname, initials, shortened name, formal name, or known variant;
+3. the email domain matches the current company, brand, or company group domain.
+
+Core rules:
+- Generated or pattern-only emails are NOT FOUND_PERSON_COMPANY_EMAIL until the exact email itself is found.
+- Strong pattern hypotheses are useful, but must remain separate from confirmed person-company emails.
+- Do not add a philosophical/publicity filter. If email/source evidence is found through search/web/source_url, that is enough for audit. Focus on the 3 criteria above.
+- Preserve one output row per input person.
+- Email yield is the priority. Do not return a route just because a contact page or profile exists.
+
+Identity preservation rules:
+- Copy these fields exactly from the input row: campaign_id, batch_id, input_row_id, person_key, company_key.
+- Do not invent, normalize, shorten, translate, regenerate, or renumber these fields.
+- Do not use the numbered list index as input_row_id.
+- If an identity field is present in the input, the same exact value must appear in the output row.
+
+Search deeply before finalizing each row, but keep the search email-first:
+- quoted exact email-style searches for likely formats;
+- person name + company domain;
+- person name + company name + email;
+- company domain + email examples;
+- official company pages only when they may expose email addresses;
+- PDFs and public documents;
+- event/speaker pages;
+- association/member directories;
+- partner pages, newsletters, press pages, old pages, and visible snippets;
+- source snippets that expose emails or pattern examples.
+
+Useful candidate variants to check or preserve:
+- firstname.lastname@domain
+- firstinitial.lastname@domain
+- firstname@domain
+- lastname@domain
+- firstname_lastname@domain
+- firstname-lastname@domain
+- formal-name variants such as Nick/Nicolas/Nicholas, Ben/Benjamin, Chris/Christopher
+- German character variants such as ä/ae, ö/oe, ü/ue, ß/ss
+- hyphen and compound surname variants
+
+Route suppression:
+- Do not search for named routes as a goal.
+- Do not return FOUND_NAMED_COMPANY_ROUTE for ordinary contact forms, booking buttons, team profiles, LinkedIn/Xing pages, or contact pages.
+- route_url and route_label should normally stay blank.
+- Use FOUND_NAMED_COMPANY_ROUTE only as a compatibility fallback if a previous row already contains a named route that must be preserved and no email/candidate/pattern evidence exists. In SEND 1 this should almost never happen.
+- Prefer NOT_FOUND_EMAIL over a route-only result.
+
+Allowed email_status values:
+FOUND_PERSON_COMPANY_EMAIL
+FOUND_NAMED_COMPANY_ROUTE
+FOUND_GENERIC_COMPANY_EMAIL
+STRONG_PATTERN_HYPOTHESIS
+UNVERIFIED_GENERATED_EMAIL
+UNVERIFIED_PROVIDER_EMAIL
+NOT_FOUND_EMAIL
+NOT_FOUND
+
+Status meaning:
+- FOUND_PERSON_COMPANY_EMAIL: exact person-level email found and matches person/company/domain criteria.
+- FOUND_NAMED_COMPANY_ROUTE: compatibility-only route status; do not actively search for it.
+- FOUND_GENERIC_COMPANY_EMAIL: only a concrete company-level email such as info@, kontakt@, hallo@, sales@, office@ is available. Do not spend extra time looking for generic emails.
+- STRONG_PATTERN_HYPOTHESIS: exact email is not found, but candidate is supported by 3+ concrete same-domain person emails following the same format.
+- UNVERIFIED_GENERATED_EMAIL: likely email generated from pattern, but exact email itself has not been found.
+- UNVERIFIED_PROVIDER_EMAIL: email appears only in provider/database-style source and needs stronger confirmation.
+- NOT_FOUND_EMAIL / NOT_FOUND: no useful person email result; use NOT_FOUND_EMAIL when the person-email search was exhausted.
+
+Allowed next_recovery_action values:
+close_as_found_person_email
+keep_named_route
+keep_generic_route
+send_to_exact_candidate_verification
+send_to_pattern_decision
+send_to_technical_source_extraction
+keep_as_unverified_candidate
+close_as_not_found_email
+
+Input format:
+You will receive CURRENT CHUNK INPUT as numbered rows generated by the dispatcher. Use the row fields as the input people. Do not require placeholder blocks.
+
+Output CSV only. No markdown. One physical line per row.
+
+Use exactly this header:
+campaign_id,batch_id,input_row_id,person_key,company_key,company_name,company_website,first_name,last_name,full_name,role,role_category,linkedin_profile_url,email_status,email,email_type,email_domain,email_source_url,source_urls,route_url,route_label,company_email_examples,pattern_examples_found,candidate_email,alternative_emails,email_confidence,next_recovery_action,strict_campaign_eligible,hypothesis_campaign_eligible,company_fallback_eligible,cascade_pass,merge_history,validation_issues,notes
+
+Column rules:
+- email_status: one allowed status.
+- email: only exact found confirmed person email or generic company email. Do not put generated emails here.
+- candidate_email: generated/provider/pattern candidate only.
+- company_email_examples or pattern_examples_found: pipe-separated concrete same-domain examples if used.
+- source_urls: pipe-separated URLs when several sources exist.
+- email_source_url: strongest URL supporting the exact email result, candidate, or pattern evidence.
+- route_url / route_label: normally blank; do not fill route fields unless preserving unavoidable compatibility evidence.
+- email_confidence: high / medium / low / unknown.
+- cascade_pass: SEND_1_DEEP_ROUTE_SEARCH.
+- strict_campaign_eligible: true only for FOUND_PERSON_COMPANY_EMAIL.
+- hypothesis_campaign_eligible: true only for STRONG_PATTERN_HYPOTHESIS.
+- company_fallback_eligible: true only for FOUND_GENERIC_COMPANY_EMAIL; false for FOUND_NAMED_COMPANY_ROUTE.
+- notes: short audit note focused on email search, max 30 words.
+
+CURRENT CHUNK INPUT:
+1. batch_id: batch_001 | company_name: LVR-Klinik Mönchengladbach - Tagesklinik Regentenstraße | company_website: http://www.klinik-moenchengladbach.lvr.de | first_name: Jochen | last_name: Möller | full_name: Jochen Möller | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official clinic board page lists him as Pflegedirektor. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lvrklinikmnchengladbachtagesklinikregentenstrae::klinikmoenchengladbachlvrde::jochen::mller | person_key: batch001::lvrklinikmnchengladbachtagesklinikregentenstrae::klinikmoenchengladbachlvrde::jochen::mller | company_key: batch001::lvrklinikmnchengladbachtagesklinikregentenstrae::klinikmoenchengladbachlvrde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+2. batch_id: batch_001 | company_name: Augenklinik Dardenne in Bonn | company_website: https://www.augenklinik-dardenne.de/ | first_name: Susa | last_name: Peters | full_name: Susa Peters | role: Personalleitung | role_category: hr_recruiting | email_type: not_found | confidence: high | notes: Official team page lists her as Personalleitung. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::augenklinikdardenneinbonn::augenklinikdardennede::susa::peters | person_key: batch001::augenklinikdardenneinbonn::augenklinikdardennede::susa::peters | company_key: batch001::augenklinikdardenneinbonn::augenklinikdardennede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+3. batch_id: batch_001 | company_name: Augenklinik Dardenne in Bonn | company_website: https://www.augenklinik-dardenne.de/ | first_name: Verena | last_name: Taxacher | full_name: Verena Taxacher | role: Referentin Personalmarketing und Employer Branding | role_category: hr_recruiting | email_type: not_found | confidence: high | notes: Official team page lists recruiting-relevant employer branding role. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::augenklinikdardenneinbonn::augenklinikdardennede::verena::taxacher | person_key: batch001::augenklinikdardenneinbonn::augenklinikdardennede::verena::taxacher | company_key: batch001::augenklinikdardenneinbonn::augenklinikdardennede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+4. batch_id: batch_001 | company_name: Augenklinik Dardenne in Bonn | company_website: https://www.augenklinik-dardenne.de/ | first_name: Thomas | last_name: Haupt | full_name: Dr. Thomas Haupt | role: Kaufmännischer Leiter | role_category: other_management | email_type: not_found | confidence: high | notes: Official team page lists him as commercial lead. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::augenklinikdardenneinbonn::augenklinikdardennede::thomas::haupt | person_key: batch001::augenklinikdardenneinbonn::augenklinikdardennede::thomas::haupt | company_key: batch001::augenklinikdardenneinbonn::augenklinikdardennede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+5. batch_id: batch_001 | company_name: Augenklinik Dardenne in Bonn | company_website: https://www.augenklinik-dardenne.de/ | first_name: Alireza | last_name: Mirshahi | full_name: Prof. Dr. med. Alireza Mirshahi | role: Direktor der Klinik | role_category: other_management | email_type: not_found | confidence: high | notes: Official team page lists him as clinic director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::augenklinikdardenneinbonn::augenklinikdardennede::alireza::mirshahi | person_key: batch001::augenklinikdardenneinbonn::augenklinikdardennede::alireza::mirshahi | company_key: batch001::augenklinikdardenneinbonn::augenklinikdardennede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+6. batch_id: batch_001 | company_name: VALEARA Bottrop | company_website: https://www.valeara.de/standorte-leistungen/valeara-bottrop | first_name: Holger | last_name: Mengelberg | full_name: Holger Mengelberg | role: Fachbereichsleitung und Tagesklinikleitung | role_category: operations | email_type: not_found | confidence: high | notes: Official Bottrop page lists him as Fachbereichsleitung and Tagesklinikleitung. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::valearabottrop::valearade::holger::mengelberg | person_key: batch001::valearabottrop::valearade::holger::mengelberg | company_key: batch001::valearabottrop::valearade | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+7. batch_id: batch_001 | company_name: VALEARA Bottrop | company_website: https://www.valeara.de/standorte-leistungen/valeara-bottrop | first_name: Tom | last_name: Tomaszewski | full_name: Tom Tomaszewski | role: Stellvertretende Fachbereichsleitung | role_category: operations | email_type: not_found | confidence: high | notes: Official Bottrop page lists deputy Fachbereichsleitung. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::valearabottrop::valearade::tom::tomaszewski | person_key: batch001::valearabottrop::valearade::tom::tomaszewski | company_key: batch001::valearabottrop::valearade | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+8. batch_id: batch_001 | company_name: VALEARA Bottrop | company_website: https://www.valeara.de/standorte-leistungen/valeara-bottrop | first_name: Ines | last_name: Wiesten | full_name: Ines Wiesten | role: Standortleitung | role_category: other_management | email_type: not_found | confidence: high | notes: Official Bottrop page lists her as Standortleitung. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::valearabottrop::valearade::ines::wiesten | person_key: batch001::valearabottrop::valearade::ines::wiesten | company_key: batch001::valearabottrop::valearade | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+9. batch_id: batch_001 | company_name: VALEARA Bottrop | company_website: https://www.valeara.de/standorte-leistungen/valeara-bottrop | first_name: Simone | last_name: Hoffmann | full_name: Simone Hoffmann | role: CPO | role_category: hr_recruiting | email_type: not_found | confidence: medium | notes: Company leadership page lists her as CPO. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::valearabottrop::valearade::simone::hoffmann | person_key: batch001::valearabottrop::valearade::simone::hoffmann | company_key: batch001::valearabottrop::valearade | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+10. batch_id: batch_001 | company_name: LVR-Klinik Viersen, Nettetal, Sassenfelder Kirchweg | company_website: http://www.klinik-viersen.lvr.de | first_name: Jörg | last_name: Mielke | full_name: Jörg Mielke | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official LVR clinic board page lists him as Pflegedirektor. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lvrklinikviersennettetalsassenfelderkirchweg::klinikviersenlvrde::jrg::mielke | person_key: batch001::lvrklinikviersennettetalsassenfelderkirchweg::klinikviersenlvrde::jrg::mielke | company_key: batch001::lvrklinikviersennettetalsassenfelderkirchweg::klinikviersenlvrde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+11. batch_id: batch_001 | company_name: LVR-Klinik Viersen, Nettetal, Sassenfelder Kirchweg | company_website: http://www.klinik-viersen.lvr.de | first_name: Dorothee | last_name: Enbergs | full_name: Dorothee Enbergs | role: Kaufmännische Direktorin | role_category: other_management | email_type: not_found | confidence: high | notes: Official LVR clinic board page lists commercial director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::lvrklinikviersennettetalsassenfelderkirchweg::klinikviersenlvrde::dorothee::enbergs | person_key: batch001::lvrklinikviersennettetalsassenfelderkirchweg::klinikviersenlvrde::dorothee::enbergs | company_key: batch001::lvrklinikviersennettetalsassenfelderkirchweg::klinikviersenlvrde | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+12. batch_id: batch_001 | company_name: Tagesklinik Dorsten | company_website: https://www.lwl-klinik-herten.de/unsere-einrichtungen/tageskliniken/tagesklinik-dorsten | first_name: Petra | last_name: Hein | full_name: Petra Hein | role: Pflegerische Leitung Tagesklinik Dorsten | role_category: operations | email_type: not_found | confidence: high | notes: Official contact page lists day-clinic nursing leadership. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikdorsten::lwlklinikhertende::petra::hein | person_key: batch001::tagesklinikdorsten::lwlklinikhertende::petra::hein | company_key: batch001::tagesklinikdorsten::lwlklinikhertende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+13. batch_id: batch_001 | company_name: Tagesklinik Dorsten | company_website: https://www.lwl-klinik-herten.de/unsere-einrichtungen/tageskliniken/tagesklinik-dorsten | first_name: Andrea Marie | last_name: Kleditzsch | full_name: Andrea Marie Kleditzsch | role: Komm. Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official clinic leadership page lists her as acting nursing director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikdorsten::lwlklinikhertende::andreamarie::kleditzsch | person_key: batch001::tagesklinikdorsten::lwlklinikhertende::andreamarie::kleditzsch | company_key: batch001::tagesklinikdorsten::lwlklinikhertende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+14. batch_id: batch_001 | company_name: Tagesklinik für Psychiatrie und Psychotherapie des St. Rochus-Hospitals Telgte in Warendorf | company_website: http://www.srh-telgte.de | first_name: Matthias | last_name: Schulte | full_name: Matthias Schulte | role: Pflegedirektor | role_category: operations | email_type: not_found | confidence: high | notes: Official nursing page lists him as Pflegedirektor. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikfrpsychiatrieundpsychotherapiedesstrochushospitalstelgteinwarendorf::srhtelgtede::matthias::schulte | person_key: batch001::tagesklinikfrpsychiatrieundpsychotherapiedesstrochushospitalstelgteinwarendorf::srhtelgtede::matthias::schulte | company_key: batch001::tagesklinikfrpsychiatrieundpsychotherapiedesstrochushospitalstelgteinwarendorf::srhtelgtede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+15. batch_id: batch_001 | company_name: Tagesklinik für Psychiatrie und Psychotherapie des St. Rochus-Hospitals Telgte in Warendorf | company_website: http://www.srh-telgte.de | first_name: Marion | last_name: Rowald | full_name: Marion Rowald | role: Stellvertretende Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official nursing page lists deputy nursing director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikfrpsychiatrieundpsychotherapiedesstrochushospitalstelgteinwarendorf::srhtelgtede::marion::rowald | person_key: batch001::tagesklinikfrpsychiatrieundpsychotherapiedesstrochushospitalstelgteinwarendorf::srhtelgtede::marion::rowald | company_key: batch001::tagesklinikfrpsychiatrieundpsychotherapiedesstrochushospitalstelgteinwarendorf::srhtelgtede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+16. batch_id: batch_001 | company_name: Tagesklinik für Psychiatrie und Psychotherapie des St. Rochus-Hospitals Telgte in Warendorf | company_website: http://www.srh-telgte.de | first_name: Elisabeth | last_name: Bonzol | full_name: Dr. med. Elisabeth Bonzol | role: Oberärztin und Leiterin der Tagesklinik | role_category: other_management | email_type: not_found | confidence: high | notes: Official day-clinic page lists her as site lead. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::tagesklinikfrpsychiatrieundpsychotherapiedesstrochushospitalstelgteinwarendorf::srhtelgtede::elisabeth::bonzol | person_key: batch001::tagesklinikfrpsychiatrieundpsychotherapiedesstrochushospitalstelgteinwarendorf::srhtelgtede::elisabeth::bonzol | company_key: batch001::tagesklinikfrpsychiatrieundpsychotherapiedesstrochushospitalstelgteinwarendorf::srhtelgtede | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+17. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Bad Oeynhausen | company_website: https://www.muehlenkreiskliniken.de/medizinisches-zentrum-fuer-seelische-gesundheit | first_name: Tanja | last_name: Ames | full_name: Tanja Ames | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official center leadership page lists Pflegedirektorin. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::psychiatrischetagesklinikbadoeynhausen::muehlenkreisklinikende::tanja::ames | person_key: batch001::psychiatrischetagesklinikbadoeynhausen::muehlenkreisklinikende::tanja::ames | company_key: batch001::psychiatrischetagesklinikbadoeynhausen::muehlenkreisklinikende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+18. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Bad Oeynhausen | company_website: https://www.muehlenkreiskliniken.de/medizinisches-zentrum-fuer-seelische-gesundheit | first_name: Mario | last_name: Hartmann | full_name: Mario Hartmann | role: Geschäftsführer Zentrum für Seelische Gesundheit | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official center leadership page lists managing director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::psychiatrischetagesklinikbadoeynhausen::muehlenkreisklinikende::mario::hartmann | person_key: batch001::psychiatrischetagesklinikbadoeynhausen::muehlenkreisklinikende::mario::hartmann | company_key: batch001::psychiatrischetagesklinikbadoeynhausen::muehlenkreisklinikende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+19. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Minden | company_website: https://www.muehlenkreiskliniken.de/medizinisches-zentrum-fuer-seelische-gesundheit | first_name: Tanja | last_name: Ames | full_name: Tanja Ames | role: Pflegedirektorin | role_category: operations | email_type: not_found | confidence: high | notes: Official center leadership page lists Pflegedirektorin. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::psychiatrischetagesklinikminden::muehlenkreisklinikende::tanja::ames | person_key: batch001::psychiatrischetagesklinikminden::muehlenkreisklinikende::tanja::ames | company_key: batch001::psychiatrischetagesklinikminden::muehlenkreisklinikende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+20. batch_id: batch_001 | company_name: Psychiatrische Tagesklinik Minden | company_website: https://www.muehlenkreiskliniken.de/medizinisches-zentrum-fuer-seelische-gesundheit | first_name: Mario | last_name: Hartmann | full_name: Mario Hartmann | role: Geschäftsführer Zentrum für Seelische Gesundheit | role_category: founder_ceo | email_type: not_found | confidence: high | notes: Official center leadership page lists managing director. | campaign_id: nrw_clinics_stage01_06_multiworker_night_20260606T175223Z | input_row_id: batch001::psychiatrischetagesklinikminden::muehlenkreisklinikende::mario::hartmann | person_key: batch001::psychiatrischetagesklinikminden::muehlenkreisklinikende::mario::hartmann | company_key: batch001::psychiatrischetagesklinikminden::muehlenkreisklinikende | email_status: NOT_FOUND_EMAIL | email_confidence: unknown | next_recovery_action: close_as_not_found_email | strict_campaign_eligible: false | hypothesis_campaign_eligible: false | company_fallback_eligible: false | cascade_pass: INPUT_SPINE | merge_history: initialized_from_input_spine
+
+REQUIRED OUTPUT:
+Start your answer with this exact first line, before the CSV header:
+TASK_ID: task_stage_050_20260608T090556Z
+Then return the requested CSV output.
+Do not output RUN_ID.
+After the TASK_ID line, include the requested CSV header exactly as specified by the stage prompt.
+Do not use markdown fences.
+Use public information only.
