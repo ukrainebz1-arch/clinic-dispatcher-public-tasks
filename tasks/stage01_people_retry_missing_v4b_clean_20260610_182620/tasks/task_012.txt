@@ -1,0 +1,97 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage01_people_retry_missing_v4b_clean_20260610_182620
+TASK_ID: task_012
+
+Then output exactly one CSV header line:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Then output CSV rows, one row per company/person.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+If no person is found for a company, still output a row for that company with:
+full_name=NOT_FOUND
+role_category=unknown
+confidence=low
+notes=No verified named decision-maker found.
+
+
+
+RUN_ID: stage01_people_retry_missing_v4b_clean_20260610_182620
+TASK_ID: task_012
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+TASK: {{STAGE_ID}} / {{DESCRIPTION}}
+
+Run context:
+- campaign_id: {{CAMPAIGN_ID}}
+- batch_id: {{BATCH_ID}}
+- run_id: {{RUN_ID}}
+- input_csv: {{INPUT_CSV}}
+
+You receive company rows. For each company, find publicly available decision-maker people relevant for B2B outreach.
+Prioritize roles such as Founder, CEO, Managing Director, Head of Sales, Sales Director, Business Development, Partnerships, Revenue, Marketing Leadership, HR/Recruiting leadership, Operations leadership.
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target company.
+- Prefer decision-makers and buying-influencers over random employees.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target company through a public source.
+- Prefer people whose role is relevant to B2B outreach, sales, partnerships, leadership, HR/recruiting, operations, or management.
+- If a person is uncertain, include the row only if the public source supports the company + role connection.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+{{OUTPUT_COLUMNS}}
+
+Column guidance:
+- batch_id: use {{BATCH_ID}}
+- company_name/company_website/city/country: copy from input when present.
+- role_category: one of founder_ceo, sales, business_development, marketing, hr_recruiting, operations, finance, other_management, unknown.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1673 | company_name: Elisabeth-Krankenhaus Thuine | city: Thuine | website: https://niels-stensen-kliniken.de/elisabeth-krankenhaus.html | source_url: https://klinikradar.de/kliniken/elisabeth-krankenhaus-thuine | external_key: healthcare_universe:klinikradar:source_url:07b0113bfb0d9497b8cf | missing_reason: company has no people | target: no-people
+2. company_id: 2172 | company_name: Endo Rehazentrum Hamburg | city: Hamburg | website: https://helios-gesundheit.de/reha/endo-reha-physiotherapie-krankengymnastik | source_url: https://klinikradar.de/rehakliniken/endo-rehazentrum-hamburg | external_key: healthcare_universe:klinikradar:source_url:b5dd4e2466bd948993fb | missing_reason: company has no people | target: no-people
+3. company_id: 1306 | company_name: Epilepsie Monitoring Neuropädiatrie Alsterdorf in Hamburg | city: Hamburg | website: http://kkh-wilhelmstift.de | source_url: https://klinikradar.de/kliniken/epilepsie-monitoring-neuropaediatrie-alsterdorf | external_key: healthcare_universe:klinikradar:source_url:cdbacbf8898b2d82f4c4 | missing_reason: company has no people | target: no-people
+4. company_id: 871 | company_name: Epilepsieklinik Tabor in Bernau bei Berlin | city: Bernau bei Berlin | website: https://epi-tabor.de | source_url: https://klinikradar.de/kliniken/epilepsieklinik-tabor | external_key: healthcare_universe:klinikradar:source_url:d478662b5814bcfb526e | missing_reason: company has no people | target: no-people
+5. company_id: 1948 | company_name: Epilepsiezentrum Kleinwachau in Radeberg | city: Radeberg | website: http://kleinwachau.de | source_url: https://klinikradar.de/kliniken/epilepsiezentrum-kleinwachau | external_key: healthcare_universe:klinikradar:source_url:9f7db35b3dbb8e7787f3 | missing_reason: company has no people | target: no-people
+6. company_id: 1909 | company_name: Erzgebirgsklinikum - Haus Stollberg | city: Stollberg | website: https://erzgebirgsklinikum.de | source_url: https://klinikradar.de/kliniken/erzgebirgsklinikum-haus-stollberg | external_key: healthcare_universe:klinikradar:source_url:756cd3830ae07d00aaa7 | missing_reason: company has no people | target: no-people
+7. company_id: 1858 | company_name: Erzgebirgsklinikum Haus Annaberg in Annaberg-Buchholz | city: Annaberg-Buchholz | website: http://erzgebirgsklinikum.de | source_url: https://klinikradar.de/kliniken/erzgebirgsklinikum-haus-annaberg | external_key: healthcare_universe:klinikradar:source_url:5607c9470780f97e528e | missing_reason: company has no people | target: no-people
+8. company_id: 1942 | company_name: Erzgebirgsklinikum Haus Olbernhau | city: Olbernhau | website: https://erzgebirgsklinikum.de | source_url: https://klinikradar.de/kliniken/erzgebirgsklinikum-haus-olbernhau | external_key: healthcare_universe:klinikradar:source_url:91ae68b8828358e447a2 | missing_reason: company has no people | target: no-people
+9. company_id: 1883 | company_name: Erzgebirgsklinikum Haus Zschopau | city: Zschopau | website: https://erzgebirgsklinikum.de | source_url: https://klinikradar.de/kliniken/erzgebirgsklinikum-haus-zschopau | external_key: healthcare_universe:klinikradar:source_url:015a8c58ad903cfde00d | missing_reason: company has no people | target: no-people
+10. company_id: 1589 | company_name: Euregio-Klinik Albert-Schweitzer-Straße in Nordhorn | city: Nordhorn | website: http://euregio-klinik.de | source_url: https://klinikradar.de/kliniken/euregio-klinik-albert-schweitzer-strasse | external_key: healthcare_universe:klinikradar:source_url:7f8396a1e3966dcfb73c | missing_reason: company has no people | target: no-people
+11. company_id: 1692 | company_name: Euregio-Klinik Hannoverstraße in Nordhorn | city: Nordhorn | website: http://euregio-klinik.de | source_url: https://klinikradar.de/kliniken/euregio-klinik-hannoverstrasse | external_key: healthcare_universe:klinikradar:source_url:2c7278ed13f594ee094c | missing_reason: company has no people | target: no-people
+12. company_id: 1902 | company_name: Ev. Diakonissenkrankenhaus Leipzig | city: Leipzig | website: http://diako-leipzig.de | source_url: https://klinikradar.de/kliniken/ev-diakonissenkrankenhaus-leipzig | external_key: healthcare_universe:klinikradar:source_url:cd70b433e82c90f3a848 | missing_reason: company has no people | target: no-people
+13. company_id: 1783 | company_name: Ev. Stift. St. Martin in Koblenz | city: Koblenz | website: https://gk.de | source_url: https://klinikradar.de/kliniken/ev-stift-st-martin | external_key: healthcare_universe:klinikradar:source_url:1ce712e8a6eb97e07dd1 | missing_reason: company has no people | target: no-people
+14. company_id: 770 | company_name: Evangelische Elisabeth Klinik in Berlin | city: Berlin | website: https://johannesstift-diakonie.de/medizinische-versorgung/evangelische-elisabeth-klinik | source_url: https://klinikradar.de/kliniken/evangelische-elisabeth-klinik | external_key: healthcare_universe:klinikradar:source_url:a1b43b95cf0231567730 | missing_reason: company has no people | target: no-people
+15. company_id: 769 | company_name: Evangelische Lungenklinik Berlin | city: Berlin | website: https://johannesstift-diakonie.de/medizinische-versorgung/evangelische-lungenklinik | source_url: https://klinikradar.de/kliniken/evangelische-lungenklinik-berlin | external_key: healthcare_universe:klinikradar:source_url:752a2c341bb826b291fc | missing_reason: company has no people | target: no-people
+16. company_id: 1274 | company_name: Evangelisches Amalie Sieveking Krankenhaus in Hamburg | city: Hamburg | website: https://amalie.de | source_url: https://klinikradar.de/kliniken/evangelisches-amalie-sieveking-krankenhaus | external_key: healthcare_universe:klinikradar:source_url:9d8e4ff418872811f2da | missing_reason: company has no people | target: no-people
+17. company_id: 764 | company_name: Evangelisches Geriatriezentrum Berlin | city: Berlin | website: http://johannesstift-diakonie.de/medizinische-versorgung/egzb | source_url: https://klinikradar.de/kliniken/evangelisches-geriatriezentrum-berlin | external_key: healthcare_universe:klinikradar:source_url:4e1dc15720101aba59e7 | missing_reason: company has no people | target: no-people
+18. company_id: 1272 | company_name: Evangelisches Krankenhaus Alsterdorf in Hamburg | city: Hamburg | website: http://evangelisches-krankenhaus-alsterdorf.de | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-alsterdorf | external_key: healthcare_universe:klinikradar:source_url:2b9b79016edf24ec515b | missing_reason: company has no people | target: no-people
+19. company_id: 1803 | company_name: Evangelisches Krankenhaus Bad Dürkheim | city: Bad Dürkheim | website: https://diakonissen.de/evangelisches-krankenhaus-bad-duerkheim/home | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-bad-duerkheim | external_key: healthcare_universe:klinikradar:source_url:5be8618d5cfb04bae9d8 | missing_reason: company has no people | target: no-people
+20. company_id: 1316 | company_name: Evangelisches Krankenhaus Bethanien Greifswald | city: Greifswald | website: http://odebrecht-stiftung.de | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-bethanien-greifswald | external_key: healthcare_universe:klinikradar:source_url:913c50405a498e5a8abb | missing_reason: company has no people | target: no-people
+21. company_id: 1848 | company_name: Evangelisches Krankenhaus Dierdorf/Selters (Dierdorf) | city: Dierdorf | website: http://khds.de | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-dierdorf-selters-dierdorf | external_key: healthcare_universe:klinikradar:source_url:0c712fa5fdb55252183b | missing_reason: company has no people | target: no-people
+22. company_id: 2032 | company_name: Evangelisches Krankenhaus Dierdorf/Selters (Selters) | city: Selters | website: http://khds.de | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-dierdorf-selters-selters | external_key: healthcare_universe:klinikradar:source_url:b24e93240f7cdebf0964 | missing_reason: company has no people | target: no-people
+23. company_id: 1448 | company_name: Evangelisches Krankenhaus Gesundbrunnen in Hofgeismar | city: Hofgeismar | website: http://ekh-gesundbrunnen.de | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-gesundbrunnen | external_key: healthcare_universe:klinikradar:source_url:07fcc6af248886296774 | missing_reason: company has no people | target: no-people
+24. company_id: 1579 | company_name: Evangelisches Krankenhaus Göttingen-Weende | city: Göttingen | website: http://ekweende.de | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-goettingen-weende | external_key: healthcare_universe:klinikradar:source_url:281f69b3dc0939e718c9 | missing_reason: company has no people | target: no-people
+25. company_id: 1680 | company_name: Evangelisches Krankenhaus Göttingen-Weende - Krankenhaus Neu-Mariahilf | city: Göttingen | website: http://ekweende.de | source_url: https://klinikradar.de/kliniken/evangelisches-krankenhaus-goettingen-weende-krankenhaus-neu-mariahilf | external_key: healthcare_universe:klinikradar:source_url:ed727701e80353fa98ca | missing_reason: company has no people | target: no-people
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_012
+- Return only the requested result.
+- Use public information only.
