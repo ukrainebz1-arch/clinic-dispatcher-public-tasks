@@ -1,0 +1,131 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_013
+
+Then output exactly one CSV header line:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Then output CSV rows, one row per target person.
+Return ONLY clinic/company-wide HR or Personal leadership.
+Do NOT return Recruiter.
+Do NOT return Personalreferent.
+Do NOT return HR Business Partner unless explicitly Leitung/Head/Director.
+Do NOT return generic Karriere contacts.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_013
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching German healthcare clinics.
+
+Goal:
+For each company, find ONLY clinic/company-wide HR leadership.
+
+Primary target:
+- Personalleiter
+- Personalleiterin
+- Personalleitung
+- Leitung Personal
+- Leiter Personal
+- Leiterin Personal
+- Personaldirektor
+- Personaldirektorin
+- HR-Leitung
+- Leitung HR
+- Head of HR
+- Human Resources Director
+- Director Human Resources
+
+Secondary target if available:
+- Stellvertretende Personalleitung
+- stellv. Leitung Personal
+- Deputy Head of HR
+- Deputy Human Resources Director
+
+Hard exclusion:
+Do NOT return Recruiter.
+Do NOT return Personalreferent / Personalreferentin.
+Do NOT return HR Business Partner unless the role explicitly says Leitung/Head/Director.
+Do NOT return Talent Acquisition.
+Do NOT return Sachbearbeiter/in Personal.
+Do NOT return Assistenz / Assistant.
+Do NOT return Ausbildung / Azubi / Bewerbermanagement.
+Do NOT return generic Karriere contact.
+Do NOT return Pflege roles.
+Do NOT return Ärztliche Direktion.
+Do NOT return Geschäftsführung unless no HR leadership exists and the company has no HR contact; even then prefer NOT_FOUND.
+
+Important:
+We are looking for leadership of the Personal/HR function, not operational recruiters.
+
+Input rows may include existing people already known in the database.
+Use existing people only as context. Do not repeat them unless they are clearly HR/Personal leadership.
+
+For each company, return up to 2 rows:
+1. best Personalleiter/Personalleitung/HR-Leitung if found
+2. deputy HR/Personal leadership if found
+
+If no valid HR/Personal leadership is found, output exactly one NOT_FOUND row for that company.
+
+Output exactly CSV with this header:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+role_category:
+- hr_recruiting for Personalleitung / HR-Leitung / Head of HR
+- unknown for NOT_FOUND
+
+confidence:
+- high = official clinic/group website, imprint, organization chart, annual report, or official document directly verifies name + role
+- medium = reliable public directory / professional page with role evidence
+- low = no valid target found or uncertain
+
+For NOT_FOUND:
+full_name=NOT_FOUND
+role_category=unknown
+confidence=low
+notes=No clinic/company-wide HR/Personal leadership found. Excluded Recruiter/Personalreferent/HR Business Partner/generic Karriere contacts.
+
+Do not use markdown.
+Do not add explanations outside CSV.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1640 | company_name: DRK-Krankenhaus Clementinenhaus in Hannover | company_website: http://clementinenhaus.de | city: Hannover | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Manuela Friesdorf — Pflegedienstleitung (kom.) | Ralf Benninghoff — Geschäftsführung | existing_all_people_roles: Manuela Friesdorf — Pflegedienstleitung (kom.) | Ralf Benninghoff — Geschäftsführung
+2. company_id: 2008 | company_name: DRK-Krankenhaus Grevesmühlen | company_website: http://drk-kh-gvm.de | city: Grevesmühlen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Jan Weyer — Geschäftsführer | Roman Grams — Pflegedienstleiter | existing_all_people_roles: Jan Weyer — Geschäftsführer | Roman Grams — Pflegedienstleiter
+3. company_id: 1346 | company_name: DRK-Krankenhaus Grimmen in Süderholz | company_website: https://krankenhaus-grimmen.de | city: Süderholz | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Astrid Schwalme — Pflegedienstleiterin | Jan Weyer — Geschäftsführer | existing_all_people_roles: Astrid Schwalme — Pflegedienstleiterin | Jan Weyer — Geschäftsführer
+4. company_id: 1329 | company_name: DRK-Krankenhaus Mecklenburg-Strelitz in Neustrelitz | company_website: http://drkmst.de | city: Neustrelitz | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Beatrice Tschorn — Pflegedienstleiterin | Jan Weyer — Geschäftsführer | existing_all_people_roles: Beatrice Tschorn — Pflegedienstleiterin | Jan Weyer — Geschäftsführer
+5. company_id: 1336 | company_name: DRK-Krankenhaus Teterow | company_website: http://drk-kh-teterow.de | city: Teterow | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Jan Weyer — Geschäftsführer | Jana Wedow — Pflegedienstleiterin | existing_all_people_roles: Jan Weyer — Geschäftsführer | Jana Wedow — Pflegedienstleiterin
+6. company_id: 2098 | company_name: DRV Reha-Zentrum Bad Aibling, Klinik Wendelstein | company_website: https://wendelstein.deutsche-rentenversicherung-reha-zentren.de/subsites/Wendelstein/de/Navigation/00_Home/Startseite_node.html | city: Bad Aibling | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_all_people_roles: Dr. med. Alex Höfter — Ärztlicher Direktor
+7. company_id: 1536 | company_name: Dalberg Klinik Fulda | company_website: http://meliva.de | city: Fulda | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_all_people_roles: Daniela Limpert — PDL | Steffen Schiffhauer — Chefarzt
+8. company_id: 1229 | company_name: Danuvius Klinik Ingolstadt | company_website: http://danuviusklinik.de | city: Ingolstadt | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andrea Ziegler-Wrobel — Kaufmännische Direktorin und Geschäftsführerin | Martin Schröter — Pflegedirektion Danuvius Klinik GmbH | existing_all_people_roles: Andrea Ziegler-Wrobel — Kaufmännische Direktorin und Geschäftsführerin | Martin Schröter — Pflegedirektion Danuvius Klinik GmbH
+9. company_id: 1177 | company_name: Danuvius Klinik Neuburg | company_website: http://danuviusklinik.de | city: Neuburg an der Donau | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andrea Ziegler-Wrobel — Kaufmännische Direktorin und Geschäftsführerin | Anne Bunke — Pflegedienstleitung | existing_all_people_roles: Andrea Ziegler-Wrobel — Kaufmännische Direktorin und Geschäftsführerin | Anne Bunke — Pflegedienstleitung
+10. company_id: 1230 | company_name: Danuvius Klinik Neuburg - Tagesklinik | company_website: http://danuviusklinik.de | city: Neuburg an der Donau | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andrea Ziegler-Wrobel — Kaufmännische Direktorin und Geschäftsführerin | Anne Bunke — Pflegedienstleitung | existing_all_people_roles: Andrea Ziegler-Wrobel — Kaufmännische Direktorin und Geschäftsführerin | Anne Bunke — Pflegedienstleitung
+11. company_id: 1108 | company_name: Danuvius Klinik Pfaffenhofen | company_website: http://danuviusklinik.de | city: Pfaffenhofen an der Ilm | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andrea Ziegler-Wrobel — Kaufmännische Direktorin und Geschäftsführerin | Anne Bunke — Pflegedienstleitung | existing_all_people_roles: Andrea Ziegler-Wrobel — Kaufmännische Direktorin und Geschäftsführerin | Anne Bunke — Pflegedienstleitung
+12. company_id: 1452 | company_name: Darmstädter Kinderkliniken Prinzessin Margaret in Darmstadt | company_website: http://kinderkliniken.de | city: Darmstadt | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andreas Hofmann — Geschäftsführer | existing_all_people_roles: Andreas Hofmann — Geschäftsführer | Anette Niemeier — PDL
+13. company_id: 2087 | company_name: Deegenbergklinik in Bad Kissingen | company_website: https://deegenberg.de | city: Bad Kissingen | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dorothea Deeg — Geschäftsführerin | R. Roßbauer — Pflegedienstleitung | existing_all_people_roles: Dorothea Deeg — Geschäftsführerin | R. Roßbauer — Pflegedienstleitung
+14. company_id: 1703 | company_name: Deister Süntel Klinik | company_website: https://dsk-bm.de | city: Bad Münder am Deister | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Hans-Christian Delfs — Geschäftsführer | existing_all_people_roles: Hans-Christian Delfs — Geschäftsführer
+15. company_id: 1604 | company_name: Delme-Klinikum Delmenhorst | company_website: https://delme-klinikum.de | city: Delmenhorst | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Christian Peters — Geschäftsführer | Dr. Waldemar Hinz — Pflegedirektor | existing_all_people_roles: Christian Peters — Geschäftsführer | Dr. Waldemar Hinz — Pflegedirektor
+16. company_id: 1365 | company_name: Dependance Herzchirurgie der Universitätsmedizin Rostock an den Helios Kliniken Schwerin | company_website: http://med.uni-rostock.de | city: Schwerin | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Diana Kords — Pflegedirektorin | existing_all_people_roles: Christian Klopsch — Leitung Standort Schwerin und Leitender Oberarzt | Diana Kords — Pflegedirektorin
+17. company_id: 1004 | company_name: Deutsches Herzzentrum München | company_website: https://deutsches-herzzentrum-muenchen.de | city: München | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Bernhard Löser — Pflegedirektor | Claudia Demmelmeir — Stellv. Pflegedirektorin | existing_all_people_roles: Bernhard Löser — Pflegedirektor | Christian Bormann — Kaufmännischer Direktor | Claudia Demmelmeir — Stellv. Pflegedirektorin
+18. company_id: 1892 | company_name: Deutsches Rotes Kreuz Krankenhaus Chemnitz-Rabenstein | company_website: http://rab.drk-khs.de | city: Chemnitz | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Beate Zierold — Pflegedienstleiterin | Diana Lohmann — Geschäftsführerin | existing_all_people_roles: Beate Zierold — Pflegedienstleiterin | Diana Lohmann — Geschäftsführerin
+19. company_id: 1923 | company_name: Deutsches Rotes Kreuz Krankenhaus Lichtenstein | company_website: http://li.drk-khs.de | city: Lichtenstein | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Diana Lohmann — Geschäftsführerin | Sebastian Löffler — Pflegedienstleiter | existing_all_people_roles: Diana Lohmann — Geschäftsführerin | Sebastian Löffler — Pflegedienstleiter
+20. company_id: 1090 | company_name: Deutsches Zentrum für Kinder- und Jugendrheumatologie in Garmisch-Partenkirchen | company_website: https://rheuma-kinderklinik.de/rheuma-zentrum | city: Garmisch-Partenkirchen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Clemens Stafflinger — Geschäftsführer | Dr. jur. Jana Mattei — Pflegedirektorin | existing_all_people_roles: Clemens Stafflinger — Geschäftsführer | Dr. jur. Jana Mattei — Pflegedirektorin
+21. company_id: 1698 | company_name: Diabeteszentrum Bad Lauterberg | company_website: http://diabeteszentrum.de | city: Bad Lauterberg im Harz | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Tanja Klaproth — Pflegedienstleitung | existing_all_people_roles: Jana Henße — Verwaltungsleiterin | Tanja Klaproth — Pflegedienstleitung
+22. company_id: 41 | company_name: Diako Mannheim | city: Mannheim | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andrea Albrecht — Pflegedirektorin | existing_all_people_roles: Andrea Albrecht — Pflegedirektorin | Julia Bergmann — Kaufmännische Direktorin
+23. company_id: 1911 | company_name: Diakomed - Diakoniekrankenhaus im Chemnitzer Land | company_website: http://diakomed.de | city: Hartmannsdorf bei Chemnitz | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Martin Jonas — Geschäftsführer | Sebastian Grosskopf — Pflegedienstleiter | existing_all_people_roles: Martin Jonas — Geschäftsführer | Sebastian Grosskopf — Pflegedienstleiter
+24. company_id: 1922 | company_name: Diakonie Kliniken Zschadraß - Fachkrankenhaus für Psychiatrie, Psychotherapie und Neurologie in Colditz | company_website: http://diakoniezschadrass.de | city: Colditz | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Yvonne Gruhle — Pflegedienstleitung | existing_all_people_roles: Prof. Dr. Dr. Stefan Brunnhuber — Ärztlicher Direktor und Chefarzt | Yvonne Gruhle — Pflegedienstleitung
+25. company_id: 1959 | company_name: Diakonie Kliniken Zschadraß - Fachkrankenhaus für Psychiatrie, Psychotherapie und Neurologie: Tagesklinik Borna | company_website: http://diakoniezschadrass.de | city: Borna | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Roberto Schimana — Geschäftsführung | existing_all_people_roles: Roberto Schimana — Geschäftsführung
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_013
+- Return only the requested result.
+- Use public information only.
