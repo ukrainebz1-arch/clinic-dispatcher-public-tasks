@@ -1,0 +1,131 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_070
+
+Then output exactly one CSV header line:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Then output CSV rows, one row per target person.
+Return ONLY clinic/company-wide HR or Personal leadership.
+Do NOT return Recruiter.
+Do NOT return Personalreferent.
+Do NOT return HR Business Partner unless explicitly Leitung/Head/Director.
+Do NOT return generic Karriere contacts.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_070
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching German healthcare clinics.
+
+Goal:
+For each company, find ONLY clinic/company-wide HR leadership.
+
+Primary target:
+- Personalleiter
+- Personalleiterin
+- Personalleitung
+- Leitung Personal
+- Leiter Personal
+- Leiterin Personal
+- Personaldirektor
+- Personaldirektorin
+- HR-Leitung
+- Leitung HR
+- Head of HR
+- Human Resources Director
+- Director Human Resources
+
+Secondary target if available:
+- Stellvertretende Personalleitung
+- stellv. Leitung Personal
+- Deputy Head of HR
+- Deputy Human Resources Director
+
+Hard exclusion:
+Do NOT return Recruiter.
+Do NOT return Personalreferent / Personalreferentin.
+Do NOT return HR Business Partner unless the role explicitly says Leitung/Head/Director.
+Do NOT return Talent Acquisition.
+Do NOT return Sachbearbeiter/in Personal.
+Do NOT return Assistenz / Assistant.
+Do NOT return Ausbildung / Azubi / Bewerbermanagement.
+Do NOT return generic Karriere contact.
+Do NOT return Pflege roles.
+Do NOT return Ärztliche Direktion.
+Do NOT return Geschäftsführung unless no HR leadership exists and the company has no HR contact; even then prefer NOT_FOUND.
+
+Important:
+We are looking for leadership of the Personal/HR function, not operational recruiters.
+
+Input rows may include existing people already known in the database.
+Use existing people only as context. Do not repeat them unless they are clearly HR/Personal leadership.
+
+For each company, return up to 2 rows:
+1. best Personalleiter/Personalleitung/HR-Leitung if found
+2. deputy HR/Personal leadership if found
+
+If no valid HR/Personal leadership is found, output exactly one NOT_FOUND row for that company.
+
+Output exactly CSV with this header:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+role_category:
+- hr_recruiting for Personalleitung / HR-Leitung / Head of HR
+- unknown for NOT_FOUND
+
+confidence:
+- high = official clinic/group website, imprint, organization chart, annual report, or official document directly verifies name + role
+- medium = reliable public directory / professional page with role evidence
+- low = no valid target found or uncertain
+
+For NOT_FOUND:
+full_name=NOT_FOUND
+role_category=unknown
+confidence=low
+notes=No clinic/company-wide HR/Personal leadership found. Excluded Recruiter/Personalreferent/HR Business Partner/generic Karriere contacts.
+
+Do not use markdown.
+Do not add explanations outside CSV.
+
+CURRENT CHUNK INPUT:
+1. company_id: 615 | company_name: St. Agatha Fachklinik für Seelische Gesundheit in Köln | city: Köln | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Martin Hofmann — Pflegedirektor | existing_all_people_roles: Martin Hofmann — Pflegedirektor
+2. company_id: 323 | company_name: St. Agnes-Hospital Bocholt | city: Bocholt | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Ingo Jansen — Pflegedirektor | Tobias Haumann — Stellvertretender Pflegedirektor | existing_all_people_roles: Ingo Jansen — Pflegedirektor | Tobias Haumann — Stellvertretender Pflegedirektor
+3. company_id: 364 | company_name: St. Anna Hospital in Herne | city: Herne | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dr. Sabine Edlinger — Geschäftsführerin | Marion Schmitz — Gesamtpflegedienstleitung St. Elisabeth Gruppe | existing_all_people_roles: Dr. Sabine Edlinger — Geschäftsführerin | Marion Schmitz — Gesamtpflegedienstleitung St. Elisabeth Gruppe
+4. company_id: 360 | company_name: St. Anna Klinik Duisburg | city: Duisburg | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carolina Korioth — Pflegedirektorin | Claudia Meßthaler — Klinikgeschäftsführerin | existing_all_people_roles: Carolina Korioth — Pflegedirektorin | Claudia Meßthaler — Klinikgeschäftsführerin
+5. company_id: 1674 | company_name: St. Anna Klinik in Löningen | company_website: http://anna-klinik.de | city: Löningen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Michael Puncak — Pflegedirektor | Ralph Ehring — Geschäftsführer | Sarah Oltmann — Klinische Pflegedienstleitung | existing_all_people_roles: Michael Puncak — Pflegedirektor | Ralph Ehring — Geschäftsführer | Sarah Oltmann — Klinische Pflegedienstleitung
+6. company_id: 1029 | company_name: St. Anna Krankenhaus in Sulzbach-Rosenberg | company_website: http://kh-as.de | city: Sulzbach-Rosenberg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carina Ellerhoff — Pflegedirektorin | Stephan Röthenbacher — Stv. Pflegedirektor | existing_all_people_roles: Carina Ellerhoff — Pflegedirektorin | Roland Ganzmann — Vorstand | Stephan Röthenbacher — Stv. Pflegedirektor
+7. company_id: 150 | company_name: St. Anna-Klinik in Stuttgart | city: Stuttgart | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dipl. Oec. Andreas Schöller — Geschäftsführer | Dorothea Casha — Pflegedienstleiterin | existing_all_people_roles: Dipl. Oec. Andreas Schöller — Geschäftsführer | Dorothea Casha — Pflegedienstleiterin
+8. company_id: 76 | company_name: St. Anna-Virngrund-Klinik in Ellwangen (Jagst) | city: Ellwangen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Daniel Köger — Pflegerischer Standortleiter St. Anna-Virngrund-Klinik | existing_all_people_roles: Bernd Ziegler — Kaufmännischer Standortleiter | Bernd Ziegler — Kaufmännischer Standortleiter Aalen und Ellwangen | Daniel Köger — Pflegerischer Standortleiter St. Anna-Virngrund-Klinik
+9. company_id: 1831 | company_name: St. Annastiftskrankenhaus in Ludwigshafen am Rhein | company_website: https://st-annastiftskrankenhaus.de | city: Ludwigshafen am Rhein | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dirk Schmidt — Pflegedirektor | Marcus Wiechmann — Geschäftsführer | existing_all_people_roles: Dirk Schmidt — Pflegedirektor | Marcus Wiechmann — Geschäftsführer
+10. company_id: 371 | company_name: St. Ansgar Krankenhaus Höxter | city: Höxter | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Christian Jostes — Geschäftsführer KHWE | Tamara Schmiemann — Pflegedienstleitung St. Ansgar Krankenhaus Höxter | existing_all_people_roles: Christian Jostes — Geschäftsführer KHWE | Juliane Gierke — Standortleitung | Tamara Schmiemann — Pflegedienstleitung St. Ansgar Krankenhaus Höxter
+11. company_id: 622 | company_name: St. Antonius Krankenhaus Hörstel | city: Hörstel | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Frank Kättker — Pflegedirektor | Günter Engels — Geschäftsführer | existing_all_people_roles: Frank Kättker — Pflegedirektor | Günter Engels — Geschäftsführer
+12. company_id: 477 | company_name: St. Antonius Krankenhaus in Köln | city: Köln | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Ansgar Holzkamp — Pflegedirektor | existing_all_people_roles: Ansgar Holzkamp — Pflegedirektor
+13. company_id: 577 | company_name: St. Antonius-Krankenhaus in Bottrop | city: Bottrop | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Eva Wilhelm — Krankenhausgeschäftsführerin | Sabine Erberich — Pflegedirektorin | existing_all_people_roles: Eva Wilhelm — Krankenhausgeschäftsführerin | Sabine Erberich — Pflegedirektorin
+14. company_id: 1830 | company_name: St. Antonius-Krankenhaus in Wissen/Sieg | company_website: http://antonius-wissen.de | city: Wissen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Markus Triesch — Pflegedienstleiter | existing_all_people_roles: Dr. Sezer Melisande Lammers — Ärztliche Direktorin und Chefärztin | Markus Triesch — Pflegedienstleiter
+15. company_id: 431 | company_name: St. Augustinus Krankenhaus in Düren | city: Düren | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Bärbel Bachmann-Stärk — Pflegedirektorin | Ewa Martens — Stellvertretende Pflegedirektorin | existing_all_people_roles: Bärbel Bachmann-Stärk — Pflegedirektorin | Ewa Martens — Stellvertretende Pflegedirektorin
+16. company_id: 399 | company_name: St. Barbara-Hospital in Gladbeck | city: Gladbeck | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Eva Wilhelm — Krankenhausgeschäftsführerin | Sabine Erberich — Pflegedirektorin | existing_all_people_roles: Eva Wilhelm — Krankenhausgeschäftsführerin | Sabine Erberich — Pflegedirektorin
+17. company_id: 334 | company_name: St. Barbara-Klinik Hamm-Heessen | city: Hamm | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Jens Alberti — Pflegedirektor | Silke Strauch — Stellvertretende Pflegedirektorin | existing_all_people_roles: Jens Alberti — Pflegedirektor | Silke Strauch — Stellvertretende Pflegedirektorin
+18. company_id: 379 | company_name: St. Bernhard-Hospital Kamp-Lintfort | city: Kamp-Lintfort | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Anna Schäfer — Stellvertretende Pflegedirektorin | Clemens Roeling — Pflegedirektor | Sabine Richter — Stellvertretende Pflegedirektorin | existing_all_people_roles: Anna Schäfer — Stellvertretende Pflegedirektorin | Clemens Roeling — Pflegedirektor | Sabine Richter — Stellvertretende Pflegedirektorin
+19. company_id: 1683 | company_name: St. Bernhard-Hospital in Brake (Unterweser) | company_website: http://krankenhaus-brake.de | city: Brake | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dirk Schrage — Pflegedienstleitung | Frank Germeroth — Geschäftsführer | existing_all_people_roles: Dirk Schrage — Pflegedienstleitung | Frank Germeroth — Geschäftsführer
+20. company_id: 1573 | company_name: St. Bernward Krankenhaus in Hildesheim | company_website: https://bernward-khs.de | city: Hildesheim | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Karen Thiele — Geschäftsführerin | Susann Börner — Pflegedirektorin | existing_all_people_roles: Karen Thiele — Geschäftsführerin | Susann Börner — Pflegedirektorin
+21. company_id: 1199 | company_name: St. Camillus Ursberg | company_website: http://krankenhaus-st-camillus.de | city: Ursberg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Zenta Spengler — Pflegedienstleitung | existing_all_people_roles: Dr. Heidi Durst — Ärztliche Direktorin und Chefärztin | Zenta Spengler — Pflegedienstleitung
+22. company_id: 1934 | company_name: St. Carolus Krankenhaus Görlitz | company_website: https://carolus-goerlitz.de | city: Görlitz | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Katrin Raimann — Pflegedirektorin | Lutz Möller — Geschäftsführer | existing_all_people_roles: Katrin Raimann — Pflegedirektorin | Lutz Möller — Geschäftsführer
+23. company_id: 462 | company_name: St. Christophorus Krankenhaus Werne | city: Werne | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Mario Bergmann — Pflegedirektor / Standortleiter | existing_all_people_roles: Mario Bergmann — Pflegedirektor / Standortleiter
+24. company_id: 359 | company_name: St. Elisabeth Hospital (Iserlohn) | city: Iserlohn | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Thomas Mende — Pflegedirektor | existing_all_people_roles: Thomas Mende — Pflegedirektor
+25. company_id: 526 | company_name: St. Elisabeth Krankenhaus Niederwenigern in Hattingen | city: Hattingen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Madeleine Nielsen — Pflegedienstleitung | Peter Berlin — Geschäftsführer | existing_all_people_roles: Madeleine Nielsen — Pflegedienstleitung | Peter Berlin — Geschäftsführer
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_070
+- Return only the requested result.
+- Use public information only.
