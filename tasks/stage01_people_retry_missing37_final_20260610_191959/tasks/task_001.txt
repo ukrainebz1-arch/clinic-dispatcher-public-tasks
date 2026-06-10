@@ -1,0 +1,97 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage01_people_retry_missing37_final_20260610_191959
+TASK_ID: task_001
+
+Then output exactly one CSV header line:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Then output CSV rows, one row per company/person.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+If no person is found for a company, still output a row for that company with:
+full_name=NOT_FOUND
+role_category=unknown
+confidence=low
+notes=No verified named decision-maker found.
+
+
+
+RUN_ID: stage01_people_retry_missing37_final_20260610_191959
+TASK_ID: task_001
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+TASK: {{STAGE_ID}} / {{DESCRIPTION}}
+
+Run context:
+- campaign_id: {{CAMPAIGN_ID}}
+- batch_id: {{BATCH_ID}}
+- run_id: {{RUN_ID}}
+- input_csv: {{INPUT_CSV}}
+
+You receive company rows. For each company, find publicly available decision-maker people relevant for B2B outreach.
+Prioritize roles such as Founder, CEO, Managing Director, Head of Sales, Sales Director, Business Development, Partnerships, Revenue, Marketing Leadership, HR/Recruiting leadership, Operations leadership.
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target company.
+- Prefer decision-makers and buying-influencers over random employees.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target company through a public source.
+- Prefer people whose role is relevant to B2B outreach, sales, partnerships, leadership, HR/recruiting, operations, or management.
+- If a person is uncertain, include the row only if the public source supports the company + role connection.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+{{OUTPUT_COLUMNS}}
+
+Column guidance:
+- batch_id: use {{BATCH_ID}}
+- company_name/company_website/city/country: copy from input when present.
+- role_category: one of founder_ceo, sales, business_development, marketing, hr_recruiting, operations, finance, other_management, unknown.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1348 | company_name: AMEOS Klinikum Anklam | city: Anklam | website: http://ameos.eu | source_url: https://klinikradar.de/kliniken/ameos-klinikum-anklam | external_key: healthcare_universe:klinikradar:source_url:51dbcf7e6ff7ea10e43c | missing_reason: company has no people | target: no-people
+2. company_id: 1358 | company_name: AMEOS Klinikum Pasewalk | city: Pasewalk | website: http://ameos.eu | source_url: https://klinikradar.de/kliniken/ameos-klinikum-pasewalk | external_key: healthcare_universe:klinikradar:source_url:2b6fb0a4bebcb008acc6 | missing_reason: company has no people | target: no-people
+3. company_id: 1599 | company_name: Asklepios Klinik Schildautal Seesen in Seesen, Harz | city: Seesen | website: http://asklepios.com/seesen | source_url: https://klinikradar.de/kliniken/asklepios-klinik-schildautal-seesen | external_key: healthcare_universe:klinikradar:source_url:61e51026fd0b94068d70 | missing_reason: company has no people | target: no-people
+4. company_id: 1922 | company_name: Diakonie Kliniken Zschadraß - Fachkrankenhaus für Psychiatrie, Psychotherapie und Neurologie in Colditz | city: Colditz | website: http://diakoniezschadrass.de | source_url: https://klinikradar.de/kliniken/diakonie-kliniken-zschadrass-fachkrankenhaus-fuer-psychiatrie-psychotherapie-und-neurologie | external_key: healthcare_universe:klinikradar:source_url:b1a0ad93730b31829933 | missing_reason: company has no people | target: no-people
+5. company_id: 1844 | company_name: Dr. von Ehrenwall&prime;sche Klinik in Bad Neuenahr-Ahrweiler | city: Bad Neuenahr-Ahrweiler | website: http://ehrenwall.de | source_url: https://klinikradar.de/kliniken/dr-von-ehrenwallsche-klinik | external_key: healthcare_universe:klinikradar:source_url:eafd6946093cd302f7bf | missing_reason: company has no people | target: no-people
+6. company_id: 1060 | company_name: Fachklinik Osterhofen in Osterhofen, Niederbayern | city: Osterhofen | website: http://fachklinik-osterhofen.de | source_url: https://klinikradar.de/kliniken/fachklinik-osterhofen | external_key: healthcare_universe:klinikradar:source_url:856572e6493f1bd480e3 | missing_reason: company has no people | target: no-people
+7. company_id: 1495 | company_name: Helios Kliniken Kassel - Fachklinik für Geriatrie in Kaufungen, Hessen | city: Kaufungen | website: https://helios-gesundheit.de/kliniken/kassel | source_url: https://klinikradar.de/kliniken/helios-kliniken-kassel-fachklinik-fuer-geriatrie | external_key: healthcare_universe:klinikradar:source_url:52384a8c3c758a31b1a9 | missing_reason: company has no people | target: no-people
+8. company_id: 1236 | company_name: KJF Klinik Josefinum / Klinik Hochried in Murnau am Staffelsee | city: Murnau am Staffelsee | website: https://josefinum.de | source_url: https://klinikradar.de/kliniken/kjf-klinik-josefinum-klinik-hochried | external_key: healthcare_universe:klinikradar:source_url:2f26b3b1d34ef547d4cf | missing_reason: company has no people | target: no-people
+9. company_id: 964 | company_name: KJF Klinik Josefinum in Augsburg | city: Augsburg | website: http://josefinum.de | source_url: https://klinikradar.de/kliniken/kjf-klinik-josefinum | external_key: healthcare_universe:klinikradar:source_url:4bfa8a8701f04faea817 | missing_reason: company has no people | target: no-people
+10. company_id: 1176 | company_name: KJF Klinik Josefinum(Standort Kempten) | city: Kempten | website: http://josefinum.de | source_url: https://klinikradar.de/kliniken/kjf-klinik-josefinumstandort-kempten | external_key: healthcare_universe:klinikradar:source_url:4dee5182925755ca0666 | missing_reason: company has no people | target: no-people
+11. company_id: 1231 | company_name: KJF Klinik Josefinum(Standort Nördlingen) | city: Nördlingen | website: http://josefinum.de | source_url: https://klinikradar.de/kliniken/kjf-klinik-josefinumstandort-noerdlingen | external_key: healthcare_universe:klinikradar:source_url:6b001d1e3e4d5c4a4729 | missing_reason: company has no people | target: no-people
+12. company_id: 1158 | company_name: Klinik am Birkenwald in Nürnberg | city: Nürnberg | website: http://klinik-am-birkenwald.de | source_url: https://klinikradar.de/kliniken/klinik-am-birkenwald | external_key: healthcare_universe:klinikradar:source_url:8e34b8917a2489d607a5 | missing_reason: company has no people | target: no-people
+13. company_id: 1227 | company_name: Klinik am Greinberg in Würzburg | city: Würzburg | website: http://kjp.ukw.de/klinik/klinikbereiche/klinik-am-greinberg.html | source_url: https://klinikradar.de/kliniken/klinik-am-greinberg | external_key: healthcare_universe:klinikradar:source_url:044d34cac59a24edac58 | missing_reason: company has no people | target: no-people
+14. company_id: 1510 | company_name: Klinik am Hainberg in Bad Hersfeld | city: Bad Hersfeld | website: https://klinikum-bad-hersfeld.de | source_url: https://klinikradar.de/kliniken/klinik-am-hainberg | external_key: healthcare_universe:klinikradar:source_url:b3953a9adff1dd8c349b | missing_reason: company has no people | target: no-people
+15. company_id: 2233 | company_name: Klinik am Hellweg in Bad Sassendorf | city: Bad Sassendorf | website: https://klinik-hellweg.de | source_url: https://klinikradar.de/rehakliniken/klinik-am-hellweg | external_key: healthcare_universe:klinikradar:source_url:d82d3ca9ab0ca6f4b6c1 | missing_reason: company has no people | target: no-people
+16. company_id: 2169 | company_name: Klinik am Kurpark Bad Rothenfelde | city: Bad Rothenfelde | website: https://klinikimkurpark.de | source_url: https://klinikradar.de/rehakliniken/klinik-am-kurpark-bad-rothenfelde | external_key: healthcare_universe:klinikradar:source_url:9f31a516806654d1fb43 | missing_reason: company has no people | target: no-people
+17. company_id: 1191 | company_name: Klinik am Park Bad Steben | city: Bad Steben | website: https://ebel-kliniken.com/klinik-am-park-bad-steben | source_url: https://klinikradar.de/kliniken/klinik-am-park-bad-steben | external_key: healthcare_universe:klinikradar:source_url:4a801bd86cfccb502a66 | missing_reason: company has no people | target: no-people
+18. company_id: 2133 | company_name: Klinik am Park in Bad Steben | city: Bad Steben | website: https://ebel-kliniken.com/klinik-am-park-bad-steben | source_url: https://klinikradar.de/rehakliniken/klinik-am-park | external_key: healthcare_universe:klinikradar:source_url:d67249903620e96a9841 | missing_reason: company has no people | target: no-people
+19. company_id: 2139 | company_name: Klinik am See in Rüdersdorf bei Berlin | city: Rüdersdorf bei Berlin | website: https://klinikamsee.org | source_url: https://klinikradar.de/rehakliniken/klinik-am-see | external_key: healthcare_universe:klinikradar:source_url:ec0d6d1d8ab479f97add | missing_reason: company has no people | target: no-people
+20. company_id: 2254 | company_name: Klinik am Tharandter Wald in Halsbrücke | city: Halsbrücke | website: https://reha-hetzdorf.de | source_url: https://klinikradar.de/rehakliniken/klinik-am-tharandter-wald | external_key: healthcare_universe:klinikradar:source_url:caf0241aad575e1f8381 | missing_reason: company has no people | target: no-people
+21. company_id: 1194 | company_name: Klinik am Ziegelberg in Aschaffenburg | city: Aschaffenburg | website: http://frauenklinik.com | source_url: https://klinikradar.de/kliniken/klinik-am-ziegelberg | external_key: healthcare_universe:klinikradar:source_url:b42432817df656515ff6 | missing_reason: company has no people | target: no-people
+22. company_id: 1339 | company_name: Klinik Amsee in Waren (Müritz) | city: Waren | website: https://johannesstift-diakonie.de/medizinische-versorgung/klinik-amsee | source_url: https://klinikradar.de/kliniken/klinik-amsee | external_key: healthcare_universe:klinikradar:source_url:1e3ec113e666bad19794 | missing_reason: company has no people | target: no-people
+23. company_id: 1210 | company_name: Klinik Angermühle in Deggendorf | city: Deggendorf | website: http://klinik-angermuehle.de | source_url: https://klinikradar.de/kliniken/klinik-angermuehle | external_key: healthcare_universe:klinikradar:source_url:0fa67dc2f7b746b77cec | missing_reason: company has no people | target: no-people
+24. company_id: 1814 | company_name: Klinik Bad Bergzabern in Landau in der Pfalz | city: Landau in der Pfalz | website: https://klinikum-ld-suew.de | source_url: https://klinikradar.de/kliniken/klinik-bad-bergzabern | external_key: healthcare_universe:klinikradar:source_url:94a9bcb1a14c9671b79f | missing_reason: company has no people | target: no-people
+25. company_id: 1075 | company_name: Klinik Bad Trissl in Oberaudorf | city: Oberaudorf | website: https://klinik-bad-trissl.de | source_url: https://klinikradar.de/kliniken/klinik-bad-trissl | external_key: healthcare_universe:klinikradar:source_url:b2859bf2ade764c84f9e | missing_reason: company has no people | target: no-people
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_001
+- Return only the requested result.
+- Use public information only.
