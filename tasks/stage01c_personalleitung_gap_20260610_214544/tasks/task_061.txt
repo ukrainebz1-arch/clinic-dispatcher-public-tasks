@@ -1,0 +1,131 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_061
+
+Then output exactly one CSV header line:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Then output CSV rows, one row per target person.
+Return ONLY clinic/company-wide HR or Personal leadership.
+Do NOT return Recruiter.
+Do NOT return Personalreferent.
+Do NOT return HR Business Partner unless explicitly Leitung/Head/Director.
+Do NOT return generic Karriere contacts.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_061
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching German healthcare clinics.
+
+Goal:
+For each company, find ONLY clinic/company-wide HR leadership.
+
+Primary target:
+- Personalleiter
+- Personalleiterin
+- Personalleitung
+- Leitung Personal
+- Leiter Personal
+- Leiterin Personal
+- Personaldirektor
+- Personaldirektorin
+- HR-Leitung
+- Leitung HR
+- Head of HR
+- Human Resources Director
+- Director Human Resources
+
+Secondary target if available:
+- Stellvertretende Personalleitung
+- stellv. Leitung Personal
+- Deputy Head of HR
+- Deputy Human Resources Director
+
+Hard exclusion:
+Do NOT return Recruiter.
+Do NOT return Personalreferent / Personalreferentin.
+Do NOT return HR Business Partner unless the role explicitly says Leitung/Head/Director.
+Do NOT return Talent Acquisition.
+Do NOT return Sachbearbeiter/in Personal.
+Do NOT return Assistenz / Assistant.
+Do NOT return Ausbildung / Azubi / Bewerbermanagement.
+Do NOT return generic Karriere contact.
+Do NOT return Pflege roles.
+Do NOT return Ärztliche Direktion.
+Do NOT return Geschäftsführung unless no HR leadership exists and the company has no HR contact; even then prefer NOT_FOUND.
+
+Important:
+We are looking for leadership of the Personal/HR function, not operational recruiters.
+
+Input rows may include existing people already known in the database.
+Use existing people only as context. Do not repeat them unless they are clearly HR/Personal leadership.
+
+For each company, return up to 2 rows:
+1. best Personalleiter/Personalleitung/HR-Leitung if found
+2. deputy HR/Personal leadership if found
+
+If no valid HR/Personal leadership is found, output exactly one NOT_FOUND row for that company.
+
+Output exactly CSV with this header:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+role_category:
+- hr_recruiting for Personalleitung / HR-Leitung / Head of HR
+- unknown for NOT_FOUND
+
+confidence:
+- high = official clinic/group website, imprint, organization chart, annual report, or official document directly verifies name + role
+- medium = reliable public directory / professional page with role evidence
+- low = no valid target found or uncertain
+
+For NOT_FOUND:
+full_name=NOT_FOUND
+role_category=unknown
+confidence=low
+notes=No clinic/company-wide HR/Personal leadership found. Excluded Recruiter/Personalreferent/HR Business Partner/generic Karriere contacts.
+
+Do not use markdown.
+Do not add explanations outside CSV.
+
+CURRENT CHUNK INPUT:
+1. company_id: 243 | company_name: Praxis am Rathauenplatz in Heilbronn | city: Heilbronn | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_all_people_roles: Dr. med. Andreas Simpfendörfer — Krankenhausträger und Arzt
+2. company_id: 1294 | company_name: Praxis-Klinik Bergedorf in Hamburg | company_website: https://praxis-klinik-bergedorf.de | city: Hamburg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Kristina Balkenhol — Pflegedienstleitung | Meike Buchholz — Geschäftsführerin | existing_all_people_roles: Kristina Balkenhol — Pflegedienstleitung | Meike Buchholz — Geschäftsführerin
+3. company_id: 1835 | company_name: Privatklinik Bad Gleisweiler | company_website: http://privatklinik-bad-gleisweiler.de | city: Gleisweiler | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Christian Lentz — Pflegedienstleitung | Dieter von Bomhard — Geschäftsführer | existing_all_people_roles: Christian Lentz — Pflegedienstleitung | Dieter von Bomhard — Geschäftsführer
+4. company_id: 1479 | company_name: Privatklinik Dr. Amelung in Königstein im Taunus | company_website: https://klinik-amelung.de | city: Königstein im Taunus | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Anja Preissler — Pflegedienstleitung | Stephan Köhler — Geschäftsführer | existing_all_people_roles: Anja Preissler — Pflegedienstleitung | Stephan Köhler — Geschäftsführer
+5. company_id: 1234 | company_name: Prosomno Klinik für Schlafmedizin in München | company_website: http://prosomno.de | city: München | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Anita Biking — Leitung Pflegedienst | Dr. med. Sebastian Herberger — Geschäftsführer und Ärztliche Leitung | existing_all_people_roles: Anita Biking — Leitung Pflegedienst | Dr. med. Sebastian Herberger — Geschäftsführer und Ärztliche Leitung
+6. company_id: 173 | company_name: Psychiatrie Schwäbisch Hall | city: Schwäbisch Hall | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andreas Breitmayer — Geschäftsführer | Anke Herzig — Pflegedienstleiterin Gerontopsychiatrie | Erika Lautenschlager — Pflegedienstleiterin Allgemeine Psychiatrie | Stefanie Klein — Pflegedienstleiterin Suchttherapie | existing_all_people_roles: Andreas Breitmayer — Geschäftsführer | Anke Herzig — Pflegedienstleiterin Gerontopsychiatrie | Erika Lautenschlager — Pflegedienstleiterin Allgemeine Psychiatrie | Stefanie Klein — Pflegedienstleiterin Suchttherapie
+7. company_id: 1667 | company_name: Psychiatrisch-Psychosomatische Klinik Celle | company_website: https://klinikum.wahrendorff.de/standort/celle/klinik | city: Celle | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Anja Hoppenstedt — Pflegedienstleiterin | Cordula Schweiger — Pflegedirektorin | Dr. phil. Maren Kentgens — Vorsitzende der Geschäftsführung CEO | existing_all_people_roles: Anja Hoppenstedt — Pflegedienstleiterin | Cordula Schweiger — Pflegedirektorin | Dr. phil. Maren Kentgens — Vorsitzende der Geschäftsführung CEO
+8. company_id: 792 | company_name: Psychiatrisch-Psychotherapeutische Tagesklinik St. Martha Prenzlauer Berg in Berlin | company_website: http://alexianer.de | city: Berlin | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Frauke Förster — Pflegedirektorin | existing_all_people_roles: Frank Schubert — Kaufmännischer Direktor | Frauke Förster — Pflegedirektorin
+9. company_id: 797 | company_name: Psychiatrische Institutsambulanz Wedding (Alexianer St. Hedwig-Krankenhaus) in Berlin | company_website: http://alexianer-berlin-hedwigkliniken.de/st_hedwig_krankenhaus/home | city: Berlin | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Ina Jarchov-Jadi — Pflegedirektorin | Martin Trnka — Stellvertretender Pflegedirektor | existing_all_people_roles: Ina Jarchov-Jadi — Pflegedirektorin | Martin Trnka — Stellvertretender Pflegedirektor | Prof. Dr. med. Meryam Schouler-Ocak — Leitende Oberärztin / Oberärztliche Leitung
+10. company_id: 1159 | company_name: Psychiatrische Klinik Aschaffenburg | company_website: https://bezirkskrankenhaus-lohr.de | city: Aschaffenburg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Marianne Schaffarczik — Pflegedirektorin | existing_all_people_roles: Kevin Streblow — Chefarzt | Marianne Schaffarczik — Pflegedirektorin
+11. company_id: 616 | company_name: Psychiatrische Klinik Langenberg in Velbert | city: Velbert | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Elisabeth Steinmann — Pflegedienstleitung | existing_all_people_roles: Elisabeth Steinmann — Pflegedienstleitung
+12. company_id: 1575 | company_name: Psychiatrische Klinik Lüneburg | company_website: http://pk.lueneburg.de | city: Lüneburg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Stefan Olmützer — Pflegedirektor | existing_all_people_roles: Dr. Marc Burlon — Ärztlicher Direktor | Stefan Olmützer — Pflegedirektor
+13. company_id: 1687 | company_name: Psychiatrische Klinik Uelzen | company_website: https://bruecke-uelzen.de | city: Uelzen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Doreen Waniek — Stellvertretende Pflegedienstleitung | Kai-Wolfhard Richter — Geschäftsführer | Robert Hayduk — Pflegedienstleitung | existing_all_people_roles: Doreen Waniek — Stellvertretende Pflegedienstleitung | Kai-Wolfhard Richter — Geschäftsführer | Robert Hayduk — Pflegedienstleitung
+14. company_id: 620 | company_name: Psychiatrische Klinik Wuppertal | city: Wuppertal | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Elisabeth Steinmann — Pflegedienstleitung | existing_all_people_roles: Elisabeth Steinmann — Pflegedienstleitung
+15. company_id: 223 | company_name: Psychiatrische Tagesklinik Bad Krozingen | city: Bad Krozingen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Jeton Himaj — Pflegedirektor | existing_all_people_roles: Gerhard Albiez — Betriebsdirektor | Jeton Himaj — Pflegedirektor
+16. company_id: 258 | company_name: Psychiatrische Tagesklinik Bad Mergentheim | city: Bad Mergentheim | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Holger Kraft — Pflegedirektor | existing_all_people_roles: Dr. Mathias Jähnel — Chefarzt Psychiatrie und Psychotherapie | Holger Kraft — Pflegedirektor | Jeremia Berschauer — Kaufmännischer Direktor
+17. company_id: 667 | company_name: Psychiatrische Tagesklinik Bad Oeynhausen | city: Bad Oeynhausen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Mario Hartmann — Geschäftsführer Zentrum für Seelische Gesundheit | Tanja Ames — Pflegedirektorin | existing_all_people_roles: Mario Hartmann — Geschäftsführer Zentrum für Seelische Gesundheit | Tanja Ames — Pflegedirektorin
+18. company_id: 229 | company_name: Psychiatrische Tagesklinik Bad Säckingen | city: Bad Säckingen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Angela Häusling — Pflegedienstleitung | Simon Kappl — Geschäftsführung | existing_all_people_roles: Angela Häusling — Pflegedienstleitung | Simon Kappl — Geschäftsführung
+19. company_id: 1527 | company_name: Psychiatrische Tagesklinik Bad Vilbel | company_website: https://gesundheitszentrum-wetterau.de | city: Bad Vilbel | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Nadine Eiskirch — Pflegedienstleitung Klinik für Psychiatrie und Psychotherapie | existing_all_people_roles: Dr. Dr. med. Nicole Jennifer Davies — Oberärztin | Nadine Eiskirch — Pflegedienstleitung Klinik für Psychiatrie und Psychotherapie
+20. company_id: 1193 | company_name: Psychiatrische Tagesklinik Bamberg-Forchheim | company_website: https://sozialstiftung-bamberg.de/klinikum-bamberg/kliniken-und-experten/psychiatrie/psychiatrische-tagesklinik-bamberg-forchheim | city: Bamberg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Ilona Baumann — Direktorin Pflege und Patientenmanagement / Pflegedirektorin | existing_all_people_roles: C. Ziegelmayer — Leitender Oberarzt, Medizinischer Leiter Tagesklinik Bamberg-Forchheim | Ilona Baumann — Direktorin Pflege und Patientenmanagement / Pflegedirektorin
+21. company_id: 1953 | company_name: Psychiatrische Tagesklinik Freiberg in Döbeln | company_website: http://agaplesion-mitteldeutzschland.de | city: Döbeln | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Petra Hundrieser — Pflegedirektorin | existing_all_people_roles: Petra Hundrieser — Pflegedirektorin | Prof. Dr. med. Francisco Pedrosa Gil — Chefarzt und Ärztlicher Direktor
+22. company_id: 233 | company_name: Psychiatrische Tagesklinik Geislingen | city: Geislingen an der Steige | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Birgit Gambert — Pflegedirektorin | Rudolf Schnauhuber — Geschäftsführer | existing_all_people_roles: Birgit Gambert — Pflegedirektorin | Rudolf Schnauhuber — Geschäftsführer
+23. company_id: 1297 | company_name: Psychiatrische Tagesklinik Hamburg-Mitte (Janssen-Haus) | city: Hamburg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dr. Christina Meigel-Scheiff — Geschäftsführung / Ärztliche Leitung | Isabel Gasch — Pflegedienstleitung | existing_all_people_roles: Dr. Christina Meigel-Scheiff — Geschäftsführung / Ärztliche Leitung | Isabel Gasch — Pflegedienstleitung
+24. company_id: 1553 | company_name: Psychiatrische Tagesklinik Hattersheim | city: Hattersheim am Main | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Astrid Eisenberg — Pflegedirektorin | existing_all_people_roles: Astrid Eisenberg — Pflegedirektorin | Dr. med. Karin Ademmer — Chefärztin der Klinik für Psychiatrie und Psychosomatik
+25. company_id: 2016 | company_name: Psychiatrische Tagesklinik Hofheim | company_website: http://varisano.de/kliniken-mtk.de | city: Hofheim am Taunus | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Astrid Eisenberg — Pflegedirektorin | existing_all_people_roles: Astrid Eisenberg — Pflegedirektorin | Dr. med. Karin Ademmer — Chefärztin der Klinik für Psychiatrie und Psychosomatik
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_061
+- Return only the requested result.
+- Use public information only.
