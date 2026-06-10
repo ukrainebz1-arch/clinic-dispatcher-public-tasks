@@ -1,0 +1,131 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_025
+
+Then output exactly one CSV header line:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Then output CSV rows, one row per target person.
+Return ONLY clinic/company-wide HR or Personal leadership.
+Do NOT return Recruiter.
+Do NOT return Personalreferent.
+Do NOT return HR Business Partner unless explicitly Leitung/Head/Director.
+Do NOT return generic Karriere contacts.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_025
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching German healthcare clinics.
+
+Goal:
+For each company, find ONLY clinic/company-wide HR leadership.
+
+Primary target:
+- Personalleiter
+- Personalleiterin
+- Personalleitung
+- Leitung Personal
+- Leiter Personal
+- Leiterin Personal
+- Personaldirektor
+- Personaldirektorin
+- HR-Leitung
+- Leitung HR
+- Head of HR
+- Human Resources Director
+- Director Human Resources
+
+Secondary target if available:
+- Stellvertretende Personalleitung
+- stellv. Leitung Personal
+- Deputy Head of HR
+- Deputy Human Resources Director
+
+Hard exclusion:
+Do NOT return Recruiter.
+Do NOT return Personalreferent / Personalreferentin.
+Do NOT return HR Business Partner unless the role explicitly says Leitung/Head/Director.
+Do NOT return Talent Acquisition.
+Do NOT return Sachbearbeiter/in Personal.
+Do NOT return Assistenz / Assistant.
+Do NOT return Ausbildung / Azubi / Bewerbermanagement.
+Do NOT return generic Karriere contact.
+Do NOT return Pflege roles.
+Do NOT return Ärztliche Direktion.
+Do NOT return Geschäftsführung unless no HR leadership exists and the company has no HR contact; even then prefer NOT_FOUND.
+
+Important:
+We are looking for leadership of the Personal/HR function, not operational recruiters.
+
+Input rows may include existing people already known in the database.
+Use existing people only as context. Do not repeat them unless they are clearly HR/Personal leadership.
+
+For each company, return up to 2 rows:
+1. best Personalleiter/Personalleitung/HR-Leitung if found
+2. deputy HR/Personal leadership if found
+
+If no valid HR/Personal leadership is found, output exactly one NOT_FOUND row for that company.
+
+Output exactly CSV with this header:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+role_category:
+- hr_recruiting for Personalleitung / HR-Leitung / Head of HR
+- unknown for NOT_FOUND
+
+confidence:
+- high = official clinic/group website, imprint, organization chart, annual report, or official document directly verifies name + role
+- medium = reliable public directory / professional page with role evidence
+- low = no valid target found or uncertain
+
+For NOT_FOUND:
+full_name=NOT_FOUND
+role_category=unknown
+confidence=low
+notes=No clinic/company-wide HR/Personal leadership found. Excluded Recruiter/Personalreferent/HR Business Partner/generic Karriere contacts.
+
+Do not use markdown.
+Do not add explanations outside CSV.
+
+CURRENT CHUNK INPUT:
+1. company_id: 271 | company_name: Helios Klinikum Krefeld | city: Krefeld | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Birger Meßthaler — Klinikgeschäftsführer | existing_all_people_roles: Birger Meßthaler — Klinikgeschäftsführer
+2. company_id: 956 | company_name: Helios Klinikum München West | company_website: http://helios-gesundheit.de/muenchen-west | city: München | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dominik Teich — Klinikgeschäftsführer | existing_all_people_roles: Dominik Teich — Klinikgeschäftsführer
+3. company_id: 26 | company_name: Helios Klinikum Pforzheim | city: Pforzheim | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Emre Nazli — Klinikgeschäftsführung | existing_all_people_roles: Emre Nazli — Klinikgeschäftsführung
+4. company_id: 1859 | company_name: Helios Klinikum Pirna | company_website: http://helios-gesundheit.de/pirna | city: Pirna | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Diana Richter — Klinikgeschäftsführerin | existing_all_people_roles: Diana Richter — Klinikgeschäftsführerin
+5. company_id: 1603 | company_name: Helios Klinikum Salzgitter | company_website: https://helios-gesundheit.de/kliniken/salzgitter | city: Salzgitter | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Benedikt Meider — Klinikgeschäftsführer | existing_all_people_roles: Benedikt Meider — Klinikgeschäftsführer
+6. company_id: 372 | company_name: Helios Klinikum Schwelm | city: Schwelm | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Lukas Trilling — Klinikgeschäftsführer | Sonja Schrader — Pflegedirektorin | existing_all_people_roles: Lukas Trilling — Klinikgeschäftsführer | Sonja Schrader — Pflegedirektorin
+7. company_id: 378 | company_name: Helios Klinikum Siegburg | city: Siegburg | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Jil Sommer — Klinikgeschäftsführerin | Mark Bierther — Pflegedirektor | existing_all_people_roles: Jil Sommer — Klinikgeschäftsführerin | Mark Bierther — Pflegedirektor
+8. company_id: 1610 | company_name: Helios Klinikum Uelzen | city: Uelzen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Christian Irmisch — Pflegedirektor | Matthias Hahn — Klinikgeschäftsführer | existing_all_people_roles: Christian Irmisch — Pflegedirektor | Matthias Hahn — Klinikgeschäftsführer
+9. company_id: 556 | company_name: Helios Klinikum Warburg | city: Warburg | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andrea Störmer — Pflegedirektorin | Michael Renziehausen — Geschäftsführer | existing_all_people_roles: Andrea Störmer — Pflegedirektorin | Michael Renziehausen — Geschäftsführer
+10. company_id: 1278 | company_name: Helios Mariahilf Klinik Hamburg | company_website: http://helios-kliniken.de/klinik/hamburg-mariahilf-klinik.html | city: Hamburg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Philip Wettengel — Klinikgeschäftsführer | Rüdiger Zahmel — Pflegedirektor | existing_all_people_roles: Philip Wettengel — Klinikgeschäftsführer | Rüdiger Zahmel — Pflegedirektor
+11. company_id: 367 | company_name: Helios Marien Klinik in Duisburg | city: Duisburg | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carolina Korioth — Pflegedirektorin | Claudia Meßthaler — Klinikgeschäftsführung | existing_all_people_roles: Carolina Korioth — Pflegedirektorin | Claudia Meßthaler — Klinikgeschäftsführung
+12. company_id: 1161 | company_name: Helios OrthoClinic Hammelburg | company_website: https://helios-gesundheit.de/kliniken/hammelburg-orthoclinic | city: Hammelburg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Peter Hermeling — Klinikgeschäftsführung | Thomas Garten — Pflegedirektor | existing_all_people_roles: Peter Hermeling — Klinikgeschäftsführung | Thomas Garten — Pflegedirektor
+13. company_id: 1841 | company_name: Helios Park-Klinikum Leipzig | company_website: https://helios-gesundheit.de/kliniken/leipzig-park-klinikum | city: Leipzig | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Julia Baß — Stellv. Pflegedirektorin | Julian Zimmer — Klinikgeschäftsführer | Sebastian Hunger — Pflegedirektor | existing_all_people_roles: Julia Baß — Stellv. Pflegedirektorin | Julian Zimmer — Klinikgeschäftsführer | Sebastian Hunger — Pflegedirektor
+14. company_id: 1961 | company_name: Helios Park-Klinikum Leipzig - Kompetenzzentrum Wurzen | company_website: http://helios-gesundheit.de/kliniken/leipzig-park-klinikum/unser-angebot/unsere-fachbereiche/kjp/wurzen | city: Wurzen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Julia Baß — Stellv. Pflegedirektorin | Julian Zimmer — Klinikgeschäftsführer | Sebastian Hunger — Pflegedirektor | existing_all_people_roles: Julia Baß — Stellv. Pflegedirektorin | Julian Zimmer — Klinikgeschäftsführer | Sebastian Hunger — Pflegedirektor
+15. company_id: 1356 | company_name: Helios Psychiatrische Tagesklinik und Institutsambulanz Ribnitz-Damgarten | company_website: http://helios-gesundheit.de/stralsund | city: Ribnitz-Damgarten | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carena Schwark — Pflegedienstleiterin | existing_all_people_roles: Carena Schwark — Pflegedienstleiterin | Priv.-Doz. Dr. med. Deborah Janowitz — Chefärztin Erwachsenenpsychiatrie, Psychotherapie und Psychosomatik
+16. company_id: 1355 | company_name: Helios Psychiatrische Tagesklinik und Institutsambulanz in Bergen | company_website: http://helios-gesundheit.de/stralsund | city: Bergen auf Rügen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carena Schwark — Pflegedienstleiterin | existing_all_people_roles: Carena Schwark — Pflegedienstleiterin | Priv.-Doz. Dr. med. Deborah Janowitz — Chefärztin Erwachsenenpsychiatrie, Psychotherapie und Psychosomatik
+17. company_id: 122 | company_name: Helios Rosmann Klinik Breisach | city: Breisach am Rhein | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Solange Palumbo — Standortleitung Pflege | Thorsten Sleifir — Geschäftsführer Helios Kliniken Breisgau-Hochschwarzwald GmbH | existing_all_people_roles: Solange Palumbo — Standortleitung Pflege | Thorsten Sleifir — Geschäftsführer Helios Kliniken Breisgau-Hochschwarzwald GmbH
+18. company_id: 105 | company_name: Helios Spital Überlingen | city: Überlingen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Monja Huber — Standortleitung Pflege | Moritz Lang — Klinikgeschäftsführer | existing_all_people_roles: Monja Huber — Standortleitung Pflege | Moritz Lang — Klinikgeschäftsführer
+19. company_id: 505 | company_name: Helios St. Elisabeth Klinik Oberhausen | city: Oberhausen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Anna Berrischen — Klinikgeschäftsführerin | Christoph Wilde — Pflegedirektor | existing_all_people_roles: Anna Berrischen — Klinikgeschäftsführerin | Christoph Wilde — Pflegedirektor
+20. company_id: 994 | company_name: Helios St. Elisabeth-Krankenhaus Bad Kissingen | company_website: https://helios-gesundheit.de/kliniken/bad-kissingen | city: Bad Kissingen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Claudia Holland-Jopp — Klinikgeschäftsführung | Sebastian Panhans — Pflegedirektor | existing_all_people_roles: Claudia Holland-Jopp — Klinikgeschäftsführung | Sebastian Panhans — Pflegedirektor
+21. company_id: 297 | company_name: Helios St. Johannes Klinik in Duisburg | city: Duisburg | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Birger Meßthaler — Klinikgeschäftsführer | Carolina Korioth — Pflegedirektorin | Michalina Krzonkalla — stellv. Pflegedirektorin | existing_all_people_roles: Birger Meßthaler — Klinikgeschäftsführer | Carolina Korioth — Pflegedirektorin | Michalina Krzonkalla — stellv. Pflegedirektorin
+22. company_id: 516 | company_name: Helios St. Josefshospital Uerdingen in Krefeld | city: Krefeld | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Birger Meßthaler — Klinikgeschäftsführer | Florian Rath — Stv. Pflegedirektor | Nicola Küppers — Pflegedirektorin | existing_all_people_roles: Birger Meßthaler — Klinikgeschäftsführer | Florian Rath — Stv. Pflegedirektor | Nicola Küppers — Pflegedirektorin
+23. company_id: 1612 | company_name: Helios St. Marienberg Klinik Helmstedt | company_website: https://helios-gesundheit.de/kliniken/helmstedt | city: Helmstedt | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Aline Prasse — Pflegedirektorin | Matthias Hahn — Klinikgeschäftsführer | existing_all_people_roles: Aline Prasse — Pflegedirektorin | Matthias Hahn — Klinikgeschäftsführer
+24. company_id: 1345 | company_name: Helios Tagesklinik für Psychiatrie und Psychotherapie in der Innenstadt von Stralsund | company_website: http://helios-gesundheit.de/stralsund | city: Stralsund | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carena Schwark — Pflegedirektorin | existing_all_people_roles: Carena Schwark — Pflegedirektorin | Priv.-Doz. Dr. med. Deborah Janowitz — Chefärztin Erwachsenenpsychiatrie, Psychotherapie und Psychosomatik
+25. company_id: 1357 | company_name: Helios Tagesklinik und Institutsambulanz für Psychiatrie und Psychotherapie Grimmen | company_website: http://helios-gesundheit.de/stralsund | city: Grimmen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carena Schwark — Pflegedienstleiterin | existing_all_people_roles: Carena Schwark — Pflegedienstleiterin | Priv.-Doz. Dr. med. Deborah Janowitz — Chefärztin Erwachsenenpsychiatrie, Psychotherapie und Psychosomatische Medizin
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_025
+- Return only the requested result.
+- Use public information only.
