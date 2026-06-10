@@ -1,0 +1,49 @@
+RUN_ID: stage01_people_no_people_20260610_141943_burstmulti_20260610_160107
+TASK_ID: task_068
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+TASK: {{STAGE_ID}} / {{DESCRIPTION}}
+
+Run context:
+- campaign_id: {{CAMPAIGN_ID}}
+- batch_id: {{BATCH_ID}}
+- run_id: {{RUN_ID}}
+- input_csv: {{INPUT_CSV}}
+
+You receive company rows. For each company, find publicly available decision-maker people relevant for B2B outreach.
+Prioritize roles such as Founder, CEO, Managing Director, Head of Sales, Sales Director, Business Development, Partnerships, Revenue, Marketing Leadership, HR/Recruiting leadership, Operations leadership.
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target company.
+- Prefer decision-makers and buying-influencers over random employees.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target company through a public source.
+- Prefer people whose role is relevant to B2B outreach, sales, partnerships, leadership, HR/recruiting, operations, or management.
+- If a person is uncertain, include the row only if the public source supports the company + role connection.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+{{OUTPUT_COLUMNS}}
+
+Column guidance:
+- batch_id: use {{BATCH_ID}}
+- company_name/company_website/city/country: copy from input when present.
+- role_category: one of founder_ceo, sales, business_development, marketing, hr_recruiting, operations, finance, other_management, unknown.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1299 | company_name: ZSG Osdorf in Hamburg | city: Hamburg | website: https://asklepios.com/hamburg/westklinikum/experten/psychiatrie_und_psychotherapie/zsg-osdorf | source_url: https://klinikradar.de/kliniken/zsg-osdorf | external_key: healthcare_universe:klinikradar:source_url:e7a11daba741cce594cc | missing_reason: company has no people | target: no-people
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_068
+- Return only the requested result.
+- Use public information only.
