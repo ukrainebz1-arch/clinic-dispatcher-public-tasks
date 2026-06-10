@@ -1,0 +1,97 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage01_people_retry_missing_v4b_clean_20260610_182620
+TASK_ID: task_029
+
+Then output exactly one CSV header line:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Then output CSV rows, one row per company/person.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+If no person is found for a company, still output a row for that company with:
+full_name=NOT_FOUND
+role_category=unknown
+confidence=low
+notes=No verified named decision-maker found.
+
+
+
+RUN_ID: stage01_people_retry_missing_v4b_clean_20260610_182620
+TASK_ID: task_029
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+TASK: {{STAGE_ID}} / {{DESCRIPTION}}
+
+Run context:
+- campaign_id: {{CAMPAIGN_ID}}
+- batch_id: {{BATCH_ID}}
+- run_id: {{RUN_ID}}
+- input_csv: {{INPUT_CSV}}
+
+You receive company rows. For each company, find publicly available decision-maker people relevant for B2B outreach.
+Prioritize roles such as Founder, CEO, Managing Director, Head of Sales, Sales Director, Business Development, Partnerships, Revenue, Marketing Leadership, HR/Recruiting leadership, Operations leadership.
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target company.
+- Prefer decision-makers and buying-influencers over random employees.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target company through a public source.
+- Prefer people whose role is relevant to B2B outreach, sales, partnerships, leadership, HR/recruiting, operations, or management.
+- If a person is uncertain, include the row only if the public source supports the company + role connection.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+{{OUTPUT_COLUMNS}}
+
+Column guidance:
+- batch_id: use {{BATCH_ID}}
+- company_name/company_website/city/country: copy from input when present.
+- role_category: one of founder_ceo, sales, business_development, marketing, hr_recruiting, operations, finance, other_management, unknown.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_id: 2248 | company_name: Mittelrhein-Klinik Bad Salzig in Boppard, Rhein | city: Boppard | website: https://mittelrhein-klinik.de | source_url: https://klinikradar.de/rehakliniken/mittelrhein-klinik-bad-salzig | external_key: healthcare_universe:klinikradar:source_url:9c13e6f61e63fbbad109 | missing_reason: company has no people | target: no-people
+2. company_id: 1679 | company_name: Niels-Stensen-Kliniken Bramsche in Bramsche, Hase | city: Bramsche | website: http://nsk.de | source_url: https://klinikradar.de/kliniken/niels-stensen-kliniken-bramsche | external_key: healthcare_universe:klinikradar:source_url:abb4a00e669a6e202342 | missing_reason: company has no people | target: no-people
+3. company_id: 2120 | company_name: Rehafachzentrum Bad Füssing | city: Bad Füssing | website: https://rehafachzentrum.de/SBKRFZ/fuessing | source_url: https://klinikradar.de/rehakliniken/rehafachzentrum-bad-fuessing | external_key: healthcare_universe:klinikradar:source_url:2c0b9be2ecfe6dc70ffc | missing_reason: company has no people | target: no-people
+4. company_id: 2206 | company_name: Rehaklinik am Berger See in Gelsenkirchen | city: Gelsenkirchen | website: https://reha-am-see.de/Inhalt/Fachbereiche/Rehabilitationsmedizin | source_url: https://klinikradar.de/rehakliniken/rehaklinik-am-berger-see | external_key: healthcare_universe:klinikradar:source_url:a08ff89f2a0e49ab978d | missing_reason: company has no people | target: no-people
+5. company_id: 2083 | company_name: Rehaklinik Am Kurpark der RehaZentren Baden-Würtemberg | city: Bad Kissingen | website: https://rehaklinik-am-kurpark.de/startseite | source_url: https://klinikradar.de/rehakliniken/rehaklinik-am-kurpark-der-rehazentren-baden-wuertemberg | external_key: healthcare_universe:klinikradar:source_url:c0a9ddfbb0da90f1ef8e | missing_reason: company has no people | target: no-people
+6. company_id: 2097 | company_name: Rehaklinik Bad Boll | city: Boll | website: https://rehaklinik-bad-boll.de/rehaklinik | source_url: https://klinikradar.de/rehakliniken/rehaklinik-bad-boll | external_key: healthcare_universe:klinikradar:source_url:7de44777a97f1bdeda2f | missing_reason: company has no people | target: no-people
+7. company_id: 2108 | company_name: Rehaklinik Glotterbad in Glottertal | city: Glottertal | website: https://rehaklinik-glotterbad.de | source_url: https://klinikradar.de/rehakliniken/rehaklinik-glotterbad | external_key: healthcare_universe:klinikradar:source_url:b7643ff8d0b1bc7b2739 | missing_reason: company has no people | target: no-people
+8. company_id: 2047 | company_name: Rehaklinik Heidelberg-Königstuhl | city: Heidelberg | website: https://rehaklinik-koenigstuhl.de/startseite | source_url: https://klinikradar.de/rehakliniken/rehaklinik-heidelberg-koenigstuhl | external_key: healthcare_universe:klinikradar:source_url:c06b5dd96a3af4484bbe | missing_reason: company has no people | target: no-people
+9. company_id: 2050 | company_name: Rehaklinik Höhenblick der RehaZentren Baden-Württemberg in Baden-Baden | city: Baden-Baden | website: https://rehaklinik-hoehenblick.de | source_url: https://klinikradar.de/rehakliniken/rehaklinik-hoehenblick-der-rehazentren-baden-wuerttemberg | external_key: healthcare_universe:klinikradar:source_url:f3f93fa6755ccc8173ac | missing_reason: company has no people | target: no-people
+10. company_id: 2053 | company_name: Rehaklinik Ob der Tauber in Bad Mergentheim | city: Bad Mergentheim | website: https://rehaklinik-odt.de/startseite | source_url: https://klinikradar.de/rehakliniken/rehaklinik-ob-der-tauber | external_key: healthcare_universe:klinikradar:source_url:9594869b1a83e44a6b1c | missing_reason: company has no people | target: no-people
+11. company_id: 2054 | company_name: Rehaklinik Sonnhalde der RehaZentren Baden-Württemberg in Donaueschingen | city: Donaueschingen | website: https://rehaklinik-sonnhalde.de | source_url: https://klinikradar.de/rehakliniken/rehaklinik-sonnhalde-der-rehazentren-baden-wuerttemberg | external_key: healthcare_universe:klinikradar:source_url:d02f768f28d86a40b756 | missing_reason: company has no people | target: no-people
+12. company_id: 2183 | company_name: Rehaklinik Usedom, Ostseebad Heringsdorf | city: Heringsdorf | website: https://rehaklinik-usedom.de | source_url: https://klinikradar.de/rehakliniken/rehaklinik-usedom-ostseebad-heringsdorf | external_key: healthcare_universe:klinikradar:source_url:6c05d089d7faa5ddfae8 | missing_reason: company has no people | target: no-people
+13. company_id: 2068 | company_name: Rehaklinik Überruh in Isny im Allgäu | city: Isny im Allgäu | website: https://rehaklinik-ueberruh.de/startseite | source_url: https://klinikradar.de/rehakliniken/rehaklinik-ueberruh | external_key: healthcare_universe:klinikradar:source_url:77fc40052b6090adbba9 | missing_reason: company has no people | target: no-people
+14. company_id: 2166 | company_name: Rehazentrum Bad Eilsen | city: Bad Eilsen | website: https://rz-bad-eilsen.de | source_url: https://klinikradar.de/rehakliniken/rehazentrum-bad-eilsen | external_key: healthcare_universe:klinikradar:source_url:64c8e94d4fe2827f2a4f | missing_reason: company has no people | target: no-people
+15. company_id: 2155 | company_name: Rehazentrum Oberharz in Clausthal-Zellerfeld | city: Clausthal-Zellerfeld | website: https://klinikamschwarzenbacherteich.de | source_url: https://klinikradar.de/rehakliniken/rehazentrum-oberharz | external_key: healthcare_universe:klinikradar:source_url:8ea54b6247a69e885f15 | missing_reason: company has no people | target: no-people
+16. company_id: 599 | company_name: Rhein-Klinik in Bad Honnef | city: Bad Honnef | source_url: https://klinikradar.de/kliniken/rhein-klinik | external_key: healthcare_universe:klinikradar:source_url:6b30a5f6c35076051b4e | missing_reason: company has no people | target: no-people
+17. company_id: 1785 | company_name: Rhein-Mosel-Fachklinik in Andernach | city: Andernach | website: http://rhein-mosel-fachklinik-andernach.de | source_url: https://klinikradar.de/kliniken/rhein-mosel-fachklinik | external_key: healthcare_universe:klinikradar:source_url:a97c10118c2557815ced | missing_reason: company has no people | target: no-people
+18. company_id: 1777 | company_name: Rheinhessen-Fachklinik Alzey | city: Alzey | website: http://rheinhessen-fachklinik-alzey.de | source_url: https://klinikradar.de/kliniken/rheinhessen-fachklinik-alzey | external_key: healthcare_universe:klinikradar:source_url:c731b209f596e30dbc9f | missing_reason: company has no people | target: no-people
+19. company_id: 1877 | company_name: Rheinhessen-Fachklinik Mainz | city: Mainz | website: http://rheinhessen-fachklinik-mainz.de | source_url: https://klinikradar.de/kliniken/rheinhessen-fachklinik-mainz | external_key: healthcare_universe:klinikradar:source_url:440782a538dd4f29ad37 | missing_reason: company has no people | target: no-people
+20. company_id: 674 | company_name: Rheinisch-Westfälisches Zentrum für Frührehabilitation und Beatmung in Nümbrecht | city: Nümbrecht | source_url: https://klinikradar.de/kliniken/rheinisch-westfaelisches-zentrum-fuer-fruehrehabilitation-und-beatmung | external_key: healthcare_universe:klinikradar:source_url:5089a5be0623608a0574 | missing_reason: company has no people | target: no-people
+21. company_id: 728 | company_name: Rheuma-Klinik Dr. Lauven in Bad Oeynhausen | city: Bad Oeynhausen | source_url: https://klinikradar.de/kliniken/rheuma-klinik-dr-lauven | external_key: healthcare_universe:klinikradar:source_url:87811212b027e2473b6a | missing_reason: company has no people | target: no-people
+22. company_id: 2095 | company_name: Rheumaklinik Bad Aibling | city: Bad Aibling | website: https://rheumaklinik-bad-aibling.de | source_url: https://klinikradar.de/rehakliniken/rheumaklinik-bad-aibling | external_key: healthcare_universe:klinikradar:source_url:eb2ead4cc802f35f433b | missing_reason: company has no people | target: no-people
+23. company_id: 2195 | company_name: Rheumaklinik Bad Wildungen | city: Bad Wildungen | website: https://bad-wildungen.deutsche-rentenversicherung-reha-zentren.de/subsites/BadWildungen/de/Navigation/00_Home/Startseite_node.html | source_url: https://klinikradar.de/rehakliniken/rheumaklinik-bad-wildungen | external_key: healthcare_universe:klinikradar:source_url:7011ae077b85e2bf76ce | missing_reason: company has no people | target: no-people
+24. company_id: 1223 | company_name: Rheumaklinik Ostbayern in Bad Füssing | city: Bad Füssing | website: http://ge-passau.de/kliniken-schulen/rheumaklinik-ostbayern | source_url: https://klinikradar.de/kliniken/rheumaklinik-ostbayern | external_key: healthcare_universe:klinikradar:source_url:6ed42c1bd8ee7c4f9f92 | missing_reason: company has no people | target: no-people
+25. company_id: 1494 | company_name: Rheumazentrum Mittelhessen in Bad Endbach | city: Bad Endbach | website: http://rzmh.de | source_url: https://klinikradar.de/kliniken/rheumazentrum-mittelhessen | external_key: healthcare_universe:klinikradar:source_url:39faef95a34cd6a6361d | missing_reason: company has no people | target: no-people
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_029
+- Return only the requested result.
+- Use public information only.
