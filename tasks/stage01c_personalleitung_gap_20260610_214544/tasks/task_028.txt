@@ -1,0 +1,131 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_028
+
+Then output exactly one CSV header line:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Then output CSV rows, one row per target person.
+Return ONLY clinic/company-wide HR or Personal leadership.
+Do NOT return Recruiter.
+Do NOT return Personalreferent.
+Do NOT return HR Business Partner unless explicitly Leitung/Head/Director.
+Do NOT return generic Karriere contacts.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_028
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching German healthcare clinics.
+
+Goal:
+For each company, find ONLY clinic/company-wide HR leadership.
+
+Primary target:
+- Personalleiter
+- Personalleiterin
+- Personalleitung
+- Leitung Personal
+- Leiter Personal
+- Leiterin Personal
+- Personaldirektor
+- Personaldirektorin
+- HR-Leitung
+- Leitung HR
+- Head of HR
+- Human Resources Director
+- Director Human Resources
+
+Secondary target if available:
+- Stellvertretende Personalleitung
+- stellv. Leitung Personal
+- Deputy Head of HR
+- Deputy Human Resources Director
+
+Hard exclusion:
+Do NOT return Recruiter.
+Do NOT return Personalreferent / Personalreferentin.
+Do NOT return HR Business Partner unless the role explicitly says Leitung/Head/Director.
+Do NOT return Talent Acquisition.
+Do NOT return Sachbearbeiter/in Personal.
+Do NOT return Assistenz / Assistant.
+Do NOT return Ausbildung / Azubi / Bewerbermanagement.
+Do NOT return generic Karriere contact.
+Do NOT return Pflege roles.
+Do NOT return Ärztliche Direktion.
+Do NOT return Geschäftsführung unless no HR leadership exists and the company has no HR contact; even then prefer NOT_FOUND.
+
+Important:
+We are looking for leadership of the Personal/HR function, not operational recruiters.
+
+Input rows may include existing people already known in the database.
+Use existing people only as context. Do not repeat them unless they are clearly HR/Personal leadership.
+
+For each company, return up to 2 rows:
+1. best Personalleiter/Personalleitung/HR-Leitung if found
+2. deputy HR/Personal leadership if found
+
+If no valid HR/Personal leadership is found, output exactly one NOT_FOUND row for that company.
+
+Output exactly CSV with this header:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+role_category:
+- hr_recruiting for Personalleitung / HR-Leitung / Head of HR
+- unknown for NOT_FOUND
+
+confidence:
+- high = official clinic/group website, imprint, organization chart, annual report, or official document directly verifies name + role
+- medium = reliable public directory / professional page with role evidence
+- low = no valid target found or uncertain
+
+For NOT_FOUND:
+full_name=NOT_FOUND
+role_category=unknown
+confidence=low
+notes=No clinic/company-wide HR/Personal leadership found. Excluded Recruiter/Personalreferent/HR Business Partner/generic Karriere contacts.
+
+Do not use markdown.
+Do not add explanations outside CSV.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1988 | company_name: InnKlinikum Mühldorf | company_website: https://innklinikum.de | city: Mühldorf am Inn | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Annemarie Denkl — Pflegedirektorin Mühldorf und Haag | existing_all_people_roles: Annemarie Denkl — Pflegedirektorin Mühldorf und Haag | Thomas Ewald — Vorstandsvorsitzender
+2. company_id: 1752 | company_name: Inselkrankenhaus Borkum | company_website: https://inselkrankenhaus-borkum.de/kliniken/fuer-ihre-gesundheit | city: Borkum | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Heike Kliegelhöfer — Pflegedirektorin | Miroslaw Herden — Geschäftsführer | existing_all_people_roles: Heike Kliegelhöfer — Pflegedirektorin | Miroslaw Herden — Geschäftsführer
+3. company_id: 1309 | company_name: Institutsambulanz und Tagesklinik Osdorf in Hamburg | company_website: http://asklepios.com/harburg | city: Hamburg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andre Schepanski — Pflegedirektor | existing_all_people_roles: Andre Schepanski — Pflegedirektor | Dr. med. Sabine Ott-Jacobs — Chefärztin
+4. company_id: 1186 | company_name: Internistische Klinik Dr. Steger in Nürnberg | company_website: http://klinik-steger.de | city: Nürnberg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_all_people_roles: Dr. med. Karsten Böhmer — Alleinvorstand
+5. company_id: 1086 | company_name: Internistisches Klinikum München Süd | company_website: https://ikms.de | city: München | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Prof. Dr. med. Thorsten Lewalter — Geschäftsführender Gesellschafter und Ärztlicher Direktor | Sonja Nuener — Pflegemanagement | existing_all_people_roles: Prof. Dr. med. Thorsten Lewalter — Geschäftsführender Gesellschafter und Ärztlicher Direktor | Sonja Nuener — Pflegemanagement
+6. company_id: 1008 | company_name: Isar Kliniken in München | company_website: http://isarklinikum.de | city: München | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Prof. Dr. med. Eckhard Alt — Vorstand und Geschäftsführung | existing_all_people_roles: Prof. Dr. med. Eckhard Alt — Vorstand und Geschäftsführung
+7. company_id: 1285 | company_name: Israelitisches Krankenhaus in Hamburg | company_website: http://ik-h.de | city: Hamburg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Florian Grünheid — Stellvertretender Pflegedirektor | Julia Petersen — Pflegedirektorin | Marcus Jahn — Geschäftsführer | existing_all_people_roles: Florian Grünheid — Stellvertretender Pflegedirektor | Julia Petersen — Pflegedirektorin | Marcus Jahn — Geschäftsführer
+8. company_id: 346 | company_name: Johanna-Etienne-Krankenhaus in Neuss | city: Neuss | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Jenny Vieten-Wetzel — Stv. Pflegedienstleitung | Mandy Nicklaus — Pflegedienstleitung | Sebastian Baum — Geschäftsführer | existing_all_people_roles: Jenny Vieten-Wetzel — Stv. Pflegedienstleitung | Mandy Nicklaus — Pflegedienstleitung | Sebastian Baum — Geschäftsführer
+9. company_id: 275 | company_name: Johannes Wesling Klinikum Minden | city: Minden | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Annegret Hesemann — Konzern-Pflegedirektorin der Mühlenkreiskliniken | Mathias Oberländer — Pflegedienstleitung am Johannes Wesling Klinikum | existing_all_people_roles: Annegret Hesemann — Konzern-Pflegedirektorin der Mühlenkreiskliniken | Mathias Oberländer — Pflegedienstleitung am Johannes Wesling Klinikum
+10. company_id: 2221 | company_name: Johannesbad Fachklinik Hochsauerland in Schmallenberg | company_website: https://johannesbad-medizin.com/bad-fredeburg-psychosomatik | city: Schmallenberg | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Waldemar Gutwinski — Klinikleitung | existing_all_people_roles: Waldemar Gutwinski — Klinikleitung
+11. company_id: 2205 | company_name: Johannesbad Medizin Adaptation Dortmund | company_website: https://johannesbad-medizin.com/adaption-dortmund | city: Dortmund | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Waldemar Gutwinski — Klinikleitung | existing_all_people_roles: Waldemar Gutwinski — Klinikleitung
+12. company_id: 2250 | company_name: Johannesbad Medizin Fachklinik & Gesundheitszentrum Raupennest in Altenberg, Erzgebirge | company_website: https://johannesbad-medizin.com/altenbergraupennest | city: Altenberg | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Anke Gundel — Klinikleitung | Elke Mühle — Leitung Pflegedienst | existing_all_people_roles: Anke Gundel — Klinikleitung | Elke Mühle — Leitung Pflegedienst
+13. company_id: 2121 | company_name: Johannesbad Medizin Fachklinik Bad Füssing | company_website: https://johannesbad-medizin.com/bad-fuessing | city: Bad Füssing | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Karsten Fuchs — Klinikleitung | Oliver Kort — Leitung Pflege | existing_all_people_roles: Karsten Fuchs — Klinikleitung | Oliver Kort — Leitung Pflege
+14. company_id: 2111 | company_name: Johannesbad Medizin Fachklinik Furth im Wald | company_website: https://johannesbad-medizin.com/furth-im-wald | city: Furth im Wald | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Tanja Meindl — Klinikleitung | existing_all_people_roles: Tanja Meindl — Klinikleitung
+15. company_id: 2286 | company_name: Johannesbad Medizin Gesundheits- & Rehazentrum Saarschleife in Mettlach | company_website: https://johannesbad-medizin.com/saarschleife | city: Mettlach | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Karin Fuchs — Klinikleitung | existing_all_people_roles: Karin Fuchs — Klinikleitung
+16. company_id: 2077 | company_name: Johannesbad Medizin Gesundheitszentrum Germering in Germering, Oberbayern | company_website: https://johannesbad-ambulante-reha.com/standorte/johannesbad-reha-nord | city: Germering | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_all_people_roles: Stefan Etzold — Zentrumsleitung
+17. company_id: 2185 | company_name: Johannesbad Medizin Klaus Störtebeker Ostseestrand Kinder- und Jugendreha in Loddin | company_website: https://johannesbad-medizin.com/usedom-kinder-jugend-rehabilitation | city: Loddin | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Birgit Rohde — Klinikleitung | Sandra Hinzmann — Pflegedienstleitung Kinder- und Jugend-Reha | existing_all_people_roles: Birgit Rohde — Klinikleitung | Sandra Hinzmann — Pflegedienstleitung Kinder- und Jugend-Reha
+18. company_id: 2134 | company_name: Johannesbad Medizin Klinik Königshof in Lechbruck am See | company_website: https://johannesbad-medizin.com/lechbruck-am-see | city: Lechbruck am See | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Anna Ackermann — Klinikleitung | Monika Schiele — Leitung Pflege | existing_all_people_roles: Anna Ackermann — Klinikleitung | Monika Schiele — Leitung Pflege
+19. company_id: 2284 | company_name: Johannesbad Medizin Reha Nord Dresden | company_website: https://reha-dresden.de/Startseite.html | city: Dresden | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Silke Juschten — Geschäftsführerin | existing_all_people_roles: Silke Juschten — Geschäftsführerin
+20. company_id: 2220 | company_name: Johannesbad Medizin Rehaklinik Bad Fredeburg in Schmallenberg | company_website: https://johannesbad-medizin.com/bad-fredeburg-fachklinik-fredeburg | city: Schmallenberg | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Lisa Schober — Kommissarische Leitung Pflegebereich | Waldemar Gutwinski — Klinikleitung | existing_all_people_roles: Lisa Schober — Kommissarische Leitung Pflegebereich | Waldemar Gutwinski — Klinikleitung
+21. company_id: 2069 | company_name: Johannesbad Medizin Tagesklinik Nürnberg | company_website: https://johannesbad-medizin.com/tagesklinik-nuernberg | city: Nürnberg | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_all_people_roles: Dr. med. Gerhard Georg Schlenk — Medizinische und Therapeutische Leitung
+22. company_id: 1140 | company_name: Johannesbad Reha-Kliniken in Bad Füssing | company_website: https://johannesbad-medizin.com/bad-fuessing | city: Bad Füssing | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Karsten Fuchs — Klinikleitung | Oliver Kort — Leitung Pflege | existing_all_people_roles: Karsten Fuchs — Klinikleitung | Oliver Kort — Leitung Pflege
+23. company_id: 390 | company_name: Johanniter Krankenhaus Bonn | city: Bonn | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Daniela Brandstätter — Pflegedienstleitung Johanniter-Krankenhaus | Kai Mückenhaupt — Pflegedirektor Johanniter-Kliniken Bonn | existing_all_people_roles: Andreas Heuser — Krankenhausdirektor | Daniela Brandstätter — Pflegedienstleitung Johanniter-Krankenhaus | Kai Mückenhaupt — Pflegedirektor Johanniter-Kliniken Bonn
+24. company_id: 375 | company_name: Johanniter Krankenhaus Oberhausen | city: Oberhausen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Achim Gregorius — Örtliche Pflegedienstleitung Psychiatrie | Dipl.-Kfm. Franz Hafner — Vorsitzender der Geschäftsführung | Udo Becker — Örtliche Pflegedienstleitung Somatik | existing_all_people_roles: Achim Gregorius — Örtliche Pflegedienstleitung Psychiatrie | Dipl.-Kfm. Franz Hafner — Vorsitzender der Geschäftsführung | Udo Becker — Örtliche Pflegedienstleitung Somatik
+25. company_id: 1677 | company_name: Johanniter-Krankenhaus Gronau | company_website: https://johanniter-gronau.de | city: Gronau | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Birgit Töben — Geschäftsführerin | Martin Ahrens — Stellvertretender Pflegedirektor | Susanne Kühle — Pflegedirektorin | existing_all_people_roles: Birgit Töben — Geschäftsführerin | Martin Ahrens — Stellvertretender Pflegedirektor | Susanne Kühle — Pflegedirektorin
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_028
+- Return only the requested result.
+- Use public information only.
