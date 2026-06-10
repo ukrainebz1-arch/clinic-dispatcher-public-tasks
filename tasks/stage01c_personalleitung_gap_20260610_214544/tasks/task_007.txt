@@ -1,0 +1,131 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_007
+
+Then output exactly one CSV header line:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Then output CSV rows, one row per target person.
+Return ONLY clinic/company-wide HR or Personal leadership.
+Do NOT return Recruiter.
+Do NOT return Personalreferent.
+Do NOT return HR Business Partner unless explicitly Leitung/Head/Director.
+Do NOT return generic Karriere contacts.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_007
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching German healthcare clinics.
+
+Goal:
+For each company, find ONLY clinic/company-wide HR leadership.
+
+Primary target:
+- Personalleiter
+- Personalleiterin
+- Personalleitung
+- Leitung Personal
+- Leiter Personal
+- Leiterin Personal
+- Personaldirektor
+- Personaldirektorin
+- HR-Leitung
+- Leitung HR
+- Head of HR
+- Human Resources Director
+- Director Human Resources
+
+Secondary target if available:
+- Stellvertretende Personalleitung
+- stellv. Leitung Personal
+- Deputy Head of HR
+- Deputy Human Resources Director
+
+Hard exclusion:
+Do NOT return Recruiter.
+Do NOT return Personalreferent / Personalreferentin.
+Do NOT return HR Business Partner unless the role explicitly says Leitung/Head/Director.
+Do NOT return Talent Acquisition.
+Do NOT return Sachbearbeiter/in Personal.
+Do NOT return Assistenz / Assistant.
+Do NOT return Ausbildung / Azubi / Bewerbermanagement.
+Do NOT return generic Karriere contact.
+Do NOT return Pflege roles.
+Do NOT return Ärztliche Direktion.
+Do NOT return Geschäftsführung unless no HR leadership exists and the company has no HR contact; even then prefer NOT_FOUND.
+
+Important:
+We are looking for leadership of the Personal/HR function, not operational recruiters.
+
+Input rows may include existing people already known in the database.
+Use existing people only as context. Do not repeat them unless they are clearly HR/Personal leadership.
+
+For each company, return up to 2 rows:
+1. best Personalleiter/Personalleitung/HR-Leitung if found
+2. deputy HR/Personal leadership if found
+
+If no valid HR/Personal leadership is found, output exactly one NOT_FOUND row for that company.
+
+Output exactly CSV with this header:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+role_category:
+- hr_recruiting for Personalleitung / HR-Leitung / Head of HR
+- unknown for NOT_FOUND
+
+confidence:
+- high = official clinic/group website, imprint, organization chart, annual report, or official document directly verifies name + role
+- medium = reliable public directory / professional page with role evidence
+- low = no valid target found or uncertain
+
+For NOT_FOUND:
+full_name=NOT_FOUND
+role_category=unknown
+confidence=low
+notes=No clinic/company-wide HR/Personal leadership found. Excluded Recruiter/Personalreferent/HR Business Partner/generic Karriere contacts.
+
+Do not use markdown.
+Do not add explanations outside CSV.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1466 | company_name: Atos Orthopädische Klinik Braunfels | company_website: https://atos.de | city: Braunfels | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Christian Emmerich — Pflegedirektor | existing_all_people_roles: Christian Emmerich — Pflegedirektor | Robert Brandner — Kaufmännische Leitung
+2. company_id: 1206 | company_name: Atos Starmed Klinik in München | company_website: http://starmedklinik.de | city: München | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_all_people_roles: Florian Kinast — Kaufmännische Leitung
+3. company_id: 1624 | company_name: Auf Der Bult Kinder- und Jugendkrankenhaus in Hannover | company_website: https://auf-der-bult.de | city: Hannover | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Sebastian Beitzel — Pflegedirektor | existing_all_people_roles: Prof. Dr. Parwis Fotuhi — Vorstandsvorsitzender | Sebastian Beitzel — Pflegedirektor
+4. company_id: 790 | company_name: Augenklinik Berlin Marzahn | city: Berlin | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Elena Nasin — Pflegedienstleitung | Sascha Kotowski — Geschäftsführer | existing_all_people_roles: Elena Nasin — Pflegedienstleitung | Sascha Kotowski — Geschäftsführer
+5. company_id: 1726 | company_name: Augenklinik Dr. Georg in Bad Rothenfelde | company_website: http://augenzentrum-bad-rothenfelde.de | city: Bad Rothenfelde | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dr. med. Aykut Gültekin — Leitender Arzt / Geschäftsführer | Sabine Theiling — Pflegedienstleitung | existing_all_people_roles: Dr. med. Aykut Gültekin — Leitender Arzt / Geschäftsführer | Sabine Theiling — Pflegedienstleitung
+6. company_id: 1732 | company_name: Augenklinik Dr. Hoffmann in Braunschweig | company_website: http://augenklinik-dr-hoffmann.de | city: Braunschweig | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Stephan Kaune — Geschäftsführung | existing_all_people_roles: Stephan Kaune — Geschäftsführung
+7. company_id: 1165 | company_name: Augenklinik Herzog Carl Theodor in München | company_website: http://augenklinik-muenchen.de | city: München | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Stefanie Kramer — Pflegedienstleitung | existing_all_people_roles: Dr. Kristian Horn — Vorstand | Stefanie Kramer — Pflegedienstleitung
+8. company_id: 1240 | company_name: Augenklinik Schweinfurt-Gerolzhofen | company_website: https://augenklinik-schweinfurt-gerolzhofen.de | city: Gerolzhofen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Annette von Heissen — Pflegedienstleitung | Sandra Trippel — Kaufmännische Geschäftsleitung | existing_all_people_roles: Annette von Heissen — Pflegedienstleitung | Sandra Trippel — Kaufmännische Geschäftsleitung
+9. company_id: 1753 | company_name: Augenklinik Stadthagen | company_website: https://augenklinik.org | city: Stadthagen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dr. Michael Knoche — Geschäftsführer / Ärztlicher Leiter | Rositta Marhenke — Pflegedienstleitung | existing_all_people_roles: Dr. Michael Knoche — Geschäftsführer / Ärztlicher Leiter | Rositta Marhenke — Pflegedienstleitung
+10. company_id: 798 | company_name: Augenklinik im Ring-Center in Berlin | company_website: http://augenklinik-ringcenter.de | city: Berlin | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dr. Stephanie Pahlitzsch — Geschäftsführerin / Ärztliche Leiterin | Michaela Wagner — Pflegedienstleitung | existing_all_people_roles: Dr. Stephanie Pahlitzsch — Geschäftsführerin / Ärztliche Leiterin | Michaela Wagner — Pflegedienstleitung
+11. company_id: 632 | company_name: Augusta-Kranken-Anstalt (Bochum-Linden) | city: Bochum | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Kevin Strenger — Pflegedirektor | existing_all_people_roles: Kevin Strenger — Pflegedirektor
+12. company_id: 503 | company_name: Augusta-Krankenhaus in Düsseldorf | city: Düsseldorf | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Niklas Benedix — Pflegedienstleitung | existing_all_people_roles: Niklas Benedix — Pflegedienstleitung
+13. company_id: 586 | company_name: Augustahospital Anholt in Isselburg | city: Isselburg | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Maik Büscher — Geschäftsführung | Marcel Haupt — Pflegedirektor | existing_all_people_roles: Maik Büscher — Geschäftsführung | Marcel Haupt — Pflegedirektor
+14. company_id: 593 | company_name: Auguste-Viktoria-Klinik in Bad Oeynhausen | city: Bad Oeynhausen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dr. Olaf Bornemeier — Geschäftsführer | Janin Tacke — Pflegedirektorin | Olaf Kawalerczyk — Geschäftsführer | existing_all_people_roles: Dr. Olaf Bornemeier — Geschäftsführer | Janin Tacke — Pflegedirektorin | Olaf Kawalerczyk — Geschäftsführer
+15. company_id: 1050 | company_name: Augustinum Klinik München | company_website: http://augustinum-kliniken.de | city: München | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Resad Puhovac — Pflegedienstleiter | Sophie Lehnert — stellvertretende Pflegedienstleitung | existing_all_people_roles: Ingo Rebmann — Klinikleiter | Resad Puhovac — Pflegedienstleiter | Sophie Lehnert — stellvertretende Pflegedienstleitung
+16. company_id: 1492 | company_name: BDH-Klinik Braunfels | company_website: http://bdh-klinik-braunfels.de | city: Braunfels | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact
+17. company_id: 2197 | company_name: BDH-Klinik Braunfels | company_website: https://bdh-klinik-braunfels.de/bdh-klinik-braunfels | city: Braunfels | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Manuel Noske — Geschäftsführer | Tim Benner — Pflegedienstleitung | existing_all_people_roles: Manuel Noske — Geschäftsführer | Prof. Dr. Klaus-Dieter Böhm — Ärztlicher Direktor | Tim Benner — Pflegedienstleitung
+18. company_id: 89 | company_name: BDH-Klinik Elzach | city: Elzach | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andrea Gihr — Personalreferentin | Clemens Moriz — Stellvertretende Pflegedienstleitung | Daniel Charlton — Geschäftsführer | Jürgen Muser — Pflegedienstleiter | existing_all_people_roles: Andrea Gihr — Personalreferentin | Clemens Moriz — Stellvertretende Pflegedienstleitung | Daniel Charlton — Geschäftsführer | Jürgen Muser — Pflegedienstleiter
+19. company_id: 1337 | company_name: BDH-Klinik Greifswald | company_website: http://bdh-klinik-greifswald.de | city: Greifswald | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dipl.-Betriebsw. Roger Gierczak — Geschäftsführung | existing_all_people_roles: Dipl.-Betriebsw. Roger Gierczak — Geschäftsführung
+20. company_id: 1657 | company_name: BDH-Klinik Hessisch Oldendorf | company_website: http://bdh-klinik-hessisch-oldendorf.de | city: Hessisch Oldendorf | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dipl.-Kfm. (FH) Michael Hengstermann — Geschäftsführer | Jolanta Pape — Pflegedienstleitung | existing_all_people_roles: Dipl.-Kfm. (FH) Michael Hengstermann — Geschäftsführer | Jolanta Pape — Pflegedienstleitung
+21. company_id: 1861 | company_name: BDH-Klinik Vallendar | company_website: https://bdh-klinik-vallendar.de | city: Vallendar | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Thomas von Kessel — Geschäftsführung | existing_all_people_roles: Jörg Biebrach — PDL | Sven Heinrich — Stv. PDL | Thomas von Kessel — Geschäftsführung
+22. company_id: 140 | company_name: BDH-Klinik Waldkirch | city: Waldkirch | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Daniel Charlton — Geschäftsführer | Fabian Gonzalvez — Pflegedienstleitung | existing_all_people_roles: Daniel Charlton — Geschäftsführer | Fabian Gonzalvez — Pflegedienstleitung
+23. company_id: 1766 | company_name: BG Klinik Ludwigshafen | company_website: https://bg-kliniken.de/klinik-ludwigshafen | city: Ludwigshafen am Rhein | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Andrea Jurcicek — Pflegedirektorin | Andreas Gather — Geschäftsführung BG Kliniken Ludwigshafen und Tübingen gGmbH Standort Ludwigshafen | Ute Häge — Stv. Pflegedirektorin | existing_all_people_roles: Andrea Jurcicek — Pflegedirektorin | Andreas Gather — Geschäftsführung BG Kliniken Ludwigshafen und Tübingen gGmbH Standort Ludwigshafen | Ute Häge — Stv. Pflegedirektorin
+24. company_id: 68 | company_name: BG Klinik Tübingen | city: Tübingen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Diana Endl — Stv. Pflegedirektorin Pflegebildung | Gerd Hauffe — Pflegedirektor | Susanne Dieffenbach — Vorsitzende der Geschäftsführung | Sylvia Pansow — Geschäftsführung BG Kliniken Ludwigshafen und Tübingen gGmbH Standort Tübingen | existing_all_people_roles: Diana Endl — Stv. Pflegedirektorin Pflegebildung | Gerd Hauffe — Pflegedirektor | Simon Krämer — Kaufmännischer Direktor | Susanne Dieffenbach — Vorsitzende der Geschäftsführung | Sylvia Pansow — Geschäftsführung BG Kliniken Ludwigshafen und Tübingen gGmbH Standort Tübingen | Tina Histing — Ärztliche Direktorin
+25. company_id: 392 | company_name: BG Klinikum Duisburg | city: bei Umbau der Nasszellen umgesetzt | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Brigitte Götz-Paul — Geschäftsführerin | Claudia Kästner — Stellvertretende Pflegedirektorin | Oliver Crone — Pflegedirektor | existing_all_people_roles: Brigitte Götz-Paul — Geschäftsführerin | Claudia Kästner — Stellvertretende Pflegedirektorin | Oliver Crone — Pflegedirektor
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_007
+- Return only the requested result.
+- Use public information only.
