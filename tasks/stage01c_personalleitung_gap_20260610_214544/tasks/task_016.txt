@@ -1,0 +1,131 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_016
+
+Then output exactly one CSV header line:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+Then output CSV rows, one row per target person.
+Return ONLY clinic/company-wide HR or Personal leadership.
+Do NOT return Recruiter.
+Do NOT return Personalreferent.
+Do NOT return HR Business Partner unless explicitly Leitung/Head/Director.
+Do NOT return generic Karriere contacts.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage01c_personalleitung_gap_20260610_214544
+TASK_ID: task_016
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching German healthcare clinics.
+
+Goal:
+For each company, find ONLY clinic/company-wide HR leadership.
+
+Primary target:
+- Personalleiter
+- Personalleiterin
+- Personalleitung
+- Leitung Personal
+- Leiter Personal
+- Leiterin Personal
+- Personaldirektor
+- Personaldirektorin
+- HR-Leitung
+- Leitung HR
+- Head of HR
+- Human Resources Director
+- Director Human Resources
+
+Secondary target if available:
+- Stellvertretende Personalleitung
+- stellv. Leitung Personal
+- Deputy Head of HR
+- Deputy Human Resources Director
+
+Hard exclusion:
+Do NOT return Recruiter.
+Do NOT return Personalreferent / Personalreferentin.
+Do NOT return HR Business Partner unless the role explicitly says Leitung/Head/Director.
+Do NOT return Talent Acquisition.
+Do NOT return Sachbearbeiter/in Personal.
+Do NOT return Assistenz / Assistant.
+Do NOT return Ausbildung / Azubi / Bewerbermanagement.
+Do NOT return generic Karriere contact.
+Do NOT return Pflege roles.
+Do NOT return Ärztliche Direktion.
+Do NOT return Geschäftsführung unless no HR leadership exists and the company has no HR contact; even then prefer NOT_FOUND.
+
+Important:
+We are looking for leadership of the Personal/HR function, not operational recruiters.
+
+Input rows may include existing people already known in the database.
+Use existing people only as context. Do not repeat them unless they are clearly HR/Personal leadership.
+
+For each company, return up to 2 rows:
+1. best Personalleiter/Personalleitung/HR-Leitung if found
+2. deputy HR/Personal leadership if found
+
+If no valid HR/Personal leadership is found, output exactly one NOT_FOUND row for that company.
+
+Output exactly CSV with this header:
+batch_id,company_name,company_website,city,country,first_name,last_name,full_name,role,role_category,linkedin_profile_url,source_url,confidence,notes
+
+role_category:
+- hr_recruiting for Personalleitung / HR-Leitung / Head of HR
+- unknown for NOT_FOUND
+
+confidence:
+- high = official clinic/group website, imprint, organization chart, annual report, or official document directly verifies name + role
+- medium = reliable public directory / professional page with role evidence
+- low = no valid target found or uncertain
+
+For NOT_FOUND:
+full_name=NOT_FOUND
+role_category=unknown
+confidence=low
+notes=No clinic/company-wide HR/Personal leadership found. Excluded Recruiter/Personalreferent/HR Business Partner/generic Karriere contacts.
+
+Do not use markdown.
+Do not add explanations outside CSV.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1620 | company_name: Elbe Klinikum Buxtehude | company_website: http://elbekliniken.de | city: Buxtehude | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Bernd Lambrecht — Pflegedirektor | Siegfried Ristau — Geschäftsführer | existing_all_people_roles: Bernd Lambrecht — Pflegedirektor | Siegfried Ristau — Geschäftsführer
+2. company_id: 1568 | company_name: Elbe Klinikum Stade in Stade, Niederelbe | company_website: http://elbekliniken.de | city: Stade | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Bernd Lambrecht — Pflegedirektor | Siegfried Ristau — Geschäftsführer | existing_all_people_roles: Bernd Lambrecht — Pflegedirektor | Siegfried Ristau — Geschäftsführer
+3. company_id: 1684 | company_name: Elbe-Jeetzel-Klinik Dannenberg | company_website: http://elbe-jeetzel-klinik.de | city: Dannenberg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Karola Doblies — Pflegedienstleitung | Rene Benecke — stellver. Pflegedienstleitung | existing_all_people_roles: Hans-Werner Kuska — Krankenhausdirektor | Karola Doblies — Pflegedienstleitung | Rene Benecke — stellver. Pflegedienstleitung
+4. company_id: 1945 | company_name: Elbland Rehabilitationsklinik Großenhain in Großenhain, Sachsen | company_website: http://elbland-reha.de | city: Großenhain | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Torsten Flade — Pflegedirektor | existing_all_people_roles: Torsten Flade — Pflegedirektor | Torsten Wagner — Verwaltungsleiter
+5. company_id: 1865 | company_name: Elblandklinikum Meißen in Meißen, Sachsen | company_website: http://elblandkliniken.de | city: Meißen | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Bianca Svoboda — Pflegedirektorin | existing_all_people_roles: Bianca Svoboda — Pflegedirektorin | Hasan Akgün — Verwaltungsdirektor
+6. company_id: 1866 | company_name: Elblandklinikum Radebeul | company_website: http://elblandkliniken.de | city: Radebeul | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Martin Schunack — Pflegedirektor | existing_all_people_roles: Benjamin Becker — Verwaltungsdirektor | Martin Schunack — Pflegedirektor
+7. company_id: 1879 | company_name: Elblandklinikum Riesa | company_website: http://elblandkliniken.de | city: Riesa | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Claudia Kupke — Pflegedirektorin | existing_all_people_roles: André Gubsch — Verwaltungsdirektor | Claudia Kupke — Pflegedirektorin
+8. company_id: 508 | company_name: Elisabeth-Klinik in Olsberg | city: Olsberg | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Frank Leber — Geschäftsführer | Stefan Brieden — Pflegedienstleiter | existing_all_people_roles: Frank Leber — Geschäftsführer | Stefan Brieden — Pflegedienstleiter
+9. company_id: 306 | company_name: Elisabeth-Krankenhaus Essen | city: Essen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Silke Kloppenburg — Stellvertretende Pflegedirektorin | Simone Sturm — Pflegedirektorin | existing_all_people_roles: Silke Kloppenburg — Stellvertretende Pflegedirektorin | Simone Sturm — Pflegedirektorin
+10. company_id: 1435 | company_name: Elisabeth-Krankenhaus Kassel | company_website: https://elisabeth-krankenhaus-kassel.de | city: Kassel | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Heike van Elkan — Pflegedirektorin | Michael Schmidt — Geschäftsführer | existing_all_people_roles: Heike van Elkan — Pflegedirektorin | Michael Schmidt — Geschäftsführer
+11. company_id: 1673 | company_name: Elisabeth-Krankenhaus Thuine | company_website: https://niels-stensen-kliniken.de/elisabeth-krankenhaus.html | city: Thuine | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_all_people_roles: Pascal Alfers — Verwaltungsdirektor
+12. company_id: 475 | company_name: Elisabeth-Krankenhaus in Gelsenkirchen | city: Gelsenkirchen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Eva Wilhelm — Krankenhausgeschäftsführerin | Herma Osthaus — Pflegedirektorin | existing_all_people_roles: Eva Wilhelm — Krankenhausgeschäftsführerin | Herma Osthaus — Pflegedirektorin
+13. company_id: 2172 | company_name: Endo Rehazentrum Hamburg | company_website: https://helios-gesundheit.de/reha/endo-reha-physiotherapie-krankengymnastik | city: Hamburg | country: DE | company_type: rehab_clinic | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_all_people_roles: Marc Sieder — Ärztlicher Leiter ENDO Rehazentrum
+14. company_id: 871 | company_name: Epilepsieklinik Tabor in Bernau bei Berlin | company_website: https://epi-tabor.de | city: Bernau bei Berlin | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Uwe Kropp — Pflegedirektor | existing_all_people_roles: Susanne Bohlmann — Verwaltungsleiterin | Uwe Kropp — Pflegedirektor
+15. company_id: 1948 | company_name: Epilepsiezentrum Kleinwachau in Radeberg | company_website: http://kleinwachau.de | city: Radeberg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Claudia Audehm — stellvertretende Pflegedienstleitung | Ronald Otto-Kaden — Pflegedienstleitung | Sandra Stöhr — Geschäftsführung | existing_all_people_roles: Claudia Audehm — stellvertretende Pflegedienstleitung | Ronald Otto-Kaden — Pflegedienstleitung | Sandra Stöhr — Geschäftsführung
+16. company_id: 124 | company_name: Epilepsiezentrum Kork in Kehl | city: Kehl | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Jochen Solf — Pflegedirektor | existing_all_people_roles: Jochen Solf — Pflegedirektor
+17. company_id: 1909 | company_name: Erzgebirgsklinikum - Haus Stollberg | company_website: https://erzgebirgsklinikum.de | city: Stollberg | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carina Ellerhoff — Leitende Pflegedirektorin | Jana Ehrich — Pflegeleitung Haus Stollberg | Marcel Koch — Geschäftsführer | existing_all_people_roles: Carina Ellerhoff — Leitende Pflegedirektorin | Jana Ehrich — Pflegeleitung Haus Stollberg | Marcel Koch — Geschäftsführer
+18. company_id: 1858 | company_name: Erzgebirgsklinikum Haus Annaberg in Annaberg-Buchholz | company_website: http://erzgebirgsklinikum.de | city: Annaberg-Buchholz | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carina Ellerhoff — Leitende Pflegedirektorin | Marcel Koch — Geschäftsführer | Sebastian Oehme — Pflegeleitung Haus Annaberg | existing_all_people_roles: Carina Ellerhoff — Leitende Pflegedirektorin | Marcel Koch — Geschäftsführer | Sebastian Oehme — Pflegeleitung Haus Annaberg
+19. company_id: 1942 | company_name: Erzgebirgsklinikum Haus Olbernhau | company_website: https://erzgebirgsklinikum.de | city: Olbernhau | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carina Ellerhoff — Leitende Pflegedirektorin | Marcel Koch — Geschäftsführer | Patrick Schramm — Pflegeleitung Haus Olbernhau | existing_all_people_roles: Carina Ellerhoff — Leitende Pflegedirektorin | Marcel Koch — Geschäftsführer | Patrick Schramm — Pflegeleitung Haus Olbernhau
+20. company_id: 1883 | company_name: Erzgebirgsklinikum Haus Zschopau | company_website: https://erzgebirgsklinikum.de | city: Zschopau | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Carina Ellerhoff — Leitende Pflegedirektorin | Marcel Koch — Geschäftsführer | Sophie Streckenbach — Pflegeleitung Haus Zschopau | existing_all_people_roles: Carina Ellerhoff — Leitende Pflegedirektorin | Marcel Koch — Geschäftsführer | Sophie Streckenbach — Pflegeleitung Haus Zschopau
+21. company_id: 1589 | company_name: Euregio-Klinik Albert-Schweitzer-Straße in Nordhorn | company_website: http://euregio-klinik.de | city: Nordhorn | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Michael Kamp — Geschäftsführer | Susanne Karrer — Stellv. Pflegedirektorin | Thorsten Lohuis — Pflegedirektor | existing_all_people_roles: Michael Kamp — Geschäftsführer | Susanne Karrer — Stellv. Pflegedirektorin | Thorsten Lohuis — Pflegedirektor
+22. company_id: 1692 | company_name: Euregio-Klinik Hannoverstraße in Nordhorn | company_website: http://euregio-klinik.de | city: Nordhorn | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Michael Kamp — Geschäftsführer | Susanne Karrer — Stellv. Pflegedirektorin | Thorsten Lohuis — Pflegedirektor | existing_all_people_roles: Michael Kamp — Geschäftsführer | Susanne Karrer — Stellv. Pflegedirektorin | Thorsten Lohuis — Pflegedirektor
+23. company_id: 1902 | company_name: Ev. Diakonissenkrankenhaus Leipzig | company_website: http://diako-leipzig.de | city: Leipzig | country: DE | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Dirk Herrmann — Kaufmännischer Geschäftsführer | Katrin Völkel-Lutz — Pflegedirektorin | existing_all_people_roles: Dirk Herrmann — Kaufmännischer Geschäftsführer | Katrin Völkel-Lutz — Pflegedirektorin
+24. company_id: 339 | company_name: Ev. Klinikum Gelsenkirchen | city: Gelsenkirchen | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Frank Hanßen — Pflegedirektor | Olaf Walter — Geschäftsführer | existing_all_people_roles: Frank Hanßen — Pflegedirektor | Olaf Walter — Geschäftsführer
+25. company_id: 358 | company_name: Ev. Krankenhaus Castrop-Rauxel | city: Castrop-Rauxel | country: Germany | company_type: clinic_location | target_slot: personalleitung | priority: 1 | search_goal: Find clinic/company-wide Personalleiter/Personalleiterin/Personalleitung/Leitung Personal/HR-Leitung. | accepted_titles: Personalleiter/in; Personalleitung; Leitung Personal; Leiter/in Personal; HR-Leitung; Head of HR; Human Resources Director | excluded_titles: Recruiter; Personalreferent/in; Talent Acquisition; HR Business Partner; Sachbearbeiter/in; Assistenz; Ausbildung; Bewerbermanagement; generic Karriere contact | existing_relevant_people: Beate Schlüter — Pflegedirektorin | Olaf Walter — Geschäftsführer | existing_all_people_roles: Beate Schlüter — Pflegedirektorin | Olaf Walter — Geschäftsführer
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_016
+- Return only the requested result.
+- Use public information only.
