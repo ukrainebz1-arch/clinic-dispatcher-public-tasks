@@ -1,0 +1,56 @@
+RUN_ID: stage01_people_no_people_20260610_141943_20260610_151340_device_3
+TASK_ID: task_023
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+TASK: {{STAGE_ID}} / {{DESCRIPTION}}
+
+Run context:
+- campaign_id: {{CAMPAIGN_ID}}
+- batch_id: {{BATCH_ID}}
+- run_id: {{RUN_ID}}
+- input_csv: {{INPUT_CSV}}
+
+You receive company rows. For each company, find publicly available decision-maker people relevant for B2B outreach.
+Prioritize roles such as Founder, CEO, Managing Director, Head of Sales, Sales Director, Business Development, Partnerships, Revenue, Marketing Leadership, HR/Recruiting leadership, Operations leadership.
+
+Primary goal:
+- Find real, named, role-relevant people connected to the exact target company.
+- Prefer decision-makers and buying-influencers over random employees.
+- Better fewer relevant people than many weak or unrelated people.
+
+Rules:
+- Use only public data.
+- Do not invent names, roles, URLs, emails or LinkedIn profiles.
+- Do not output departments, teams, generic roles, or anonymous group names as people.
+- A valid person row must contain a real individual person name.
+- Verify that the person is connected to the target company through a public source.
+- Prefer people whose role is relevant to B2B outreach, sales, partnerships, leadership, HR/recruiting, operations, or management.
+- If a person is uncertain, include the row only if the public source supports the company + role connection.
+- Keep source_url for every person whenever possible.
+- If no relevant person can be verified, return NOT_FOUND / empty person fields according to the output schema.
+- Return CSV only, no markdown, no explanation.
+- Use exactly this output header and order:
+{{OUTPUT_COLUMNS}}
+
+Column guidance:
+- batch_id: use {{BATCH_ID}}
+- company_name/company_website/city/country: copy from input when present.
+- role_category: one of founder_ceo, sales, business_development, marketing, hr_recruiting, operations, finance, other_management, unknown.
+- confidence: high / medium / low.
+- notes: short reason or uncertainty, max 25 words.
+
+CURRENT CHUNK INPUT:
+1. company_id: 38 | company_name: ZfP Klinikum Schloß Winnenden, Standort Winnenden | city: Winnenden | source_url: https://klinikradar.de/kliniken/zfp-klinikum-schloss-winnenden-standort-winnenden | external_key: healthcare_universe:klinikradar:source_url:16586772d921b7409e82 | missing_reason: company has no people | target: no-people
+2. company_id: 219 | company_name: ZfP Reichenau Satellit (TAZ) Konstanz | city: Konstanz | source_url: https://klinikradar.de/kliniken/zfp-reichenau-satellit-taz-konstanz | external_key: healthcare_universe:klinikradar:source_url:379241aa7699737922f8 | missing_reason: company has no people | target: no-people
+3. company_id: 190 | company_name: ZfP Reichenau Satellit Waldshut in Waldshut-Tiengen | city: Waldshut-Tiengen | source_url: https://klinikradar.de/kliniken/zfp-reichenau-satellit-waldshut | external_key: healthcare_universe:klinikradar:source_url:a90164766e579a2b9a92 | missing_reason: company has no people | target: no-people
+4. company_id: 157 | company_name: ZfP Südwürttemberg Bad Schussenried Satellit Biberach | city: Biberach an der Riß | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-bad-schussenried-satellit-biberach | external_key: healthcare_universe:klinikradar:source_url:020e22ef4169b613fbf2 | missing_reason: company has no people | target: no-people
+5. company_id: 192 | company_name: ZfP Südwürttemberg Bad Schussenried Satellit Ulm | city: Ulm | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-bad-schussenried-satellit-ulm | external_key: healthcare_universe:klinikradar:source_url:fd2fbf097dc78517c011 | missing_reason: company has no people | target: no-people
+6. company_id: 185 | company_name: ZfP Südwürttemberg Satellit Ehingen | city: Ehingen | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-satellit-ehingen | external_key: healthcare_universe:klinikradar:source_url:4141315ee0678eedce15 | missing_reason: company has no people | target: no-people
+7. company_id: 250 | company_name: ZfP Südwürttemberg Zwiefalten Tagesklinik Riedlingen | city: Riedlingen | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-zwiefalten-tagesklinik-riedlingen | external_key: healthcare_universe:klinikradar:source_url:37360642d63901319776 | missing_reason: company has no people | target: no-people
+8. company_id: 1299 | company_name: ZSG Osdorf in Hamburg | city: Hamburg | website: https://asklepios.com/hamburg/westklinikum/experten/psychiatrie_und_psychotherapie/zsg-osdorf | source_url: https://klinikradar.de/kliniken/zsg-osdorf | external_key: healthcare_universe:klinikradar:source_url:e7a11daba741cce594cc | missing_reason: company has no people | target: no-people
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_023
+- Return only the requested result.
+- Use public information only.
