@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_104
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_104
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5475 | company_id: 2028 | company_name: Klinikum Mittelmosel in Zell (Mosel) | company_website: http://klinikum-mittelmosel.de | city: Zell | country: DE | company_type: clinic_location | first_name: Margot | last_name: Michels | full_name: Margot Michels | role: Personalleitung | role_bucket: personalleitung | priority: 2
+2. person_id: 5476 | company_id: 945 | company_name: Klinikum Neumarkt | company_website: https://klinikum-neumarkt.de | city: Neumarkt in der Oberpfalz | country: DE | company_type: clinic_location | first_name: Manuela | last_name: Nirschl | full_name: Manuela Nirschl | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+3. person_id: 5477 | company_id: 680 | company_name: Klinikum Niederberg Tagesklinik für Psychiatrie in Heiligenhaus bei Velbert | city: Heiligenhaus bei Velbert | country: Germany | company_type: clinic_location | first_name: Farina | last_name: Görtz | full_name: Farina Görtz | role: Standortverantwortliche Personalleitung | role_bucket: personalleitung | priority: 2
+4. person_id: 5478 | company_id: 320 | company_name: Klinikum Niederberg in Velbert | city: Velbert | country: Germany | company_type: clinic_location | first_name: Farina | last_name: Görtz | full_name: Farina Görtz | role: Standortverantwortliche Personalleitung | role_bucket: personalleitung | priority: 2
+5. person_id: 5484 | company_id: 1895 | company_name: Klinikum Obergöltzsch Rodewisch | company_website: http://klinikum-obergoeltzsch.de | city: Rodewisch | country: DE | company_type: clinic_location | first_name: Odette | last_name: Beer | full_name: Odette Beer | role: Personalleiterin / Leiterin Personal | role_bucket: personalleitung | priority: 2
+6. person_id: 5485 | company_id: 1567 | company_name: Klinikum Oldenburg | company_website: http://klinikum-oldenburg.de | city: Oldenburg | country: DE | company_type: clinic_location | first_name: Heiko | last_name: Kroon | full_name: Heiko Kroon | role: Personalleiter / Leiter Personaladministration | role_bucket: personalleitung | priority: 2
+7. person_id: 5487 | company_id: 1561 | company_name: Klinikum Osnabrück | company_website: http://klinikum-os.de | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Mathias | last_name: Dietzel | full_name: Mathias Dietzel | role: Leiter Personalmanagement | role_bucket: personalleitung | priority: 2
+8. person_id: 5486 | company_id: 1561 | company_name: Klinikum Osnabrück | company_website: http://klinikum-os.de | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Ulrich | last_name: Falk | full_name: Ulrich Falk | role: Prokurist Leitung Personal und Recht / Allgemeine Verwaltung | role_bucket: personalleitung | priority: 2
+9. person_id: 5488 | company_id: 926 | company_name: Klinikum Passau | company_website: http://klinikum-passau.de | city: Passau | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Sondorfer-Höng | full_name: Andrea Sondorfer-Höng | role: Personalleitung | role_bucket: personalleitung | priority: 2
+10. person_id: 5490 | company_id: 1611 | company_name: Klinikum Peine | company_website: http://klinikum-peine.de | city: Peine | country: DE | company_type: clinic_location | first_name: Sandra | last_name: Rüchardt | full_name: Sandra Rüchardt | role: Leiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+11. person_id: 5491 | company_id: 1100 | company_name: Klinikum Penzberg | company_website: https://klinikum-penzberg.de | city: Penzberg | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Richter | full_name: Kerstin Richter | role: Leiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+12. person_id: 5492 | company_id: 1754 | company_name: Klinikum Saarbrücken | company_website: http://klinikum-saarbruecken.de | city: Saarbrücken | country: DE | company_type: clinic_location | first_name: Jens | last_name: Hartmann | full_name: Jens Hartmann | role: Personaldirektor / Leitung Personaldirektion | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/jens-hartmann-b0894a225
+13. person_id: 5493 | company_id: 1133 | company_name: Klinikum Seefeld | company_website: https://klinikum-seefeld.de | city: Seefeld | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Richter | full_name: Kerstin Richter | role: Leiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+14. person_id: 5494 | company_id: 932 | company_name: Klinikum St. Marien Amberg | company_website: http://klinikum-amberg.de | city: Amberg | country: DE | company_type: clinic_location | first_name: Jochen | last_name: Högner | full_name: Jochen Högner | role: Personalleiter | role_bucket: personalleitung | priority: 2
+15. person_id: 5495 | company_id: 973 | company_name: Klinikum Starnberg | company_website: https://klinikum-starnberg.de | city: Starnberg | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Richter | full_name: Kerstin Richter | role: Leiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+16. person_id: 5496 | company_id: 1235 | company_name: Klinikum Starnberg - Außenstelle Wolfratshausen | company_website: https://klinikum-starnberg.de | city: Wolfratshausen | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Richter | full_name: Kerstin Richter | role: Leiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+17. person_id: 5497 | company_id: 120 | company_name: Klinikum Stuttgart - Behandlungszentrum Mitte | city: Stuttgart | country: Germany | company_type: clinic_location | first_name: Holger | last_name: Holzwart | full_name: Dr. Holger Holzwart | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+18. person_id: 5499 | company_id: 6 | company_name: Klinikum Stuttgart - Katharinenhospital | city: Stuttgart | country: Germany | company_type: clinic_location | first_name: Holger | last_name: Holzwart | full_name: Dr. Holger Holzwart | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+19. person_id: 5501 | company_id: 197 | company_name: Klinikum Stuttgart - Kinder- und Jugendpsychiatrie (Hasenbergstr.) | city: Stuttgart | country: Germany | company_type: clinic_location | first_name: Holger | last_name: Holzwart | full_name: Dr. Holger Holzwart | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+20. person_id: 5503 | company_id: 14 | company_name: Klinikum Stuttgart - Krankenhaus Bad Cannstatt | city: Stuttgart | country: Germany | company_type: clinic_location | first_name: Holger | last_name: Holzwart | full_name: Dr. Holger Holzwart | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_104
+- Return only the requested result.
+- Use public information only.
