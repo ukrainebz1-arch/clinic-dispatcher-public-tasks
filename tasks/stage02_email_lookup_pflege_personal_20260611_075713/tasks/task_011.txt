@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_011
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_011
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3299 | company_id: 1815 | company_name: DRK Krankenhaus Alzey | company_website: https://drk-kh-alzey.de | city: Alzey | country: DE | company_type: clinic_location | first_name: Jonas | last_name: Vironen | full_name: Jonas Vironen | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/jonas-vironen-632b5111a
+2. person_id: 3301 | company_id: 1481 | company_name: DRK Krankenhaus Biedenkopf | company_website: https://drk-biedenkopf.de | city: Biedenkopf | country: DE | company_type: clinic_location | first_name: Elisa | last_name: Grunwald | full_name: Elisa Grunwald | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 3303 | company_id: 1795 | company_name: DRK Krankenhaus Kirchen | company_website: https://drk-kh-kirchen.de. | city: Kirchen | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Meinhardt | full_name: Michaela Meinhardt | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 3304 | company_id: 1788 | company_name: DRK Krankenhaus Neuwied | company_website: https://drk-kh-neuwied.de | city: Neuwied | country: DE | company_type: clinic_location | first_name: Ute | last_name: Müller | full_name: Ute Müller | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3305 | company_id: 2030 | company_name: DRK Schmerz-Zentrum Mainz | company_website: https://drk-schmerz-zentrum.de | city: Mainz | country: DE | company_type: clinic_location | first_name: Nela | last_name: Micic | full_name: Nela Micic | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 3306 | company_id: 1640 | company_name: DRK-Krankenhaus Clementinenhaus in Hannover | company_website: http://clementinenhaus.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Manuela | last_name: Friesdorf | full_name: Manuela Friesdorf | role: Pflegedienstleitung (kom.) | role_bucket: pflege_director | priority: 1
+7. person_id: 3307 | company_id: 2008 | company_name: DRK-Krankenhaus Grevesmühlen | company_website: http://drk-kh-gvm.de | city: Grevesmühlen | country: DE | company_type: clinic_location | first_name: Roman | last_name: Grams | full_name: Roman Grams | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+8. person_id: 3308 | company_id: 1346 | company_name: DRK-Krankenhaus Grimmen in Süderholz | company_website: https://krankenhaus-grimmen.de | city: Süderholz | country: DE | company_type: clinic_location | first_name: Astrid | last_name: Schwalme | full_name: Astrid Schwalme | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+9. person_id: 3309 | company_id: 1329 | company_name: DRK-Krankenhaus Mecklenburg-Strelitz in Neustrelitz | company_website: http://drkmst.de | city: Neustrelitz | country: DE | company_type: clinic_location | first_name: Beatrice | last_name: Tschorn | full_name: Beatrice Tschorn | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/beatrice-tschorn-645985134
+10. person_id: 3310 | company_id: 1336 | company_name: DRK-Krankenhaus Teterow | company_website: http://drk-kh-teterow.de | city: Teterow | country: DE | company_type: clinic_location | first_name: Jana | last_name: Wedow | full_name: Jana Wedow | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+11. person_id: 3311 | company_id: 1536 | company_name: Dalberg Klinik Fulda | company_website: http://meliva.de | city: Fulda | country: DE | company_type: clinic_location | first_name: Daniela | last_name: Limpert | full_name: Daniela Limpert | role: PDL | role_bucket: pflege_director | priority: 1
+12. person_id: 3312 | company_id: 1229 | company_name: Danuvius Klinik Ingolstadt | company_website: http://danuviusklinik.de | city: Ingolstadt | country: DE | company_type: clinic_location | first_name: Martin | last_name: Schröter | full_name: Martin Schröter | role: Pflegedirektion Danuvius Klinik GmbH | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/martin-schr%C3%B6ter-a4158a230
+13. person_id: 3313 | company_id: 1177 | company_name: Danuvius Klinik Neuburg | company_website: http://danuviusklinik.de | city: Neuburg an der Donau | country: DE | company_type: clinic_location | first_name: Anne | last_name: Bunke | full_name: Anne Bunke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3314 | company_id: 1230 | company_name: Danuvius Klinik Neuburg - Tagesklinik | company_website: http://danuviusklinik.de | city: Neuburg an der Donau | country: DE | company_type: clinic_location | first_name: Anne | last_name: Bunke | full_name: Anne Bunke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 3315 | company_id: 1108 | company_name: Danuvius Klinik Pfaffenhofen | company_website: http://danuviusklinik.de | city: Pfaffenhofen an der Ilm | country: DE | company_type: clinic_location | first_name: Anne | last_name: Bunke | full_name: Anne Bunke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+16. person_id: 3316 | company_id: 1452 | company_name: Darmstädter Kinderkliniken Prinzessin Margaret in Darmstadt | company_website: http://kinderkliniken.de | city: Darmstadt | country: DE | company_type: clinic_location | first_name: Anette | last_name: Niemeier | full_name: Anette Niemeier | role: PDL | role_bucket: pflege_director | priority: 1
+17. person_id: 3317 | company_id: 2087 | company_name: Deegenbergklinik in Bad Kissingen | company_website: https://deegenberg.de | city: Bad Kissingen | country: DE | company_type: rehab_clinic | first_name: R. | last_name: Roßbauer | full_name: R. Roßbauer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 3318 | company_id: 1604 | company_name: Delme-Klinikum Delmenhorst | company_website: https://delme-klinikum.de | city: Delmenhorst | country: DE | company_type: clinic_location | first_name: Waldemar | last_name: Hinz | full_name: Dr. Waldemar Hinz | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/dr-waldemar-hinz-642938248
+19. person_id: 3319 | company_id: 1365 | company_name: Dependance Herzchirurgie der Universitätsmedizin Rostock an den Helios Kliniken Schwerin | company_website: http://med.uni-rostock.de | city: Schwerin | country: DE | company_type: clinic_location | first_name: Diana | last_name: Kords | full_name: Diana Kords | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+20. person_id: 3320 | company_id: 1004 | company_name: Deutsches Herzzentrum München | company_website: https://deutsches-herzzentrum-muenchen.de | city: München | country: DE | company_type: clinic_location | first_name: Bernhard | last_name: Löser | full_name: Bernhard Löser | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_011
+- Return only the requested result.
+- Use public information only.
