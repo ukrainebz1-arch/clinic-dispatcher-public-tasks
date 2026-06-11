@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_020
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_020
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3499 | company_id: 1146 | company_name: Günztalklinik Allgäu in Obergünzburg | company_website: https://guenztalklinik-allgaeu.de | city: Obergünzburg | country: DE | company_type: clinic_location | first_name: Alexander | last_name: Fröhlich | full_name: Alexander Fröhlich | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+2. person_id: 3500 | company_id: 2085 | company_name: HESCURO Klinik REGINA Bad Kissingen | company_website: https://hescuro.de | city: Bad Kissingen | country: DE | company_type: rehab_clinic | first_name: Jessica | last_name: Walter | full_name: Jessica Walter | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 3501 | company_id: 1213 | company_name: HNO-Klinik Bogenhausen Dr. Gaertner in München | company_website: https://gaertnerklinik.de | city: München | country: DE | company_type: clinic_location | first_name: Christian | last_name: Wörgau | full_name: Christian Wörgau | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+4. person_id: 3502 | company_id: 199 | company_name: Hans Carossa Klinik Stühlingen | city: Stühlingen | country: Germany | company_type: clinic_location | first_name: Sigrid | last_name: Seifermann | full_name: Sigrid Seifermann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+5. person_id: 3503 | company_id: 1498 | company_name: Hardtwaldklinik I in Bad Zwesten | company_website: http://hardtwaldklinik1.de | city: Bad Zwesten | country: DE | company_type: clinic_location | first_name: Beate | last_name: Schneider | full_name: Beate Schneider | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+6. person_id: 3505 | company_id: 2282 | company_name: Hardtwaldklinik II in Bad Zwesten | company_website: https://wicker.de/kliniken/hardtwaldklinik-ii | city: Bad Zwesten | country: DE | company_type: rehab_clinic | first_name: Ramona | last_name: Kling | full_name: Ramona Kling | role: Pflegedienstleitung Reha-Abteilung | role_bucket: pflege_director | priority: 1
+7. person_id: 3504 | company_id: 2282 | company_name: Hardtwaldklinik II in Bad Zwesten | company_website: https://wicker.de/kliniken/hardtwaldklinik-ii | city: Bad Zwesten | country: DE | company_type: rehab_clinic | first_name: Sylvia | last_name: Zimmer | full_name: Sylvia Zimmer | role: Pflegedienstleitung der Krankenhausabteilung | role_bucket: pflege_director | priority: 1
+8. person_id: 3506 | company_id: 1162 | company_name: Hassberg-Kliniken Haus Ebern | company_website: https://hassberg-kliniken.de/startseite.html | city: Ebern | country: DE | company_type: clinic_location | first_name: Dominik | last_name: Greim | full_name: Dominik Greim | role: Pflegedirektion | role_bucket: pflege_director | priority: 1
+9. person_id: 3507 | company_id: 1162 | company_name: Hassberg-Kliniken Haus Ebern | company_website: https://hassberg-kliniken.de/startseite.html | city: Ebern | country: DE | company_type: clinic_location | first_name: Elisabeth | last_name: Röhner | full_name: Elisabeth Röhner | role: Pflegedirektion | role_bucket: pflege_director | priority: 1
+10. person_id: 3508 | company_id: 1043 | company_name: Hassberg-Kliniken Haus Haßfurt | company_website: https://hassberg-kliniken.de/startseite.html | city: Haßfurt | country: DE | company_type: clinic_location | first_name: Dominik | last_name: Greim | full_name: Dominik Greim | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 3509 | company_id: 775 | company_name: Havelklinik in Berlin | company_website: http://havelklinik.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Spahn | full_name: Thomas Spahn | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+12. person_id: 3510 | company_id: 1660 | company_name: Heidekreis Klinikum Krankenhaus Soltau | company_website: http://heidekreis-klinikum.de | city: Soltau | country: DE | company_type: clinic_location | first_name: Meike | last_name: Heins | full_name: Meike Heins | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 3511 | company_id: 1457 | company_name: Heilig Geist Hospital Bensheim | company_website: http://hgh-bensheim.de | city: Bensheim | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Knöttner | full_name: Susanne Knöttner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3512 | company_id: 784 | company_name: Heiligenfeld Klinik Berlin | company_website: http://berlin.heiligenfeld.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Kordula | last_name: Dorsch | full_name: Kordula Dorsch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 3513 | company_id: 1115 | company_name: Heiligenfeld Klinik Uffenheim | company_website: http://uffenheim.heiligenfeld.de | city: Uffenheim | country: DE | company_type: clinic_location | first_name: Kordula | last_name: Dorsch | full_name: Kordula Dorsch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+16. person_id: 3514 | company_id: 2002 | company_name: Heiligenfeld Klinik Waldmünchen | company_website: http://waldmuenchen.heiligenfeld.de | city: Waldmünchen | country: DE | company_type: clinic_location | first_name: Kordula | last_name: Dorsch | full_name: Kordula Dorsch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 3515 | company_id: 1141 | company_name: Heiligenfeld Kliniken Bad Wörishofen | company_website: http://badwoerishofen.heiligenfeld.de | city: Bad Wörishofen | country: DE | company_type: clinic_location | first_name: Kordula | last_name: Dorsch | full_name: Kordula Dorsch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 3516 | company_id: 1313 | company_name: Heinrich Sengelmann Tageskliniken Uhlenhorst in Hamburg | company_website: https://heinrich-sengelmann-kliniken.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Frank | last_name: Vilsmeier | full_name: Frank Vilsmeier | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 3517 | company_id: 1943 | company_name: Heinrich-Braun-Klinikum (Kirchberg) in Kirchberg, Sachsen | company_website: http://heinrich-braun-klinikum.de | city: Kirchberg | country: DE | company_type: clinic_location | first_name: Mirko | last_name: Schmidt | full_name: Mirko Schmidt | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+20. person_id: 3518 | company_id: 1837 | company_name: Heinrich-Braun-Klinikum (Zwickau) | company_website: http://heinrich-braun-klinikum.de | city: Zwickau | country: DE | company_type: clinic_location | first_name: Mirko | last_name: Schmidt | full_name: Mirko Schmidt | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_020
+- Return only the requested result.
+- Use public information only.
