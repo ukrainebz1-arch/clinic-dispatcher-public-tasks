@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_076
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_076
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4789 | company_id: 1823 | company_name: Westpfalz-Klinikum (Kirchheimbolanden) | company_website: http://westpfalz-klinikum.eu | city: Kirchheimbolanden | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Bergsträßer | full_name: Andrea Bergsträßer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+2. person_id: 4791 | company_id: 1802 | company_name: Westpfalz-Klinikum (Kusel) | company_website: http://westpfalz-klinikum.eu | city: Kusel | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Bergsträßer | full_name: Andrea Bergsträßer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+3. person_id: 4793 | company_id: 1832 | company_name: Westpfalz-Klinikum (Rockenhausen) | company_website: http://westpfalz-klinikum.eu | city: Rockenhausen | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Bergsträßer | full_name: Andrea Bergsträßer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 4795 | company_id: 774 | company_name: Wichernkrankenhaus in Berlin | company_website: https://johannesstift-diakonie.de/medizinische-versorgung/wichernkrankenhaus | city: Berlin | country: DE | company_type: clinic_location | first_name: Justyna | last_name: Maculewicz-Berger | full_name: Justyna Maculewicz-Berger | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+5. person_id: 4796 | company_id: 531 | company_name: Wilhelm-Anton Hospital in Goch | city: Goch | country: Germany | company_type: clinic_location | first_name: Melanie | last_name: Licht | full_name: Melanie Licht | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 4797 | company_id: 1281 | company_name: Wilhelmsburger Krankenhaus Groß-Sand in Hamburg | company_website: http://gross-sand.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Tanja | last_name: Rados | full_name: Tanja Rados | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 4798 | company_id: 1092 | company_name: WolfartKlinik in Gräfelfing | company_website: http://wolfartklinik.de | city: Gräfelfing | country: DE | company_type: clinic_location | first_name: Simone | last_name: Scheitler | full_name: Simone Scheitler | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 4799 | company_id: 1540 | company_name: Wolfgang-Winckler-Haus in Kelkheim (Taunus) | company_website: http://jj-ev.de | city: Kelkheim | country: DE | company_type: clinic_location | first_name: Martina | last_name: Rank | full_name: Martina Rank | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 4800 | company_id: 1299 | company_name: ZSG Osdorf in Hamburg | company_website: https://asklepios.com/hamburg/westklinikum/experten/psychiatrie_und_psychotherapie/zsg-osdorf | city: Hamburg | country: DE | company_type: clinic_location | first_name: Richard | last_name: Hockl | full_name: Richard Hockl | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+10. person_id: 4802 | company_id: 1889 | company_name: Zeisigwaldklinken Bethanien Chemnitz | company_website: http://bethanien-chemnitz.de | city: Chemnitz | country: DE | company_type: clinic_location | first_name: Christian | last_name: Schuster | full_name: Christian Schuster | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+11. person_id: 4803 | company_id: 1225 | company_name: Zentrum für Kinder und Jugendliche Inn-Salzach, Kinder- und Jugendpsychiatrie in Altötting | company_website: http://kinderzentrum.de | city: Altötting | country: DE | company_type: clinic_location | first_name: Christina | last_name: Seidl | full_name: Christina Seidl | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+12. person_id: 4805 | company_id: 1160 | company_name: Zentrum für Psychiatrie Cham | company_website: https://medbo.de/kliniken-einrichtungen/psychiatrie-psychotherapie/zentrum-cham | city: Cham | country: DE | company_type: clinic_location | first_name: Felicitas | last_name: Klein | full_name: Felicitas Klein | role: Direktorin Patienten- & Pflegemanagement | role_bucket: pflege_director | priority: 1
+13. person_id: 4806 | company_id: 1467 | company_name: Zentrum für Psychiatrie und Psychotherapie in Marburg | company_website: https://ukgm.de | city: Marburg | country: DE | company_type: clinic_location | first_name: Olaf | last_name: Heckmann | full_name: Olaf Heckmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 4807 | company_id: 189 | company_name: Zentrum für Psychische Gesundheit Bruchsal | city: Bruchsal | country: Germany | company_type: clinic_location | first_name: Andreas | last_name: Emmerich | full_name: Andreas Emmerich | role: Pflegedirektor Medizindirektion | role_bucket: pflege_director | priority: 1
+15. person_id: 4808 | company_id: 186 | company_name: Zentrum für Psychische Gesundheit Neckar-Odenwald in Mosbach | city: Mosbach | country: Germany | company_type: clinic_location | first_name: Andreas | last_name: Emmerich | full_name: Andreas Emmerich | role: Pflegedirektor Medizindirektion | role_bucket: pflege_director | priority: 1
+16. person_id: 4809 | company_id: 193 | company_name: Zentrum für Psychische Gesundheit Schwetzingen | city: Schwetzingen | country: Germany | company_type: clinic_location | first_name: Andreas | last_name: Emmerich | full_name: Andreas Emmerich | role: Pflegedirektor Medizindirektion | role_bucket: pflege_director | priority: 1
+17. person_id: 4810 | company_id: 180 | company_name: Zentrum für Psychische Gesundheit Weinheim | city: Weinheim | country: Germany | company_type: clinic_location | first_name: Andreas | last_name: Emmerich | full_name: Andreas Emmerich | role: Pflegedirektor Medizindirektion | role_bucket: pflege_director | priority: 1
+18. person_id: 888 | company_id: 522 | company_name: Zentrum für Seelische Gesundheit Marienheide | city: Marienheide | country: Germany | company_type: clinic_location | first_name: Raphael | last_name: Lüdenbach | full_name: Raphael Lüdenbach | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/raphael-l%C3%BCdenbach-m-a-15b336259
+19. person_id: 4811 | company_id: 145 | company_name: ZfP Klinikum Schloß Winnenden, Standort Schwäbisch Gmünd | city: Schwäbisch Gmünd | country: Germany | company_type: clinic_location | first_name: Sabine | last_name: Fleiner | full_name: Sabine Fleiner | role: Pflegedienstleitung Klinik für Allgemeinpsychiatrie und Psychotherapie Standort Schwäbisch Gmünd | role_bucket: pflege_director | priority: 1
+20. person_id: 4812 | company_id: 38 | company_name: ZfP Klinikum Schloß Winnenden, Standort Winnenden | city: Winnenden | country: Germany | company_type: clinic_location | first_name: Klaus | last_name: Kaiser | full_name: Klaus Kaiser | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_076
+- Return only the requested result.
+- Use public information only.
