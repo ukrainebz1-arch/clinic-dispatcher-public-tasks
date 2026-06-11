@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_096
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_096
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5266 | company_id: 1988 | company_name: InnKlinikum Mühldorf | company_website: https://innklinikum.de | city: Mühldorf am Inn | country: DE | company_type: clinic_location | first_name: Simon | last_name: Eismann | full_name: Simon Eismann | role: Leiter Personal | role_bucket: personalleitung | priority: 2
+2. person_id: 5267 | company_id: 1752 | company_name: Inselkrankenhaus Borkum | company_website: https://inselkrankenhaus-borkum.de/kliniken/fuer-ihre-gesundheit | city: Borkum | country: DE | company_type: clinic_location | first_name: Franziska | last_name: Macher | full_name: Franziska Macher | role: Personalleitung | role_bucket: personalleitung | priority: 2
+3. person_id: 5268 | company_id: 1309 | company_name: Institutsambulanz und Tagesklinik Osdorf in Hamburg | company_website: http://asklepios.com/harburg | city: Hamburg | country: DE | company_type: clinic_location | first_name: Cornelia | last_name: Adamski | full_name: Cornelia Adamski | role: Personalleitung | role_bucket: personalleitung | priority: 2
+4. person_id: 5269 | company_id: 1086 | company_name: Internistisches Klinikum München Süd | company_website: https://ikms.de | city: München | country: DE | company_type: clinic_location | first_name: Angelika | last_name: Janssen | full_name: Angelika Janssen | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+5. person_id: 5270 | company_id: 1008 | company_name: Isar Kliniken in München | company_website: http://isarklinikum.de | city: München | country: DE | company_type: clinic_location | first_name: Mike | last_name: Schulz | full_name: Dr. Mike Schulz | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+6. person_id: 5271 | company_id: 1285 | company_name: Israelitisches Krankenhaus in Hamburg | company_website: http://ik-h.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Sascha | last_name: Spelling | full_name: Sascha Spelling | role: Leiter Personalabteilung | role_bucket: personalleitung | priority: 2
+7. person_id: 5272 | company_id: 346 | company_name: Johanna-Etienne-Krankenhaus in Neuss | city: Neuss | country: Germany | company_type: clinic_location | first_name: Karin | last_name: Mehwald | full_name: Karin Mehwald | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+8. person_id: 5274 | company_id: 2221 | company_name: Johannesbad Fachklinik Hochsauerland in Schmallenberg | company_website: https://johannesbad-medizin.com/bad-fredeburg-psychosomatik | city: Schmallenberg | country: DE | company_type: rehab_clinic | first_name: Petra | last_name: Brieden | full_name: Petra Brieden | role: Personalleitung | role_bucket: personalleitung | priority: 2
+9. person_id: 5275 | company_id: 2205 | company_name: Johannesbad Medizin Adaptation Dortmund | company_website: https://johannesbad-medizin.com/adaption-dortmund | city: Dortmund | country: DE | company_type: rehab_clinic | first_name: Petra | last_name: Brieden | full_name: Petra Brieden | role: Personalleitung | role_bucket: personalleitung | priority: 2
+10. person_id: 5276 | company_id: 2250 | company_name: Johannesbad Medizin Fachklinik & Gesundheitszentrum Raupennest in Altenberg, Erzgebirge | company_website: https://johannesbad-medizin.com/altenbergraupennest | city: Altenberg | country: DE | company_type: rehab_clinic | first_name: Maria | last_name: Erhard | full_name: Maria Erhard | role: Leitung Personal & Bildung | role_bucket: personalleitung | priority: 2
+11. person_id: 5277 | company_id: 2121 | company_name: Johannesbad Medizin Fachklinik Bad Füssing | company_website: https://johannesbad-medizin.com/bad-fuessing | city: Bad Füssing | country: DE | company_type: rehab_clinic | first_name: Maria | last_name: Erhard | full_name: Maria Erhard | role: Leitung Personal & Bildung | role_bucket: personalleitung | priority: 2
+12. person_id: 5278 | company_id: 2111 | company_name: Johannesbad Medizin Fachklinik Furth im Wald | company_website: https://johannesbad-medizin.com/furth-im-wald | city: Furth im Wald | country: DE | company_type: rehab_clinic | first_name: Maria | last_name: Erhard | full_name: Maria Erhard | role: Leitung Personal & Bildung | role_bucket: personalleitung | priority: 2
+13. person_id: 5279 | company_id: 2286 | company_name: Johannesbad Medizin Gesundheits- & Rehazentrum Saarschleife in Mettlach | company_website: https://johannesbad-medizin.com/saarschleife | city: Mettlach | country: DE | company_type: rehab_clinic | first_name: Maria | last_name: Erhard | full_name: Maria Erhard | role: Leitung Personal & Bildung | role_bucket: personalleitung | priority: 2
+14. person_id: 5280 | company_id: 2077 | company_name: Johannesbad Medizin Gesundheitszentrum Germering in Germering, Oberbayern | company_website: https://johannesbad-ambulante-reha.com/standorte/johannesbad-reha-nord | city: Germering | country: DE | company_type: rehab_clinic | first_name: Maria | last_name: Erhard | full_name: Maria Erhard | role: Leitung Personal & Bildung | role_bucket: personalleitung | priority: 2
+15. person_id: 5281 | company_id: 2185 | company_name: Johannesbad Medizin Klaus Störtebeker Ostseestrand Kinder- und Jugendreha in Loddin | company_website: https://johannesbad-medizin.com/usedom-kinder-jugend-rehabilitation | city: Loddin | country: DE | company_type: rehab_clinic | first_name: Maria | last_name: Erhard | full_name: Maria Erhard | role: Leitung Personal & Bildung | role_bucket: personalleitung | priority: 2
+16. person_id: 5282 | company_id: 2134 | company_name: Johannesbad Medizin Klinik Königshof in Lechbruck am See | company_website: https://johannesbad-medizin.com/lechbruck-am-see | city: Lechbruck am See | country: DE | company_type: rehab_clinic | first_name: Maria | last_name: Erhard | full_name: Maria Erhard | role: Leitung Personal & Bildung | role_bucket: personalleitung | priority: 2
+17. person_id: 5283 | company_id: 2284 | company_name: Johannesbad Medizin Reha Nord Dresden | company_website: https://reha-dresden.de/Startseite.html | city: Dresden | country: DE | company_type: rehab_clinic | first_name: Maria | last_name: Erhard | full_name: Maria Erhard | role: Leitung Personal & Bildung | role_bucket: personalleitung | priority: 2
+18. person_id: 5284 | company_id: 2220 | company_name: Johannesbad Medizin Rehaklinik Bad Fredeburg in Schmallenberg | company_website: https://johannesbad-medizin.com/bad-fredeburg-fachklinik-fredeburg | city: Schmallenberg | country: DE | company_type: rehab_clinic | first_name: Petra | last_name: Brieden | full_name: Petra Brieden | role: Personalleitung | role_bucket: personalleitung | priority: 2
+19. person_id: 5285 | company_id: 2069 | company_name: Johannesbad Medizin Tagesklinik Nürnberg | company_website: https://johannesbad-medizin.com/tagesklinik-nuernberg | city: Nürnberg | country: DE | company_type: rehab_clinic | first_name: Maria | last_name: Erhard | full_name: Maria Erhard | role: Leitung Personal & Bildung | role_bucket: personalleitung | priority: 2
+20. person_id: 5286 | company_id: 1140 | company_name: Johannesbad Reha-Kliniken in Bad Füssing | company_website: https://johannesbad-medizin.com/bad-fuessing | city: Bad Füssing | country: DE | company_type: clinic_location | first_name: Maria | last_name: Erhard | full_name: Maria Erhard | role: Leitung Personal & Bildung | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_096
+- Return only the requested result.
+- Use public information only.
