@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_027
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_027
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3647 | company_id: 1267 | company_name: Kath. Marienkrankenhaus in Hamburg | company_website: http://marienkrankenhaus.org | city: Hamburg | country: DE | company_type: clinic_location | first_name: Kevin | last_name: Heinrich | full_name: Kevin Heinrich | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+2. person_id: 3648 | company_id: 1276 | company_name: Katholisches Kinderkrankenhaus Wilhelmstift in Hamburg | company_website: http://kkh-wilhelmstift.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Markus | last_name: Balters | full_name: Markus Balters | role: Pflegedirektor & Personalleiter | role_bucket: pflege_director | priority: 1
+3. person_id: 3649 | company_id: 1778 | company_name: Katholisches Klinikum Koblenz·Montabaur | company_website: https://kk-km.de | city: Koblenz | country: DE | company_type: clinic_location | first_name: Daniel | last_name: Frank | full_name: Daniel Frank | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+4. person_id: 3650 | company_id: 1395 | company_name: Kerckhoff-Klinik in Bad Nauheim | company_website: http://kerckhoff-klinik.de | city: Bad Nauheim | country: DE | company_type: clinic_location | first_name: Bettina | last_name: Pfaff-Degenkolb | full_name: Bettina Pfaff-Degenkolb | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3652 | company_id: 2191 | company_name: Kerckhoff-Rehabilitations-Zentrum in Bad Nauheim | company_website: https://kerckhoff-klinik.de/reha | city: Bad Nauheim | country: DE | company_type: rehab_clinic | first_name: Bettina | last_name: Pfaff-Degenkolb | full_name: Bettina Pfaff-Degenkolb | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 3654 | company_id: 1406 | company_name: Ketteler Krankenhaus in Offenbach am Main | company_website: https://ketteler-krankenhaus.org | city: Offenbach am Main | country: DE | company_type: clinic_location | first_name: Marleen | last_name: Erkrath | full_name: Marleen Erkrath | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 3656 | company_id: 1690 | company_name: Kinderhospital Osnabrück | company_website: https://kinderhospital.de | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Meyer | full_name: Andrea Meyer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 3657 | company_id: 1690 | company_name: Kinderhospital Osnabrück | company_website: https://kinderhospital.de | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Lina | last_name: Bredefeld | full_name: Lina Bredefeld | role: Stellvertr. Pflegedirektorin | role_bucket: pflege_director | priority: 1
+9. person_id: 3658 | company_id: 2007 | company_name: Kinderklinik Passau | company_website: https://kinderklinik-passau.de | city: Passau | country: DE | company_type: clinic_location | first_name: Margit | last_name: Schuster | full_name: Margit Schuster | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+10. person_id: 3659 | company_id: 498 | company_name: Kinderkrankenhaus Amsterdamer Straße in Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Raphael | last_name: Lüdenbach | full_name: Raphael Lüdenbach | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+11. person_id: 3660 | company_id: 1070 | company_name: Kinderkrankenhaus St. Marien in Landshut | company_website: http://kinderkrankenhaus-landshut.de | city: Landshut | country: DE | company_type: clinic_location | first_name: Petra | last_name: Buchecker | full_name: Petra Buchecker | role: Pflegedienstleitung Kinderklinik St. Marien | role_bucket: pflege_director | priority: 1
+12. person_id: 3661 | company_id: 2158 | company_name: Kirchberg Klinik in Bad Lauterberg im Harz | company_website: https://gollee.de/de/kirchberg-klinik | city: Bad Lauterberg im Harz | country: DE | company_type: rehab_clinic | last_name: Trübel | full_name: Frau Trübel | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 3662 | company_id: 1718 | company_name: Kirchberg-Klinik Bad Lauterberg | company_website: http://kirchbergklinik.de | city: Bad Lauterberg im Harz | country: DE | company_type: clinic_location | last_name: Trübel | full_name: Frau Trübel | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3663 | company_id: 1045 | company_name: Kirinus PsoriSol Klinik in Hersbruck | company_website: https://kirinus.de/psorisol-klinik | city: Hersbruck | country: DE | company_type: clinic_location | first_name: Sabrina | last_name: Buley | full_name: Sabrina Buley | role: Pflegedienstleitung / Sprecherin der Pflege | role_bucket: pflege_director | priority: 1
+15. person_id: 3664 | company_id: 1039 | company_name: Kirinus Schlemmer Klinik in Bad Tölz | company_website: http://klinik-schlemmer.de | city: Bad Tölz | country: DE | company_type: clinic_location | first_name: Angelika | last_name: Schönwald | full_name: Angelika Schönwald | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+16. person_id: 3665 | company_id: 1121 | company_name: Kirinus Tagesklinik Nymphenburg in München | company_website: http://kirinus.de | city: München | country: DE | company_type: clinic_location | first_name: Anja | last_name: Kühnel | full_name: Anja Kühnel | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 3666 | company_id: 1120 | company_name: Kirinus Tagesklinik Schwabing in München | company_website: http://kirinus.de | city: München | country: DE | company_type: clinic_location | first_name: Christoph | last_name: Johnen | full_name: Christoph Johnen | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 3667 | company_id: 1339 | company_name: Klinik Amsee in Waren (Müritz) | company_website: https://johannesstift-diakonie.de/medizinische-versorgung/klinik-amsee | city: Waren | country: DE | company_type: clinic_location | first_name: Margitta | last_name: Cleemann | full_name: Margitta Cleemann | role: Pflegedirektion | role_bucket: pflege_director | priority: 1
+19. person_id: 3668 | company_id: 1210 | company_name: Klinik Angermühle in Deggendorf | company_website: http://klinik-angermuehle.de | city: Deggendorf | country: DE | company_type: clinic_location | first_name: Kornelia | last_name: Moszko | full_name: Kornelia Moszko | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 3669 | company_id: 1814 | company_name: Klinik Bad Bergzabern in Landau in der Pfalz | company_website: https://klinikum-ld-suew.de | city: Landau in der Pfalz | country: DE | company_type: clinic_location | first_name: Annette | last_name: Hofmann | full_name: Annette Hofmann | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_027
+- Return only the requested result.
+- Use public information only.
