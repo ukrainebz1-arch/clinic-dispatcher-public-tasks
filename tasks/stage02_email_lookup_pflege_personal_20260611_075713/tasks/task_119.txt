@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_119
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_119
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5834 | company_id: 2102 | company_name: Passauer Wolf Bad Gögging in Neustadt an der Donau | company_website: https://passauerwolf.de/standorte/bad-goegging | city: Neustadt an der Donau | country: DE | company_type: rehab_clinic | first_name: Susanna | last_name: Gubo | full_name: Susanna Gubo | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+2. person_id: 5835 | company_id: 1714 | company_name: Paulinenkrankenhaus Bad Bentheim | company_website: https://mathias-medizin.de/leistungen-einrichtungen/einrichtungen/paulinenkrankenhaus-bad-bentheim | city: Bad Bentheim | country: DE | company_type: clinic_location | first_name: Bernd | last_name: Hoche | full_name: Bernd Hoche | role: Personaldirektor; Leiter Personalmanagement | role_bucket: personalleitung | priority: 2
+3. person_id: 5837 | company_id: 771 | company_name: Paulinenkrankenhaus Berlin | company_website: https://sana.de/paulinenkrankenhaus | city: Berlin | country: DE | company_type: clinic_location | first_name: Ralph | last_name: Wiechers | full_name: Dr. Ralph Wiechers | role: Chief People Officer (CPO) und Arbeitsdirektor | role_bucket: personalleitung | priority: 2
+4. person_id: 5838 | company_id: 1867 | company_name: Paulinenstift in Neuhäusel, Westerwald | company_website: https://gk.de | city: Neuhäusel | country: DE | company_type: clinic_location | first_name: Carina | last_name: Motz | full_name: Carina Motz | role: Leiterin Personal und Soziales | role_bucket: personalleitung | priority: 2
+5. person_id: 5839 | company_id: 1748 | company_name: Perinatalzentrum Hannover (Kinder- und Jugendkrankenhaus Auf der Bult) | company_website: https://auf-der-bult.de/neugeborenenmedizin | city: Hannover | country: DE | company_type: clinic_location | first_name: Stina | last_name: Baldin | full_name: Stina Baldin | role: Personalleitung | role_bucket: personalleitung | priority: 2
+6. person_id: 5840 | company_id: 1842 | company_name: Pfalzklinikum Standort Kaiserslautern | company_website: http://pfalzklinikum.de | city: Kaiserslautern | country: DE | company_type: clinic_location | first_name: Markus | last_name: Landherr | full_name: Markus Landherr | role: Leiter Personal und Service | role_bucket: personalleitung | priority: 2
+7. person_id: 5842 | company_id: 1801 | company_name: Pfalzklinikum Standort Klingenmünster | company_website: http://pfalzklinikum.de | city: Klingenmünster | country: DE | company_type: clinic_location | first_name: Markus | last_name: Landherr | full_name: Markus Landherr | role: Leiter Personal und Service | role_bucket: personalleitung | priority: 2
+8. person_id: 5844 | company_id: 1850 | company_name: Pfalzklinikum Standort Rockenhausen | company_website: http://pfalzklinikum.de | city: Rockenhausen | country: DE | company_type: clinic_location | first_name: Markus | last_name: Landherr | full_name: Markus Landherr | role: Leiter Personal und Service | role_bucket: personalleitung | priority: 2
+9. person_id: 5846 | company_id: 243 | company_name: Praxis am Rathauenplatz in Heilbronn | city: Heilbronn | country: Germany | company_type: clinic_location | first_name: Kathrin | last_name: Armbruster | full_name: Kathrin Armbruster | role: Personalleitung | role_bucket: personalleitung | priority: 2
+10. person_id: 5847 | company_id: 1835 | company_name: Privatklinik Bad Gleisweiler | company_website: http://privatklinik-bad-gleisweiler.de | city: Gleisweiler | country: DE | company_type: clinic_location | first_name: Antonia | last_name: Reicherz | full_name: Antonia Reicherz | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+11. person_id: 532 | company_id: 322 | company_name: Prosper-Hospital in Recklinghausen | city: Recklinghausen | country: Germany | company_type: clinic_location | first_name: Jörg | last_name: Kuchenreuther | full_name: Jörg Kuchenreuther | role: Personalleiter und Prokurist | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/j%C3%B6rg-kuchenreuther-0a173784
+12. person_id: 5848 | company_id: 173 | company_name: Psychiatrie Schwäbisch Hall | city: Schwäbisch Hall | country: Germany | company_type: clinic_location | first_name: Roland | last_name: Kuttner | full_name: Roland Kuttner | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+13. person_id: 5850 | company_id: 792 | company_name: Psychiatrisch-Psychotherapeutische Tagesklinik St. Martha Prenzlauer Berg in Berlin | company_website: http://alexianer.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Matthias | last_name: Ziechmann | full_name: Matthias Ziechmann | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+14. person_id: 5852 | company_id: 797 | company_name: Psychiatrische Institutsambulanz Wedding (Alexianer St. Hedwig-Krankenhaus) in Berlin | company_website: http://alexianer-berlin-hedwigkliniken.de/st_hedwig_krankenhaus/home | city: Berlin | country: DE | company_type: clinic_location | first_name: Matthias | last_name: Ziechmann | full_name: Matthias Ziechmann | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+15. person_id: 5854 | company_id: 1159 | company_name: Psychiatrische Klinik Aschaffenburg | company_website: https://bezirkskrankenhaus-lohr.de | city: Aschaffenburg | country: DE | company_type: clinic_location | first_name: Joachim | last_name: Heilmann | full_name: Joachim Heilmann | role: Leiter Personalabteilung | role_bucket: personalleitung | priority: 2
+16. person_id: 5855 | company_id: 616 | company_name: Psychiatrische Klinik Langenberg in Velbert | city: Velbert | country: Germany | company_type: clinic_location | first_name: Claudia | last_name: Rocholl | full_name: Claudia Rocholl | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+17. person_id: 5857 | company_id: 1575 | company_name: Psychiatrische Klinik Lüneburg | company_website: http://pk.lueneburg.de | city: Lüneburg | country: DE | company_type: clinic_location | first_name: Britta | last_name: Hupfeld | full_name: Britta Hupfeld | role: Stellvertr. Personalleiterin / Personalerin Mitarbeiterbindung und -gewinnung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/britta-hupfeld-5a0b75260
+18. person_id: 5856 | company_id: 1575 | company_name: Psychiatrische Klinik Lüneburg | company_website: http://pk.lueneburg.de | city: Lüneburg | country: DE | company_type: clinic_location | first_name: Marieke | last_name: Timm | full_name: Marieke Timm | role: Leitung Personal- & Organisationsentwicklung | role_bucket: personalleitung | priority: 2
+19. person_id: 5858 | company_id: 620 | company_name: Psychiatrische Klinik Wuppertal | city: Wuppertal | country: Germany | company_type: clinic_location | first_name: Claudia | last_name: Rocholl | full_name: Claudia Rocholl | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+20. person_id: 5859 | company_id: 223 | company_name: Psychiatrische Tagesklinik Bad Krozingen | city: Bad Krozingen | country: Germany | company_type: clinic_location | first_name: Brigitte | last_name: Schütz | full_name: Brigitte Schütz | role: Personaldirektorin | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_119
+- Return only the requested result.
+- Use public information only.
