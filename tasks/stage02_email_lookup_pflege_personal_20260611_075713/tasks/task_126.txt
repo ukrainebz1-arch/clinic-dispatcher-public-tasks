@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_126
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_126
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 6000 | company_id: 835 | company_name: Spreewaldklinik Lübben | company_website: https://klinikum-ds.de | city: Lübben | country: DE | company_type: clinic_location | first_name: Sylke | last_name: Wenzlaff | full_name: Sylke Wenzlaff | role: Leiterin Personalabteilung | role_bucket: personalleitung | priority: 2
+2. person_id: 6001 | company_id: 323 | company_name: St. Agnes-Hospital Bocholt | city: Bocholt | country: Germany | company_type: clinic_location | first_name: Stephan | last_name: Auerhahn | full_name: Stephan Auerhahn | role: Leiter Personal | role_bucket: personalleitung | priority: 2
+3. person_id: 6002 | company_id: 1674 | company_name: St. Anna Klinik in Löningen | company_website: http://anna-klinik.de | city: Löningen | country: DE | company_type: clinic_location | first_name: Manfred | last_name: Janknecht | full_name: Manfred Janknecht | role: Personalleiter / Prokurist | role_bucket: personalleitung | priority: 2
+4. person_id: 6003 | company_id: 1029 | company_name: St. Anna Krankenhaus in Sulzbach-Rosenberg | company_website: http://kh-as.de | city: Sulzbach-Rosenberg | country: DE | company_type: clinic_location | first_name: Christine | last_name: Arnold | full_name: Christine Arnold | role: Personalleitung | role_bucket: personalleitung | priority: 2
+5. person_id: 6004 | company_id: 1831 | company_name: St. Annastiftskrankenhaus in Ludwigshafen am Rhein | company_website: https://st-annastiftskrankenhaus.de | city: Ludwigshafen am Rhein | country: DE | company_type: clinic_location | first_name: Silke | last_name: Beisel | full_name: Silke Beisel | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+6. person_id: 6006 | company_id: 371 | company_name: St. Ansgar Krankenhaus Höxter | city: Höxter | country: Germany | company_type: clinic_location | first_name: Maik | last_name: Möller | full_name: Maik Möller | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+7. person_id: 6007 | company_id: 1683 | company_name: St. Bernhard-Hospital in Brake (Unterweser) | company_website: http://krankenhaus-brake.de | city: Brake | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Theisen | full_name: Claudia Theisen | role: Personalleitung | role_bucket: personalleitung | priority: 2
+8. person_id: 6008 | company_id: 1573 | company_name: St. Bernward Krankenhaus in Hildesheim | company_website: https://bernward-khs.de | city: Hildesheim | country: DE | company_type: clinic_location | first_name: Antje | last_name: Winterhof | full_name: Antje Winterhof | role: Personalleitung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/antje-winterhof-163bb9229
+9. person_id: 6009 | company_id: 481 | company_name: St. Elisabeth-Hospital Beckum in Beckum, Westfalen | city: Beckum | country: Germany | company_type: clinic_location | first_name: Anne | last_name: Rohlmann | full_name: Anne Rohlmann | role: Personalleitung | role_bucket: personalleitung | priority: 2
+10. person_id: 6010 | company_id: 416 | company_name: St. Elisabeth-Hospital Herten | city: Herten | country: Germany | company_type: clinic_location | first_name: Jörg | last_name: Kuchenreuther | full_name: Jörg Kuchenreuther | role: Personalleiter und Prokurist | role_bucket: personalleitung | priority: 2
+11. person_id: 6011 | company_id: 603 | company_name: St. Elisabeth-Hospital Meerbusch-Lank | city: Meerbusch | country: Germany | company_type: clinic_location | first_name: Joachim | last_name: Reifer | full_name: Joachim Reifer | role: Regionalleiter Personal Rheinland | role_bucket: personalleitung | priority: 2
+12. person_id: 6012 | company_id: 486 | company_name: St. Elisabeth-Hospital in Bochum | city: Bochum | country: Germany | company_type: clinic_location | first_name: Daniel | last_name: Gohres | full_name: Daniel Gohres | role: Leiter Personal | role_bucket: personalleitung | priority: 2
+13. person_id: 6014 | company_id: 542 | company_name: St. Elisabeth-Krankenhaus Jülich | city: Jülich | country: Germany | company_type: clinic_location | first_name: Marc | last_name: Rathert | full_name: Marc Rathert | role: Personalleiter | role_bucket: personalleitung | priority: 2
+14. person_id: 6015 | company_id: 1864 | company_name: St. Elisabeth-Krankenhaus Leipzig | company_website: http://ek-leipzig.de | city: Leipzig | country: DE | company_type: clinic_location | first_name: Stephanie | last_name: Niemetz | full_name: Stephanie Niemetz | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+15. person_id: 6016 | company_id: 1686 | company_name: St. Elisabeth-Krankenhaus Salzgitter | company_website: http://st-elisabeth-sz.de | city: Salzgitter | country: DE | company_type: clinic_location | first_name: Beatrix | last_name: Packenius | full_name: Beatrix Packenius | role: Leitung Personal und Arbeitsrecht | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/beatrix-packenius-a05aa01b8
+16. person_id: 6017 | company_id: 1507 | company_name: St. Elisabeth-Krankenhaus Volkmarsen | company_website: http://elisabeth-krankenhaus-volkmarsen.de | city: Volkmarsen | country: DE | company_type: clinic_location | first_name: Diana | last_name: Gotschy | full_name: Diana Gotschy | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+17. person_id: 6018 | company_id: 354 | company_name: St. Elisabeth-Krankenhaus in Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Kristin | last_name: Helms | full_name: Kristin Helms | role: Personalleitung | role_bucket: personalleitung | priority: 2
+18. person_id: 6019 | company_id: 98 | company_name: St. Elisabethen-Krankenhaus Lörrach | city: Lörrach | country: Germany | company_type: clinic_location | first_name: Nadine | last_name: Brödlin | full_name: Nadine Brödlin | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+19. person_id: 6021 | company_id: 246 | company_name: St. Elisabethen-Krankenhaus, Kinder- und Jugendpsychiatrie in Lörrach | city: Lörrach | country: Germany | company_type: clinic_location | first_name: Nadine | last_name: Brödlin | full_name: Nadine Brödlin | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+20. person_id: 6023 | company_id: 598 | company_name: St. Franziskus Krankenhaus in Eitorf | city: Eitorf | country: Germany | company_type: clinic_location | first_name: Bianca | last_name: Hammelstein | full_name: Bianca Hammelstein | role: Leitung Geschäftsbereich Personal | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_126
+- Return only the requested result.
+- Use public information only.
