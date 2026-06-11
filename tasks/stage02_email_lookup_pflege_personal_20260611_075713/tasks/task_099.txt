@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_099
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_099
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5346 | company_id: 1023 | company_name: Klinik Immenstadt | company_website: https://klinikverbund-allgaeu.de | city: Immenstadt im Allgäu | country: DE | company_type: clinic_location | first_name: Katharina | last_name: Schäfer | full_name: Katharina Schäfer | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+2. person_id: 5347 | company_id: 1993 | company_name: Klinik Kitzinger Land in Kitzingen | company_website: http://klinik-kitzinger-land.de | city: Kitzingen | country: DE | company_type: clinic_location | first_name: Astrid | last_name: Janotta | full_name: Astrid Janotta | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+3. person_id: 5348 | company_id: 690 | company_name: Klinik Königshof Tagesklinik Hüls am Cäcilien-Hospital Helios Hüls in Krefeld | city: Krefeld | country: Germany | company_type: clinic_location | first_name: Karin | last_name: Mehwald | full_name: Karin Mehwald | role: Personalleiterin St. Augustinus Gruppe | role_bucket: personalleitung | priority: 2
+4. person_id: 5349 | company_id: 693 | company_name: Klinik Königshof Tagesklinik Melanchthonstraße am Helios Krefeld | city: Krefeld | country: Germany | company_type: clinic_location | first_name: Karin | last_name: Mehwald | full_name: Karin Mehwald | role: Personalleiterin St. Augustinus Gruppe | role_bucket: personalleitung | priority: 2
+5. person_id: 5350 | company_id: 566 | company_name: Klinik Königshof in Krefeld | city: Krefeld | country: Germany | company_type: clinic_location | first_name: Karin | last_name: Mehwald | full_name: Karin Mehwald | role: Personalleiterin St. Augustinus Gruppe | role_bucket: personalleitung | priority: 2
+6. person_id: 5351 | company_id: 1142 | company_name: Klinik Menterschwaige in München | company_website: https://klinik-menterschwaige.de | city: München | country: DE | company_type: clinic_location | first_name: Cornelia | last_name: Treffler | full_name: Cornelia Treffler | role: Leitung Personal | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/cornelia-treffler-b3a22443
+7. person_id: 5352 | company_id: 992 | company_name: Klinik Münchberg in Münchberg, Oberfranken | company_website: https://kliniken-hochfranken.de | city: Münchberg | country: DE | company_type: clinic_location | first_name: Ute | last_name: Kießling | full_name: Ute Kießling | role: Personalleitung | role_bucket: personalleitung | priority: 2
+8. person_id: 5354 | company_id: 1030 | company_name: Klinik Naila | company_website: https://kliniken-hochfranken.de | city: Naila | country: DE | company_type: clinic_location | first_name: Ute | last_name: Kießling | full_name: Ute Kießling | role: Personalleitung | role_bucket: personalleitung | priority: 2
+9. person_id: 5356 | company_id: 821 | company_name: Klinik Nauen | company_website: http://havelland-kliniken.de | city: Nauen | country: DE | company_type: clinic_location | first_name: Matthias G. | last_name: Rehder | full_name: Matthias G. Rehder | role: Fachbereichsleiter Personalmanagement | role_bucket: personalleitung | priority: 2
+10. person_id: 5357 | company_id: 1009 | company_name: Klinik Neustadt an der Aisch | company_website: http://kliniken-nea.de | city: Neustadt an der Aisch | country: DE | company_type: clinic_location | first_name: Kai | last_name: Nieß | full_name: Kai Nieß | role: Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/kai-nie%C3%9F-7604a61a1
+11. person_id: 5358 | company_id: 2119 | company_name: Klinik Niederbayern in Bad Füssing | company_website: https://klinik-niederbayern.de | city: Bad Füssing | country: DE | company_type: rehab_clinic | first_name: Stefanie | last_name: Günther | full_name: Stefanie Günther | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+12. person_id: 5359 | company_id: 1114 | company_name: Klinik Oberammergau | company_website: http://klinik-oberammergau.de | city: Oberammergau | country: DE | company_type: clinic_location | first_name: Stefanie | last_name: Günther | full_name: Stefanie Günther | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+13. person_id: 5360 | company_id: 1135 | company_name: Klinik Oberstdorf | company_website: https://klinikverbund-allgaeu.de | city: Oberstdorf | country: DE | company_type: clinic_location | first_name: Katharina | last_name: Schäfer | full_name: Katharina Schäfer | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+14. person_id: 5361 | company_id: 837 | company_name: Klinik Oranienburg | company_website: http://oberhavel-kliniken.de | city: Oranienburg | country: DE | company_type: clinic_location | first_name: Constanze | last_name: Hennig | full_name: Constanze Hennig | role: Leiterin Personal und Recht | role_bucket: personalleitung | priority: 2
+15. person_id: 5362 | company_id: 834 | company_name: Klinik Rathenow | company_website: http://havelland-kliniken.de | city: Rathenow | country: DE | company_type: clinic_location | first_name: Matthias G. | last_name: Rehder | full_name: Matthias G. Rehder | role: Fachbereichsleiter Personalmanagement | role_bucket: personalleitung | priority: 2
+16. person_id: 5363 | company_id: 2067 | company_name: Klinik Schwabenland in Isny im Allgäu | company_website: https://klinik-schwabenland.de | city: Isny im Allgäu | country: DE | company_type: rehab_clinic | first_name: Stefanie | last_name: Günther | full_name: Stefanie Günther | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+17. person_id: 5364 | company_id: 1188 | company_name: Klinik Sonthofen | company_website: https://klinikverbund-allgaeu.de | city: Sonthofen | country: DE | company_type: clinic_location | first_name: Katharina | last_name: Schäfer | full_name: Katharina Schäfer | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+18. person_id: 5365 | company_id: 117 | company_name: Klinik Tettnang | city: Tettnang | country: Germany | company_type: clinic_location | first_name: Stefanie | last_name: Pareth | full_name: Stefanie Pareth | role: Personalleitung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/stefanie-pareth-3408071ba
+19. person_id: 5366 | company_id: 1152 | company_name: Klinik Wartenberg | company_website: http://klinik-wartenberg.de | city: Wartenberg | country: DE | company_type: clinic_location | first_name: Christine | last_name: Kohlschütter | full_name: Christine Kohlschütter | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+20. person_id: 5367 | company_id: 1227 | company_name: Klinik am Greinberg in Würzburg | company_website: http://kjp.ukw.de/klinik/klinikbereiche/klinik-am-greinberg.html | city: Würzburg | country: DE | company_type: clinic_location | first_name: Bettina | last_name: Steinmetz | full_name: Bettina Steinmetz | role: Leitung Personal UKW | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_099
+- Return only the requested result.
+- Use public information only.
