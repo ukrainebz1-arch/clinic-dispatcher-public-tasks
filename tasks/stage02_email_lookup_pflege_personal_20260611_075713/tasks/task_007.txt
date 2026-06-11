@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_007
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_007
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3197 | company_id: 1987 | company_name: Bezirksklinikum Obermain in Ebensfeld | company_website: https://gebo-med.de | city: Ebensfeld | country: DE | company_type: clinic_location | first_name: Steffen | last_name: Wehrle | full_name: Steffen Wehrle | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+2. person_id: 3199 | company_id: 931 | company_name: Bezirksklinikum Regensburg | company_website: http://medbo.de | city: Regensburg | country: DE | company_type: clinic_location | first_name: Felicitas | last_name: Klein | full_name: Felicitas Klein | role: Direktorin Patienten- und Pflegemanagement | role_bucket: pflege_director | priority: 1
+3. person_id: 3200 | company_id: 965 | company_name: Bezirkskrankenhaus Augsburg | company_website: http://bkh-augsburg.de | city: Augsburg | country: DE | company_type: clinic_location | first_name: Timo | last_name: Thöle | full_name: Timo Thöle | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/timo-th%C3%B6le-b83908177
+4. person_id: 3202 | company_id: 1178 | company_name: Bezirkskrankenhaus Donauwörth | company_website: http://bkh-donauwoerth.de | city: Donauwörth | country: DE | company_type: clinic_location | first_name: Iris | last_name: Frank | full_name: Iris Frank | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3203 | company_id: 954 | company_name: Bezirkskrankenhaus Günzburg | company_website: http://bkh-guenzburg.de | city: Günzburg | country: DE | company_type: clinic_location | first_name: Alishia | last_name: Schneider | full_name: Alishia Schneider | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 3204 | company_id: 1995 | company_name: Bezirkskrankenhaus Kaufbeuren | company_website: https://bezirkskliniken-schwaben.de/kliniken/bezirkskrankenhaus-kaufbeuren | city: Kaufbeuren | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Gebler | full_name: Andreas Gebler | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 3205 | company_id: 1068 | company_name: Bezirkskrankenhaus Kempten | company_website: http://bkh-kempten.de | city: Kempten | country: DE | company_type: clinic_location | first_name: Tabea | last_name: Schmid | full_name: Tabea Schmid | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 3206 | company_id: 987 | company_name: Bezirkskrankenhaus Landshut | company_website: http://bkh-landshut.de | city: Landshut | country: DE | company_type: clinic_location | first_name: Michèle | last_name: Schuierer | full_name: Michèle Schuierer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+9. person_id: 3208 | company_id: 974 | company_name: Bezirkskrankenhaus Lohr | company_website: https://bezirkskrankenhaus-lohr.de | city: Lohr am Main | country: DE | company_type: clinic_location | first_name: Marianne | last_name: Schaffarczik | full_name: Marianne Schaffarczik | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+10. person_id: 3210 | company_id: 1156 | company_name: Bezirkskrankenhaus Memmingen | company_website: http://bezirkskrankenhaus-memmingen.de | city: Memmingen | country: DE | company_type: clinic_location | first_name: Ines | last_name: Otte | full_name: Ines Otte | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 3211 | company_id: 1110 | company_name: Bezirkskrankenhaus Passau | company_website: http://bkh-passau.de | city: Passau | country: DE | company_type: clinic_location | first_name: Agnes | last_name: Kolbeck | full_name: Agnes Kolbeck | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 3212 | company_id: 1018 | company_name: Bezirkskrankenhaus Wöllershof in Störnstein | company_website: https://medbo.de/kliniken-einrichtungen/psychiatrie-psychotherapie/klinik-fuer-psychiatrie-psychosomatik-psychotherapie-woellershof | city: Störnstein | country: DE | company_type: clinic_location | first_name: Christine | last_name: Kick | full_name: Christine Kick | role: Leiterin Patienten- & Pflegemanagement | role_bucket: pflege_director | priority: 1
+13. person_id: 3213 | company_id: 1834 | company_name: BioMed-Klinik in Bad Bergzabern | company_website: http://biomed-klinik.de | city: Bad Bergzabern | country: DE | company_type: clinic_location | first_name: Sabrina | last_name: Arenth | full_name: Sabrina Arenth | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3215 | company_id: 1331 | company_name: Bodden-Kliniken Ribnitz-Damgarten | company_website: http://www-bodden-kliniken.de | city: Ribnitz-Damgarten | country: DE | company_type: clinic_location | first_name: Christina | last_name: Preußler | full_name: Christina Preußler | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+15. person_id: 3216 | company_id: 1584 | company_name: Bonifatius Hospital Lingen | company_website: http://bonifatius-hospital-lingen.de | city: Lingen | country: DE | company_type: clinic_location | first_name: Christiane | last_name: Neehoff-Tylla | full_name: Christiane Neehoff-Tylla | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+16. person_id: 3218 | company_id: 1617 | company_name: Borromäus Hospital Leer | company_website: https://borromäus-hospital-leer.de | city: Leer | country: DE | company_type: clinic_location | first_name: Nina | last_name: Blanke-Buretzek | full_name: Nina Blanke-Buretzek | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 3219 | company_id: 1617 | company_name: Borromäus Hospital Leer | company_website: https://borromäus-hospital-leer.de | city: Leer | country: DE | company_type: clinic_location | first_name: Philine | last_name: Popken de Freyle | full_name: Philine Popken de Freyle | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 3220 | company_id: 2142 | company_name: Brandenburg Klinik in Bernau bei Berlin | company_website: https://michelskliniken.de/kliniken/brandenburgklinik-berlin-brandenburg/ihre-klinik | city: Bernau bei Berlin | country: DE | company_type: rehab_clinic | first_name: Kristin | last_name: Brincker-Borath | full_name: Kristin Brincker-Borath | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 3221 | company_id: 849 | company_name: Brandenburgklinik Berlin-Brandenburg | company_website: https://michelskliniken.de/kliniken/brandenburgklinik-berlin-brandenburg/ihre-klinik | city: Bernau bei Berlin | country: DE | company_type: clinic_location | first_name: Kristin | last_name: Brincker-Borath | full_name: Kristin Brincker-Borath | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 3223 | company_id: 2063 | company_name: Breisgau-Klinik in Bad Krozingen | company_website: https://breisgau-klinik.de | city: Bad Krozingen | country: DE | company_type: rehab_clinic | first_name: Elisabeth | last_name: Kalai | full_name: Elisabeth Kalai | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_007
+- Return only the requested result.
+- Use public information only.
