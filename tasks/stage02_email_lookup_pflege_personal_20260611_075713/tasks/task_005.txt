@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_005
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_005
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3149 | company_id: 1532 | company_name: Asklepios Geriatrische Tagesklinik Biebrich in Wiesbaden | company_website: https://asklepios.com/wiesbaden/experten/geriatrie | city: Wiesbaden | country: DE | company_type: clinic_location | first_name: Martina | last_name: Kramp | full_name: Martina Kramp | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 3150 | company_id: 889 | company_name: Asklepios Tagesklinik Werder | company_website: http://asklepios.com/Brandenburg | city: Werder | country: DE | company_type: clinic_location | first_name: Angela | last_name: Tiedemann | full_name: Angela Tiedemann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 3151 | company_id: 2216 | company_name: Asklepios Weserbergland-Klinik in Höxter | company_website: https://asklepios.com/hoexter | city: Höxter | country: DE | company_type: rehab_clinic | first_name: Thomas | last_name: Graßhoff | full_name: Thomas Graßhoff | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+4. person_id: 3152 | company_id: 1268 | company_name: Asklepios Westklinikum Hamburg | company_website: http://asklepios.com/westklinikum | city: Hamburg | country: DE | company_type: clinic_location | first_name: Richard | last_name: Hockl | full_name: Richard Hockl | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+5. person_id: 3154 | company_id: 2104 | company_name: Asklepios Zentrum für Rehabilitation Bad Abbach | company_website: https://asklepios.com/bad-abbach/reha | city: Bad Abbach | country: DE | company_type: rehab_clinic | first_name: Kai | last_name: Bremicker | full_name: Kai Bremicker | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 3155 | company_id: 1926 | company_name: Asklepios-ASB Klinik Radeberg | company_website: https://asklepios.com/radeberg | city: Radeberg | country: DE | company_type: clinic_location | first_name: Marco | last_name: Palme | full_name: Marco Palme | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 3156 | company_id: 1466 | company_name: Atos Orthopädische Klinik Braunfels | company_website: https://atos.de | city: Braunfels | country: DE | company_type: clinic_location | first_name: Christian | last_name: Emmerich | full_name: Christian Emmerich | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+8. person_id: 3157 | company_id: 1624 | company_name: Auf Der Bult Kinder- und Jugendkrankenhaus in Hannover | company_website: https://auf-der-bult.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Sebastian | last_name: Beitzel | full_name: Sebastian Beitzel | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+9. person_id: 3158 | company_id: 790 | company_name: Augenklinik Berlin Marzahn | city: Berlin | country: DE | company_type: clinic_location | first_name: Elena | last_name: Nasin | full_name: Elena Nasin | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 3159 | company_id: 1726 | company_name: Augenklinik Dr. Georg in Bad Rothenfelde | company_website: http://augenzentrum-bad-rothenfelde.de | city: Bad Rothenfelde | country: DE | company_type: clinic_location | first_name: Sabine | last_name: Theiling | full_name: Sabine Theiling | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 3160 | company_id: 1165 | company_name: Augenklinik Herzog Carl Theodor in München | company_website: http://augenklinik-muenchen.de | city: München | country: DE | company_type: clinic_location | first_name: Stefanie | last_name: Kramer | full_name: Stefanie Kramer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+12. person_id: 3161 | company_id: 1240 | company_name: Augenklinik Schweinfurt-Gerolzhofen | company_website: https://augenklinik-schweinfurt-gerolzhofen.de | city: Gerolzhofen | country: DE | company_type: clinic_location | first_name: Annette | last_name: von Heissen | full_name: Annette von Heissen | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 3162 | company_id: 1753 | company_name: Augenklinik Stadthagen | company_website: https://augenklinik.org | city: Stadthagen | country: DE | company_type: clinic_location | first_name: Rositta | last_name: Marhenke | full_name: Rositta Marhenke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3163 | company_id: 798 | company_name: Augenklinik im Ring-Center in Berlin | company_website: http://augenklinik-ringcenter.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Wagner | full_name: Michaela Wagner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 543 | company_id: 328 | company_name: Augusta-Kranken-Anstalt (Bochum-Mitte) | city: Bochum | country: Germany | company_type: clinic_location | first_name: Kevin | last_name: Strenger | full_name: Kevin Strenger | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/kevin-strenger-b9840b324
+16. person_id: 3164 | company_id: 1050 | company_name: Augustinum Klinik München | company_website: http://augustinum-kliniken.de | city: München | country: DE | company_type: clinic_location | first_name: Resad | last_name: Puhovac | full_name: Resad Puhovac | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+17. person_id: 3166 | company_id: 2197 | company_name: BDH-Klinik Braunfels | company_website: https://bdh-klinik-braunfels.de/bdh-klinik-braunfels | city: Braunfels | country: DE | company_type: rehab_clinic | first_name: Tim | last_name: Benner | full_name: Tim Benner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 3167 | company_id: 1657 | company_name: BDH-Klinik Hessisch Oldendorf | company_website: http://bdh-klinik-hessisch-oldendorf.de | city: Hessisch Oldendorf | country: DE | company_type: clinic_location | first_name: Jolanta | last_name: Pape | full_name: Jolanta Pape | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 3168 | company_id: 1861 | company_name: BDH-Klinik Vallendar | company_website: https://bdh-klinik-vallendar.de | city: Vallendar | country: DE | company_type: clinic_location | first_name: Jörg | last_name: Biebrach | full_name: Jörg Biebrach | role: PDL | role_bucket: pflege_director | priority: 1
+20. person_id: 3170 | company_id: 140 | company_name: BDH-Klinik Waldkirch | city: Waldkirch | country: Germany | company_type: clinic_location | first_name: Fabian | last_name: Gonzalvez | full_name: Fabian Gonzalvez | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_005
+- Return only the requested result.
+- Use public information only.
