@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_008
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_008
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3222 | company_id: 2063 | company_name: Breisgau-Klinik in Bad Krozingen | company_website: https://breisgau-klinik.de | city: Bad Krozingen | country: DE | company_type: rehab_clinic | first_name: Patricia | last_name: Janz | full_name: Patricia Janz | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 3224 | company_id: 1810 | company_name: Brüderkrankenhaus Montabaur | company_website: http://kk-km.de | city: Montabaur | country: DE | company_type: clinic_location | first_name: Daniel | last_name: Frank | full_name: Daniel Frank | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+3. person_id: 3225 | company_id: 1407 | company_name: Buergerhospital Friedberg | company_website: http://gz-wetterau.de | city: Friedberg | country: DE | company_type: clinic_location | first_name: Nadine | last_name: Eiskirch | full_name: Nadine Eiskirch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+4. person_id: 3226 | company_id: 1773 | company_name: Bundeswehr Zentralkrankenhaus Koblenz | company_website: https://bwkrankenhaus.de/de/bundeswehrzentralkrankenhaus-koblenz | city: Koblenz | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Andree | full_name: Thomas Andree | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+5. person_id: 3227 | company_id: 752 | company_name: Bundeswehrkrankenhaus Berlin | company_website: http://berlin.bwkrankenhaus.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Heike | last_name: Losen | full_name: Heike Losen | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 3228 | company_id: 1275 | company_name: Bundeswehrkrankenhaus Hamburg | company_website: https://bwkrankenhaus.de/de/bundeswehrkrankenhaus-hamburg | city: Hamburg | country: DE | company_type: clinic_location | first_name: Maren | last_name: Lach | full_name: Maren Lach | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 3229 | company_id: 49 | company_name: Bundeswehrkrankenhaus Ulm | city: Ulm | country: Germany | company_type: clinic_location | first_name: Jens | last_name: Voderberg | full_name: Jens Voderberg | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+8. person_id: 3231 | company_id: 1659 | company_name: Bundeswehrkrankenhaus Westerstede | company_website: https://bwkrankenhaus.de/de/bundeswehrkrankenhaus-westerstede | city: Westerstede | country: DE | company_type: clinic_location | first_name: Dominik | last_name: Honecker | full_name: Dominik Honecker | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+9. person_id: 3233 | company_id: 1513 | company_name: Burghof-Klinik Bad Nauheim | company_website: http://burghof-klinik.com | city: Bad Nauheim | country: DE | company_type: clinic_location | first_name: Tim | last_name: van Slobbe | full_name: Tim van Slobbe | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 3234 | company_id: 1693 | company_name: Burghof-Klinik Haus 1 in Rinteln | company_website: http://burghof-klinik.de | city: Rinteln | country: DE | company_type: clinic_location | first_name: Lena | last_name: Linge | full_name: Lena Linge | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 3235 | company_id: 1693 | company_name: Burghof-Klinik Haus 1 in Rinteln | company_website: http://burghof-klinik.de | city: Rinteln | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Wellmann | full_name: Susanne Wellmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+12. person_id: 3236 | company_id: 1721 | company_name: Burghof-Klinik Haus 2 in Aerzen | company_website: http://burghof-klinik.de | city: Aerzen | country: DE | company_type: clinic_location | first_name: Lena | last_name: Linge | full_name: Lena Linge | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 3237 | company_id: 1721 | company_name: Burghof-Klinik Haus 2 in Aerzen | company_website: http://burghof-klinik.de | city: Aerzen | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Wellmann | full_name: Susanne Wellmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3238 | company_id: 1695 | company_name: Burghof-Klinik Haus 3 u . 4 in Rinteln | company_website: http://burghof-klinik.de | city: Rinteln | country: DE | company_type: clinic_location | first_name: Lena | last_name: Linge | full_name: Lena Linge | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 3239 | company_id: 1695 | company_name: Burghof-Klinik Haus 3 u . 4 in Rinteln | company_website: http://burghof-klinik.de | city: Rinteln | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Wellmann | full_name: Susanne Wellmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+16. person_id: 3240 | company_id: 1740 | company_name: Burghof-Klinik Tagesklinik Stadthagen | company_website: http://burghof-klinik.de | city: Stadthagen | country: DE | company_type: clinic_location | first_name: Lena | last_name: Linge | full_name: Lena Linge | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 3241 | company_id: 1740 | company_name: Burghof-Klinik Tagesklinik Stadthagen | company_website: http://burghof-klinik.de | city: Stadthagen | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Wellmann | full_name: Susanne Wellmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 3242 | company_id: 2161 | company_name: Bückeberg Klinik in Bad Eilsen | company_website: https://bueckeberg-klinik.de | city: Bad Eilsen | country: DE | company_type: rehab_clinic | first_name: Claudia | last_name: Schütte | full_name: Claudia Schütte | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 3245 | company_id: 1399 | company_name: Bürgerhospital und Clementine Kinderhospital Standort: Bürgerhospital Frankfurt | company_website: https://buergerhospital-ffm.de | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Greco | full_name: Andreas Greco | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 3244 | company_id: 1399 | company_name: Bürgerhospital und Clementine Kinderhospital Standort: Bürgerhospital Frankfurt | company_website: https://buergerhospital-ffm.de | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Christine | last_name: Schwarzbeck | full_name: Christine Schwarzbeck | role: Pflegedirektion / Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_008
+- Return only the requested result.
+- Use public information only.
