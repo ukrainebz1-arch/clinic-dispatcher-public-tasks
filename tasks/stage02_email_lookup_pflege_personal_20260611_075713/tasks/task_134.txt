@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_134
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_134
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 6192 | company_id: 2208 | company_name: VITREA Klinik Hagen-Ambrock | company_website: https://vamed-gesundheit.de/kliniken/hagen-ambrock | city: Hagen | country: DE | company_type: rehab_clinic | first_name: Susanne | last_name: Fischer | full_name: Susanne Fischer | role: Personalleitung | role_bucket: personalleitung | priority: 2
+2. person_id: 6193 | company_id: 1929 | company_name: VITREA Klinik Schloss Pulsnitz | company_website: https://vitrea-gesundheit.de/reha/schloss-pulsnitz | city: Pulsnitz | country: DE | company_type: clinic_location | first_name: Heike | last_name: Rentsch | full_name: Heike Rentsch | role: Personalleitung | role_bucket: personalleitung | priority: 2
+3. person_id: 6194 | company_id: 459 | company_name: Vestische Kinder- und Jugendklinik Datteln | city: Datteln | country: Germany | company_type: clinic_location | first_name: Volker | last_name: Bach | full_name: Volker Bach | role: Personalleiter | role_bucket: personalleitung | priority: 2
+4. person_id: 6195 | company_id: 1790 | company_name: Vinzentius-Krankenhaus Landau | company_website: http://vinzentius.de | city: Landau in der Pfalz | country: DE | company_type: clinic_location | first_name: Daniel | last_name: Schnoor | full_name: Daniel Schnoor | role: Leitung Personalmanagement cts Krankenhäuser | role_bucket: personalleitung | priority: 2
+5. person_id: 6196 | company_id: 2114 | company_name: Vinzenz Klinik in Pfronten | company_website: https://vinzenz-klinik.de/rehaklinik | city: Pfronten | country: DE | company_type: rehab_clinic | first_name: Monika | last_name: Greiter | full_name: Monika Greiter | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+6. person_id: 6197 | company_id: 1596 | company_name: Vinzenzkrankenhaus Hannover | company_website: http://vinzenzkrankenhaus.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Sandra | last_name: Schampel-Özcan | full_name: Sandra Schampel-Özcan | role: Leitung HR / Personalleitung | role_bucket: personalleitung | priority: 2
+7. person_id: 6198 | company_id: 1454 | company_name: Vitos Klinik für Psychiatrie und Psychotherapie Bad Emstal | company_website: https://vitos.de/gesellschaften/vitos-kurhessen | city: Bad Emstal | country: DE | company_type: clinic_location | first_name: Saskia | last_name: Kaune | full_name: Saskia Kaune | role: Personalleiterin und kaufmännische Leitung Vitos Nordhessen | role_bucket: personalleitung | priority: 2
+8. person_id: 6199 | company_id: 1523 | company_name: Vitos Klinik für Psychiatrie und Psychotherapie Hofgeismar | company_website: https://vitos.de/gesellschaften/vitos-kurhessen | city: Hofgeismar | country: DE | company_type: clinic_location | first_name: Saskia | last_name: Kaune | full_name: Saskia Kaune | role: Personalleiterin und kaufmännische Leitung Vitos Nordhessen | role_bucket: personalleitung | priority: 2
+9. person_id: 6200 | company_id: 1468 | company_name: Vitos Klinik für Psychiatrie und Psychotherapie Kassel | company_website: https://vitos.de/gesellschaften/vitos-kurhessen | city: Kassel | country: DE | company_type: clinic_location | first_name: Saskia | last_name: Kaune | full_name: Saskia Kaune | role: Personalleiterin und kaufmännische Leitung Vitos Nordhessen | role_bucket: personalleitung | priority: 2
+10. person_id: 6201 | company_id: 1371 | company_name: Vitos Klinik für Psychosomatik Kassel | company_website: https://vitos.de/gesellschaften/vitos-nordhessen/einrichtungen/vitos-klinik-fuer-psychosomatik-kassel?utm_campaign=klinikradar_vitos_kassel&utm_medium=referrer&utm_source=klinikradar | city: Kassel | country: DE | company_type: clinic_location | first_name: Saskia | last_name: Kaune | full_name: Saskia Kaune | role: Personalleiterin und kaufmännische Leitung Vitos Nordhessen | role_bucket: personalleitung | priority: 2
+11. person_id: 6202 | company_id: 1441 | company_name: Vitos Klinikum Gießen-Marburg (Marburg) | company_website: http://vitos-giessen-marburg.de | city: Marburg | country: DE | company_type: clinic_location | first_name: Julia | last_name: Seeger | full_name: Julia Seeger | role: Personalleiterin / Leitung Personal und Recht Vitos Gießen-Marburg | role_bucket: personalleitung | priority: 2
+12. person_id: 6203 | company_id: 1419 | company_name: Vitos Klinikum Gießen-Marburg (Standort Gießen) | company_website: http://vitos-giessen-marburg.de | city: Gießen | country: DE | company_type: clinic_location | first_name: Julia | last_name: Seeger | full_name: Julia Seeger | role: Personalleiterin / Leitung Personal und Recht Vitos Gießen-Marburg | role_bucket: personalleitung | priority: 2
+13. person_id: 6204 | company_id: 1430 | company_name: Vitos Klinikum Heppenheim | company_website: http://vitos-heppenheim.de | city: Heppenheim | country: DE | company_type: clinic_location | first_name: Martin | last_name: Benz | full_name: Martin Benz | role: Personalleiter Vitos Südhessen | role_bucket: personalleitung | priority: 2
+14. person_id: 6205 | company_id: 2017 | company_name: Vitos Klinikum Heppenheim (Bensheim) | company_website: http://vitos-vitos-suedhessen.de | city: Bensheim | country: DE | company_type: clinic_location | first_name: Martin | last_name: Benz | full_name: Martin Benz | role: Personalleiter Vitos Südhessen | role_bucket: personalleitung | priority: 2
+15. person_id: 6206 | company_id: 1542 | company_name: Vitos Klinikum Heppenheim Standort Lampertheim in Lampertheim, Hessen | company_website: http://vitos-suedhessen.de | city: Lampertheim | country: DE | company_type: clinic_location | first_name: Martin | last_name: Benz | full_name: Martin Benz | role: Personalleiter Vitos Südhessen | role_bucket: personalleitung | priority: 2
+16. person_id: 6207 | company_id: 1404 | company_name: Vitos Klinikum Herborn | company_website: https://vitos.de/gesellschaften/vitos-herborn | city: Herborn | country: DE | company_type: clinic_location | first_name: Philip | last_name: Mathes | full_name: Philip Mathes | role: Personalleiter Vitos Herborn und Vitos Weil-Lahn | role_bucket: personalleitung | priority: 2
+17. person_id: 6208 | company_id: 1471 | company_name: Vitos Klinikum Hochtaunus (Standord Bad Homburg) | company_website: http://vitos-hochtaunus.de | city: Bad Homburg | country: DE | company_type: clinic_location | first_name: Diana | last_name: Colloseus | full_name: Diana Colloseus | role: Prokuristin und Personalleiterin Vitos Hochtaunus | role_bucket: personalleitung | priority: 2
+18. person_id: 6209 | company_id: 1434 | company_name: Vitos Klinikum Rheingau in Eltville | company_website: http://vitos-rheingau.de | city: Eltville | country: DE | company_type: clinic_location | first_name: Diana | last_name: Colloseus | full_name: Diana Colloseus | role: Prokuristin und Personalleiterin Vitos Rheingau | role_bucket: personalleitung | priority: 2
+19. person_id: 6210 | company_id: 1403 | company_name: Vitos Klinikum Riedstadt | company_website: http://vitos-suedhessen.de | city: Riedstadt | country: DE | company_type: clinic_location | first_name: Martin | last_name: Benz | full_name: Martin Benz | role: Personalleiter Vitos Südhessen | role_bucket: personalleitung | priority: 2
+20. person_id: 6211 | company_id: 1546 | company_name: Vitos Klinikum Riedstadt (Gross-Gerau) in Groß-Gerau | company_website: http://vitos-suedhessen.de | city: Groß-Gerau | country: DE | company_type: clinic_location | first_name: Martin | last_name: Benz | full_name: Martin Benz | role: Personalleiter Vitos Südhessen | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_134
+- Return only the requested result.
+- Use public information only.
