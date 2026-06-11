@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_003
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_003
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3102 | company_id: 1282 | company_name: Agaplesion Diakonieklinikum Hamburg | company_website: http://d-k-h.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Thorsten | last_name: Witt | full_name: Thorsten Witt | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+2. person_id: 3104 | company_id: 1565 | company_name: Agaplesion Diakonieklinikum Rotenburg | company_website: http://diako-online.de | city: Rotenburg an der Wümme | country: DE | company_type: clinic_location | first_name: Natascha | last_name: Möller-Seseke | full_name: Natascha Möller-Seseke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+3. person_id: 3106 | company_id: 1709 | company_name: Agaplesion Diakonieklinikum Rotenburg - Klinik für Kinder- und Jugendpsychiatrie, -psychotherapie und -psychosomatik | company_website: http://diako-online.de | city: Rotenburg an der Wümme | country: DE | company_type: clinic_location | first_name: Natascha | last_name: Möller-Seseke | full_name: Natascha Möller-Seseke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 3109 | company_id: 1389 | company_name: Agaplesion Elisabethenstift Evangelisches Krankenhaus in Darmstadt | company_website: http://agaplesion-elisabethenstift.de | city: Darmstadt | country: DE | company_type: clinic_location | first_name: Anja | last_name: Bopp | full_name: Anja Bopp | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3108 | company_id: 1389 | company_name: Agaplesion Elisabethenstift Evangelisches Krankenhaus in Darmstadt | company_website: http://agaplesion-elisabethenstift.de | city: Darmstadt | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Steindecker | full_name: Birgit Steindecker | role: Pflegedirektorin / Prokuristin | role_bucket: pflege_director | priority: 1
+6. person_id: 3110 | company_id: 1581 | company_name: Agaplesion Ev. Klinikum Schaumburg in Obernkirchen | company_website: https://ev-klinikum-schaumburg.de | city: Obernkirchen | country: DE | company_type: clinic_location | first_name: Jörg | last_name: Hake | full_name: Jörg Hake | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 3111 | company_id: 1581 | company_name: Agaplesion Ev. Klinikum Schaumburg in Obernkirchen | company_website: https://ev-klinikum-schaumburg.de | city: Obernkirchen | country: DE | company_type: clinic_location | first_name: Norbert | last_name: Janssen | full_name: Norbert Janssen | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+8. person_id: 3112 | company_id: 1410 | company_name: Agaplesion Evangelisches Krankenhaus Mittelhessen Gießen | company_website: http://ekm-gi.de | city: Gießen | country: DE | company_type: clinic_location | first_name: Markus | last_name: Lich | full_name: Markus Lich | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+9. person_id: 3114 | company_id: 1682 | company_name: Agaplesion Krankenhaus Neu Bethlehem in Göttingen | company_website: http://neubethlehem.de | city: Göttingen | country: DE | company_type: clinic_location | first_name: Martin | last_name: Weinrich | full_name: Martin Weinrich | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+10. person_id: 3115 | company_id: 1878 | company_name: Ahrtal-Klinik in Sinzig | company_website: http://ahrtal-klinik.de | city: Sinzig | country: DE | company_type: clinic_location | first_name: Markus | last_name: Laubach | full_name: Markus Laubach | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 3116 | company_id: 1261 | company_name: Albertinen-Krankenhaus in Hamburg | company_website: http://albertinen-krankenhaus.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Alberto | last_name: da Silva Correia | full_name: Alberto da Silva Correia | role: Pflegedirektor, Albertinen Krankenhaus | role_bucket: pflege_director | priority: 1
+12. person_id: 3118 | company_id: 788 | company_name: Alexianer Hedwigkliniken, Tagesklinik für Psychosomatik und Psychotherapie in Berlin | company_website: http://alexianer-berlin-hedwigkliniken.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Ina | last_name: Jarchov-Jadi | full_name: Ina Jarchov-Jadi | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 912 | company_id: 536 | company_name: Alexianer Johannisstift Münster | city: Münster | country: Germany | company_type: clinic_location | first_name: Tobias | last_name: Wünnemann | full_name: Tobias Wünnemann | role: Pflegedirektor Alexianer Münster GmbH | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/tobias-w%C3%BCnnemann-5a7770154
+14. person_id: 1004 | company_id: 590 | company_name: Alexianer Krankenhaus Münster | city: Münster | country: Germany | company_type: clinic_location | first_name: Tobias | last_name: Wünnemann | full_name: Tobias Wünnemann | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/tobias-w%C3%BCnnemann-5a7770154
+15. person_id: 3120 | company_id: 830 | company_name: Alexianer St. Josefs-Krankenhaus Potsdam-Sanssouci | company_website: https://alexianer-potsdam.de/unternehmen/wir-ueber-uns/unternehmensleitung | city: Potsdam | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kirnich-Müller | full_name: Claudia Kirnich-Müller | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+16. person_id: 3122 | company_id: 754 | company_name: Alexianer St. Joseph-Krankenhaus Berlin-Weißensee | company_website: http://alexianer.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Sofie | last_name: Nolte-Kräft | full_name: Sofie Nolte-Kräft | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+17. person_id: 1133 | company_id: 691 | company_name: Alexianer-Klinik Meerbusch | city: Meerbusch | country: Germany | company_type: clinic_location | first_name: Nicole | last_name: Hilbert-Kluczkowski | full_name: Nicole Hilbert-Kluczkowski | role: Krankenpflegedirektorin | role_bucket: pflege_director | priority: 1
+18. person_id: 3124 | company_id: 1449 | company_name: Alice-Hospital in Darmstadt | company_website: https://alice-hospital.de | city: Darmstadt | country: DE | company_type: clinic_location | first_name: Daniel | last_name: Skroch | full_name: Daniel Skroch | role: Pflegedienstleitung (funktionsnahe Bereiche) | role_bucket: pflege_director | priority: 1
+19. person_id: 3123 | company_id: 1449 | company_name: Alice-Hospital in Darmstadt | company_website: https://alice-hospital.de | city: Darmstadt | country: DE | company_type: clinic_location | first_name: Lucie | last_name: Mehmed Hlavinova | full_name: Lucie Mehmed Hlavinova | role: Pflegedienstleitung (stationäre Bereiche) | role_bucket: pflege_director | priority: 1
+20. person_id: 3125 | company_id: 1666 | company_name: Aller-Weser-Klinik - Krankenhaus Achim | company_website: http://aller-weser-klink.de | city: Achim bei Bremen | country: DE | company_type: clinic_location | first_name: Christine | last_name: Schrader | full_name: Christine Schrader | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_003
+- Return only the requested result.
+- Use public information only.
