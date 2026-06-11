@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_105
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_105
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5505 | company_id: 1307 | company_name: Klinikum Südstadt Rostock | company_website: http://kliniksued-rostock.de | city: Rostock | country: DE | company_type: clinic_location | first_name: Cindy | last_name: Pischke | full_name: Cindy Pischke | role: Leiterin Personalabteilung | role_bucket: personalleitung | priority: 2
+2. person_id: 5507 | company_id: 936 | company_name: Klinikum Traunstein | company_website: http://kliniken-suedostbayern.de/de/leistungsspektrum/klinikum-traunstein.htm | city: Traunstein | country: DE | company_type: clinic_location | first_name: Julia | last_name: Schoel | full_name: Julia Schoel | role: Personalleitung und Bildung | role_bucket: personalleitung | priority: 2
+3. person_id: 5506 | company_id: 936 | company_name: Klinikum Traunstein | company_website: http://kliniken-suedostbayern.de/de/leistungsspektrum/klinikum-traunstein.htm | city: Traunstein | country: DE | company_type: clinic_location | first_name: Steffen | last_name: Köhler | full_name: Steffen Köhler | role: Leitung Geschäftsbereich Personal und Bildung | role_bucket: personalleitung | priority: 2
+4. person_id: 5508 | company_id: 927 | company_name: Klinikum Weiden | company_website: http://kliniken-nordoberpfalz.de | city: Weiden in der Oberpfalz | country: DE | company_type: clinic_location | first_name: Mathias | last_name: Weiß | full_name: Mathias Weiß | role: Leiter Personalwesen | role_bucket: personalleitung | priority: 2
+5. person_id: 5509 | company_id: 1401 | company_name: Klinikum Werra Meißner (Eschwege) | company_website: http://klinikum-werra-meissner.de | city: Eschwege | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Hildinger | full_name: Andreas Hildinger | role: Bereichsleiter Personal | role_bucket: personalleitung | priority: 2
+6. person_id: 5510 | company_id: 1461 | company_name: Klinikum Werra Meißner (Witzenhausen) | company_website: http://klinikum-werra-meissner.de | city: Witzenhausen | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Hildinger | full_name: Andreas Hildinger | role: Bereichsleiter Personal | role_bucket: personalleitung | priority: 2
+7. person_id: 5511 | company_id: 873 | company_name: Klinikum Westbrandenburg (Brandenburg) | company_website: http://klinikumwb.de | city: Brandenburg an der Havel | country: DE | company_type: clinic_location | first_name: Bert | last_name: Stresow | full_name: Dr. Bert Stresow | role: Personalleiter | role_bucket: personalleitung | priority: 2
+8. person_id: 5512 | company_id: 869 | company_name: Klinikum Westbrandenburg (Potsdam) | company_website: http://klinikumwb.de | city: Potsdam | country: DE | company_type: clinic_location | first_name: Caroline | last_name: Witt-Seifert | full_name: Caroline Witt-Seifert | role: Geschäftsbereichsleiterin Personal- und Organisationsentwicklung | role_bucket: personalleitung | priority: 2
+9. person_id: 5513 | company_id: 1382 | company_name: Klinikum Wetzlar | company_website: http://lahn-dill-kliniken.de | city: Wetzlar | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Drabner | full_name: Claudia Drabner | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+10. person_id: 5515 | company_id: 1563 | company_name: Klinikum Wilhelmshaven | company_website: http://klinikum-whv.de | city: Wilhelmshaven | country: DE | company_type: clinic_location | first_name: Jana | last_name: Burggraef | full_name: Jana Burggraef | role: Leitung Personalwesen und Recht | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/jana-burggraef-83a730194
+11. person_id: 5516 | company_id: 1770 | company_name: Klinikum Worms | company_website: http://klinikum-worms.de | city: Worms | country: DE | company_type: clinic_location | first_name: Margit | last_name: Lemke | full_name: Margit Lemke | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+12. person_id: 5517 | company_id: 925 | company_name: Klinikum Würzburg Mitte | company_website: http://kwm-klinikum.de | city: Würzburg | country: DE | company_type: clinic_location | first_name: Ute | last_name: Schönbach | full_name: Ute Schönbach | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+13. person_id: 5518 | company_id: 957 | company_name: Klinikum am Europakanal in Erlangen | company_website: http://bezirkskliniken-mfr.de | city: Erlangen | country: DE | company_type: clinic_location | first_name: Roland | last_name: Sturm | full_name: Roland Sturm | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+14. person_id: 5519 | company_id: 47 | company_name: Klinikum am Plattenwald in Bad Friedrichshall | city: Bad Friedrichshall | country: Germany | company_type: clinic_location | first_name: Kathrin | last_name: Armbruster | full_name: Kathrin Armbruster | role: Personalleitung | role_bucket: personalleitung | priority: 2
+15. person_id: 5520 | company_id: 19 | company_name: Klinikum am Steinenberg in Reutlingen | city: Reutlingen | country: Germany | company_type: clinic_location | first_name: Anja | last_name: Fujan | full_name: Anja Fujan | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+16. person_id: 5521 | company_id: 1769 | company_name: Klinikum der Stadt Ludwigshafen am Rhein | company_website: http://klilu.de | city: Ludwigshafen am Rhein | country: DE | company_type: clinic_location | first_name: Peter | last_name: Buchholz | full_name: Peter Buchholz | role: Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/peter-buchholz-76538983
+17. person_id: 5522 | company_id: 212 | company_name: Klinikum für Psychiatrie, Psychotherapie und Psychosomatik des Rudolf-Sophien-Stifts in Stuttgart | city: Stuttgart | country: Germany | company_type: clinic_location | first_name: Sven | last_name: Schiffel | full_name: Sven Schiffel | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+18. person_id: 5523 | company_id: 911 | company_name: Klinikum rechts der Isar der Technischen Universität München | company_website: http://mri.tum.de | city: München | country: DE | company_type: clinic_location | first_name: Manfred | last_name: Balan | full_name: Manfred Balan | role: Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/manfred-balan-186925208
+19. person_id: 5524 | company_id: 1139 | company_name: Klinikum rechts der Isar der Technischen Universität München - Biederstein | company_website: http://mri.tum.de | city: München | country: DE | company_type: clinic_location | first_name: Manfred | last_name: Balan | full_name: Manfred Balan | role: Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/manfred-balan-186925208
+20. person_id: 5525 | company_id: 2270 | company_name: Klinikzentrum Bad Sulza | company_website: https://toskanaworld.net/klinikzentrum-bad-sulza-de | city: Bad Sulza | country: DE | company_type: rehab_clinic | first_name: Johanna | last_name: Wagner | full_name: Johanna Wagner | role: Leitung Personal | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/jo-wa
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_105
+- Return only the requested result.
+- Use public information only.
