@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_009
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_009
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3246 | company_id: 1200 | company_name: CJD Asthmazentrum Berchtesgaden | company_website: http://cjd-berchtesgaden.de | city: Berchtesgaden | country: DE | company_type: clinic_location | first_name: Sabine | last_name: Fendt | full_name: Sabine Fendt | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 3247 | company_id: 681 | company_name: CardioCliniC Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Ralf | last_name: Winter | full_name: Ralf Winter | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+3. person_id: 3248 | company_id: 762 | company_name: Caritas-Klinik Dominikus in Berlin | company_website: https://caritas-gesundheit.de/kliniken/caritas-klinik-dominikus | city: Berlin | country: DE | company_type: clinic_location | first_name: Stefanie | last_name: Nathal | full_name: Stefanie Nathal | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 3249 | company_id: 761 | company_name: Caritas-Klinik Maria Heimsuchung Berlin-Pankow | company_website: http://caritas-klinik-pankow.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Ilona | last_name: Hanuschke | full_name: Ilona Hanuschke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3250 | company_id: 772 | company_name: Caritas-Klinik St. Anna Berlin-Charlottenburg | company_website: https://caritas-gesundheit.de/kliniken/caritas-klinik-st-anna | city: Berlin | country: DE | company_type: clinic_location | first_name: Eneida | last_name: Setka | full_name: Eneida Setka | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 3251 | company_id: 844 | company_name: Caritas-Klinik St. Marien in Brandenburg an der Havel | company_website: https://caritas-klinik-marien.de | city: Brandenburg an der Havel | country: DE | company_type: clinic_location | first_name: Jacqueline | last_name: Lentge | full_name: Jacqueline Lentge | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 3253 | company_id: 2020 | company_name: Caritas-Krankenhaus Lebach | company_website: https://caritas-krankenhaus-lebach.de | city: Lebach | country: DE | company_type: clinic_location | first_name: Ann-Kathrin | last_name: Berger | full_name: Ann-Kathrin Berger | role: Kommissarische Pflegedirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 3256 | company_id: 1005 | company_name: Caritas-Krankenhaus St. Lukas in Kelheim | company_website: https://csl-kelheim.de | city: Kelheim | country: DE | company_type: clinic_location | first_name: Rebecca | last_name: Rath | full_name: Rebecca Rath | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+9. person_id: 3258 | company_id: 2026 | company_name: CaritasKlinikum Saarbrücken (St. Josef) | company_website: http://caritasklinikum.de | city: Saarbrücken | country: DE | company_type: clinic_location | first_name: Sascha | last_name: Kropp | full_name: Sascha Kropp | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+10. person_id: 3260 | company_id: 1755 | company_name: CaritasKlinikum Saarbrücken (St. Theresia) | company_website: http://caritasklinikum.de | city: Saarbrücken | country: DE | company_type: clinic_location | first_name: Sascha | last_name: Kropp | full_name: Sascha Kropp | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+11. person_id: 3262 | company_id: 813 | company_name: Carl-Thiem-Klinikum Cottbus | company_website: http://mul-ct.de | city: u | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Stewig-Nitschke | full_name: Andrea Stewig-Nitschke | role: Pflegevorstand | role_bucket: pflege_director | priority: 1
+12. person_id: 3263 | company_id: 813 | company_name: Carl-Thiem-Klinikum Cottbus | company_website: http://mul-ct.de | city: u | country: DE | company_type: clinic_location | first_name: Carmen | last_name: Dommaschke | full_name: Carmen Dommaschke | role: Pflegedirektorin Klinikmanagement operativ | role_bucket: pflege_director | priority: 1
+13. person_id: 3264 | company_id: 2225 | company_name: Caspar Heinrich Klinik in Bad Driburg | company_website: https://caspar-heinrich-klinik.de | city: Bad Driburg | country: DE | company_type: rehab_clinic | first_name: Tanja | last_name: Tiller | full_name: Tanja Tiller | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3265 | company_id: 2271 | company_name: Celenus Algos Fachklinik in Bad Klosterlausnitz | company_website: https://celenus-kliniken.de/algos | city: Bad Klosterlausnitz | country: DE | company_type: rehab_clinic | first_name: Antje | last_name: Hönig | full_name: Antje Hönig | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 3266 | company_id: 2082 | company_name: Celenus Gotthard-Schettler-Klinik in Bad Schönborn | company_website: https://gotthard-schettler-klinik.de | city: Bad Schönborn | country: DE | company_type: rehab_clinic | first_name: Markus | last_name: Hasenest | full_name: Markus Hasenest | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+16. person_id: 3267 | company_id: 2086 | company_name: Celenus Klinik Kinzigtal in Gengenbach | company_website: https://klinik-kinzigtal.de | city: Gengenbach | country: DE | company_type: rehab_clinic | first_name: Juliane | last_name: Irslinger | full_name: Juliane Irslinger | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+17. person_id: 3268 | company_id: 2253 | company_name: Celenus Parkklinik Bad Bergzabern | company_website: https://parkklinik-bad-bergzabern.de | city: Bad Bergzabern | country: DE | company_type: rehab_clinic | first_name: Sybille | last_name: Berndt | full_name: Sybille Berndt | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 3269 | company_id: 2239 | company_name: Celenus Teufelsbad Fachklinik in Blankenburg (Harz) | company_website: https://celenus-kliniken.de/teufelsbad | city: Blankenburg | country: DE | company_type: rehab_clinic | first_name: Daniela | last_name: Bitter | full_name: Daniela Bitter | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+19. person_id: 3270 | company_id: 1661 | company_name: Christliches Kinderhospital Osnabrück | company_website: http://christliches-kinderhospital.de | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Meyer | full_name: Andrea Meyer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+20. person_id: 3271 | company_id: 1742 | company_name: Christliches Kinderhospital Osnabrück - Am Finkenhügel | company_website: https://christliches-kinderhospital.de | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Meyer | full_name: Andrea Meyer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_009
+- Return only the requested result.
+- Use public information only.
