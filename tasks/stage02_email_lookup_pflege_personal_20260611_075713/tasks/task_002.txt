@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_002
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_002
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3083 | company_id: 1621 | company_name: AMEOS Klinikum Seepark Geestland in Langen bei Bremerhaven | company_website: https://ameos.eu/standorte/ameos-west/geestland/ameos-klinikum-seepark-geestland | city: Langen bei Bremerhaven | country: DE | company_type: clinic_location | first_name: Uwe | last_name: Stein | full_name: Uwe Stein | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+2. person_id: 3084 | company_id: 397 | company_name: AMEOS Klinikum St. Clemens Oberhausen | city: Oberhausen | country: Germany | company_type: clinic_location | first_name: Carsten | last_name: Eichhorn | full_name: Carsten Eichhorn | role: Pflegedirektor | Leiter Pflege Zentren | role_bucket: pflege_director | priority: 1
+3. person_id: 3085 | company_id: 2039 | company_name: AMEOS Klinikum St. Elisabeth Neuburg | company_website: https://ameos.de/neuburg | city: Neuburg an der Donau | country: DE | company_type: clinic_location | first_name: Dominik | last_name: Bock | full_name: Dominik Bock | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+4. person_id: 3086 | company_id: 1215 | company_name: AMEOS Klinikum St. Elisabeth Neuburg - Kinder- und Jugendmedizin Standort Ingolstadt | company_website: https://ameos.de/neuburg | city: Ingolstadt | country: DE | company_type: clinic_location | first_name: Dominik | last_name: Bock | full_name: Dominik Bock | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+5. person_id: 3087 | company_id: 434 | company_name: AMEOS Klinikum St. Josef Oberhausen | city: Oberhausen | country: Germany | company_type: clinic_location | first_name: Carsten | last_name: Eichhorn | full_name: Carsten Eichhorn | role: Pflegedirektor | Leiter Pflege Zentren | role_bucket: pflege_director | priority: 1
+6. person_id: 3088 | company_id: 575 | company_name: AMEOS Klinikum St. Marien Oberhausen | city: Oberhausen | country: Germany | company_type: clinic_location | first_name: Carsten | last_name: Eichhorn | full_name: Carsten Eichhorn | role: Pflegedirektor der AMEOS Klinika Oberhausen | role_bucket: pflege_director | priority: 1
+7. person_id: 3089 | company_id: 1319 | company_name: AMEOS Klinikum Ueckermünde | company_website: http://ameos.eu | city: Ueckermünde | country: DE | company_type: clinic_location | first_name: Jessica | last_name: Hafemann | full_name: Jessica Hafemann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 3090 | company_id: 2000 | company_name: ANregiomed Klinik Dinkelsbühl | company_website: https://anregiomed.de | city: Dinkelsbühl | country: DE | company_type: clinic_location | first_name: Sandra | last_name: Henneck | full_name: Sandra Henneck | role: Pflegedirektorin Klinik Dinkelsbühl und Klinik Rothenburg | role_bucket: pflege_director | priority: 1
+9. person_id: 3091 | company_id: 1028 | company_name: ANregiomed Klinik Rothenburg | company_website: https://anregiomed.de | city: Rothenburg ob der Tauber | country: DE | company_type: clinic_location | first_name: Sandra | last_name: Henneck | full_name: Sandra Henneck | role: Pflegedirektorin Klinik Rothenburg und Klinik Dinkelsbühl | role_bucket: pflege_director | priority: 1
+10. person_id: 3092 | company_id: 960 | company_name: ANregiomed Klinikum Ansbach | company_website: https://anregiomed.de | city: Ansbach | country: DE | company_type: clinic_location | first_name: Manuela | last_name: Herzog-Wehrer | full_name: Manuela Herzog-Wehrer | role: Pflegedirektorin Klinikum Ansbach | role_bucket: pflege_director | priority: 1
+11. person_id: 3093 | company_id: 777 | company_name: ARONA Klinik für Altersmedizin - Tagesklinik für Geriatrie in Berlin | company_website: https://arona-kliniken.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Silke | last_name: Wache | full_name: Silke Wache | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 3094 | company_id: 1291 | company_name: ATOS Klinik Fleetinsel in Hamburg | company_website: https://atos-kliniken.com/de/atos-fleetinsel-hamburg | city: Hamburg | country: DE | company_type: clinic_location | first_name: Silke | last_name: Johannsen | full_name: Silke Johannsen | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 3095 | company_id: 1562 | company_name: AWO Psychiatriezentrum in Königslutter am Elm | company_website: http://awo-psychiatriezentrum.de | city: Königslutter am Elm | country: DE | company_type: clinic_location | first_name: Grit | last_name: Hesse | full_name: Grit Hesse | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+14. person_id: 3096 | company_id: 826 | company_name: Achenbach Krankenhaus Königs Wusterhausen | company_website: https://klinikum-ds.de | city: Königs Wusterhausen | country: DE | company_type: clinic_location | first_name: Katrin | last_name: Schmidt | full_name: Katrin Schmidt | role: Pflegedirektion | role_bucket: pflege_director | priority: 1
+15. person_id: 3097 | company_id: 826 | company_name: Achenbach Krankenhaus Königs Wusterhausen | company_website: https://klinikum-ds.de | city: Königs Wusterhausen | country: DE | company_type: clinic_location | first_name: Vivien | last_name: Jendreyeck | full_name: Vivien Jendreyeck | role: Pflegedirektion | role_bucket: pflege_director | priority: 1
+16. person_id: 3098 | company_id: 1046 | company_name: Adula Klinik in Oberstdorf | company_website: http://dr-reisach-kliniken.de | city: Oberstdorf | country: DE | company_type: clinic_location | first_name: Elke | last_name: Morhart | full_name: Elke Morhart | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 3099 | company_id: 137 | company_name: Agaplesion Bethanien Krankenhaus Heidelberg | city: Heidelberg | country: Germany | company_type: clinic_location | first_name: Hamid | last_name: Hodzic | full_name: Hamid Hodzic | role: Kommissarischer Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 3100 | company_id: 1432 | company_name: Agaplesion Bethanien Krankenhaus in Frankfurt am Main | company_website: http://bethanien-krankenhaus.de | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Sigrid | last_name: Kuptschitsch | full_name: Sigrid Kuptschitsch | role: Pflegedirektorin im AGAPLESION BETHANIEN KRANKENHAUS | role_bucket: pflege_director | priority: 1
+19. person_id: 649 | company_id: 377 | company_name: Agaplesion Bethesda Krankenhaus Wuppertal | city: Wuppertal | country: Germany | company_type: clinic_location | first_name: Stefanie | last_name: Eisenberg | full_name: Stefanie Eisenberg | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/stefanie-eisenberg-471a4528a
+20. person_id: 3101 | company_id: 1402 | company_name: Agaplesion Diakonie Kliniken Kassel | company_website: https://diako-kassel.de | city: Kassel | country: DE | company_type: clinic_location | first_name: Judith | last_name: Lorenz | full_name: Judith Lorenz | role: Pflegedienstdirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_002
+- Return only the requested result.
+- Use public information only.
