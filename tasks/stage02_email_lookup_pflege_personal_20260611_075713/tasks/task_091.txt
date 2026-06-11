@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_091
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_091
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5153 | company_id: 2147 | company_name: Gesundheitszentrum Hannover | company_website: https://median-kliniken.de/de/median-ambulantes-gesundheitszentrum-hannover | city: Hannover | country: DE | company_type: rehab_clinic | first_name: Maik | last_name: Steude | full_name: Maik Steude | role: Leiter HR GER | role_bucket: personalleitung | priority: 2
+2. person_id: 5152 | company_id: 2147 | company_name: Gesundheitszentrum Hannover | company_website: https://median-kliniken.de/de/median-ambulantes-gesundheitszentrum-hannover | city: Hannover | country: DE | company_type: rehab_clinic | first_name: Stefan | last_name: Wollschläger | full_name: Stefan Wollschläger | role: Chief People Officer GER | role_bucket: personalleitung | priority: 2
+3. person_id: 5154 | company_id: 1146 | company_name: Günztalklinik Allgäu in Obergünzburg | company_website: https://guenztalklinik-allgaeu.de | city: Obergünzburg | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Beck | full_name: Claudia Beck | role: Leitung Service-Center Personal | role_bucket: personalleitung | priority: 2
+4. person_id: 5155 | company_id: 2085 | company_name: HESCURO Klinik REGINA Bad Kissingen | company_website: https://hescuro.de | city: Bad Kissingen | country: DE | company_type: rehab_clinic | first_name: Sarah | last_name: Hartmann | full_name: Sarah Hartmann | role: Konzernleitung Personal | role_bucket: personalleitung | priority: 2
+5. person_id: 5159 | company_id: 775 | company_name: Havelklinik in Berlin | company_website: http://havelklinik.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Michael | last_name: Schaupp | full_name: Michael Schaupp | role: Bereichsleiter Personalmanagement | role_bucket: personalleitung | priority: 2
+6. person_id: 5160 | company_id: 196 | company_name: Hegau-Jugendwerk in Gailingen am Hochrhein | city: Gailingen am Hochrhein | country: Germany | company_type: clinic_location | first_name: Susanne | last_name: Kern | full_name: Susanne Kern | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+7. person_id: 5161 | company_id: 1457 | company_name: Heilig Geist Hospital Bensheim | company_website: http://hgh-bensheim.de | city: Bensheim | country: DE | company_type: clinic_location | first_name: Xenia | last_name: Martin | full_name: Xenia Martin | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+8. person_id: 5162 | company_id: 1965 | company_name: Heinrich-Braun-Klinikum (Glauchau) | company_website: http://heinrich-braun-klinikum.de | city: Glauchau | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Muck | full_name: Kerstin Muck | role: Leiterin Personalwesen | role_bucket: personalleitung | priority: 2
+9. person_id: 5163 | company_id: 1943 | company_name: Heinrich-Braun-Klinikum (Kirchberg) in Kirchberg, Sachsen | company_website: http://heinrich-braun-klinikum.de | city: Kirchberg | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Muck | full_name: Kerstin Muck | role: Leiterin Personalwesen | role_bucket: personalleitung | priority: 2
+10. person_id: 5164 | company_id: 1837 | company_name: Heinrich-Braun-Klinikum (Zwickau) | company_website: http://heinrich-braun-klinikum.de | city: Zwickau | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Muck | full_name: Kerstin Muck | role: Leiterin Personalwesen | role_bucket: personalleitung | priority: 2
+11. person_id: 5165 | company_id: 2036 | company_name: Heinrich-Braun-Klinikum Zwickau - Standort Werdauer Straße | company_website: http://heinrich-braun-klinikum.de | city: Zwickau | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Muck | full_name: Kerstin Muck | role: Leiterin Personalwesen | role_bucket: personalleitung | priority: 2
+12. person_id: 5166 | company_id: 1632 | company_name: Helios Albert-Schweitzer-Klinik Northeim | company_website: https://helios-gesundheit.de/kliniken/Northeim | city: Northeim | country: DE | company_type: clinic_location | first_name: Alina | last_name: Reiperstein | full_name: Alina Reiperstein | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+13. person_id: 5167 | company_id: 1189 | company_name: Helios Amper-Klinik Indersdorf | company_website: http://helios-gesundheit/dachau.de | city: Markt Indersdorf | country: DE | company_type: clinic_location | first_name: Christine | last_name: Pellmeyer | full_name: Christine Pellmeyer | role: Personalleitung | role_bucket: personalleitung | priority: 2
+14. person_id: 5168 | company_id: 951 | company_name: Helios Amper-Klinikum Dachau | company_website: http://helios-gesundheit/dachau.de | city: Dachau | country: DE | company_type: clinic_location | first_name: Christine | last_name: Pellmeyer | full_name: Christine Pellmeyer | role: Personalleitung | role_bucket: personalleitung | priority: 2
+15. person_id: 5170 | company_id: 584 | company_name: Helios Cäcilien-Hospital Hüls in Krefeld | city: Krefeld | country: Germany | company_type: clinic_location | first_name: Jennifer | last_name: Landry | full_name: Jennifer Landry | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+16. person_id: 5171 | company_id: 584 | company_name: Helios Cäcilien-Hospital Hüls in Krefeld | city: Krefeld | country: Germany | company_type: clinic_location | first_name: Lisa | last_name: Vieth | full_name: Lisa Vieth | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+17. person_id: 5172 | company_id: 1380 | company_name: Helios Dr. Horst-Schmidt-Kliniken Wiesbaden | company_website: http://helios-kliniken.de/klinik/wiesbaden-hsk.html | city: Wiesbaden | country: DE | company_type: clinic_location | first_name: Roland | last_name: Hahn | full_name: Roland Hahn | role: HR-Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/roland-hahn-119949100
+18. person_id: 5173 | company_id: 1277 | company_name: Helios ENDO-Klinik Hamburg | company_website: https://helios-gesundheit.de/kliniken/hamburg-endo-klinik | city: Hamburg | country: DE | company_type: clinic_location | first_name: Alexa | last_name: Bartels | full_name: Alexa Bartels | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+19. person_id: 5174 | company_id: 1985 | company_name: Helios Frankenwaldklinik Kronach in Kronach, Oberfranken | company_website: https://helios-gesundheit.de/kliniken/kronach-frankenwaldklinik | city: Kronach | country: DE | company_type: clinic_location | first_name: Dunja | last_name: Schmidt | full_name: Dunja Schmidt | role: Operative Personalleitung | role_bucket: personalleitung | priority: 2
+20. person_id: 5175 | company_id: 1324 | company_name: Helios Hanseklinikum Stralsund - Krankenhaus West | company_website: http://helios-gesundheit.de/stralsund | city: Stralsund | country: DE | company_type: clinic_location | first_name: Yvonne | last_name: Werner | full_name: Yvonne Werner | role: Personalleitung | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_091
+- Return only the requested result.
+- Use public information only.
