@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_116
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_116
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5770 | company_id: 1891 | company_name: Median Tagesklinik Grünstadt | company_website: https://median-kliniken.de/de/median-tagesklinik-gruenstadt | city: Grünstadt | country: DE | company_type: clinic_location | first_name: Stefan | last_name: Wollschläger | full_name: Stefan Wollschläger | role: Chief People Officer GER | role_bucket: personalleitung | priority: 2
+2. person_id: 5773 | company_id: 1885 | company_name: Median Tagesklinik Neustadt | company_website: https://median-kliniken.de/de/median-tagesklinik-neustadt-an-der-weinstrasse | city: Neustadt an der Weinstraße | country: DE | company_type: clinic_location | first_name: Maik | last_name: Steude | full_name: Maik Steude | role: Leiter HR GER | role_bucket: personalleitung | priority: 2
+3. person_id: 5772 | company_id: 1885 | company_name: Median Tagesklinik Neustadt | company_website: https://median-kliniken.de/de/median-tagesklinik-neustadt-an-der-weinstrasse | city: Neustadt an der Weinstraße | country: DE | company_type: clinic_location | first_name: Stefan | last_name: Wollschläger | full_name: Stefan Wollschläger | role: Chief People Officer GER | role_bucket: personalleitung | priority: 2
+4. person_id: 5775 | company_id: 838 | company_name: Median-Klinik Grünheide | company_website: http://median-kliniken.de/de/standorte/median-klinik-gruenheide/klinikprofil | city: Grünheide | country: DE | company_type: clinic_location | first_name: Maik | last_name: Steude | full_name: Maik Steude | role: Leiter HR GER | role_bucket: personalleitung | priority: 2
+5. person_id: 5774 | company_id: 838 | company_name: Median-Klinik Grünheide | company_website: http://median-kliniken.de/de/standorte/median-klinik-gruenheide/klinikprofil | city: Grünheide | country: DE | company_type: clinic_location | first_name: Stefan | last_name: Wollschläger | full_name: Stefan Wollschläger | role: Chief People Officer GER | role_bucket: personalleitung | priority: 2
+6. person_id: 2941 | company_id: 1502 | company_name: Medical Park Bad Camberg | company_website: https://kliniken.medicalpark.de/bad-camberg | city: Bad Camberg | country: DE | company_type: clinic_location | first_name: Madlen | last_name: Beck | full_name: Madlen Beck | role: Geschäftsführerin und Personalleitung | role_bucket: personalleitung | priority: 2
+7. person_id: 5776 | company_id: 1205 | company_name: Medical Park Bad Rodach | company_website: http://medicalpark.de | city: Bad Rodach | country: DE | company_type: clinic_location | first_name: Evelina | last_name: Grell | full_name: Evelina Grell | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+8. person_id: 5777 | company_id: 2137 | company_name: Medical Park Berlin Humboldtmühle | company_website: https://medicalpark.de/humboldtmuehle | city: Berlin | country: DE | company_type: rehab_clinic | first_name: Nicole | last_name: Ertmer | full_name: Nicole Ertmer | role: Personalleitung | role_bucket: personalleitung | priority: 2
+9. person_id: 5778 | company_id: 1026 | company_name: Medical Park Chiemseeblick | company_website: https://medicalpark.de/de/Kliniken_und_Zentren/Chiemseeblick__Bernau-Felden.html | city: Bernau am Chiemsee | country: DE | company_type: clinic_location | first_name: Stefan | last_name: Guther | full_name: Stefan Guther | role: Personalleitung | role_bucket: personalleitung | priority: 2
+10. person_id: 5779 | company_id: 2125 | company_name: Medical Park St. Hubertus Bad Wiessee | company_website: https://medicalpark.de/de/Kliniken_und_Zentren/St__Hubertus__Bad_Wiessee.html | city: Bad Wiessee | country: DE | company_type: rehab_clinic | first_name: Anja | last_name: Künzel | full_name: Anja Künzel | role: Personalleitung | role_bucket: personalleitung | priority: 2
+11. person_id: 5780 | company_id: 52 | company_name: Medius Klinik Nürtingen | city: Nürtingen | country: Germany | company_type: clinic_location | first_name: Michael | last_name: Grubwinkler | full_name: Michael Grubwinkler | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+12. person_id: 5781 | company_id: 65 | company_name: Medius Klinik Ostfildern-Ruit | city: Ostfildern | country: Germany | company_type: clinic_location | first_name: Michael | last_name: Grubwinkler | full_name: Michael Grubwinkler | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+13. person_id: 5782 | company_id: 1559 | company_name: Medizinische Hochschule Hannover | company_website: http://mhh.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Manuel | last_name: Chrobok | full_name: Manuel Chrobok | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+14. person_id: 5783 | company_id: 1559 | company_name: Medizinische Hochschule Hannover | company_website: http://mhh.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Silke | last_name: Pelzmeier | full_name: Silke Pelzmeier | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+15. person_id: 5784 | company_id: 1789 | company_name: Medizinisches Zentrum Lahnhöhe am Mittelrhein in Lahnstein | company_website: https://lahnhoehe.de | city: Lahnstein | country: DE | company_type: clinic_location | first_name: Inka | last_name: Nothbaum | full_name: Inka Nothbaum | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+16. person_id: 5785 | company_id: 2052 | company_name: Mettnau Werner-Messmer-Klinik in Radolfzell am Bodensee | company_website: https://mettnau.com/werner-messmer-klinik | city: Radolfzell am Bodensee | country: DE | company_type: rehab_clinic | first_name: Tanja | last_name: Scheurer | full_name: Tanja Scheurer | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+17. person_id: 5786 | company_id: 2268 | company_name: Moritz Klinik in Bad Klosterlausnitz | company_website: https://moritz-klinik.de | city: Bad Klosterlausnitz | country: DE | company_type: rehab_clinic | first_name: René | last_name: Mengel | full_name: René Mengel | role: Personalleitung / People and Culture | role_bucket: personalleitung | priority: 2
+18. person_id: 5787 | company_id: 843 | company_name: Naemi-Wilke-Stift in Guben | company_website: http://naemi-wilke-stift.de | city: Guben | country: DE | company_type: clinic_location | first_name: Madlen | last_name: Rinkert | full_name: Madlen Rinkert | role: Sachgebietsleiterin Personal | role_bucket: personalleitung | priority: 2
+19. person_id: 5788 | company_id: 1793 | company_name: Nardini Klinikum St. Elisabeth Zweibrücken | company_website: http://nardiniklinikum.de | city: Zweibrücken | country: DE | company_type: clinic_location | first_name: Sylvia | last_name: Heinemann | full_name: Sylvia Heinemann | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+20. person_id: 5789 | company_id: 1800 | company_name: Nardini Klinikum St. Johannis in Landstuhl | company_website: http://nardiniklinikum.de | city: Landstuhl | country: DE | company_type: clinic_location | first_name: Sylvia | last_name: Heinemann | full_name: Sylvia Heinemann | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_116
+- Return only the requested result.
+- Use public information only.
