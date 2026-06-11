@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_136
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_136
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 6232 | company_id: 1338 | company_name: Warnow-Klinik Bützow | company_website: https://warnowklinik.de | city: Bützow | country: DE | company_type: clinic_location | first_name: Johanna | last_name: Medau | full_name: Johanna Medau | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+2. person_id: 6234 | company_id: 171 | company_name: Werner-Schwidder-Klinik in Bad Krozingen | city: Bad Krozingen | country: Germany | company_type: clinic_location | first_name: L. | last_name: Gütermann | full_name: L. Gütermann | role: Personalleitung | role_bucket: personalleitung | priority: 2
+3. person_id: 6235 | company_id: 2062 | company_name: Werner-Schwidder-Klink in Bad Krozingen | company_website: https://schwarzwaldkliniken.de/kliniken/werner-schwidder-klinik-2 | city: Bad Krozingen | country: DE | company_type: rehab_clinic | first_name: L. | last_name: Gütermann | full_name: L. Gütermann | role: Personalleitung | role_bucket: personalleitung | priority: 2
+4. person_id: 6236 | company_id: 1998 | company_name: Wertachklinik Bobingen | company_website: http://wertachkliniken.de | city: Bobingen | country: DE | company_type: clinic_location | first_name: Manuela | last_name: Völk | full_name: Manuela Völk | role: Personalleitung | role_bucket: personalleitung | priority: 2
+5. person_id: 6237 | company_id: 1061 | company_name: Wertachklinik Schwabmünchen | company_website: http://wertachkliniken.de | city: Schwabmünchen | country: DE | company_type: clinic_location | first_name: Manuela | last_name: Völk | full_name: Manuela Völk | role: Personalleitung | role_bucket: personalleitung | priority: 2
+6. person_id: 6238 | company_id: 83 | company_name: Westallgäu-Klinikum in Wangen im Allgäu | city: Wangen im Allgäu | country: Germany | company_type: clinic_location | first_name: Raimund | last_name: Alker | full_name: Raimund Alker | role: Personalleiter | role_bucket: personalleitung | priority: 2
+7. person_id: 6239 | company_id: 1327 | company_name: Westmecklenburg Klinikum Helene von Bülow (Hagenow) | company_website: https://wmk-hvb.de | city: Hagenow | country: DE | company_type: clinic_location | first_name: Sibylle | last_name: Salamon | full_name: Sibylle Salamon | role: Leitung Personal und Organisation | role_bucket: personalleitung | priority: 2
+8. person_id: 6240 | company_id: 1330 | company_name: Westmecklenburg Klinikum Helene von Bülow (Ludwigslust) | company_website: http://wmk-hvb.de | city: Ludwigslust | country: DE | company_type: clinic_location | first_name: Sibylle | last_name: Salamon | full_name: Sibylle Salamon | role: Leitung Personal und Organisation | role_bucket: personalleitung | priority: 2
+9. person_id: 6241 | company_id: 1768 | company_name: Westpfalz-Klinikum (Kaiserslautern) | company_website: https://westpfalz-klinikum.eu | city: Kaiserslautern | country: DE | company_type: clinic_location | first_name: Timo | last_name: Ries | full_name: Timo Ries | role: Leiter Personalmanagement | role_bucket: personalleitung | priority: 2
+10. person_id: 6242 | company_id: 1823 | company_name: Westpfalz-Klinikum (Kirchheimbolanden) | company_website: http://westpfalz-klinikum.eu | city: Kirchheimbolanden | country: DE | company_type: clinic_location | first_name: Timo | last_name: Ries | full_name: Timo Ries | role: Leiter Personalmanagement | role_bucket: personalleitung | priority: 2
+11. person_id: 6243 | company_id: 1802 | company_name: Westpfalz-Klinikum (Kusel) | company_website: http://westpfalz-klinikum.eu | city: Kusel | country: DE | company_type: clinic_location | first_name: Timo | last_name: Ries | full_name: Timo Ries | role: Leiter Personalmanagement | role_bucket: personalleitung | priority: 2
+12. person_id: 6244 | company_id: 1832 | company_name: Westpfalz-Klinikum (Rockenhausen) | company_website: http://westpfalz-klinikum.eu | city: Rockenhausen | country: DE | company_type: clinic_location | first_name: Timo | last_name: Ries | full_name: Timo Ries | role: Leiter Personalmanagement | role_bucket: personalleitung | priority: 2
+13. person_id: 6247 | company_id: 531 | company_name: Wilhelm-Anton Hospital in Goch | city: Goch | country: Germany | company_type: clinic_location | first_name: Maik | last_name: Möller | full_name: Maik Möller | role: Leiter Personalwesen | role_bucket: personalleitung | priority: 2
+14. person_id: 6248 | company_id: 1299 | company_name: ZSG Osdorf in Hamburg | company_website: https://asklepios.com/hamburg/westklinikum/experten/psychiatrie_und_psychotherapie/zsg-osdorf | city: Hamburg | country: DE | company_type: clinic_location | first_name: Matthias | last_name: Meyer | full_name: Matthias Meyer | role: Leiter Personalmanagement Hamburg und Leiter Konzernbereich Personal | role_bucket: personalleitung | priority: 2
+15. person_id: 6249 | company_id: 43 | company_name: Zentralinstitut für Seelische Gesundheit in Mannheim | city: Mannheim | country: Germany | company_type: clinic_location | first_name: Gerda | last_name: Rensch | full_name: Gerda Rensch | role: Leitung Geschäftsbereich Personal | role_bucket: personalleitung | priority: 2
+16. person_id: 6250 | company_id: 1160 | company_name: Zentrum für Psychiatrie Cham | company_website: https://medbo.de/kliniken-einrichtungen/psychiatrie-psychotherapie/zentrum-cham | city: Cham | country: DE | company_type: clinic_location | first_name: Horst | last_name: Meisinger | full_name: Horst Meisinger | role: Direktor Personal | role_bucket: personalleitung | priority: 2
+17. person_id: 6251 | company_id: 28 | company_name: Zentrum für Psychiatrie Emmendingen | city: Emmendingen | country: Germany | company_type: clinic_location | first_name: Brigitte | last_name: Schütz | full_name: Brigitte Schütz | role: Personaldirektorin | role_bucket: personalleitung | priority: 2
+18. person_id: 6252 | company_id: 69 | company_name: Zentrum für Psychiatrie Reichenau | city: Reichenau | country: Germany | company_type: clinic_location | first_name: Eva | last_name: Majovski | full_name: Eva Majovski | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+19. person_id: 6253 | company_id: 189 | company_name: Zentrum für Psychische Gesundheit Bruchsal | city: Bruchsal | country: Germany | company_type: clinic_location | first_name: Isolde | last_name: Schuller | full_name: Isolde Schuller | role: Personaldirektorin, Mitglied der Geschäftsleitung | role_bucket: personalleitung | priority: 2
+20. person_id: 6255 | company_id: 186 | company_name: Zentrum für Psychische Gesundheit Neckar-Odenwald in Mosbach | city: Mosbach | country: Germany | company_type: clinic_location | first_name: Isolde | last_name: Schuller | full_name: Isolde Schuller | role: Personaldirektorin, Mitglied der Geschäftsleitung | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_136
+- Return only the requested result.
+- Use public information only.
