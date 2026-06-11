@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_047
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_047
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4089 | company_id: 1855 | company_name: Lausitzer Seenland Klinikum in Hoyerswerda | company_website: http://seenlandklinikum.de | city: Hoyerswerda | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Wolthusen | full_name: Birgit Wolthusen | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+2. person_id: 4090 | company_id: 922 | company_name: Leopoldina-Krankenhaus in Schweinfurt | company_website: http://leopoldina-krankenhaus.com | city: Schweinfurt | country: DE | company_type: clinic_location | first_name: Eva | last_name: Marienfeld | full_name: Eva Marienfeld | role: Kommissarische Pflegedirektorin | role_bucket: pflege_director | priority: 1
+3. person_id: 4091 | company_id: 1486 | company_name: Ludwig-Noll-Krankenhaus in Kassel | company_website: https://gesundheit-nordhessen.de/klinikum-kassel | city: Kassel | country: DE | company_type: clinic_location | first_name: Helmut | last_name: Zeilfelder | full_name: Helmut Zeilfelder | role: Pflegerischer Geschäftsführer / Pflegedirektor | role_bucket: pflege_director | priority: 1
+4. person_id: 765 | company_id: 437 | company_name: Lukas-Krankenhaus Bünde | city: Bünde | country: Germany | company_type: clinic_location | first_name: Anna | last_name: Bollhorst | full_name: Anna Bollhorst | role: Klinikpflegedienstleitung | role_bucket: pflege_director | priority: 1
+5. person_id: 4093 | company_id: 1473 | company_name: Lungenfachklinik Immenhausen in Immenhausen, Hessen | company_website: http://lungenfachklinik-immenhausen.de | city: Immenhausen | country: DE | company_type: clinic_location | first_name: Benjamin | last_name: Bachmann | full_name: Benjamin Bachmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 4094 | company_id: 2037 | company_name: Lungenzentrum Coswig | company_website: https://lungenzentrum-coswig.de | city: Coswig bei Dresden | country: DE | company_type: clinic_location | first_name: Annett | last_name: Berger | full_name: Annett Berger | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 4095 | company_id: 1882 | company_name: Lutrina Klinik in Kaiserslautern | company_website: http://lutrinaklinik.de | city: Kaiserslautern | country: DE | company_type: clinic_location | first_name: Sven | last_name: Käufer | full_name: Sven Käufer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 4096 | company_id: 252 | company_name: MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik) | city: Ottenhöfen im Schwarzwald | country: Germany | company_type: clinic_location | first_name: Alexandra | last_name: Heinzelmann | full_name: Alexandra Heinzelmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 4097 | company_id: 2240 | company_name: MEDIAN Klinik Elbe-Saale in Barby (Elbe) | company_website: https://median-kliniken.de/de/median-klinik-elbe-saale | city: Barby | country: DE | company_type: rehab_clinic | first_name: Laura-Sophie | last_name: Leihe | full_name: Laura-Sophie Leihe | role: Therapie- und Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 4098 | company_id: 2277 | company_name: MEDIAN Klinik Schlangenbad (Standort Schlangenbad) in Schlangenbad, Taunus | company_website: https://median-kliniken.de/de/median-klinik-schlangenbad | city: Schlangenbad | country: DE | company_type: rehab_clinic | first_name: Eva | last_name: Dreifuss | full_name: Eva Dreifuss | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 4099 | company_id: 2255 | company_name: MEDIAN Rehazentrum Bad Bertrich | company_website: https://median-kliniken.de/de/median-reha-zentrum-bad-bertrich | city: Bad Bertrich | country: DE | company_type: rehab_clinic | first_name: Sabine | last_name: Schmitz | full_name: Sabine Schmitz | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+12. person_id: 4100 | company_id: 1697 | company_name: MEDIAN Zentrum für Verhaltensmedizin Bad Pyrmont | company_website: https://median-kliniken.de/de/median-zentrum-fuer-verhaltensmedizin-bad-pyrmont-fachkrankenhaus | city: Bad Pyrmont | country: DE | company_type: clinic_location | first_name: Anja | last_name: Begemann | full_name: Anja Begemann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 4101 | company_id: 2180 | company_name: MEDIAN-Klinik Bad Sülze | company_website: https://median-kliniken.de/de/median-klinik-bad-suelze | city: Bad Sülze | country: DE | company_type: rehab_clinic | first_name: Antje | last_name: Meyer | full_name: Antje Meyer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 4102 | company_id: 2186 | company_name: MEDICLIN Dünenwald Klinik in Trassenheide | company_website: https://duenenwaldklinik.de | city: Trassenheide | country: DE | company_type: rehab_clinic | first_name: Claudia | last_name: Wermke | full_name: Claudia Wermke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 4161 | company_id: 2149 | company_name: MEDICLIN Hedon Klinik in Lingen (Ems) | company_website: https://mediclin-hedon-klinik.de | city: Lingen | country: DE | company_type: rehab_clinic | first_name: Annegret | last_name: Hesemann | full_name: Annegret Hesemann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+16. person_id: 4103 | company_id: 2056 | company_name: MEDICLIN Klinik am Vogelsang in Donaueschingen | company_website: https://klinik-am-vogelsang.de | city: Donaueschingen | country: DE | company_type: rehab_clinic | first_name: Stefan | last_name: Schmidt | full_name: Stefan Schmidt | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 4104 | company_id: 2196 | company_name: MEDICLIN Kliniken Bad Wildungen | company_website: https://mediclin-badwildungen.de | city: Bad Wildungen | country: DE | company_type: rehab_clinic | first_name: Christian | last_name: Brhel | full_name: Christian Brhel | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 4105 | company_id: 2243 | company_name: MEDICLIN Reha-Zentrum Bad Düben | company_website: https://reha-zentrum-bad-dueben.de | city: Bad Düben | country: DE | company_type: rehab_clinic | first_name: Anja | last_name: Hübscher | full_name: Anja Hübscher | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 4106 | company_id: 2075 | company_name: MEDICLIN Reha-Zentrum Roter Hügel in Bayreuth | company_website: https://reha-zentrum-roter-huegel.de | city: Bayreuth | country: DE | company_type: rehab_clinic | first_name: Lena | last_name: Jahreis | full_name: Lena Jahreis | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 4107 | company_id: 2230 | company_name: MEDICLIN Rose Klinik in Horn-Bad Meinberg | company_website: https://rose-klinik.de | city: Horn-Bad Meinberg | country: DE | company_type: rehab_clinic | first_name: Stephanie | last_name: Lange | full_name: Stephanie Lange | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_047
+- Return only the requested result.
+- Use public information only.
