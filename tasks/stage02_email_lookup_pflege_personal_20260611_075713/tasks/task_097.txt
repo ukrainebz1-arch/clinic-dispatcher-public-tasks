@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_097
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_097
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5287 | company_id: 390 | company_name: Johanniter Krankenhaus Bonn | city: Bonn | country: Germany | company_type: clinic_location | first_name: Carola | last_name: Henrich | full_name: Carola Henrich | role: Personalleitung | role_bucket: personalleitung | priority: 2
+2. person_id: 5288 | company_id: 455 | company_name: Johanniter-Krankenhaus Rheinhausen in Duisburg | city: Duisburg | country: Germany | company_type: clinic_location | first_name: Martin | last_name: Schlie | full_name: Martin Schlie | role: Leiter Personal Johanniter GmbH | role_bucket: personalleitung | priority: 2
+3. person_id: 5289 | company_id: 1983 | company_name: Johanniter-Krankenhaus Treuenbrietzen | company_website: http://johanniter-treuenbrietzen.de | city: Treuenbrietzen | country: DE | company_type: clinic_location | first_name: Denise | last_name: Fiedler | full_name: Denise Fiedler | role: Personalleitung | role_bucket: personalleitung | priority: 2
+4. person_id: 5290 | company_id: 645 | company_name: Johanniter-Tagesklinik Düsseldorf | city: Düsseldorf | country: Germany | company_type: clinic_location | first_name: Martin | last_name: Schlie | full_name: Martin Schlie | role: Leiter Personal Johanniter GmbH | role_bucket: personalleitung | priority: 2
+5. person_id: 5291 | company_id: 1898 | company_name: Johanniter-Tagesklinik Koblenz | company_website: https://johanniter-tagesklinik-koblenz.de | city: Koblenz | country: DE | company_type: clinic_location | first_name: Martin | last_name: Schlie | full_name: Martin Schlie | role: Leiter Personal Johanniter GmbH | role_bucket: personalleitung | priority: 2
+6. person_id: 5292 | company_id: 724 | company_name: Johanniter-Tagesklinik Siegburg | city: Siegburg | country: Germany | company_type: clinic_location | first_name: Martin | last_name: Schlie | full_name: Martin Schlie | role: Leiter Personal Johanniter GmbH | role_bucket: personalleitung | priority: 2
+7. person_id: 5293 | company_id: 1884 | company_name: Johanniter-Zentrum für Kinder- und Jugendpsychiatrie Neuwied | company_website: http://johanniter-zentrum.de | city: Neuwied | country: DE | company_type: clinic_location | first_name: Martin | last_name: Schlie | full_name: Martin Schlie | role: Leiter Personal Johanniter GmbH | role_bucket: personalleitung | priority: 2
+8. person_id: 5294 | company_id: 2003 | company_name: Juraklinik Scheßlitz | company_website: https://gkg-bamberg.de/klinik/juraklinik | city: Scheßlitz | country: DE | company_type: clinic_location | first_name: Ute | last_name: Göbhardt | full_name: Ute Göbhardt | role: Leitung Personalwesen | role_bucket: personalleitung | priority: 2
+9. person_id: 5295 | company_id: 337 | company_name: KEM Evang. Huyssens-Stiftung Essen-Huttrop | city: Essen | country: Germany | company_type: clinic_location | first_name: Ralf | last_name: Klose | full_name: Ralf Klose | role: Leitung Personal und Organisation | role_bucket: personalleitung | priority: 2
+10. person_id: 5296 | company_id: 452 | company_name: KEM Evang. Krankenhaus Essen-Steele | city: Essen | country: Germany | company_type: clinic_location | first_name: Ralf | last_name: Klose | full_name: Ralf Klose | role: Leitung Personal und Organisation | role_bucket: personalleitung | priority: 2
+11. person_id: 5297 | company_id: 466 | company_name: KEM Evang. Krankenhaus Essen-Werden | city: Essen | country: Germany | company_type: clinic_location | first_name: Ralf | last_name: Klose | full_name: Ralf Klose | role: Leitung Personal und Organisation | role_bucket: personalleitung | priority: 2
+12. person_id: 5303 | company_id: 2144 | company_name: KMG Elbtalkliniken Bad Wilsnack | company_website: https://kmg-kliniken.de/rehakliniken/kmg-elbtalklinik-bad-wilsnack | city: Bad Wilsnack | country: DE | company_type: rehab_clinic | first_name: Michaela | last_name: Hettinger | full_name: Michaela Hettinger | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+13. person_id: 5304 | company_id: 1343 | company_name: KMG Klinik Boizenburg | company_website: http://kmg-kliniken.de | city: Boizenburg | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Hettinger | full_name: Michaela Hettinger | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+14. person_id: 5305 | company_id: 1311 | company_name: KMG Klinikum Güstrow | company_website: http://kmg-kliniken.de | city: Güstrow | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Hettinger | full_name: Michaela Hettinger | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+15. person_id: 5306 | company_id: 829 | company_name: KMG Klinikum Luckenwalde | company_website: https://kmg-kliniken.de | city: Luckenwalde | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Hettinger | full_name: Michaela Hettinger | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+16. person_id: 5307 | company_id: 847 | company_name: KMG Klinikum Nordbrandenburg - Standort Kyritz | company_website: https://kmg-kliniken.de/akutkliniken/kmg-klinikum-nordbrandenburg/standort-kyritz | city: Kyritz | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Hettinger | full_name: Michaela Hettinger | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+17. person_id: 5308 | company_id: 854 | company_name: KMG Klinikum Nordbrandenburg - Standort Pritzwalk | company_website: https://kmg-kliniken.de/akutkliniken/kmg-klinikum-nordbrandenburg/standort-pritzwalk | city: Pritzwalk | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Hettinger | full_name: Michaela Hettinger | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+18. person_id: 5309 | company_id: 851 | company_name: KMG Klinikum Nordbrandenburg - Standort Wittstock in Wittstock/Dosse | company_website: https://kmg-kliniken.de/akutkliniken/kmg-klinikum-nordbrandenburg/standort-wittstock | city: Wittstock | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Hettinger | full_name: Michaela Hettinger | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+19. person_id: 5321 | company_id: 501 | company_name: Karl-Hansen-Klinik in Bad Lippspringe | city: Bad Lippspringe | country: Germany | company_type: clinic_location | first_name: Markus | last_name: Finkeldei | full_name: Markus Finkeldei | role: Direktor Personal und Recht | role_bucket: personalleitung | priority: 2
+20. person_id: 5322 | company_id: 1574 | company_name: Karl-Jaspers-Klinik in Bad Zwischenahn | company_website: https://karl-jaspers-klinik.de | city: Bad Zwischenahn | country: DE | company_type: clinic_location | first_name: Erik | last_name: Stalljann | full_name: Erik Stalljann | role: Personalleitung | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_097
+- Return only the requested result.
+- Use public information only.
