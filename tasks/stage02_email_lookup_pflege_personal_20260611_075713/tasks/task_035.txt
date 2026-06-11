@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_035
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_035
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3820 | company_id: 1082 | company_name: Klinikum Fichtelgebirge (Haus Selb) | company_website: http://klinikum-fichtelgebirge.de | city: Selb | country: DE | company_type: clinic_location | first_name: Manuel | last_name: Schaumberger | full_name: Manuel Schaumberger | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+2. person_id: 3822 | company_id: 996 | company_name: Klinikum Forchheim in Forchheim, Oberfranken | company_website: http://klinikumforchheim.de | city: Forchheim | country: DE | company_type: clinic_location | first_name: Sabine | last_name: Jacob | full_name: Sabine Jacob | role: Pflegedirektion / Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 3824 | company_id: 814 | company_name: Klinikum Frankfurt (Oder) | company_website: http://klinikumffo.de | city: Frankfurt | country: DE | company_type: clinic_location | first_name: Jenny | last_name: Wortha | full_name: Dr. Jenny Wortha | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 3825 | company_id: 1379 | company_name: Klinikum Frankfurt Höchst | company_website: https://varisano.de/klinikum-frankfurt-hoechst | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Corinna | last_name: Schreier | full_name: Corinna Schreier | role: Pflegedienstdirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3827 | company_id: 961 | company_name: Klinikum Freising | company_website: https://klinikum-freising.de | city: Freising | country: DE | company_type: clinic_location | first_name: Stefan J. | last_name: Hörömpö | full_name: Stefan J. Hörömpö | role: Pflegedirektor (CNO) | role_bucket: pflege_director | priority: 1
+6. person_id: 3828 | company_id: 1375 | company_name: Klinikum Fulda | company_website: http://klinikum-fulda.de | city: Fulda | country: DE | company_type: clinic_location | first_name: Ronald | last_name: Poljak | full_name: Ronald Poljak | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 3830 | company_id: 1518 | company_name: Klinikum Fulda / Standort Gersfeld / Station G1 | company_website: http://klinikum-fulda.de | city: Gersfeld | country: DE | company_type: clinic_location | first_name: Ronald | last_name: Poljak | full_name: Ronald Poljak | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+8. person_id: 3832 | company_id: 1051 | company_name: Klinikum Fünfseenland Gauting | company_website: https://klinikum-fuenfseenland.de | city: Gauting | country: DE | company_type: clinic_location | first_name: Goran | last_name: Sumic | full_name: Goran Sumic | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 3834 | company_id: 958 | company_name: Klinikum Fürstenfeldbruck | company_website: http://klinikum-ffb.de | city: Fürstenfeldbruck | country: DE | company_type: clinic_location | first_name: Elke | last_name: Boch | full_name: Elke Boch | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+10. person_id: 3836 | company_id: 917 | company_name: Klinikum Fürth | company_website: https://klinikum-fuerth.de | city: Fürth | country: DE | company_type: clinic_location | first_name: Ute | last_name: Jahnel | full_name: Ute Jahnel | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 3838 | company_id: 962 | company_name: Klinikum Garmisch-Partenkirchen | company_website: http://klinikum-gap.de | city: Garmisch-Partenkirchen | country: DE | company_type: clinic_location | first_name: Gisela | last_name: Gehring | full_name: Gisela Gehring | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 3840 | company_id: 1125 | company_name: Klinikum Garmisch-Partenkirchen (Außenstelle Murnau) | company_website: http://klinikum-gap.de | city: Murnau am Staffelsee | country: DE | company_type: clinic_location | first_name: Gisela | last_name: Gehring | full_name: Gisela Gehring | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 3842 | company_id: 1541 | company_name: Klinikum Gersfeld | company_website: http://klinikum-gersfeld.de | city: Gersfeld | country: DE | company_type: clinic_location | first_name: Ronald | last_name: Petrovic-Poljak | full_name: Ronald Petrovic-Poljak | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+14. person_id: 3844 | company_id: 1647 | company_name: Klinikum Hann. Münden | company_website: http://khmue.de | city: Hann | country: DE | company_type: clinic_location | first_name: Dimitri | last_name: Probst | full_name: Dimitri Probst | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+15. person_id: 3845 | company_id: 349 | company_name: Klinikum Ibbenbüren | city: Ibbenbüren | country: Germany | company_type: clinic_location | first_name: Karin | last_name: Christian | full_name: Karin Christian | role: Pflegedirektorin Stiftung Mathias-Spital Rheine | role_bucket: pflege_director | priority: 1
+16. person_id: 3847 | company_id: 1772 | company_name: Klinikum Idar-Oberstein | company_website: https://shg-kliniken.de/idar-oberstein | city: Idar-Oberstein | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Scaramuzzo-Schröer | full_name: Michaela Scaramuzzo-Schröer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+17. person_id: 3848 | company_id: 912 | company_name: Klinikum Ingolstadt | company_website: https://klinikum-ingolstadt.de | city: nach brustwandnaher Stanzbiopsie zum Ausschluss eines Pneumothorax erfolgen | country: DE | company_type: clinic_location | first_name: Rainer | last_name: Knöferl | full_name: Rainer Knöferl | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 3849 | company_id: 1318 | company_name: Klinikum Karlsburg | company_website: http://klinikum-karlsburg.de | city: Karlsburg bei Greifswald | country: DE | company_type: clinic_location | first_name: Manuela | last_name: Reinhardt | full_name: Manuela Reinhardt | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 3850 | company_id: 950 | company_name: Klinikum Kaufbeuren | company_website: https://kliniken-oal-kf.de/kliniken/klinikum-kaufbeuren | city: Kaufbeuren | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Lehmann | full_name: Andrea Lehmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 3851 | company_id: 940 | company_name: Klinikum Kempten | company_website: https://klinikverbund-allgaeu.de | city: Kempten | country: DE | company_type: clinic_location | first_name: Matthias | last_name: Fink | full_name: Matthias Fink | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_035
+- Return only the requested result.
+- Use public information only.
