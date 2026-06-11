@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_001
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_001
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3059 | company_id: 1174 | company_name: 310KLINIK in Nürnberg | company_website: http://310klinik.com | city: Nürnberg | country: DE | company_type: clinic_location | first_name: Alize | last_name: Takil | full_name: Alize Takil | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 3060 | company_id: 1626 | company_name: AGAPLESION Ev. Bathildiskrankenhaus in Bad Pyrmont | company_website: http://bathildis.de | city: Bad Pyrmont | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Rumberger | full_name: Susanne Rumberger | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+3. person_id: 3062 | company_id: 1332 | company_name: AKG Klinik Parchim | company_website: https://asklepios.com/parchim | city: Parchim | country: DE | company_type: clinic_location | first_name: Stefanie | last_name: Lindenau | full_name: Stefanie Lindenau | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+4. person_id: 3064 | company_id: 1280 | company_name: AKK Altonaer Kinderkrankenhaus in Hamburg | company_website: https://kinderkrankenhaus.net | city: Hamburg | country: DE | company_type: clinic_location | first_name: Ibrahim | last_name: Bölad | full_name: Ibrahim Bölad | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+5. person_id: 3066 | company_id: 1730 | company_name: AMEOS Klinik Hildesheim Tagesklinik | city: Hildesheim | country: DE | company_type: clinic_location | first_name: Andy | last_name: Schütz | full_name: Andy Schütz | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+6. person_id: 3067 | company_id: 1665 | company_name: AMEOS Klinikum Alfeld | company_website: https://ameos.de/klinikum-alfeld/kontakt | city: Alfeld | country: DE | company_type: clinic_location | first_name: Fabian | last_name: Barembruch | full_name: Fabian Barembruch | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 3068 | company_id: 1348 | company_name: AMEOS Klinikum Anklam | company_website: http://ameos.eu | city: Anklam | country: DE | company_type: clinic_location | first_name: Karolin | last_name: Timm | full_name: Karolin Timm | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 3069 | company_id: 564 | company_name: AMEOS Klinikum Bad Salzuflen | city: Bad Salzuflen | country: Germany | company_type: clinic_location | first_name: Sebastian | last_name: Enskat | full_name: Sebastian Enskat | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 3070 | company_id: 808 | company_name: AMEOS Klinikum Bremen | company_website: https://ameos.de/klinikum-bremen | city: Bremen | country: DE | company_type: clinic_location | first_name: Sven | last_name: Helliger | full_name: Sven Helliger | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+10. person_id: 3071 | company_id: 1722 | company_name: AMEOS Klinikum Cuxhaven | company_website: https://ameos.de/klinikum-cuxhaven | city: Cuxhaven | country: DE | company_type: clinic_location | first_name: Sven | last_name: Helliger | full_name: Sven Helliger | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+11. person_id: 3072 | company_id: 1745 | company_name: AMEOS Klinikum Goslar | company_website: https://ameos.eu/standorte/ameos-west/goslar/ameos-klinikum-goslar | city: Goslar | country: DE | company_type: clinic_location | first_name: Andy | last_name: Schütz | full_name: Andy Schütz | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+12. person_id: 3073 | company_id: 1705 | company_name: AMEOS Klinikum Hameln | company_website: https://ameos.eu/standorte/ameos-west/hameln/ameos-klinikum-hameln | city: Hameln | country: DE | company_type: clinic_location | first_name: Andy | last_name: Schütz | full_name: Andy Schütz | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+13. person_id: 3074 | company_id: 1744 | company_name: AMEOS Klinikum Hameln - Tagesklinik für Kinder-und Jugendpsychiatrie | company_website: https://ameos.eu/standorte/ameos-west/hildesheim/ameos-klinikum-hildesheim | city: Hameln | country: DE | company_type: clinic_location | first_name: Andy | last_name: Schütz | full_name: Andy Schütz | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+14. person_id: 3075 | company_id: 1591 | company_name: AMEOS Klinikum Hildesheim | company_website: https://ameos.eu/standorte/ameos-west/hildesheim | city: Hildesheim | country: DE | company_type: clinic_location | first_name: Andy | last_name: Schütz | full_name: Andy Schütz | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+15. person_id: 3076 | company_id: 1749 | company_name: AMEOS Klinikum Hildesheim - Standort Holzminden | company_website: https://ameos.eu/standorte/ameos-west/holzminden/ameos-klinikum-holzminden | city: Holzminden | country: DE | company_type: clinic_location | first_name: Andy | last_name: Schütz | full_name: Andy Schütz | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+16. person_id: 3077 | company_id: 1727 | company_name: AMEOS Klinikum Hildesheim - Tagesklinik Alfeld | company_website: https://ameos.eu/standorte/ameos-west/alfeld/ameos-klinikum-alfeld/leistungen/psychiatrie-und-psychotherapie/tagesklinik-fuer-erwachsene | city: Alfeld | country: DE | company_type: clinic_location | first_name: Andy | last_name: Schütz | full_name: Andy Schütz | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+17. person_id: 3078 | company_id: 1147 | company_name: AMEOS Klinikum Inntal | company_website: http://ameos.eu | city: Simbach am Inn | country: DE | company_type: clinic_location | first_name: Walter | last_name: Unterhuber | full_name: Walter Unterhuber | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 3079 | company_id: 1590 | company_name: AMEOS Klinikum Osnabrück | company_website: http://ameos.eu/standorte/ameos-west/osnabrueck | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Manfred | last_name: Timm | full_name: Manfred Timm | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+19. person_id: 3081 | company_id: 1723 | company_name: AMEOS Klinikum Osterholz-Scharmbeck | company_website: https://ameos.de/klinikum-osterholz-scharmbeck | city: Osterholz-Scharmbeck | country: DE | company_type: clinic_location | first_name: Sven | last_name: Helliger | full_name: Sven Helliger | role: Pflegedirektor mit QMB Funktion | role_bucket: pflege_director | priority: 1
+20. person_id: 3082 | company_id: 1358 | company_name: AMEOS Klinikum Pasewalk | company_website: http://ameos.eu | city: Pasewalk | country: DE | company_type: clinic_location | first_name: Jessica | last_name: Hafemann | full_name: Jessica Hafemann | role: Pflegedienstleitung Psychiatrie | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_001
+- Return only the requested result.
+- Use public information only.
