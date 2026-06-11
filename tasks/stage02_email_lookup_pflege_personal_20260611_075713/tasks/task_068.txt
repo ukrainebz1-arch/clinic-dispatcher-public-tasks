@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_068
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_068
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4569 | company_id: 1712 | company_name: Tagesklinik Linden in Hannover | company_website: https://klinikum.wahrendorff.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Cordula | last_name: Schweiger | full_name: Cordula Schweiger | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+2. person_id: 4570 | company_id: 639 | company_name: Tagesklinik Netphen | city: Netphen | country: Germany | company_type: clinic_location | first_name: Stefan | last_name: Schneider | full_name: Stefan Schneider | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 4571 | company_id: 1733 | company_name: Tagesklinik Peine | company_website: http://awo-psychiatriezentrum.de | city: Peine | country: DE | company_type: clinic_location | first_name: Grit | last_name: Hesse | full_name: Grit Hesse | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 4572 | company_id: 900 | company_name: Tagesklinik Rüdersdorf | company_website: http://klinikumffo.de | city: Rüdersdorf bei Berlin | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Mohr | full_name: Claudia Mohr | role: Komm. Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 4573 | company_id: 892 | company_name: Tagesklinik Seelow | company_website: http://klinikumffo.de | city: Seelow | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Mohr | full_name: Claudia Mohr | role: Komm. Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 4574 | company_id: 1738 | company_name: Tagesklinik Seesen in Seesen, Harz | company_website: http://asklepios.com/goettingen | city: Seesen | country: DE | company_type: clinic_location | first_name: Jörn | last_name: Heinecke | full_name: Jörn Heinecke | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 4576 | company_id: 1522 | company_name: Tagesklinik Seligenstadt - Froschhausen | company_website: https://asklepios.com/psychiatrie-langen | city: Seligenstadt | country: DE | company_type: clinic_location | first_name: Frank | last_name: Schmitz | full_name: Frank Schmitz | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+8. person_id: 4577 | company_id: 901 | company_name: Tagesklinik Spremberg | company_website: http://krankenhaus-spremberg.de | city: Spremberg | country: DE | company_type: clinic_location | first_name: Ulrike | last_name: Walinsky | full_name: Ulrike Walinsky | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+9. person_id: 4578 | company_id: 882 | company_name: Tagesklinik Strausberg | company_website: https://psychiatrie.immanuel.de/einrichtung/versorgungsbereiche/tagesklinik-strausberg | city: Strausberg | country: DE | company_type: clinic_location | first_name: Daniel | last_name: Thamm | full_name: Daniel Thamm | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+10. person_id: 4580 | company_id: 894 | company_name: Tagesklinik Vetschau | company_website: http://asklepios.com/luebben | city: Vetschau | country: DE | company_type: clinic_location | first_name: Daniela | last_name: Wolschke | full_name: Daniela Wolschke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 4581 | company_id: 1731 | company_name: Tagesklinik Wolfenbüttel | company_website: http://awo-psychiatriezentrum.de | city: Wolfenbüttel | country: DE | company_type: clinic_location | first_name: Grit | last_name: Hesse | full_name: Grit Hesse | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 4582 | company_id: 1715 | company_name: Tagesklinik Wolfsburg Erwachsene und KJP | company_website: http://awo-psychiatriezentrum.de | city: Wolfsburg | country: DE | company_type: clinic_location | first_name: Grit | last_name: Hesse | full_name: Grit Hesse | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 4583 | company_id: 1354 | company_name: Tagesklinik Wolgast | company_website: http://odebrecht-stiftung.de | city: Wolgast | country: DE | company_type: clinic_location | first_name: Margit | last_name: Gretzler | full_name: Margit Gretzler | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 4584 | company_id: 1750 | company_name: Tagesklinik der Kinder- und Jugendpsychiatrie im Landkreis Diepholz in Twistringen | company_website: https://kinderhospital.de | city: Twistringen | country: DE | company_type: clinic_location | first_name: Silke | last_name: Hövelkamp | full_name: Silke Hövelkamp | role: Kommissarische Pflegedirektorin | role_bucket: pflege_director | priority: 1
+15. person_id: 4585 | company_id: 1303 | company_name: Tagesklinik für Kinder- und Jugendpsychiatrie (Nord) in Hamburg | company_website: http://kkh-wilhelmstift.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Markus | last_name: Balters | full_name: Markus Balters | role: Pflegedirektor & Personalleiter | role_bucket: pflege_director | priority: 1
+16. person_id: 4586 | company_id: 1246 | company_name: Tagesklinik für Kinder- und Jugendpsychiatrie und -psychotherapie in Bamberg | company_website: https://gebo-med.de | city: Bamberg | country: DE | company_type: clinic_location | first_name: Marian | last_name: Winter | full_name: Marian Winter | role: Pflegedienstleitung KPPP / KJP | role_bucket: pflege_director | priority: 1
+17. person_id: 4587 | company_id: 1251 | company_name: Tagesklinik für Kinder- und Jugendpsychiatrie und -psychotherapie in Coburg | company_website: https://gebo-med.de | city: Coburg | country: DE | company_type: clinic_location | first_name: Marian | last_name: Winter | full_name: Marian Winter | role: Pflegedienstleitung KPPP / KJP | role_bucket: pflege_director | priority: 1
+18. person_id: 4588 | company_id: 1250 | company_name: Tagesklinik für Kinder- und Jugendpsychiatrie und -psychotherapie in Hof | company_website: https://gebo-med.de | city: Hof an der Saale | country: DE | company_type: clinic_location | first_name: Marian | last_name: Winter | full_name: Marian Winter | role: Pflegedienstleitung KPPP / KJP | role_bucket: pflege_director | priority: 1
+19. person_id: 4589 | company_id: 1216 | company_name: Tagesklinik für Psychiatrie Schweinfurt des BKH Werneck | company_website: https://kh-schloss-werneck.de/leistung/tagesklinik/index.html | city: Schweinfurt | country: DE | company_type: clinic_location | first_name: Stefan | last_name: Werner | full_name: Stefan Werner | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+20. person_id: 4590 | company_id: 655 | company_name: Tagesklinik für Psychiatrie und Psychotherapie Bünde | city: Bünde | country: Germany | company_type: clinic_location | first_name: Martina | last_name: Waldeyer | full_name: Martina Waldeyer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_068
+- Return only the requested result.
+- Use public information only.
