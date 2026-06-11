@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_018
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_018
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3456 | company_id: 1919 | company_name: Fachkrankenhaus Hubertusburg in Wermsdorf | company_website: http://fkh-hubertusburg.de | city: Wermsdorf | country: DE | company_type: clinic_location | first_name: Nicole | last_name: Lange | full_name: Nicole Lange | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+2. person_id: 3457 | company_id: 497 | company_name: Fachkrankenhaus Kloster Grafschaft in Schmallenberg | city: Schmallenberg | country: Germany | company_type: clinic_location | first_name: Sr. M. Theodora | last_name: Galatanu | full_name: Sr. M. Theodora Galatanu | role: Pflegedirektorin/Krankenhausoberin | role_bucket: pflege_director | priority: 1
+3. person_id: 3459 | company_id: 1925 | company_name: Fachkrankenhaus Kreischa | company_website: https://klinik-bavaria.de | city: Kreischa | country: DE | company_type: clinic_location | first_name: Ines | last_name: Kano | full_name: Ines Kano | role: Geschäftsleitung Pflege | role_bucket: pflege_director | priority: 1
+4. person_id: 3460 | company_id: 1946 | company_name: Fachkrankenhaus für Geriatrie Radeburg | company_website: http://fachkliniken-radeburg.de | city: Radeburg | country: DE | company_type: clinic_location | first_name: Christopher | last_name: Kührt | full_name: Christopher Kührt | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+5. person_id: 3461 | company_id: 845 | company_name: Fachkrankenhaus für Neurologische Frührehabilitation Kliniken Beelitz | company_website: http://fruehreha-beelitz.de/kbgf.html | city: Beelitz | country: DE | company_type: clinic_location | first_name: Nico | last_name: Kleine-Knefelkamp | full_name: Nico Kleine-Knefelkamp | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+6. person_id: 3462 | company_id: 1932 | company_name: Fachkrankenhaus für Psychiatrie und Psychotherapie Bethanien Hochweitzschen in Großweitzschen | company_website: http://agaplesion-mitteldeutschland.de | city: Großweitzschen | country: DE | company_type: clinic_location | first_name: Petra | last_name: Hundrieser | full_name: Petra Hundrieser | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 3463 | company_id: 1724 | company_name: Falkenried Caduceus Klinik in Bad Bevensen | city: Bad Bevensen | country: DE | company_type: clinic_location | first_name: Doris | last_name: Gartelmann | full_name: Doris Gartelmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 3464 | company_id: 1977 | company_name: Familientagesklinik "Koralle" mit familientherapeutischer Ambulanz (Bernau) | company_website: https://glg-gesundheit.de | city: Bernau bei Berlin | country: DE | company_type: clinic_location | first_name: Christian | last_name: Jödicke | full_name: Christian Jödicke | role: Komm. Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+9. person_id: 3465 | company_id: 2099 | company_name: Federseeklinik Bad Buchau | company_website: https://federseeklinik.de | city: Bad Buchau | country: DE | company_type: rehab_clinic | first_name: Karin | last_name: Ramsperger | full_name: Karin Ramsperger | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 3466 | company_id: 1862 | company_name: Felsenland Klinik Dahn | company_website: http://felsenlandklinik.com | city: Dahn | country: DE | company_type: clinic_location | first_name: Rosa | last_name: Leier | full_name: Rosa Leier | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 3467 | company_id: 2019 | company_name: Fliedner Krankenhaus Neunkirchen | company_website: https://kreuznacherdiakonie.de/krankenhaeuser/fliedner-krankenhaus-neunkirchen | city: Neunkirchen | country: DE | company_type: clinic_location | first_name: Marc | last_name: Detzler | full_name: Marc Detzler | role: Pflegedirektor / pflegerische Leitung | role_bucket: pflege_director | priority: 1
+12. person_id: 3468 | company_id: 1990 | company_name: Frankenalb-Klinik Engelthal in Engelthal, Mittelfranken | company_website: https://bezirkskliniken-mfr.de/standorte-und-kliniken/engelthal | city: Engelthal | country: DE | company_type: clinic_location | first_name: Michael | last_name: Kaufmann | full_name: Michael Kaufmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 3469 | company_id: 2090 | company_name: Frankenklinik in Bad Kissingen | company_website: https://frankenklinik.de | city: Bad Kissingen | country: DE | company_type: rehab_clinic | first_name: Bärbel | last_name: Eichmüller | full_name: Bärbel Eichmüller | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3471 | company_id: 1418 | company_name: Frankfurter Rotkreuz-Kliniken | company_website: http://rotkreuzkliniken.de/index.html | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Sabine | last_name: Strobach | full_name: Sabine Strobach | role: Pflegedienstleitung / Geschäftsführerin Pflege & Versorgung | role_bucket: pflege_director | priority: 1
+15. person_id: 3470 | company_id: 1418 | company_name: Frankfurter Rotkreuz-Kliniken | company_website: http://rotkreuzkliniken.de/index.html | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Brunk | full_name: Susanne Brunk | role: Pflegedienstleitung / Geschäftsführerin Pflege & Versorgung | role_bucket: pflege_director | priority: 1
+16. person_id: 3472 | company_id: 765 | company_name: Franziskus Krankenhaus Berlin | company_website: https://franziskus-berlin.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Christian | last_name: Fischer | full_name: Christian Fischer | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+17. person_id: 3473 | company_id: 765 | company_name: Franziskus Krankenhaus Berlin | company_website: https://franziskus-berlin.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Sebastian | last_name: Pahl | full_name: Sebastian Pahl | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 3474 | company_id: 1819 | company_name: Franziskus Krankenhaus Linz | company_website: http://verbundkrankenhaus-linz-remagen.de | city: Linz am Rhein | country: DE | company_type: clinic_location | first_name: Thorsten | last_name: Dörholt | full_name: Thorsten Dörholt | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+19. person_id: 3476 | company_id: 1116 | company_name: Frauenklinik Dr. Geisenhofer in München | company_website: http://geisenhoferklinik.de | city: München | country: DE | company_type: clinic_location | first_name: Peter | last_name: Ortner | full_name: Peter Ortner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 3475 | company_id: 1116 | company_name: Frauenklinik Dr. Geisenhofer in München | company_website: http://geisenhoferklinik.de | city: München | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Schüpphaus | full_name: Susanne Schüpphaus | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_018
+- Return only the requested result.
+- Use public information only.
