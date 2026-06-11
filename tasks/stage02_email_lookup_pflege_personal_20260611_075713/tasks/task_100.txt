@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_100
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_100
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5368 | company_id: 1510 | company_name: Klinik am Hainberg in Bad Hersfeld | company_website: https://klinikum-bad-hersfeld.de | city: Bad Hersfeld | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Boß | full_name: Andreas Boß | role: Personalleiter | role_bucket: personalleitung | priority: 2
+2. person_id: 5369 | company_id: 2233 | company_name: Klinik am Hellweg in Bad Sassendorf | company_website: https://klinik-hellweg.de | city: Bad Sassendorf | country: DE | company_type: rehab_clinic | first_name: Nico | last_name: Meier | full_name: Nico Meier | role: Personalleiter | role_bucket: personalleitung | priority: 2
+3. person_id: 5370 | company_id: 538 | company_name: Klinik am Park Lünen | city: Lünen | country: Germany | company_type: clinic_location | first_name: Jörg | last_name: Sasse | full_name: Jörg Sasse | role: Leitung Personal | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/j%C3%B6rg-sasse-481a05a2
+4. person_id: 5371 | company_id: 2254 | company_name: Klinik am Tharandter Wald in Halsbrücke | company_website: https://reha-hetzdorf.de | city: Halsbrücke | country: DE | company_type: rehab_clinic | first_name: Ines | last_name: Meyer | full_name: Ines Meyer | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+5. person_id: 5372 | company_id: 2153 | company_name: Klinik der Fürstenhof in Bad Pyrmont | company_website: https://klinik-der-fuerstenhof.staatsbad-pyrmont.de | city: Bad Pyrmont | country: DE | company_type: rehab_clinic | first_name: Bettina | last_name: Schlüter | full_name: Bettina Schlüter | role: Leitung Personalmanagement und Mitglied der Geschäftsleitung | role_bucket: personalleitung | priority: 2
+6. person_id: 5373 | company_id: 2153 | company_name: Klinik der Fürstenhof in Bad Pyrmont | company_website: https://klinik-der-fuerstenhof.staatsbad-pyrmont.de | city: Bad Pyrmont | country: DE | company_type: rehab_clinic | first_name: Lisa | last_name: Tschasowitin | full_name: Lisa Tschasowitin | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+7. person_id: 5374 | company_id: 1500 | company_name: Klinik für Kinder- und Jugendpsychiatrie Psychosomatik und Psychotherapie in Marburg | company_website: https://ukgm.de | city: Marburg | country: DE | company_type: clinic_location | first_name: Mathias | last_name: Winter | full_name: Mathias Winter | role: Personalleiter Universitätsklinikum Marburg | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/mathias-winter-7b6487100
+8. person_id: 5375 | company_id: 1069 | company_name: Klinik für Psychiatrie und Psychotherapie Fürth | company_website: http://bezirkskliniken-mfr.de | city: Fürth | country: DE | company_type: clinic_location | first_name: Roland | last_name: Sturm | full_name: Roland Sturm | role: Personalleiter und Leiter Personalmanagement | role_bucket: personalleitung | priority: 2
+9. person_id: 5376 | company_id: 628 | company_name: Klinik für Psychosomatik und Psychotherapie Emsdetten in Münster | city: Münster | country: Germany | company_type: clinic_location | first_name: Frank | last_name: Hermeyer | full_name: Frank Hermeyer | role: Prokurist und Leiter Personal | role_bucket: personalleitung | priority: 2
+10. person_id: 5377 | company_id: 218 | company_name: Klinik für Psychosomatische Medizin in Heilbronn | city: Heilbronn | country: Germany | company_type: clinic_location | first_name: Roland | last_name: Kuttner | full_name: Roland Kuttner | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+11. person_id: 5380 | company_id: 1720 | company_name: Klinik für Psychosomatische Medizin und Psychotherapie in Westerstede | company_website: https://karl-jaspers-klinik.de | city: Westerstede | country: DE | company_type: clinic_location | first_name: Erik | last_name: Stalljann | full_name: Erik Stalljann | role: Personalleitung | role_bucket: personalleitung | priority: 2
+12. person_id: 5381 | company_id: 2059 | company_name: Klinik im Hofgarten in Bad Waldsee | company_website: https://klinik-im-hofgarten.de | city: Bad Waldsee | country: DE | company_type: rehab_clinic | first_name: Stefanie | last_name: Günther | full_name: Stefanie Günther | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+13. person_id: 5382 | company_id: 2234 | company_name: Klinik im Park in Bad Sassendorf | company_website: https://klinikimpark.de | city: Bad Sassendorf | country: DE | company_type: rehab_clinic | first_name: Nicole | last_name: Ertmer | full_name: Nicole Ertmer | role: Personalleitung | role_bucket: personalleitung | priority: 2
+14. person_id: 5383 | company_id: 1485 | company_name: Klinik und Rehabilitationszentrum Lippoldsberg in Wahlsburg | company_website: http://klinik-lippoldsberg.de | city: Wahlsburg | country: DE | company_type: clinic_location | first_name: Pascal | last_name: Gräflich | full_name: Pascal Gräflich | role: Leitung Personal/Entgeltabrechnung | role_bucket: personalleitung | priority: 2
+15. person_id: 5384 | company_id: 58 | company_name: Kliniken Böblingen | city: Böblingen | country: Germany | company_type: clinic_location | first_name: Kathrin | last_name: Bahnmüller | full_name: Kathrin Bahnmüller | role: Ressortleiterin Personal & Bildung | role_bucket: personalleitung | priority: 2
+16. person_id: 5387 | company_id: 995 | company_name: Kliniken Dr. Erler in Nürnberg | company_website: https://erler-klinik.de | city: Nürnberg | country: DE | company_type: clinic_location | first_name: Adjo | last_name: Kpedzroku | full_name: Adjo Kpedzroku | role: Leitung Personal & Recht | role_bucket: personalleitung | priority: 2
+17. person_id: 5388 | company_id: 85 | company_name: Kliniken Nagold | city: Nagold | country: Germany | company_type: clinic_location | first_name: Kathrin | last_name: Bahnmüller | full_name: Kathrin Bahnmüller | role: Ressortleiterin Personal & Bildung | role_bucket: personalleitung | priority: 2
+18. person_id: 5390 | company_id: 221 | company_name: Kliniken Schmieder - Satellitenstation Z2N im Katharinenhospital in Stuttgart | city: Stuttgart | country: Germany | company_type: clinic_location | first_name: Michael | last_name: Groos | full_name: Michael Groos | role: Geschäftsleiter Personal- und Sozialwesen | role_bucket: personalleitung | priority: 2
+19. person_id: 5392 | company_id: 2093 | company_name: Kliniken Schmieder Allensbach | company_website: https://kliniken-schmieder.de/kliniken-und-standorte/allensbach.html | city: Allensbach | country: DE | company_type: rehab_clinic | first_name: Michael | last_name: Groos | full_name: Michael Groos | role: Geschäftsleiter Personal- und Sozialwesen | role_bucket: personalleitung | priority: 2
+20. person_id: 5394 | company_id: 2109 | company_name: Kliniken Schmieder Gailingen | company_website: https://kliniken-schmieder.de/kliniken-und-standorte/gailingen.html | city: Gailingen am Hochrhein | country: DE | company_type: rehab_clinic | first_name: Michael | last_name: Groos | full_name: Michael Groos | role: Geschäftsleiter Personal- und Sozialwesen | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_100
+- Return only the requested result.
+- Use public information only.
