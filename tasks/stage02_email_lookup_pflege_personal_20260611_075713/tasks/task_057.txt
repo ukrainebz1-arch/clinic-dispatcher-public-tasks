@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_057
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_057
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4325 | company_id: 2146 | company_name: Rehabilitationszentrum Oldenburg | company_website: https://rehazentrum-oldenburg.de | city: Oldenburg | country: DE | company_type: rehab_clinic | first_name: Andreas | last_name: Willenborg | full_name: Andreas Willenborg | role: Leitung Pflegemanagement | role_bucket: pflege_director | priority: 1
+2. person_id: 4326 | company_id: 2073 | company_name: Rehabiltationsklinik Bad Wurzach | company_website: https://rehabilitationsklinik-bad-wurzach.de | city: Bad Wurzach | country: DE | company_type: rehab_clinic | first_name: Karin | last_name: Amann | full_name: Karin Amann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 4327 | company_id: 2120 | company_name: Rehafachzentrum Bad Füssing | company_website: https://rehafachzentrum.de/SBKRFZ/fuessing | city: Bad Füssing | country: DE | company_type: rehab_clinic | first_name: Robert | last_name: Fenzl | full_name: Robert Fenzl | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+4. person_id: 4328 | company_id: 2166 | company_name: Rehazentrum Bad Eilsen | company_website: https://rz-bad-eilsen.de | city: Bad Eilsen | country: DE | company_type: rehab_clinic | first_name: Christiane | last_name: Wrede | full_name: Christiane Wrede | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+5. person_id: 4329 | company_id: 599 | company_name: Rhein-Klinik in Bad Honnef | city: Bad Honnef | country: Germany | company_type: clinic_location | first_name: Ralf | last_name: Weinz | full_name: Ralf Weinz | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+6. person_id: 486 | company_id: 295 | company_name: Rhein-Maas Klinikum in Würselen | city: Würselen | country: Germany | company_type: clinic_location | first_name: Danny | last_name: Hass | full_name: Danny Hass | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/danny-hass-7a81a9156
+7. person_id: 4330 | company_id: 1785 | company_name: Rhein-Mosel-Fachklinik in Andernach | company_website: http://rhein-mosel-fachklinik-andernach.de | city: Andernach | country: DE | company_type: clinic_location | first_name: Yvonne | last_name: Brachtendorf | full_name: Yvonne Brachtendorf | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 4332 | company_id: 1777 | company_name: Rheinhessen-Fachklinik Alzey | company_website: http://rheinhessen-fachklinik-alzey.de | city: Alzey | country: DE | company_type: clinic_location | first_name: Isabella | last_name: Müller | full_name: Isabella Müller | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+9. person_id: 4333 | company_id: 1877 | company_name: Rheinhessen-Fachklinik Mainz | company_website: http://rheinhessen-fachklinik-mainz.de | city: Mainz | country: DE | company_type: clinic_location | first_name: Isabella | last_name: Müller | full_name: Isabella Müller | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+10. person_id: 4334 | company_id: 674 | company_name: Rheinisch-Westfälisches Zentrum für Frührehabilitation und Beatmung in Nümbrecht | city: Nümbrecht | country: Germany | company_type: clinic_location | first_name: Friederike | last_name: Schillingmann | full_name: Friederike Schillingmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 742 | company_id: 425 | company_name: Rheinland Klinikum Dormagen | city: Dormagen | country: Germany | company_type: clinic_location | first_name: Tanja | last_name: Jaeger-Goetz | full_name: Tanja Jaeger-Goetz | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/tanja-jaeger-goetz-630586122
+12. person_id: 730 | company_id: 419 | company_name: Rheinland Klinikum Grevenbroich Elisabethkrankenhaus | city: Grevenbroich | country: Germany | company_type: clinic_location | first_name: Tanja | last_name: Jaeger-Goetz | full_name: Tanja Jaeger-Goetz | role: Pflegedirektorin Rheinland Klinikum | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/tanja-jaeger-goetz-630586122
+13. person_id: 4335 | company_id: 728 | company_name: Rheuma-Klinik Dr. Lauven in Bad Oeynhausen | city: Bad Oeynhausen | country: Germany | company_type: clinic_location | first_name: Erika | last_name: Penner | full_name: Erika Penner | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+14. person_id: 4336 | company_id: 2195 | company_name: Rheumaklinik Bad Wildungen | company_website: https://bad-wildungen.deutsche-rentenversicherung-reha-zentren.de/subsites/BadWildungen/de/Navigation/00_Home/Startseite_node.html | city: Bad Wildungen | country: DE | company_type: rehab_clinic | first_name: Denis | last_name: Merdani | full_name: Denis Merdani | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 4338 | company_id: 2276 | company_name: Rheumazentrum Mittelhessen in Bad Endbach | company_website: https://rheumazentrum-mittelhessen.de | city: Bad Endbach | country: DE | company_type: rehab_clinic | first_name: Gerd | last_name: Kaiser | full_name: Gerd Kaiser | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+16. person_id: 939 | company_id: 550 | company_name: Rheumazentrum Ruhrgebiet in Herne | city: Herne | country: Germany | company_type: clinic_location | first_name: Marion | last_name: Schmitz | full_name: Marion Schmitz | role: Gesamtpflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 4339 | company_id: 919 | company_name: Rhön-Klinikum Campus Bad Neustadt | company_website: https://campus-nes.de | city: Bad Neustadt an der Saale | country: DE | company_type: clinic_location | first_name: Elisabeth | last_name: Hertel | full_name: Elisabeth Hertel | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+18. person_id: 4340 | company_id: 1052 | company_name: RoMed Klinik Bad Aibling | company_website: https://romed-kliniken.de/de/bad-aibling/die-klinik-im-ueberblick.htm | city: Bad Aibling | country: DE | company_type: clinic_location | first_name: Jenny | last_name: Kaplan | full_name: Jenny Kaplan | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 4341 | company_id: 1052 | company_name: RoMed Klinik Bad Aibling | company_website: https://romed-kliniken.de/de/bad-aibling/die-klinik-im-ueberblick.htm | city: Bad Aibling | country: DE | company_type: clinic_location | first_name: Yvonne | last_name: Behrendt | full_name: Yvonne Behrendt | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 4342 | company_id: 1054 | company_name: RoMed Klinik Prien am Chiemsee | company_website: http://romed-kliniken.de | city: Prien am Chiemsee | country: DE | company_type: clinic_location | first_name: Sebastian | last_name: Hirmer | full_name: Sebastian Hirmer | role: Pflegedienstleitung Prien am Chiemsee | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_057
+- Return only the requested result.
+- Use public information only.
