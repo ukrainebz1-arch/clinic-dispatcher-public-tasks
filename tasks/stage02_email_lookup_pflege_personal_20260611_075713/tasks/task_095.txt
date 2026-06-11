@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_095
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_095
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5241 | company_id: 313 | company_name: Herz- und Diabeteszentrum NRW in Bad Oeynhausen | city: Bad Oeynhausen | country: Germany | company_type: clinic_location | first_name: Jörg | last_name: Hübner | full_name: Jörg Hübner | role: Personalleiter | role_bucket: personalleitung | priority: 2
+2. person_id: 5242 | company_id: 2164 | company_name: Herz- und Gefäßzentrum Bad Bevensen | company_website: https://hgz-bb.de | city: Bad Bevensen | country: DE | company_type: rehab_clinic | first_name: Nicole | last_name: Gagelmann | full_name: Nicole Gagelmann | role: Personalleitung | role_bucket: personalleitung | priority: 2
+3. person_id: 5244 | company_id: 1805 | company_name: Herz-Jesu-Krankenhaus Dernbach | company_website: http://krankenhaus-dernbach.de | city: Dernbach | country: DE | company_type: clinic_location | first_name: Jürgen | last_name: Stange | full_name: Jürgen Stange | role: Personalleitung | role_bucket: personalleitung | priority: 2
+4. person_id: 5245 | company_id: 1396 | company_name: Herz-Jesu-Krankenhaus Fulda | company_website: http://herz-jesu-krankenhaus.de | city: Fulda | country: DE | company_type: clinic_location | first_name: Katharina | last_name: Sauer | full_name: Katharina Sauer | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+5. person_id: 5246 | company_id: 1545 | company_name: Herz-Jesu-Krankenhaus Fulda Abteilung für Kinder- und Jugendpsychiatrie, Psychosomatik und Psychotherapie in Bad Hersfeld | company_website: http://herz-jesu-krankenhaus.de | city: Bad Hersfeld | country: DE | company_type: clinic_location | first_name: Katharina | last_name: Sauer | full_name: Katharina Sauer | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+6. person_id: 5247 | company_id: 384 | company_name: Herz-Jesu-Krankenhaus Hiltrup in Münster | city: Münster | country: Germany | company_type: clinic_location | first_name: Volker | last_name: Bach | full_name: Volker Bach | role: Personalleitung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/volker-bach-867ab0276
+7. person_id: 5248 | company_id: 1433 | company_name: Herz-Kreislauf-Zentrum Klinikum Hersfeld-Rotenburg | company_website: http://hkz-rotenburg.de | city: Rotenburg an der Fulda | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Boß | full_name: Andreas Boß | role: Personalleiter | role_bucket: personalleitung | priority: 2
+8. person_id: 5249 | company_id: 1635 | company_name: Herzogin Elisabeth Hospital in Braunschweig | company_website: https://heh-bs.de | city: Braunschweig | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Jentsch | full_name: Kerstin Jentsch | role: Leitung Personalwesen | role_bucket: personalleitung | priority: 2
+9. person_id: 5250 | company_id: 1917 | company_name: Herzzentrum Dresden | company_website: http://herzzentrum-dresden.com | city: Dresden | country: DE | company_type: clinic_location | first_name: Jana | last_name: Gnewekow | full_name: Jana Gnewekow | role: Head of People & Culture, Personalleitung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/jana-gnewekow-35315839
+10. person_id: 5251 | company_id: 1415 | company_name: Hessenklinik Stadtkrankenhaus Korbach | company_website: http://krankenhaus-korbach.de | city: Korbach | country: DE | company_type: clinic_location | first_name: Anne | last_name: Bülling | full_name: Anne Bülling | role: Prokuristin und Leitung Personal | role_bucket: personalleitung | priority: 2
+11. person_id: 5252 | company_id: 1387 | company_name: Hochtaunus Kliniken Bad Homburg | company_website: https://hochtaunus-kliniken.de | city: Bad Homburg | country: DE | company_type: clinic_location | first_name: Dirk | last_name: Topnik | full_name: Dirk Topnik | role: Personalleiter | role_bucket: personalleitung | priority: 2
+12. person_id: 5253 | company_id: 1520 | company_name: Hochtaunus Kliniken Königstein | company_website: https://hochtaunus-kliniken.de/die-hochtaunus-kliniken/standorte/koenigstein | city: Königstein im Taunus | country: DE | company_type: clinic_location | first_name: Dirk | last_name: Topnik | full_name: Dirk Topnik | role: Personalleiter | role_bucket: personalleitung | priority: 2
+13. person_id: 5254 | company_id: 1474 | company_name: Hochtaunus Kliniken Usingen | company_website: https://hochtaunus-kliniken.de | city: Usingen | country: DE | company_type: clinic_location | first_name: Dirk | last_name: Topnik | full_name: Dirk Topnik | role: Personalleiter | role_bucket: personalleitung | priority: 2
+14. person_id: 5255 | company_id: 95 | company_name: Hohenloher Krankenhaus Öhringen | city: Öhringen | country: Germany | company_type: clinic_location | first_name: Alexander | last_name: Jahn | full_name: Alexander Jahn | role: Personalleiter | role_bucket: personalleitung | priority: 2
+15. person_id: 5256 | company_id: 1423 | company_name: Hospital zum Heiligen Geist in Frankfurt am Main | company_website: http://hospital-zum-heiligen-geist.de | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Kornelia | last_name: Schröder | full_name: Kornelia Schröder | role: Leiterin Personal und Arbeitsrecht | role_bucket: personalleitung | priority: 2
+16. person_id: 5258 | company_id: 1658 | company_name: Hümmling Hospital Sögel | company_website: http://hümmling-hospital-sögel.de | city: Sögel | country: DE | company_type: clinic_location | first_name: Andre | last_name: Meyer | full_name: Andre Meyer | role: Personalleiter | role_bucket: personalleitung | priority: 2
+17. person_id: 5257 | company_id: 1658 | company_name: Hümmling Hospital Sögel | company_website: http://hümmling-hospital-sögel.de | city: Sögel | country: DE | company_type: clinic_location | first_name: Jens | last_name: Eilers | full_name: Dr. Jens Eilers | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+18. person_id: 5259 | company_id: 520 | company_name: Hüttenhospital Dortmund | city: Dortmund | country: Germany | company_type: clinic_location | first_name: Mike | last_name: Schmedemann | full_name: Mike Schmedemann | role: Personalleiter | role_bucket: personalleitung | priority: 2
+19. person_id: 5260 | company_id: 998 | company_name: Ilmtalklinik Pfaffenhofen | company_website: http://ilmtalklinik.de | city: Pfaffenhofen an der Ilm | country: DE | company_type: clinic_location | first_name: Sharon | last_name: Schulze-Reimpell | full_name: Sharon Schulze-Reimpell | role: Head of HR | role_bucket: personalleitung | priority: 2
+20. person_id: 5265 | company_id: 955 | company_name: InnKlinikum Altötting | company_website: https://innklinikum.de | city: Altötting | country: DE | company_type: clinic_location | first_name: Simon | last_name: Eismann | full_name: Simon Eismann | role: Personalleiter | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_095
+- Return only the requested result.
+- Use public information only.
