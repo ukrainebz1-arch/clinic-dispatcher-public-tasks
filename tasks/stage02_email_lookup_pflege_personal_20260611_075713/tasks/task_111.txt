@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_111
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_111
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5652 | company_id: 281 | company_name: LVR-Klinikum Düsseldorf | city: Düsseldorf | country: Germany | company_type: clinic_location | first_name: Andreas | last_name: Riplinger | full_name: Andreas Riplinger | role: Leitung Personal Rhein-Ruhr | role_bucket: personalleitung | priority: 2
+2. person_id: 5653 | company_id: 387 | company_name: LWL-Klinik Hemer − Hans-Prinzhorn-Klinik | city: Hemer | country: Germany | company_type: clinic_location | first_name: Birger | last_name: Fleischhauer | full_name: Birger Fleischhauer | role: Leiter Personalabteilung LWL-Klinik Dortmund und LWL-Klinik Hemer | role_bucket: personalleitung | priority: 2
+3. person_id: 5654 | company_id: 568 | company_name: LWL-Klinik Marsberg | city: Marsberg | country: Germany | company_type: clinic_location | first_name: Stefan | last_name: Nellenschulte | full_name: Stefan Nellenschulte | role: Personalleiter der LWL-Einrichtungen Marsberg | role_bucket: personalleitung | priority: 2
+4. person_id: 5655 | company_id: 686 | company_name: LWL-Klinik Marsberg - Standort Meschede | city: Meschede | country: Germany | company_type: clinic_location | first_name: Stefan | last_name: Nellenschulte | full_name: Stefan Nellenschulte | role: Personalleiter der LWL-Einrichtungen Marsberg | role_bucket: personalleitung | priority: 2
+5. person_id: 5656 | company_id: 626 | company_name: LWL-Klinik Marsberg Kinder- und Jugendpsychiatrie | city: Marsberg | country: Germany | company_type: clinic_location | first_name: Stefan | last_name: Nellenschulte | full_name: Stefan Nellenschulte | role: Personalleiter der LWL-Einrichtungen Marsberg | role_bucket: personalleitung | priority: 2
+6. person_id: 5657 | company_id: 648 | company_name: LWL-Klinik Marsberg Paderborn Kinder- und Jugendpsychiatrie | city: Paderborn | country: Germany | company_type: clinic_location | first_name: Stefan | last_name: Nellenschulte | full_name: Stefan Nellenschulte | role: Personalleiter der LWL-Einrichtungen Marsberg | role_bucket: personalleitung | priority: 2
+7. person_id: 5659 | company_id: 478 | company_name: LWL-Klinik Paderborn (Agathastraße) | city: Paderborn | country: Germany | company_type: clinic_location | first_name: Jutta | last_name: Oesterhelweg | full_name: Jutta Oesterhelweg | role: Personalleitung | role_bucket: personalleitung | priority: 2
+8. person_id: 5660 | company_id: 351 | company_name: LWL-Klinikum Gütersloh | city: Gütersloh | country: Germany | company_type: clinic_location | first_name: Jutta | last_name: Oesterhelweg | full_name: Jutta Oesterhelweg | role: Personalleitung | role_bucket: personalleitung | priority: 2
+9. person_id: 5661 | company_id: 1411 | company_name: Lahn-Dill Kliniken Dillenburg | company_website: http://lahn-dill-kliniken.de | city: Dillenburg | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Drabner | full_name: Claudia Drabner | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+10. person_id: 5662 | company_id: 2246 | company_name: Lahntalklinik Nassau in Bad Ems | company_website: https://lahntalklinik.de | city: Bad Ems | country: DE | company_type: rehab_clinic | first_name: Marvin | last_name: Renger | full_name: Marvin Renger | role: Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/marvin-renger-016219226
+11. person_id: 5663 | company_id: 2162 | company_name: Landgrafen-Klinik in Bad Nenndorf | company_website: https://staatsbadnenndorf.de/landgrafen-klinik | city: Bad Nenndorf | country: DE | company_type: rehab_clinic | first_name: Lisa | last_name: Tschasowitin | full_name: Lisa Tschasowitin | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+12. person_id: 5664 | company_id: 101 | company_name: Landkreis Schwäbisch Hall Klinikum in Crailsheim | city: Crailsheim | country: Germany | company_type: clinic_location | first_name: Alexander | last_name: Latzko | full_name: Alexander Latzko | role: Personalleiter | role_bucket: personalleitung | priority: 2
+13. person_id: 5665 | company_id: 1855 | company_name: Lausitzer Seenland Klinikum in Hoyerswerda | company_website: http://seenlandklinikum.de | city: Hoyerswerda | country: DE | company_type: clinic_location | first_name: Vincent | last_name: Schröder | full_name: Vincent Schröder | role: Head of People & Culture / Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/vincent-schroeder
+14. person_id: 5666 | company_id: 922 | company_name: Leopoldina-Krankenhaus in Schweinfurt | company_website: http://leopoldina-krankenhaus.com | city: Schweinfurt | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Finzel | full_name: Thomas Finzel | role: Leitung Geschäftsbereich Personal | role_bucket: personalleitung | priority: 2
+15. person_id: 5667 | company_id: 94 | company_name: Loretto-Krankenhaus in Freiburg im Breisgau | city: Freiburg im Breisgau | country: Germany | company_type: clinic_location | first_name: Robert | last_name: Kugge | full_name: Robert Kugge | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+16. person_id: 5668 | company_id: 437 | company_name: Lukas-Krankenhaus Bünde | city: Bünde | country: Germany | company_type: clinic_location | first_name: Sandra | last_name: Groß | full_name: Sandra Groß | role: Personalleitung | role_bucket: personalleitung | priority: 2
+17. person_id: 5670 | company_id: 304 | company_name: Lukaskrankenhaus Neuss | city: Neuss | country: Germany | company_type: clinic_location | first_name: Katja | last_name: Borck | full_name: Katja Borck | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+18. person_id: 5671 | company_id: 252 | company_name: MEDIAN Achertal-Klinik Ottenhöfen (Psychiatrische Tagesklinik) | city: Ottenhöfen im Schwarzwald | country: Germany | company_type: clinic_location | first_name: Stefan | last_name: Wollschläger | full_name: Stefan Wollschläger | role: Chief People Officer GER (CPO GER) | role_bucket: personalleitung | priority: 2
+19. person_id: 5672 | company_id: 2240 | company_name: MEDIAN Klinik Elbe-Saale in Barby (Elbe) | company_website: https://median-kliniken.de/de/median-klinik-elbe-saale | city: Barby | country: DE | company_type: rehab_clinic | first_name: Stefan | last_name: Wollschläger | full_name: Stefan Wollschläger | role: Chief People Officer GER (CPO GER) | role_bucket: personalleitung | priority: 2
+20. person_id: 5673 | company_id: 2277 | company_name: MEDIAN Klinik Schlangenbad (Standort Schlangenbad) in Schlangenbad, Taunus | company_website: https://median-kliniken.de/de/median-klinik-schlangenbad | city: Schlangenbad | country: DE | company_type: rehab_clinic | first_name: Stefan | last_name: Wollschläger | full_name: Stefan Wollschläger | role: Chief People Officer GER (CPO GER) | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_111
+- Return only the requested result.
+- Use public information only.
