@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_108
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_108
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5572 | company_id: 343 | company_name: Krankenhaus Porz am Rhein in Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Mario | last_name: Schiffer | full_name: Mario Schiffer | role: Personalleiter | role_bucket: personalleitung | priority: 2
+2. person_id: 5574 | company_id: 1699 | company_name: Krankenhaus Rheiderland in Weener | company_website: https://krankenhaus-rheiderland.de/patienteninfos/willkommen | city: Weener | country: DE | company_type: clinic_location | first_name: Franziska | last_name: Macher | full_name: Franziska Macher | role: Personalleitung | role_bucket: personalleitung | priority: 2
+3. person_id: 1698 | company_id: 1001 | company_name: Krankenhaus Rotthalmünster | company_website: http://ge-passau.de | city: Rotthalmünster | country: DE | company_type: clinic_location | first_name: Josef | last_name: Mader | full_name: Josef Mader | role: Geschäftsführer und Personalleiter | role_bucket: personalleitung | priority: 2
+4. person_id: 5576 | company_id: 1437 | company_name: Krankenhaus Sachsenhausen in Frankfurt am Main | company_website: https://krankenhaus-sachsenhausen.de | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Mounir | last_name: Baouch | full_name: Mounir Baouch | role: Dezernatsleitung Personal | role_bucket: personalleitung | priority: 2
+5. person_id: 5577 | company_id: 81 | company_name: Krankenhaus Salem in Heidelberg | city: Heidelberg | country: Germany | company_type: clinic_location | first_name: Christian | last_name: Wetzel | full_name: Christian Wetzel | role: Personalleiter / Leiter Personalabteilung | role_bucket: personalleitung | priority: 2
+6. person_id: 5578 | company_id: 592 | company_name: Krankenhaus Schleiden | city: Schleiden | country: Germany | company_type: clinic_location | first_name: Marco | last_name: Hionsek | full_name: Marco Hionsek | role: Personalleiter Kreiskrankenhaus Mechernich GmbH | role_bucket: personalleitung | priority: 2
+7. person_id: 5579 | company_id: 1032 | company_name: Krankenhaus Schongau | company_website: https://meinkrankenhaus2030.de | city: Schongau | country: DE | company_type: clinic_location | first_name: Stefan | last_name: Richter | full_name: Stefan Richter | role: Personalleiter | role_bucket: personalleitung | priority: 2
+8. person_id: 5580 | company_id: 865 | company_name: Krankenhaus Seelow | company_website: https://krankenhaus-seelow.de | city: Seelow | country: DE | company_type: clinic_location | first_name: Ina | last_name: Seifert | full_name: Ina Seifert | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+9. person_id: 5581 | company_id: 833 | company_name: Krankenhaus Spremberg | company_website: http://krankenhaus-spremberg.de | city: Spremberg | country: DE | company_type: clinic_location | first_name: Christin | last_name: Nowak | full_name: Christin Nowak | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+10. person_id: 5582 | company_id: 887 | company_name: Krankenhaus Spremberg Tagesklinik Forst | company_website: http://krankenhaus-spremberg.de | city: Forst | country: DE | company_type: clinic_location | first_name: Christin | last_name: Nowak | full_name: Christin Nowak | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+11. person_id: 5583 | company_id: 2041 | company_name: Krankenhaus St. Barbara Schwandorf | company_website: http://barmherzige-schwandorf.de | city: Schwandorf | country: DE | company_type: clinic_location | first_name: Axel | last_name: Buchheit | full_name: Axel Buchheit | role: Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/axel-buchheit-470819194
+12. person_id: 5584 | company_id: 1628 | company_name: Krankenhaus St. Elisabeth in Damme, Dümmer | company_website: http://krankenhaus-damme.de | city: Damme | country: DE | company_type: clinic_location | first_name: Heinrich | last_name: Arlinghaus | full_name: Heinrich Arlinghaus | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+13. person_id: 5585 | company_id: 804 | company_name: Krankenhaus St. Joseph-Stift Bremen | company_website: http://sjs-bremen.de | city: Bremen | country: DE | company_type: clinic_location | first_name: Nicole | last_name: Voß | full_name: Nicole Voß | role: Personalleitung | role_bucket: personalleitung | priority: 2
+14. person_id: 5586 | company_id: 1903 | company_name: Krankenhaus St. Joseph-Stift Dresden | company_website: https://josephstift-dresden.de | city: Dresden | country: DE | company_type: clinic_location | first_name: Markus | last_name: Schröter | full_name: Markus Schröter | role: Leiter Personal | role_bucket: personalleitung | priority: 2
+15. person_id: 5587 | company_id: 1763 | company_name: Krankenhaus Sulzbach | company_website: https://kksaar.de | city: Sulzbach | country: DE | company_type: clinic_location | first_name: Barbara | last_name: Greiff | full_name: Barbara Greiff | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+16. person_id: 5588 | company_id: 78 | company_name: Krankenhaus Tauberbischofsheim | city: Tauberbischofsheim | country: Germany | company_type: clinic_location | first_name: Thomas | last_name: Schaefer | full_name: Thomas Schaefer | role: Klinikübergreifende Leitung Personal | role_bucket: personalleitung | priority: 2
+17. person_id: 5589 | company_id: 1047 | company_name: Krankenhaus Tirschenreuth | company_website: http://kliniken-nordoberpfalz.de | city: Tirschenreuth | country: DE | company_type: clinic_location | first_name: Mathias | last_name: Weiß | full_name: Mathias Weiß | role: Leiter Personalwesen | role_bucket: personalleitung | priority: 2
+18. person_id: 5590 | company_id: 1003 | company_name: Krankenhaus Vilsbiburg | company_website: http://lakumed.de | city: Vilsbiburg | country: DE | company_type: clinic_location | first_name: Rebecca | last_name: Bleeck | full_name: Rebecca Bleeck | role: Leitung Personalmanagement Kliniken Landshut-Achdorf, Vilsbiburg, Schlossklinik Rottenburg | role_bucket: personalleitung | priority: 2
+19. person_id: 5592 | company_id: 766 | company_name: Krankenhaus Waldfriede in Berlin | company_website: http://krankenhaus-waldfriede.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Martin | last_name: Herziger | full_name: Martin Herziger | role: Personalleiter | role_bucket: personalleitung | priority: 2
+20. person_id: 5595 | company_id: 422 | company_name: Krankenhaus der Augustinerinnen in Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Thomas | last_name: Reske | full_name: Thomas Reske | role: Personalleiter | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_108
+- Return only the requested result.
+- Use public information only.
