@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_013
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_013
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3348 | company_id: 981 | company_name: Donau-Ries Klinik Donauwörth | company_website: http://donkliniken.de | city: Donauwörth | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Rechner | full_name: Michaela Rechner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 3349 | company_id: 1143 | company_name: Donau-Ries-Klinik Oettingen | company_website: http://donkliniken.de | city: Oettingen in Bayern | country: DE | company_type: clinic_location | first_name: Bernd | last_name: Meyr | full_name: Bernd Meyr | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+3. person_id: 3350 | company_id: 949 | company_name: Donauisar Klinikum Deggendorf | company_website: http://donau-isar-klinikum.de | city: Deggendorf | country: DE | company_type: clinic_location | first_name: Anja | last_name: Herzog | full_name: Anja Herzog | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 3351 | company_id: 1089 | company_name: Donauisar Klinikum Dingolfing | company_website: http://donau-isar-klinikum.de | city: Dingolfing | country: DE | company_type: clinic_location | first_name: Anja | last_name: Herzog | full_name: Anja Herzog | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3352 | company_id: 1091 | company_name: Donauisar Klinikum Landau | company_website: http://donau-isar-klinikum.de | city: Landau an der Isar | country: DE | company_type: clinic_location | first_name: Anja | last_name: Herzog | full_name: Anja Herzog | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 3353 | company_id: 1022 | company_name: Donauklinik Neu-Ulm | company_website: http://donauklinik-neu-ulm.de | city: Neu-Ulm | country: DE | company_type: clinic_location | first_name: Nadine | last_name: Timmer-Haunschild | full_name: Nadine Timmer-Haunschild | role: Pflegedirektorin Pflege | role_bucket: pflege_director | priority: 1
+7. person_id: 3354 | company_id: 1180 | company_name: Dr. Becker Kiliani-Klinik in Bad Windsheim | company_website: https://dbkg.de/kliniken/dr-becker-kiliani-klinik/kurzprofil-klinik | city: Bad Windsheim | country: DE | company_type: clinic_location | first_name: Franziska | last_name: Göttfert | full_name: Franziska Göttfert | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 3356 | company_id: 2235 | company_name: Dr. Becker Klinik Möhnesee | company_website: https://dbkg.de/kliniken/dr-becker-klinik-mohnesee | city: Möhnesee | country: DE | company_type: rehab_clinic | first_name: Petra | last_name: Rösler | full_name: Petra Rösler | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 3357 | company_id: 2231 | company_name: Dr. Becker Rhein-Sieg-Klinik in Nümbrecht | company_website: https://dbkg.de/kliniken/dr-becker-rhein-sieg-klinik/kurzprofil-klinik | city: Nümbrecht | country: DE | company_type: rehab_clinic | first_name: Liane | last_name: Murawskij | full_name: Liane Murawskij | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 3358 | company_id: 2138 | company_name: Dr. Ebel Fachklinik - Heinrich-Heine-Klinik Potsdam | company_website: https://ebel-kliniken.com/heinrich-heine-klinik-potsdam | city: Potsdam | country: DE | company_type: rehab_clinic | first_name: Jeanett | last_name: Knappe | full_name: Jeanett Knappe | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 3359 | company_id: 2281 | company_name: Dr. Ebel Fachklinik - Klinik Carolinum Bad Karlshafen | company_website: https://ebel-kliniken.com/klinik-carolinum-bad-karlshafen | city: Bad Karlshafen | country: DE | company_type: rehab_clinic | first_name: Adriana | last_name: Fuss | full_name: Adriana Fuss | role: Pflegedienstleitung Reha | role_bucket: pflege_director | priority: 1
+12. person_id: 3360 | company_id: 2201 | company_name: Dr. Ebel Fachklinik - Klinik Reinhardshöhe Bad Wildungen | company_website: https://ebel-kliniken.com/klinik-reinhardshoehe-bad-wildungen | city: Bad Wildungen | country: DE | company_type: rehab_clinic | first_name: Mandy | last_name: Thiele | full_name: Mandy Thiele | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 3362 | company_id: 2279 | company_name: Dr. Ebel Fachklinik - Vogelsbergklinik Grebenhain | company_website: https://ebel-kliniken.com/vogelsbergklinik-grebenhain | city: Grebenhain | country: DE | company_type: rehab_clinic | first_name: Christel | last_name: Ochs | full_name: Christel Ochs | role: Pflegedienstleitung Reha | role_bucket: pflege_director | priority: 1
+14. person_id: 3361 | company_id: 2279 | company_name: Dr. Ebel Fachklinik - Vogelsbergklinik Grebenhain | company_website: https://ebel-kliniken.com/vogelsbergklinik-grebenhain | city: Grebenhain | country: DE | company_type: rehab_clinic | first_name: Ilona | last_name: Schubert | full_name: Ilona Schubert | role: Pflegedienstleitung Akut | role_bucket: pflege_director | priority: 1
+15. person_id: 3363 | company_id: 2178 | company_name: Dr. Ebel Fachkliniken - Moorbad Bad Doberan | company_website: https://ebel-kliniken.com/klinik-moorbad-bad-doberan | city: Bad Doberan | country: DE | company_type: rehab_clinic | first_name: Anett | last_name: Allwardt | full_name: Anett Allwardt | role: Pflegedienstleitung und Beauftragte für Medizinproduktesicherheit | role_bucket: pflege_director | priority: 1
+16. person_id: 3364 | company_id: 1606 | company_name: Dr. Fontheim Mentale Gesundheit in Liebenburg | company_website: https://fontheim.de | city: Liebenburg | country: DE | company_type: clinic_location | first_name: Georg | last_name: Schnieders | full_name: Georg Schnieders | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+17. person_id: 3365 | company_id: 1606 | company_name: Dr. Fontheim Mentale Gesundheit in Liebenburg | company_website: https://fontheim.de | city: Liebenburg | country: DE | company_type: clinic_location | first_name: Wiebke | last_name: Friedrich | full_name: Wiebke Friedrich | role: Pflegedienstleitung der Klinik | role_bucket: pflege_director | priority: 1
+18. person_id: 3366 | company_id: 1515 | company_name: Dr. Frühauf Klinik in Offenbach am Main | company_website: https://klinik-dr-fruehauf.de | city: Offenbach am Main | country: DE | company_type: clinic_location | first_name: Violeta | last_name: Savevska | full_name: Violeta Savevska | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 3367 | company_id: 2005 | company_name: Dr. Lubos Kliniken Bogenhausen in München | company_website: http://lubos-kliniken.de | city: München | country: DE | company_type: clinic_location | first_name: Alexander | last_name: Groß | full_name: Alexander Groß | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 3368 | company_id: 1168 | company_name: Dr. Lubos Kliniken Pasing in München | company_website: http://lubos-klinken.de | city: München | country: DE | company_type: clinic_location | first_name: Alexander | last_name: Groß | full_name: Alexander Groß | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_013
+- Return only the requested result.
+- Use public information only.
