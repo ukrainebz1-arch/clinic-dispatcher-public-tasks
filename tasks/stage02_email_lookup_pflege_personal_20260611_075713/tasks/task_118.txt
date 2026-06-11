@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_118
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_118
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5812 | company_id: 1940 | company_name: Orthopädisches Zentrum Martin-Ulbrich-Haus Rothenburg | company_website: http://klinik-rothenburg.de | city: Rothenburg | country: DE | company_type: clinic_location | first_name: Gabriele | last_name: Lebeda | full_name: Gabriele Lebeda | role: Leiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+2. person_id: 5813 | company_id: 1517 | company_name: Otto-Fricke-Krankenhaus Paulinenberg am St. Josefs-Hospital Rüdesheim | company_website: http://otto-fricke-krankenhaus.de | city: Rüdesheim am Rhein | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Baller | full_name: Birgit Baller | role: Leitung Personalwesen / Prokuristin | role_bucket: personalleitung | priority: 2
+3. person_id: 5814 | company_id: 1529 | company_name: Otto-Fricke-Krankenhaus Paulinenberg in Wiesbaden | company_website: http://otto-fricke-krankenhaus.de | city: Wiesbaden | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Baller | full_name: Birgit Baller | role: Leitung Personalwesen / Prokuristin | role_bucket: personalleitung | priority: 2
+4. person_id: 5815 | company_id: 1463 | company_name: Otto-Fricke-Krankenhaus in Bad Schwalbach | company_website: http://otto-fricke-krankenhaus.de | city: Bad Schwalbach | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Baller | full_name: Birgit Baller | role: Leitung Personalwesen / Prokuristin | role_bucket: personalleitung | priority: 2
+5. person_id: 5816 | company_id: 109 | company_name: PP.rt Klinik für Psychiatrie und Psychosomatik in Reutlingen | city: Reutlingen | country: Germany | company_type: clinic_location | first_name: Marina | last_name: Hummel | full_name: Marina Hummel | role: Leitung Personal | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/marina-hummel-45b487353
+6. person_id: 5817 | company_id: 1094 | company_name: Panorama Fachklinik Scheidegg | city: Scheidegg | country: DE | company_type: clinic_location | first_name: Mathias | last_name: Paul | full_name: Mathias Paul | role: Group Human Resources Director | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/mathias-paul-22353879
+7. person_id: 5818 | company_id: 213 | company_name: Panoramaklinik Esslingen | city: Esslingen am Neckar | country: Germany | company_type: clinic_location | first_name: Andreas | last_name: Klöhn | full_name: Andreas Klöhn | role: Personalleiter | role_bucket: personalleitung | priority: 2
+8. person_id: 5819 | company_id: 1145 | company_name: Paracelsus Klinik München | company_website: https://paracelsus-kliniken.de/akut/muenchen | city: München | country: DE | company_type: clinic_location | first_name: Dagmar | last_name: Linck | full_name: Dagmar Linck | role: Leiterin Personal Recht und Compliance | role_bucket: personalleitung | priority: 2
+9. person_id: 5820 | company_id: 1460 | company_name: Paracelsus-Elena-Klinik Kassel | company_website: https://paracelsus-kliniken.de/kassel | city: Kassel | country: DE | company_type: clinic_location | first_name: Dagmar | last_name: Linck | full_name: Dagmar Linck | role: Leiterin Personal Recht und Compliance | role_bucket: personalleitung | priority: 2
+10. person_id: 5821 | company_id: 1899 | company_name: Paracelsus-Klinik Adorf/Schöneck - Standort Adorf in Adorf, Vogtland | company_website: http://paracelsus-kliniken.de/adorf | city: Adorf | country: DE | company_type: clinic_location | first_name: Dagmar | last_name: Linck | full_name: Dagmar Linck | role: Leitung Personal, Recht und Compliance | role_bucket: personalleitung | priority: 2
+11. person_id: 5822 | company_id: 1900 | company_name: Paracelsus-Klinik Adorf/Schöneck - Standort Schöneck | company_website: http://paracelsus-kliniken.de/schoeneck | city: Schöneck | country: DE | company_type: clinic_location | first_name: Dagmar | last_name: Linck | full_name: Dagmar Linck | role: Leitung Personal, Recht und Compliance | role_bucket: personalleitung | priority: 2
+12. person_id: 5823 | company_id: 809 | company_name: Paracelsus-Klinik Bremen | company_website: https://paracelsus-kliniken.de/akut/bremen | city: Bremen | country: DE | company_type: clinic_location | first_name: Dagmar | last_name: Linck | full_name: Dagmar Linck | role: Leitung Personal, Recht und Compliance | role_bucket: personalleitung | priority: 2
+13. person_id: 5824 | company_id: 605 | company_name: Paracelsus-Klinik Golzheim in Düsseldorf | city: Düsseldorf | country: Germany | company_type: clinic_location | first_name: Dagmar | last_name: Linck | full_name: Dagmar Linck | role: Leitung Personal, Recht und Compliance | role_bucket: personalleitung | priority: 2
+14. person_id: 5825 | company_id: 432 | company_name: Paracelsus-Klinik Marl | city: Marl | country: Germany | company_type: clinic_location | first_name: Dagmar | last_name: Linck | full_name: Dagmar Linck | role: Leitung Personal, Recht und Compliance | role_bucket: personalleitung | priority: 2
+15. person_id: 5826 | company_id: 1669 | company_name: Paracelsus-Klinik am Silbersee in Langenhagen | company_website: https://paracelsus-kliniken.de/langenhagen.html | city: Langenhagen | country: DE | company_type: clinic_location | first_name: Dagmar | last_name: Linck | full_name: Dagmar Linck | role: Leitung Personal, Recht und Compliance | role_bucket: personalleitung | priority: 2
+16. person_id: 5827 | company_id: 2154 | company_name: Paracelsus-Wittekindklinik in Bad Essen | company_website: https://paracelsus-kliniken.de/reha/wittekindklinik-bad-essen | city: Bad Essen | country: DE | company_type: rehab_clinic | first_name: Dagmar | last_name: Linck | full_name: Dagmar Linck | role: Leitung Personal, Recht und Compliance | role_bucket: personalleitung | priority: 2
+17. person_id: 5828 | company_id: 2226 | company_name: Park Klinik Bad Hermannsborn | company_website: https://kbh.de | city: Bad Driburg | country: DE | company_type: rehab_clinic | first_name: Claudia | last_name: Rosenheinrich | full_name: Claudia Rosenheinrich | role: Chief People Officer (CPO), Personalleiterin/People and Culture | role_bucket: personalleitung | priority: 2
+18. person_id: 5829 | company_id: 751 | company_name: Park-Klinik Weißensee in Berlin | company_website: https://parkkliniken-weissensee.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Wilfried | last_name: Wagner | full_name: Wilfried Wagner | role: Direktor Personal, IT und Medizintechnik | role_bucket: personalleitung | priority: 2
+19. person_id: 5832 | company_id: 1204 | company_name: Passauer Wolf Bad Griesbach - Klinik für Neurologie | company_website: https://passauerwolf.de | city: Bad Griesbach im Rottal | country: DE | company_type: clinic_location | first_name: Oliver | last_name: Weithmann | full_name: Oliver Weithmann | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+20. person_id: 5833 | company_id: 1201 | company_name: Passauer Wolf Bad Gögging - Klinik für Neurologie in Neustadt an der Donau | company_website: https://passauerwolf.de | city: Neustadt an der Donau | country: DE | company_type: clinic_location | first_name: Susanna | last_name: Gubo | full_name: Susanna Gubo | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_118
+- Return only the requested result.
+- Use public information only.
