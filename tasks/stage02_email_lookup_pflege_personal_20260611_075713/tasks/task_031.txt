@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_031
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_031
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3731 | company_id: 2167 | company_name: Klinik Münsterland in Bad Rothenfelde | company_website: https://muensterland.deutsche-rentenversicherung-reha-zentren.de/subsites/Muensterland/de/Navigation/00_Home/Startseite_node.html | city: Bad Rothenfelde | country: DE | company_type: rehab_clinic | first_name: Daniel | last_name: Tischner | full_name: Daniel Tischner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 3732 | company_id: 1030 | company_name: Klinik Naila | company_website: https://kliniken-hochfranken.de | city: Naila | country: DE | company_type: clinic_location | first_name: Peter | last_name: Schönefeld | full_name: Peter Schönefeld | role: Pflegedienstleitung Klinik Naila | role_bucket: pflege_director | priority: 1
+3. person_id: 3733 | company_id: 821 | company_name: Klinik Nauen | company_website: http://havelland-kliniken.de | city: Nauen | country: DE | company_type: clinic_location | first_name: Olaf | last_name: Arnhold | full_name: Olaf Arnhold | role: Krankenpflegedirektor | role_bucket: pflege_director | priority: 1
+4. person_id: 3734 | company_id: 1153 | company_name: Klinik Neustadt | company_website: http://regiomed-kliniken.de/startseite-klinik-neustadt.aspx | city: Neustadt bei Coburg | country: DE | company_type: clinic_location | first_name: Stefanie | last_name: Neubauer | full_name: Stefanie Neubauer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+5. person_id: 3735 | company_id: 1009 | company_name: Klinik Neustadt an der Aisch | company_website: http://kliniken-nea.de | city: Neustadt an der Aisch | country: DE | company_type: clinic_location | first_name: Cornelia | last_name: Kerschbaum | full_name: Cornelia Kerschbaum | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 3737 | company_id: 2119 | company_name: Klinik Niederbayern in Bad Füssing | company_website: https://klinik-niederbayern.de | city: Bad Füssing | country: DE | company_type: rehab_clinic | first_name: Nina | last_name: Kapfhammer | full_name: Nina Kapfhammer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+7. person_id: 3738 | company_id: 2285 | company_name: Klinik Niederrhein in Bad Neuenahr-Ahrweiler | company_website: https://klinik-niederrhein.de | city: Bad Neuenahr-Ahrweiler | country: DE | company_type: rehab_clinic | first_name: Nicole | last_name: Poltorak | full_name: Nicole Poltorak | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 3740 | company_id: 1114 | company_name: Klinik Oberammergau | company_website: http://klinik-oberammergau.de | city: Oberammergau | country: DE | company_type: clinic_location | first_name: Sebastian | last_name: Noetzel | full_name: Sebastian Noetzel | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 3741 | company_id: 1135 | company_name: Klinik Oberstdorf | company_website: https://klinikverbund-allgaeu.de | city: Oberstdorf | country: DE | company_type: clinic_location | first_name: Matthias | last_name: Ecker | full_name: Matthias Ecker | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 3742 | company_id: 837 | company_name: Klinik Oranienburg | company_website: http://oberhavel-kliniken.de | city: Oranienburg | country: DE | company_type: clinic_location | first_name: Richard | last_name: Staar | full_name: Richard Staar | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+11. person_id: 3743 | company_id: 834 | company_name: Klinik Rathenow | company_website: http://havelland-kliniken.de | city: Rathenow | country: DE | company_type: clinic_location | first_name: Olaf | last_name: Arnhold | full_name: Olaf Arnhold | role: Krankenpflegedirektor | role_bucket: pflege_director | priority: 1
+12. person_id: 3744 | company_id: 2218 | company_name: Klinik Roderbirken in Leichlingen (Rheinland) | company_website: https://klinik-roderbirken.de | city: Leichlingen | country: DE | company_type: rehab_clinic | first_name: Birgit | last_name: Zimmermann | full_name: Birgit Zimmermann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 3745 | company_id: 786 | company_name: Klinik Schöneberg in Berlin | company_website: https://klinik-schoeneberg.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Juliane | last_name: Springer | full_name: Juliane Springer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3746 | company_id: 1188 | company_name: Klinik Sonthofen | company_website: https://klinikverbund-allgaeu.de | city: Sonthofen | country: DE | company_type: clinic_location | first_name: Sabine | last_name: Dobrawa | full_name: Sabine Dobrawa | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 3747 | company_id: 2107 | company_name: Klinik St. Irmingard in Prien am Chiemsee | company_website: https://st-irmingard.de | city: Prien am Chiemsee | country: DE | company_type: rehab_clinic | first_name: Bettina | last_name: Perl | full_name: Bettina Perl | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+16. person_id: 2306 | company_id: 1106 | company_name: Klinik St. Josef Buchloe | company_website: https://kliniken-oal-kf.de/kliniken/klinik-st-josef | city: Buchloe | country: DE | company_type: clinic_location | first_name: Ralf | last_name: Kratel | full_name: Ralf Kratel | role: Klinikleitung und Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 3748 | company_id: 1664 | company_name: Klinik Sulingen | company_website: https://kliniken-lkd.de | city: Sulingen | country: DE | company_type: clinic_location | first_name: Jennifer | last_name: Arkenberg | full_name: Jennifer Arkenberg | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+18. person_id: 3749 | company_id: 1664 | company_name: Klinik Sulingen | company_website: https://kliniken-lkd.de | city: Sulingen | country: DE | company_type: clinic_location | first_name: Kathrin | last_name: Heusmann | full_name: Kathrin Heusmann | role: PDL Klinik Sulingen | role_bucket: pflege_director | priority: 1
+19. person_id: 3750 | company_id: 1890 | company_name: Klinik Viktoriastift in Bad Kreuznach | company_website: https://landeskrankenhaus.de/klinik-viktoriastift | city: Bad Kreuznach | country: DE | company_type: clinic_location | first_name: Angela | last_name: Körte | full_name: Angela Körte | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+20. person_id: 3752 | company_id: 988 | company_name: Klinik Vincentinum in Augsburg | company_website: http://klinik-vincentinum.de | city: Augsburg | country: DE | company_type: clinic_location | first_name: Brigitte | last_name: Ritter | full_name: Brigitte Ritter | role: Leitung Pflegemanagement | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_031
+- Return only the requested result.
+- Use public information only.
