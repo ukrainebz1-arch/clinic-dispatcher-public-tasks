@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_046
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_046
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4064 | company_id: 1041 | company_name: Kreiskrankenhaus Schrobenhausen | company_website: http://kkh-sob.de | city: Schrobenhausen | country: DE | company_type: clinic_location | first_name: Lukas | last_name: Pfundheller | full_name: Lukas Pfundheller | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+2. person_id: 4066 | company_id: 1804 | company_name: Kreiskrankenhaus St. Franziskus Saarburg | company_website: https://kh-saarburg.de | city: Saarburg | country: DE | company_type: clinic_location | first_name: Sabine | last_name: Heberer | full_name: Sabine Heberer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+3. person_id: 4067 | company_id: 2018 | company_name: Kreiskrankenhaus St. Ingbert | company_website: http://kreiskrankenhaus.saarland | city: Sankt Ingbert | country: DE | company_type: clinic_location | first_name: Margit | last_name: Damm | full_name: Margit Damm | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 4068 | company_id: 1906 | company_name: Kreiskrankenhaus Torgau "Johann Kentmann" | company_website: http://kkh-torgau.de | city: Torgau | country: DE | company_type: clinic_location | first_name: Gabriele | last_name: Nowesky | full_name: Gabriele Nowesky | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+5. person_id: 4069 | company_id: 405 | company_name: Kreiskrankenhaus Waldbröl | city: Waldbröl | country: Germany | company_type: clinic_location | first_name: Miriam | last_name: Sischka | full_name: Miriam Sischka | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 4070 | company_id: 1438 | company_name: Kreiskrankenhaus Weilburg | company_website: https://krankenhaus-weilburg.de | city: Weilburg | country: DE | company_type: clinic_location | first_name: Marcel | last_name: Heneck | full_name: Marcel Heneck | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 4071 | company_id: 1918 | company_name: Kreiskrankenhaus Weißwasser | company_website: http://kreiskrankenhaus-weisswasser.de | city: Weißwasser | country: DE | company_type: clinic_location | first_name: Laura | last_name: Pittke | full_name: Laura Pittke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 4072 | company_id: 1328 | company_name: Kreiskrankenhaus Wolgast | company_website: http://kreiskrankenhaus-wolgast.de | city: Wolgast | country: DE | company_type: clinic_location | first_name: Holger | last_name: Miltzow | full_name: Holger Miltzow | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+9. person_id: 4074 | company_id: 2192 | company_name: Kurpark-Klinik in Bad Nauheim | company_website: https://kurpark-klinik.com | city: Bad Nauheim | country: DE | company_type: rehab_clinic | first_name: Christian | last_name: Stumpf | full_name: Christian Stumpf | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 4075 | company_id: 910 | company_name: LMU Klinikum (Campus Großhadern) in München | company_website: https://lmu-klinikum.de | city: München | country: DE | company_type: clinic_location | first_name: Carolin | last_name: Werner | full_name: Carolin Werner | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 4077 | company_id: 1238 | company_name: LMU Klinikum (Standort Augustinum) in München | company_website: https://lmu-klinikum.de | city: München | country: DE | company_type: clinic_location | first_name: Carolin | last_name: Werner | full_name: Carolin Werner | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 4079 | company_id: 923 | company_name: LMU Klinikum (Standort Innenstadt) in München | company_website: https://lmu-klinikum.de | city: München | country: DE | company_type: clinic_location | first_name: Carolin | last_name: Werner | full_name: Carolin Werner | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 535 | company_id: 324 | company_name: LVR-Klinik Düren | city: Düren | country: Germany | company_type: clinic_location | first_name: Kurt | last_name: Königs | full_name: Kurt Königs | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/kurt-k%C3%B6nigs-5bbaa4268
+14. person_id: 541 | company_id: 327 | company_name: LVR-Klinik Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Klara | last_name: Barkouni | full_name: Klara Barkouni | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+15. person_id: 4081 | company_id: 631 | company_name: LVR-Klinik Viersen, Süchtelner Strasse | city: Viersen | country: Germany | company_type: clinic_location | first_name: Jörg | last_name: Mielke | full_name: Jörg Mielke | role: Pflegedirektion als Leitende Pflegekraft | role_bucket: pflege_director | priority: 1
+16. person_id: 4083 | company_id: 299 | company_name: LWL-Klinik Dortmund, Tagesklinik Allerstraße, Krisentagesklinik | city: Dortmund | country: Germany | company_type: clinic_location | first_name: Yvonne | last_name: Auclair | full_name: Yvonne Auclair | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+17. person_id: 941 | company_id: 551 | company_name: LWL-Klinik Lippstadt | city: Lippstadt | country: Germany | company_type: clinic_location | first_name: Magnus | last_name: Eggers | full_name: Magnus Eggers | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/magnus-eggers-6289b62a0
+18. person_id: 4085 | company_id: 1411 | company_name: Lahn-Dill Kliniken Dillenburg | company_website: http://lahn-dill-kliniken.de | city: Dillenburg | country: DE | company_type: clinic_location | first_name: Stefan | last_name: Zinn | full_name: Stefan Zinn | role: Kommissarischer Pflegedirektor / Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 4086 | company_id: 2162 | company_name: Landgrafen-Klinik in Bad Nenndorf | company_website: https://staatsbadnenndorf.de/landgrafen-klinik | city: Bad Nenndorf | country: DE | company_type: rehab_clinic | first_name: Anja | last_name: Schulz | full_name: Anja Schulz | role: Gesundheits- und Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 4087 | company_id: 839 | company_name: Lausitz Klinik Forst | company_website: https://evb-gesundheit.de/lausitzklinik | city: Forst | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Scharp | full_name: Michaela Scharp | role: Pflegedienstleitung und Prokuristin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_046
+- Return only the requested result.
+- Use public information only.
