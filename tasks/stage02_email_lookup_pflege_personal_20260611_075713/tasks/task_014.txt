@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_014
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_014
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3369 | company_id: 2249 | company_name: Dt. Klinik für Integrative Medizin in Bad Elster | company_website: https://dekimed.de | city: Bad Elster | country: DE | company_type: rehab_clinic | first_name: Kathrin | last_name: Schupke | full_name: Kathrin Schupke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 3370 | company_id: 489 | company_name: Eduardus-Krankenhaus in Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Phil | last_name: Baumgarten | full_name: Phil Baumgarten | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 3372 | company_id: 574 | company_name: Eifelklinik St. Brigida in Simmerath | city: Simmerath | country: Germany | company_type: clinic_location | first_name: Birgit | last_name: Pauly | full_name: Birgit Pauly | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+4. person_id: 3374 | company_id: 1676 | company_name: Einbecker BürgerSpital | company_website: http://einbecker-buergerspital.de | city: Einbeck | country: DE | company_type: clinic_location | first_name: Sarah | last_name: Köhne | full_name: Sarah Köhne | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/sarah-k%C3%B6hne-71194731b
+5. person_id: 3375 | company_id: 1620 | company_name: Elbe Klinikum Buxtehude | company_website: http://elbekliniken.de | city: Buxtehude | country: DE | company_type: clinic_location | first_name: Bernd | last_name: Lambrecht | full_name: Bernd Lambrecht | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+6. person_id: 3376 | company_id: 1568 | company_name: Elbe Klinikum Stade in Stade, Niederelbe | company_website: http://elbekliniken.de | city: Stade | country: DE | company_type: clinic_location | first_name: Bernd | last_name: Lambrecht | full_name: Bernd Lambrecht | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 3377 | company_id: 1684 | company_name: Elbe-Jeetzel-Klinik Dannenberg | company_website: http://elbe-jeetzel-klinik.de | city: Dannenberg | country: DE | company_type: clinic_location | first_name: Karola | last_name: Doblies | full_name: Karola Doblies | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 3378 | company_id: 1684 | company_name: Elbe-Jeetzel-Klinik Dannenberg | company_website: http://elbe-jeetzel-klinik.de | city: Dannenberg | country: DE | company_type: clinic_location | first_name: Rene | last_name: Benecke | full_name: Rene Benecke | role: stellver. Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 3379 | company_id: 1945 | company_name: Elbland Rehabilitationsklinik Großenhain in Großenhain, Sachsen | company_website: http://elbland-reha.de | city: Großenhain | country: DE | company_type: clinic_location | first_name: Torsten | last_name: Flade | full_name: Torsten Flade | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+10. person_id: 3380 | company_id: 1865 | company_name: Elblandklinikum Meißen in Meißen, Sachsen | company_website: http://elblandkliniken.de | city: Meißen | country: DE | company_type: clinic_location | first_name: Bianca | last_name: Svoboda | full_name: Bianca Svoboda | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 3381 | company_id: 1866 | company_name: Elblandklinikum Radebeul | company_website: http://elblandkliniken.de | city: Radebeul | country: DE | company_type: clinic_location | first_name: Martin | last_name: Schunack | full_name: Martin Schunack | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+12. person_id: 3382 | company_id: 1879 | company_name: Elblandklinikum Riesa | company_website: http://elblandkliniken.de | city: Riesa | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kupke | full_name: Claudia Kupke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 3383 | company_id: 508 | company_name: Elisabeth-Klinik in Olsberg | city: Olsberg | country: Germany | company_type: clinic_location | first_name: Stefan | last_name: Brieden | full_name: Stefan Brieden | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+14. person_id: 3384 | company_id: 1435 | company_name: Elisabeth-Krankenhaus Kassel | company_website: https://elisabeth-krankenhaus-kassel.de | city: Kassel | country: DE | company_type: clinic_location | first_name: Heike | last_name: van Elkan | full_name: Heike van Elkan | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+15. person_id: 3386 | company_id: 1306 | company_name: Epilepsie Monitoring Neuropädiatrie Alsterdorf in Hamburg | company_website: http://kkh-wilhelmstift.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Heike | last_name: Brost | full_name: Heike Brost | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+16. person_id: 3385 | company_id: 1306 | company_name: Epilepsie Monitoring Neuropädiatrie Alsterdorf in Hamburg | company_website: http://kkh-wilhelmstift.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Markus | last_name: Balters | full_name: Markus Balters | role: Pflegedirektor & Personalleiter | role_bucket: pflege_director | priority: 1
+17. person_id: 3387 | company_id: 871 | company_name: Epilepsieklinik Tabor in Bernau bei Berlin | company_website: https://epi-tabor.de | city: Bernau bei Berlin | country: DE | company_type: clinic_location | first_name: Uwe | last_name: Kropp | full_name: Uwe Kropp | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 3388 | company_id: 1948 | company_name: Epilepsiezentrum Kleinwachau in Radeberg | company_website: http://kleinwachau.de | city: Radeberg | country: DE | company_type: clinic_location | first_name: Ronald | last_name: Otto-Kaden | full_name: Ronald Otto-Kaden | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 3390 | company_id: 1909 | company_name: Erzgebirgsklinikum - Haus Stollberg | company_website: https://erzgebirgsklinikum.de | city: Stollberg | country: DE | company_type: clinic_location | first_name: Carina | last_name: Ellerhoff | full_name: Carina Ellerhoff | role: Leitende Pflegedirektorin | role_bucket: pflege_director | priority: 1
+20. person_id: 3391 | company_id: 1909 | company_name: Erzgebirgsklinikum - Haus Stollberg | company_website: https://erzgebirgsklinikum.de | city: Stollberg | country: DE | company_type: clinic_location | first_name: Jana | last_name: Ehrich | full_name: Jana Ehrich | role: Pflegeleitung Haus Stollberg | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_014
+- Return only the requested result.
+- Use public information only.
