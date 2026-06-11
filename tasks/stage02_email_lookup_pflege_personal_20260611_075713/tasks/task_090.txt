@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_090
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_090
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5130 | company_id: 1925 | company_name: Fachkrankenhaus Kreischa | company_website: https://klinik-bavaria.de | city: Kreischa | country: DE | company_type: clinic_location | first_name: Daniel | last_name: Häußer | full_name: Daniel Häußer | role: Personalleiter und Ansprechpartner ärztlicher Dienst | role_bucket: personalleitung | priority: 2
+2. person_id: 5131 | company_id: 845 | company_name: Fachkrankenhaus für Neurologische Frührehabilitation Kliniken Beelitz | company_website: http://fruehreha-beelitz.de/kbgf.html | city: Beelitz | country: DE | company_type: clinic_location | first_name: Sven | last_name: Graumnitz | full_name: Sven Graumnitz | role: Geschäftsbereichsleiter Personal und Kommunikation | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/sven-graumnitz-796973164
+3. person_id: 5133 | company_id: 1932 | company_name: Fachkrankenhaus für Psychiatrie und Psychotherapie Bethanien Hochweitzschen in Großweitzschen | company_website: http://agaplesion-mitteldeutschland.de | city: Großweitzschen | country: DE | company_type: clinic_location | first_name: Jacqueline | last_name: Klömich | full_name: Jacqueline Klömich | role: Personalleiterin Abteilung Personalmanagement | role_bucket: personalleitung | priority: 2
+4. person_id: 5134 | company_id: 532 | company_name: Fliedner Krankenhaus Ratingen - Klinik für Psychiatrie und Psychotherapie, Gerontopsychiatrie und Suchtmedizin | city: Ratingen | country: Germany | company_type: clinic_location | first_name: Lars | last_name: Borchert | full_name: Lars Borchert | role: Leitung Personal & Recht | role_bucket: personalleitung | priority: 2
+5. person_id: 5135 | company_id: 1990 | company_name: Frankenalb-Klinik Engelthal in Engelthal, Mittelfranken | company_website: https://bezirkskliniken-mfr.de/standorte-und-kliniken/engelthal | city: Engelthal | country: DE | company_type: clinic_location | first_name: Roland | last_name: Sturm | full_name: Roland Sturm | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+6. person_id: 5136 | company_id: 1116 | company_name: Frauenklinik Dr. Geisenhofer in München | company_website: http://geisenhoferklinik.de | city: München | country: DE | company_type: clinic_location | first_name: René | last_name: Napierski | full_name: René Napierski | role: Personalleitung Frauenklinik Dr. Geisenhofer München | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/rene-napierski-938409229
+7. person_id: 5137 | company_id: 121 | company_name: Furtbachkrankenhaus Stuttgart | city: Stuttgart | country: Germany | company_type: clinic_location | first_name: Willi | last_name: Slesak | full_name: Willi Slesak | role: Leiter Personalabteilung | role_bucket: personalleitung | priority: 2
+8. person_id: 5138 | company_id: 46 | company_name: Fürst-Stirum-Klinik Bruchsal | city: Bruchsal | country: Germany | company_type: clinic_location | first_name: Benedikt | last_name: Conzen | full_name: Benedikt Conzen | role: Leiter Personal & Recht | role_bucket: personalleitung | priority: 2
+9. person_id: 5139 | company_id: 490 | company_name: GFO Kliniken Bonn St. Josef | city: Bonn | country: Germany | company_type: clinic_location | first_name: Stephan | last_name: Querling | full_name: Stephan Querling | role: HR-Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/stephan-querling-050962148
+10. person_id: 5140 | company_id: 883 | company_name: GLG Fachklinik Wolletzsee in Angermünde | company_website: https://glg-gesundheit.de | city: Angermünde | country: DE | company_type: clinic_location | first_name: Torsten | last_name: Maerz | full_name: Torsten Maerz | role: Zentralbereichsleiter Personalverwaltung GLG mbH | role_bucket: personalleitung | priority: 2
+11. person_id: 5141 | company_id: 818 | company_name: GLG Werner Forßmann Klinikum Eberswalde | company_website: https://glg-gesundheit.de | city: Eberswalde | country: DE | company_type: clinic_location | first_name: Torsten | last_name: Maerz | full_name: Torsten Maerz | role: Zentralbereichsleiter Personalverwaltung GLG mbH | role_bucket: personalleitung | priority: 2
+12. person_id: 5142 | company_id: 1391 | company_name: GPR Klinikum Rüsselsheim | company_website: http://gp-ruesselsheim.de | city: Rüsselsheim | country: DE | company_type: clinic_location | first_name: Sven | last_name: Schultz | full_name: Sven Schultz | role: Leiter Personalabteilung | role_bucket: personalleitung | priority: 2
+13. person_id: 5143 | company_id: 1824 | company_name: Gemeinschaftsklinikum Mittelrhein (Heilig Geist) in Boppard, Rhein | company_website: https://gk.de | city: Boppard | country: DE | company_type: clinic_location | first_name: Carina | last_name: Motz | full_name: Carina Motz | role: Leiterin Personal und Soziales | role_bucket: personalleitung | priority: 2
+14. person_id: 5144 | company_id: 1774 | company_name: Gemeinschaftsklinikum Mittelrhein (Kemperhof) in Koblenz | company_website: http://gk.de | city: Koblenz | country: DE | company_type: clinic_location | first_name: Carina | last_name: Motz | full_name: Carina Motz | role: Leiterin Personal und Soziales | role_bucket: personalleitung | priority: 2
+15. person_id: 5145 | company_id: 1797 | company_name: Gemeinschaftsklinikum Mittelrhein (St. Elisabeth Mayen) | company_website: http://gk.de | city: Mayen | country: DE | company_type: clinic_location | first_name: Carina | last_name: Motz | full_name: Carina Motz | role: Leiterin Personal und Soziales | role_bucket: personalleitung | priority: 2
+16. person_id: 5146 | company_id: 341 | company_name: Gemeinschaftskrankenhaus Bonn - Haus St. Petrus | city: Bonn | country: Germany | company_type: clinic_location | first_name: Cornelius | last_name: Degenhardt | full_name: Cornelius Degenhardt | role: HR Director / Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/cornelius-degenhardt-35544235a
+17. person_id: 5147 | company_id: 308 | company_name: Gemeinschaftskrankenhaus Herdecke | city: Herdecke an der Ruhr | country: Germany | company_type: clinic_location | first_name: Davud | last_name: Karahan | full_name: Davud Karahan | role: Personalleiter | role_bucket: personalleitung | priority: 2
+18. person_id: 5148 | company_id: 1109 | company_name: Geomed-Kreisklinik in Gerolzhofen | company_website: http://geomed-klinik.de | city: Gerolzhofen | country: DE | company_type: clinic_location | first_name: Melanie | last_name: Roth | full_name: Melanie Roth | role: Personalleitung | role_bucket: personalleitung | priority: 2
+19. person_id: 5149 | company_id: 1203 | company_name: Geriatrie Klinikum St. Elisabeth an der Klinik Bogen in Bogen, Niederbayern | company_website: https://klinikum-straubing.de | city: Bogen | country: DE | company_type: clinic_location | first_name: Barbara | last_name: Wurm | full_name: Barbara Wurm | role: Leiterin Personalabteilung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/barbara-wurm-84a897210
+20. person_id: 5150 | company_id: 712 | company_name: Gerontopsychiatrische und psychiatrische Tageskliniken Wuppertal-Elberfeld | city: Wuppertal | country: Germany | company_type: clinic_location | first_name: Claudia | last_name: Rocholl | full_name: Claudia Rocholl | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-rocholl-73061b248
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_090
+- Return only the requested result.
+- Use public information only.
