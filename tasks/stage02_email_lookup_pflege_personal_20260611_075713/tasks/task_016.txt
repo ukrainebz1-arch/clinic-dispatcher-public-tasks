@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_016
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_016
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3415 | company_id: 1848 | company_name: Evangelisches Krankenhaus Dierdorf/Selters (Dierdorf) | company_website: http://khds.de | city: Dierdorf | country: DE | company_type: clinic_location | first_name: Tim | last_name: Scharein | full_name: Tim Scharein | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+2. person_id: 3417 | company_id: 2032 | company_name: Evangelisches Krankenhaus Dierdorf/Selters (Selters) | company_website: http://khds.de | city: Selters | country: DE | company_type: clinic_location | first_name: Tim | last_name: Scharein | full_name: Tim Scharein | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+3. person_id: 512 | company_id: 311 | company_name: Evangelisches Krankenhaus Düsseldorf | city: Düsseldorf | country: Germany | company_type: clinic_location | first_name: Sascha | last_name: Bakos | full_name: Sascha Bakos | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+4. person_id: 3419 | company_id: 1448 | company_name: Evangelisches Krankenhaus Gesundbrunnen in Hofgeismar | company_website: http://ekh-gesundbrunnen.de | city: Hofgeismar | country: DE | company_type: clinic_location | first_name: Thorsten | last_name: Ramus | full_name: Thorsten Ramus | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+5. person_id: 2617 | company_id: 1579 | company_name: Evangelisches Krankenhaus Göttingen-Weende | company_website: http://ekweende.de | city: Göttingen | country: DE | company_type: clinic_location | first_name: Hauke | last_name: Heißmeyer | full_name: Hauke Heißmeyer | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+6. person_id: 3420 | company_id: 1680 | company_name: Evangelisches Krankenhaus Göttingen-Weende - Krankenhaus Neu-Mariahilf | company_website: http://ekweende.de | city: Göttingen | country: DE | company_type: clinic_location | first_name: Hauke | last_name: Heißmeyer | full_name: Hauke Heißmeyer | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 3421 | company_id: 763 | company_name: Evangelisches Krankenhaus Hubertus in Berlin | company_website: http://jsd.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Helgrid | last_name: Marschke | full_name: Helgrid Marschke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 3422 | company_id: 736 | company_name: Evangelisches Krankenhaus Königin Elisabeth Herzberge in Berlin | company_website: https://keh-berlin.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Uwe | last_name: Kropp | full_name: Uwe Kropp | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+9. person_id: 3424 | company_id: 842 | company_name: Evangelisches Krankenhaus Luckau in Luckau, Niederlausitz | company_website: http://ekh-luckau.de | city: Luckau | country: DE | company_type: clinic_location | first_name: Martina | last_name: Haufe | full_name: Martina Haufe | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+10. person_id: 3425 | company_id: 831 | company_name: Evangelisches Krankenhaus Ludwigsfelde Teltow | company_website: http://ekh-ludwigsfelde.de | city: Ludwigsfelde | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Reichert | full_name: Birgit Reichert | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 3426 | company_id: 862 | company_name: Evangelisches Krankenhaus Lutherstift (Frankfurt (Oder)) | company_website: http://ekh-lutherstift.de | city: Frankfurt | country: DE | company_type: clinic_location | first_name: Beatrice | last_name: Reschke | full_name: Beatrice Reschke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 3427 | company_id: 1580 | company_name: Evangelisches Krankenhaus Oldenburg | company_website: http://evangelischeskrankenhaus.de | city: Oldenburg | country: DE | company_type: clinic_location | first_name: Markus | last_name: Dierks | full_name: Markus Dierks | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+13. person_id: 938 | company_id: 546 | company_name: Evangelisches Lukas-Krankenhaus Gronau | city: Gronau | country: Germany | company_type: clinic_location | first_name: Sascha | last_name: Dahms | full_name: Sascha Dahms | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+14. person_id: 3428 | company_id: 742 | company_name: Evangelisches Waldkrankenhaus Spandau in Berlin | company_website: http://jsd.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Lemke | full_name: Andrea Lemke | role: Pflegedirektion | role_bucket: pflege_director | priority: 1
+15. person_id: 3429 | company_id: 868 | company_name: Evangelisches Zentrum für Altersmedizin in Potsdam | company_website: http://altersmedizin-potsdam.de | city: Potsdam | country: DE | company_type: clinic_location | first_name: Dietlind | last_name: Jander | full_name: Dietlind Jander | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+16. person_id: 3430 | company_id: 1226 | company_name: Fachklinik Allgäu in Pfronten | company_website: https://fachklinik-allgaeu.de | city: Pfronten | country: DE | company_type: clinic_location | first_name: Raffael | last_name: Käsch | full_name: Raffael Käsch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 3431 | company_id: 2156 | company_name: Fachklinik Bad Bentheim | company_website: https://fk-bentheim.de | city: Bad Bentheim | country: DE | company_type: rehab_clinic | first_name: Martin | last_name: Hermeling | full_name: Martin Hermeling | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 3432 | company_id: 1081 | company_name: Fachklinik Berchtesgaden | company_website: http://kliniken-suedostbayern.de/de/leistungsspektrum/kreisklinik-berchtesgaden.htm | city: Berchtesgaden | country: DE | company_type: clinic_location | first_name: Eugen | last_name: Siegle | full_name: Eugen Siegle | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+19. person_id: 3433 | company_id: 1081 | company_name: Fachklinik Berchtesgaden | company_website: http://kliniken-suedostbayern.de/de/leistungsspektrum/kreisklinik-berchtesgaden.htm | city: Berchtesgaden | country: DE | company_type: clinic_location | first_name: Simone | last_name: Ammersdörfer | full_name: Simone Ammersdörfer | role: Pflegeleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 3434 | company_id: 1016 | company_name: Fachklinik Enzensberg in Füssen | company_website: http://fachklinik-enzensberg.de | city: Füssen | country: DE | company_type: clinic_location | first_name: Elfriede | last_name: Kastner | full_name: Elfriede Kastner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_016
+- Return only the requested result.
+- Use public information only.
