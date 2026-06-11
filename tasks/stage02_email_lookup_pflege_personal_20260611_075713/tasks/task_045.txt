@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_045
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_045
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4034 | company_id: 1080 | company_name: Kreisklinik Wertingen | company_website: https://khdw.de | city: Niederpöcking | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Frech | full_name: Andreas Frech | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/andreas-frech-a4721b29b
+2. person_id: 4035 | company_id: 1487 | company_name: Kreisklinik Wolfhagen | company_website: https://kreisklinikenkassel.de | city: Wolfhagen | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Scheele | full_name: Michaela Scheele | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 4038 | company_id: 1077 | company_name: Kreisklinik Wörth an der Donau | company_website: https://kreisklinik-woerth.de | city: Wörth an der Donau | country: DE | company_type: clinic_location | first_name: Tina | last_name: Fuchs | full_name: Tina Fuchs | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 4040 | company_id: 1550 | company_name: Kreiskliniken Darmstadt Dieburg ZfSG Tagesklinik Dieburg | company_website: http://kreiskliniken-dadi.de | city: Dieburg | country: DE | company_type: clinic_location | first_name: Jens | last_name: Müller-Laupert | full_name: Jens Müller-Laupert | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+5. person_id: 4042 | company_id: 1412 | company_name: Kreiskrankenhaus Bergstraße in Heppenheim | company_website: http://kkh-bergstrasse.de | city: Heppenheim | country: DE | company_type: clinic_location | first_name: Dirk | last_name: Buchloh | full_name: Dirk Buchloh | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+6. person_id: 4044 | company_id: 1937 | company_name: Kreiskrankenhaus Delitzsch | city: Delitzsch | country: DE | company_type: clinic_location | first_name: Manuela | last_name: Weidlich | full_name: Manuela Weidlich | role: Pflegedienstleitung Klinik Delitzsch | role_bucket: pflege_director | priority: 1
+7. person_id: 4046 | company_id: 1936 | company_name: Kreiskrankenhaus Delitzsch Standort Eilenburg | company_website: https://klinik-delitzsch.de | city: Eilenburg | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Kleinig | full_name: Susanne Kleinig | role: Pflegedienstleitung Klinik Eilenburg | role_bucket: pflege_director | priority: 1
+8. person_id: 4047 | company_id: 1322 | company_name: Kreiskrankenhaus Demmin | company_website: http://kkh-demmin.de | city: Demmin | country: DE | company_type: clinic_location | first_name: Anne-Kristin | last_name: Lembke | full_name: Anne-Kristin Lembke | role: Komm. Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 4049 | company_id: 119 | company_name: Kreiskrankenhaus Eberbach | city: Eberbach | country: Germany | company_type: clinic_location | first_name: Rolf | last_name: Poxleitner | full_name: Rolf Poxleitner | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+10. person_id: 4050 | company_id: 1427 | company_name: Kreiskrankenhaus Frankenberg | company_website: http://krankenhaus-frankenberg.de | city: Frankenberg | country: DE | company_type: clinic_location | first_name: Silvia | last_name: Vesper | full_name: Silvia Vesper | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+11. person_id: 4051 | company_id: 1873 | company_name: Kreiskrankenhaus Freiberg in Freiberg, Sachsen | company_website: https://kkh-freiberg.com | city: Freiberg | country: DE | company_type: clinic_location | first_name: Sabine | last_name: Hesse | full_name: Sabine Hesse | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 4053 | company_id: 1809 | company_name: Kreiskrankenhaus Grünstadt | company_website: http://krankenhausgruenstadt.de | city: Grünstadt | country: DE | company_type: clinic_location | first_name: Christine | last_name: Christmann | full_name: Christine Christmann | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 4055 | company_id: 1129 | company_name: Kreiskrankenhaus Höchstadt | company_website: http://kreiskrankenhaus-hoechstadt.de | city: Höchstadt an der Aisch | country: DE | company_type: clinic_location | first_name: Bianca | last_name: Dotterweich | full_name: Bianca Dotterweich | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+14. person_id: 4057 | company_id: 1663 | company_name: Kreiskrankenhaus Osterholz in Osterholz-Scharmbeck | company_website: https://kreiskrankenhaus-osterholz.de | city: Osterholz-Scharmbeck | country: DE | company_type: clinic_location | first_name: Rolf | last_name: Weiß | full_name: Rolf Weiß | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+15. person_id: 4056 | company_id: 1663 | company_name: Kreiskrankenhaus Osterholz in Osterholz-Scharmbeck | company_website: https://kreiskrankenhaus-osterholz.de | city: Osterholz-Scharmbeck | country: DE | company_type: clinic_location | first_name: Sönke | last_name: Caspers | full_name: Sönke Caspers | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+16. person_id: 4058 | company_id: 864 | company_name: Kreiskrankenhaus Prenzlau | company_website: https://glg-gesundheit.de | city: Prenzlau | country: DE | company_type: clinic_location | first_name: Maren | last_name: Lichteblau | full_name: Maren Lichteblau | role: Pflegedienstleitung Kreiskrankenhaus Prenzlau | role_bucket: pflege_director | priority: 1
+17. person_id: 4059 | company_id: 890 | company_name: Kreiskrankenhaus Prignitz - Standort Wittenberge | company_website: http://krankenhaus-prignitz.de | city: Wittenberge | country: DE | company_type: clinic_location | first_name: Niels | last_name: Schnürle | full_name: Niels Schnürle | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+18. person_id: 4060 | company_id: 1981 | company_name: Kreiskrankenhaus Prignitz in Perleberg | company_website: http://krankenhaus-prignitz.de | city: Perleberg | country: DE | company_type: clinic_location | first_name: Niels | last_name: Schnürle | full_name: Niels Schnürle | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+19. person_id: 4061 | company_id: 1442 | company_name: Kreiskrankenhaus Rotenburg | company_website: http://kkh-rotenburg.de | city: Rotenburg an der Fulda | country: DE | company_type: clinic_location | first_name: Christina | last_name: Harthausen | full_name: Sr. Christina Harthausen | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+20. person_id: 4063 | company_id: 1453 | company_name: Kreiskrankenhaus Schotten in Schotten, Hessen | company_website: https://gesundheitszentrum-wetterau.de/176 | city: Schotten | country: DE | company_type: clinic_location | first_name: Jana | last_name: Wuttke | full_name: Jana Wuttke | role: Pflegedienstleitung Kreiskrankenhaus Schotten | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_045
+- Return only the requested result.
+- Use public information only.
