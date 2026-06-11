@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_078
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_078
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4857 | company_id: 2001 | company_name: m&i Fachklinik Bad Heilbrunn | company_website: http://fachklinik-bad-heilbrunn.de | city: Bad Heilbrunn | country: DE | company_type: clinic_location | first_name: Markus | last_name: Lunk | full_name: Markus Lunk | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 4859 | company_id: 2150 | company_name: m&i Fachklinik Bad Pyrmont | company_website: https://fachklinik-bad-pyrmont.de | city: Bad Pyrmont | country: DE | company_type: rehab_clinic | first_name: Cornelia | last_name: Adam | full_name: Cornelia Adam | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 4860 | company_id: 1127 | company_name: m&i Fachklinik Herzogenaurach | company_website: http://fachklinik-herzogenaurach.de | city: Herzogenaurach | country: DE | company_type: clinic_location | first_name: Bettina | last_name: Honeiser | full_name: Bettina Honeiser | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+4. person_id: 4861 | company_id: 2131 | company_name: m&i-Fachklinik Bad Heilbrunn | company_website: https://fachklinik-bad-heilbrunn.de | city: Bad Heilbrunn | country: DE | company_type: rehab_clinic | first_name: Markus | last_name: Lunk | full_name: Markus Lunk | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+5. person_id: 4863 | company_id: 2100 | company_name: m&i-Fachklinik Enzensberg in Füssen | company_website: https://fachklinik-enzensberg.de | city: Füssen | country: DE | company_type: rehab_clinic | first_name: Elfriede | last_name: Kastner | full_name: Elfriede Kastner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 4865 | company_id: 2079 | company_name: m&i-Fachklinik Herzogenaurach | company_website: https://fachklinik-herzogenaurach.de | city: Herzogenaurach | country: DE | company_type: rehab_clinic | first_name: Bettina | last_name: Honeiser | full_name: Bettina Honeiser | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+7. person_id: 4866 | company_id: 2141 | company_name: salus klinik Lindow | company_website: https://salus-kliniken.de/lindow | city: Lindow | country: DE | company_type: rehab_clinic | first_name: Dagmar | last_name: Schöneck | full_name: Dagmar Schöneck | role: PDL | role_bucket: pflege_director | priority: 1
+8. person_id: 4867 | company_id: 1174 | company_name: 310KLINIK in Nürnberg | company_website: http://310klinik.com | city: Nürnberg | country: DE | company_type: clinic_location | first_name: Yvonne | last_name: Knoblach | full_name: Yvonne Knoblach | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+9. person_id: 4868 | company_id: 1626 | company_name: AGAPLESION Ev. Bathildiskrankenhaus in Bad Pyrmont | company_website: http://bathildis.de | city: Bad Pyrmont | country: DE | company_type: clinic_location | first_name: Anna | last_name: Funk | full_name: Anna Funk | role: Personalleiterin | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/anna-funk-66a811187
+10. person_id: 4870 | company_id: 1280 | company_name: AKK Altonaer Kinderkrankenhaus in Hamburg | company_website: https://kinderkrankenhaus.net | city: Hamburg | country: DE | company_type: clinic_location | first_name: Stefanie | last_name: Michalke | full_name: Stefanie Michalke | role: Personalleitung | role_bucket: personalleitung | priority: 2
+11. person_id: 4871 | company_id: 1730 | company_name: AMEOS Klinik Hildesheim Tagesklinik | city: Hildesheim | country: DE | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+12. person_id: 4872 | company_id: 1665 | company_name: AMEOS Klinikum Alfeld | company_website: https://ameos.de/klinikum-alfeld/kontakt | city: Alfeld | country: DE | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+13. person_id: 4873 | company_id: 1348 | company_name: AMEOS Klinikum Anklam | company_website: http://ameos.eu | city: Anklam | country: DE | company_type: clinic_location | first_name: Maximilian | last_name: Ulverich | full_name: Maximilian Ulverich | role: Leiter Personalmanagement AMEOS Nord | role_bucket: personalleitung | priority: 2
+14. person_id: 4874 | company_id: 564 | company_name: AMEOS Klinikum Bad Salzuflen | city: Bad Salzuflen | country: Germany | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+15. person_id: 4875 | company_id: 808 | company_name: AMEOS Klinikum Bremen | company_website: https://ameos.de/klinikum-bremen | city: Bremen | country: DE | company_type: clinic_location | first_name: Maximilian | last_name: Ulverich | full_name: Maximilian Ulverich | role: Leiter Personalmanagement AMEOS Nord | role_bucket: personalleitung | priority: 2
+16. person_id: 4876 | company_id: 1722 | company_name: AMEOS Klinikum Cuxhaven | company_website: https://ameos.de/klinikum-cuxhaven | city: Cuxhaven | country: DE | company_type: clinic_location | first_name: Maximilian | last_name: Ulverich | full_name: Maximilian Ulverich | role: Leiter Personalmanagement AMEOS Nord | role_bucket: personalleitung | priority: 2
+17. person_id: 4877 | company_id: 1745 | company_name: AMEOS Klinikum Goslar | company_website: https://ameos.eu/standorte/ameos-west/goslar/ameos-klinikum-goslar | city: Goslar | country: DE | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+18. person_id: 4878 | company_id: 1705 | company_name: AMEOS Klinikum Hameln | company_website: https://ameos.eu/standorte/ameos-west/hameln/ameos-klinikum-hameln | city: Hameln | country: DE | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+19. person_id: 4879 | company_id: 1744 | company_name: AMEOS Klinikum Hameln - Tagesklinik für Kinder-und Jugendpsychiatrie | company_website: https://ameos.eu/standorte/ameos-west/hildesheim/ameos-klinikum-hildesheim | city: Hameln | country: DE | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+20. person_id: 4880 | company_id: 1591 | company_name: AMEOS Klinikum Hildesheim | company_website: https://ameos.eu/standorte/ameos-west/hildesheim | city: Hildesheim | country: DE | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_078
+- Return only the requested result.
+- Use public information only.
