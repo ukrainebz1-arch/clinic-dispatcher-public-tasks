@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_012
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_012
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3322 | company_id: 1892 | company_name: Deutsches Rotes Kreuz Krankenhaus Chemnitz-Rabenstein | company_website: http://rab.drk-khs.de | city: Chemnitz | country: DE | company_type: clinic_location | first_name: Beate | last_name: Zierold | full_name: Beate Zierold | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+2. person_id: 3323 | company_id: 1923 | company_name: Deutsches Rotes Kreuz Krankenhaus Lichtenstein | company_website: http://li.drk-khs.de | city: Lichtenstein | country: DE | company_type: clinic_location | first_name: Sebastian | last_name: Löffler | full_name: Sebastian Löffler | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+3. person_id: 3324 | company_id: 1090 | company_name: Deutsches Zentrum für Kinder- und Jugendrheumatologie in Garmisch-Partenkirchen | company_website: https://rheuma-kinderklinik.de/rheuma-zentrum | city: Garmisch-Partenkirchen | country: DE | company_type: clinic_location | first_name: Jana | last_name: Mattei | full_name: Dr. jur. Jana Mattei | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 3325 | company_id: 1698 | company_name: Diabeteszentrum Bad Lauterberg | company_website: http://diabeteszentrum.de | city: Bad Lauterberg im Harz | country: DE | company_type: clinic_location | first_name: Tanja | last_name: Klaproth | full_name: Tanja Klaproth | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+5. person_id: 3326 | company_id: 1911 | company_name: Diakomed - Diakoniekrankenhaus im Chemnitzer Land | company_website: http://diakomed.de | city: Hartmannsdorf bei Chemnitz | country: DE | company_type: clinic_location | first_name: Sebastian | last_name: Grosskopf | full_name: Sebastian Grosskopf | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+6. person_id: 3327 | company_id: 1922 | company_name: Diakonie Kliniken Zschadraß - Fachkrankenhaus für Psychiatrie, Psychotherapie und Neurologie in Colditz | company_website: http://diakoniezschadrass.de | city: Colditz | country: DE | company_type: clinic_location | first_name: Yvonne | last_name: Gruhle | full_name: Yvonne Gruhle | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+7. person_id: 915 | company_id: 537 | company_name: Diakonie Klinikum Krankenhaus Bethesda in Freudenberg, Westfalen | city: Freudenberg | country: Germany | company_type: clinic_location | first_name: Jörg | last_name: Engel | full_name: Jörg Engel | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/j%C3%B6rg-engel-m-a-8071b1256
+8. person_id: 3328 | company_id: 1762 | company_name: Diakonie Klinikum Neunkirchen | company_website: http://kreuznacherdiakonie.de/Krankenhaeuser/Diakonie-Klinikum-Neunkirchen | city: Neunkirchen | country: DE | company_type: clinic_location | first_name: Marc | last_name: Detzler | full_name: Marc Detzler | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+9. person_id: 3330 | company_id: 1846 | company_name: Diakonie Krankenhaus Kirn in Kirn, Nahe | company_website: https://kreuznacherdiakonie.de/krankenhaeuser/diakonie-krankenhaus-kirn | city: Kirn | country: DE | company_type: clinic_location | first_name: Jutta | last_name: Magmer-Melaas | full_name: Jutta Magmer-Melaas | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+10. person_id: 3331 | company_id: 1784 | company_name: Diakonie Krankenhaus Kreuznacher Diakonie | company_website: https://kreuznacherdiakonie.de/krankenhaeuser/diakonie-krankenhaus-bad-kreuznach | city: Bad Kreuznach | country: DE | company_type: clinic_location | first_name: Jutta | last_name: Magmer-Melaas | full_name: Jutta Magmer-Melaas | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 3333 | company_id: 1428 | company_name: Diakonie-Krankenhaus Wehrda in Marburg | company_website: https://dkh-wehrda.de | city: Marburg | country: DE | company_type: clinic_location | first_name: Claus | last_name: Bollong | full_name: Claus Bollong | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+12. person_id: 3335 | company_id: 1779 | company_name: Diakonissen-Stiftungs-Krankenhaus Speyer | company_website: http://diakonissen.de/krankenhaeuser/diakonissen-stiftungs-krankenhaus-speyer/home.html | city: Speyer | country: DE | company_type: clinic_location | first_name: Miriam | last_name: Maier | full_name: Miriam Maier | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 3337 | company_id: 1908 | company_name: Diakonissenkrankenhaus Dresden | company_website: http://diakonissenkrankenhaus-dresden.de | city: Dresden | country: DE | company_type: clinic_location | first_name: Michael | last_name: Junge | full_name: Michael Junge | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+14. person_id: 3338 | company_id: 2160 | company_name: DianaKlinik in Bad Bevensen | company_website: https://diana-klinik.de | city: Bad Bevensen | country: DE | company_type: rehab_clinic | first_name: Ramona | last_name: Schröder | full_name: Ramona Schröder | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+15. person_id: 177 | company_id: 88 | company_name: Die Filderklinik in Filderstadt | city: Filderstadt | country: Germany | company_type: clinic_location | first_name: Carola | last_name: Riehm | full_name: Carola Riehm | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/carola-riehm-844279150
+16. person_id: 3339 | company_id: 1056 | company_name: Die Stadtklinik im Diako in Augsburg | company_website: https://stadtklinik-diako.de | city: Augsburg | country: DE | company_type: clinic_location | first_name: Manfred | last_name: Dürr | full_name: Manfred Dürr | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+17. person_id: 3340 | company_id: 1333 | company_name: Dietrich-Bonhoeffer-Klinikum (Altentreptow) | company_website: http://dbknb.de | city: Altentreptow | country: DE | company_type: clinic_location | first_name: Sarah | last_name: Buder | full_name: Sarah Buder | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+18. person_id: 3342 | company_id: 1334 | company_name: Dietrich-Bonhoeffer-Klinikum (Malchin) | company_website: http://dbknb.de | city: Malchin | country: DE | company_type: clinic_location | first_name: Sarah | last_name: Buder | full_name: Sarah Buder | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+19. person_id: 3344 | company_id: 1301 | company_name: Dietrich-Bonhoeffer-Klinikum (Neubrandenburg) | company_website: http://dbknb.de | city: Neubrandenburg | country: DE | company_type: clinic_location | first_name: Sarah | last_name: Buder | full_name: Sarah Buder | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+20. person_id: 3346 | company_id: 1352 | company_name: Dietrich-Bonhoeffer-Klinikum (Neustrelitz) | company_website: http://dbknb.de | city: Neustrelitz | country: DE | company_type: clinic_location | first_name: Sarah | last_name: Buder | full_name: Sarah Buder | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_012
+- Return only the requested result.
+- Use public information only.
