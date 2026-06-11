@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_056
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_056
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4301 | company_id: 1506 | company_name: Psychosomatische Akut-Klinik Kassel-Bad Wilhelmshöhe | company_website: https://psychosomatische-akut-klinik.de | city: Kassel | country: DE | company_type: clinic_location | first_name: Sonja | last_name: Range | full_name: Sonja Range | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 4302 | company_id: 934 | company_name: Psychosomatische Fachklinik Simbach | company_website: https://rottalinnkliniken.de | city: Simbach am Inn | country: DE | company_type: clinic_location | first_name: Maria-Theresia | last_name: Linner | full_name: Maria-Theresia Linner | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+3. person_id: 4304 | company_id: 983 | company_name: Psychosomatische Klinik Bad Neustadt | company_website: http://campus-nes.de/psychosomatische-klinik.html | city: Bad Neustadt an der Saale | country: DE | company_type: clinic_location | first_name: Elisabeth | last_name: Hertel | full_name: Elisabeth Hertel | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 1064 | company_id: 634 | company_name: Psychosomatische Klinik Bergisch Gladbach | city: Bergisch Gladbach | country: Germany | company_type: clinic_location | first_name: Raphael | last_name: Lüdenbach | full_name: Raphael Lüdenbach | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/raphael-l%C3%BCdenbach-m-a-15b336259
+5. person_id: 4305 | company_id: 1556 | company_name: Psychosomatische Klinik Ginsterhof in Rosengarten | company_website: https://ginsterhof.de | city: Rosengarten | country: DE | company_type: clinic_location | first_name: Kathrin | last_name: Großmann | full_name: Kathrin Großmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 4307 | company_id: 1149 | company_name: Psychosomatische Klinik Kloster Dießen | company_website: https://psychosomatik-diessen.de | city: Dießen am Ammersee | country: DE | company_type: clinic_location | first_name: Petra | last_name: Bohatsch | full_name: Petra Bohatsch | role: Leitung Pflege und Co-Therapie | role_bucket: pflege_director | priority: 1
+7. person_id: 4309 | company_id: 1013 | company_name: Psychosomatische Klinik Windach | company_website: http://klinik-windach.de | city: Windach | country: DE | company_type: clinic_location | first_name: Sascha | last_name: Fern | full_name: Sascha Fern | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 4310 | company_id: 1202 | company_name: Psychosomatische Tagesklinik Passau | company_website: http://ge-passau.de | city: Passau | country: DE | company_type: clinic_location | first_name: Martin | last_name: Marek | full_name: Martin Marek | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+9. person_id: 4311 | company_id: 1288 | company_name: Psychosomatische Tagesklinik Ulmenhof in Hamburg | company_website: https://asklepios.com/hamburg/westklinikum/experten/p sychosomatische-medizin/tagesklinik-ulmenhof | city: Hamburg | country: DE | company_type: clinic_location | first_name: Richard | last_name: Hockl | full_name: Richard Hockl | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+10. person_id: 4312 | company_id: 1198 | company_name: Pychiatrische Tagklinik Freising (kbo-Isar-Amper-Kinikum Taufkirchen) | company_website: http://kbo-iak.de | city: Freising | country: DE | company_type: clinic_location | first_name: Brigitta | last_name: Wermuth | full_name: Brigitta Wermuth | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 4315 | company_id: 77 | company_name: RKU - Universitäts- und Rehabilitationskliniken Ulm | city: Ulm | country: Germany | company_type: clinic_location | first_name: Catharina | last_name: Bothner | full_name: Catharina Bothner | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 4314 | company_id: 77 | company_name: RKU - Universitäts- und Rehabilitationskliniken Ulm | city: Ulm | country: Germany | company_type: clinic_location | first_name: Helene | last_name: Maucher | full_name: Helene Maucher | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 4316 | company_id: 1124 | company_name: Rangauklinik Ansbach | company_website: http://rangauklinik.de | city: Ansbach | country: DE | company_type: clinic_location | first_name: Hardy | last_name: Zießler | full_name: Hardy Zießler | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 4318 | company_id: 1986 | company_name: Regiomed Klinikum Lichtenfels in Lichtenfels, Bayern | company_website: http://regiomed-kliniken.de | city: Lichtenfels | country: DE | company_type: clinic_location | first_name: Katrin | last_name: Jung | full_name: Katrin Jung | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+15. person_id: 4319 | company_id: 2074 | company_name: Reha-Klinik Schwäbische Alb Bad Urach | company_website: http://gesundheitszentrum-schwaebische-alb.de | city: Bad Urach | country: DE | company_type: rehab_clinic | first_name: Beate | last_name: Wurst | full_name: Beate Wurst | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+16. person_id: 4320 | company_id: 2065 | company_name: Reha-Klinikum Bad Säckingen | company_website: https://rkbs.de/startseite.html | city: Bad Säckingen | country: DE | company_type: rehab_clinic | first_name: Cornelia | last_name: Döring | full_name: Cornelia Döring | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 4321 | company_id: 1228 | company_name: Reha-Zentrum Nittenau | company_website: https://passauerwolf.de | city: Nittenau | country: DE | company_type: clinic_location | first_name: Tatjana | last_name: Braun | full_name: Tatjana Braun | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 4322 | company_id: 2148 | company_name: Reha-Zentrum am Meer in Bad Zwischenahn | company_website: https://rehazentrum-am-meer.de | city: Bad Zwischenahn | country: DE | company_type: rehab_clinic | first_name: Elke | last_name: Schlottmann | full_name: Elke Schlottmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 4323 | company_id: 660 | company_name: RehaNova Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Christian | last_name: Kollhosser | full_name: Christian Kollhosser | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+20. person_id: 4324 | company_id: 2128 | company_name: Rehabilitations- und Präventionszentrum Bad Bocklet | company_website: https://rehazentrum-bb.de | city: Bad Bocklet | country: DE | company_type: rehab_clinic | first_name: Jessica | last_name: Walter | full_name: Jessica Walter | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_056
+- Return only the requested result.
+- Use public information only.
