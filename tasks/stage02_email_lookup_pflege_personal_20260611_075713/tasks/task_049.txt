@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_049
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_049
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4138 | company_id: 1820 | company_name: Marienhaus Klinikum St. Antonius Waldbreitbach | company_website: http://marienhaus-klinikum.de | city: Waldbreitbach | country: DE | company_type: clinic_location | first_name: Wioletta | last_name: Osko | full_name: Wioletta Osko | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+2. person_id: 4140 | company_id: 1776 | company_name: Marienhaus Klinikum St. Elisabeth Neuwied | company_website: http://marienhaus-klinikum.de | city: Neuwied | country: DE | company_type: clinic_location | first_name: Wioletta | last_name: Osko | full_name: Wioletta Osko | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+3. person_id: 4142 | company_id: 1759 | company_name: Marienhaus Klinikum St. Wendel-Ottweiler - Standort Wendel | company_website: https://marienhaus-st-wendel-ottweiler.de/startseite | city: Sankt Wendel | country: DE | company_type: clinic_location | first_name: Nicole | last_name: Busch | full_name: Nicole Busch | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 4144 | company_id: 528 | company_name: Marienhospital Oelde in Oelde, Westfalen | city: Oelde | country: Germany | company_type: clinic_location | first_name: Susanne | last_name: Welp | full_name: Susanne Welp | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+5. person_id: 4147 | company_id: 1675 | company_name: Marienhospital Osnabrück - Standort Natruper Holz | company_website: https://niels-stensen-kliniken.de/niels-stensen-kliniken.html | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Florian | last_name: Grötschel | full_name: Florian Grötschel | role: Pflegedirektor und OP-Manager | role_bucket: pflege_director | priority: 1
+6. person_id: 4146 | company_id: 1675 | company_name: Marienhospital Osnabrück - Standort Natruper Holz | company_website: https://niels-stensen-kliniken.de/niels-stensen-kliniken.html | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Scholüke | full_name: Susanne Scholüke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 4148 | company_id: 1821 | company_name: Marienkrankenhaus Cochem | company_website: http://marienkrankenhaus-cochem.de | city: Cochem | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Weppler | full_name: Andreas Weppler | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+8. person_id: 4149 | company_id: 1431 | company_name: Marienkrankenhaus Kassel | company_website: http://marienkrankenhaus-kassel.de | city: Kassel | country: DE | company_type: clinic_location | first_name: Peter | last_name: Wieddekind | full_name: Peter Wieddekind | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+9. person_id: 4151 | company_id: 1212 | company_name: Marion von Tessin Memory Tagesklinik in München | company_website: https://mvt-zentrum.de | city: München | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Ohl | full_name: Susanne Ohl | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 4152 | company_id: 827 | company_name: Martin Gropius Krankenhaus in Eberswalde | company_website: https://glg-gesundheit.de | city: Eberswalde | country: DE | company_type: clinic_location | first_name: Florian | last_name: Müller | full_name: Florian Müller | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+11. person_id: 4153 | company_id: 757 | company_name: Martin-Luther-Krankenhaus in Berlin | company_website: https://johannesstift-diakonie.de/medizinische-versorgung/martin-luther-krankenhaus | city: Berlin | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Patt | full_name: Kerstin Patt | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 4154 | company_id: 1063 | company_name: Max-Planck-Institut für Psychiatrie in München | company_website: http://psych.mpg.de | city: München | country: DE | company_type: clinic_location | first_name: Eva | last_name: Leugner | full_name: Eva Leugner | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+13. person_id: 4156 | company_id: 1239 | company_name: MediCare Flughafen München Medizinisches Zentrum (AirportClinic M) in Freising | company_website: https://munich-airport-clinic.com | city: Freising | country: DE | company_type: clinic_location | first_name: Martin | last_name: Maierthaler | full_name: Martin Maierthaler | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 4157 | company_id: 1704 | company_name: MediClin Deister Weser Kliniken - Klinik für Akutpsychosomatik und Psychotherapie | company_website: http://deister-weser-kliniken.de | city: Bad Münder am Deister | country: DE | company_type: clinic_location | first_name: Christian | last_name: Kaßler | full_name: Christian Kaßler | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 4159 | company_id: 2203 | company_name: MediClin Fachklinik Rhein/Ruhr in Essen | company_website: https://fachklinik-rheinruhr.de | city: Essen | country: DE | company_type: rehab_clinic | first_name: Tim | last_name: Schulz | full_name: Tim Schulz | role: Referent der kaufmännischen Direktion, Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+16. person_id: 4162 | company_id: 1537 | company_name: MediClin Klinik Bad Orb | company_website: https://reha-zentrum-bad-orb.de | city: Bad Orb | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Schäfer | full_name: Birgit Schäfer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 4163 | company_id: 2224 | company_name: MediClin Klinik Reichshof | company_website: https://klinik-reichshof.de | city: Reichshof | country: DE | company_type: rehab_clinic | first_name: Marius | last_name: Lübke | full_name: Marius Lübke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 4165 | company_id: 1956 | company_name: MediClin Klinik am Brunnenberg in Bad Elster | company_website: http://klinik-am-brunnenberg.de | city: Bad Elster | country: DE | company_type: clinic_location | first_name: Gabriele | last_name: Lange | full_name: Gabriele Lange | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+19. person_id: 4166 | company_id: 1702 | company_name: MediClin Klinikum Soltau | company_website: http://mediclin.de | city: Soltau | country: DE | company_type: clinic_location | first_name: Robert | last_name: Schroeter | full_name: Robert Schroeter | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 4167 | company_id: 2057 | company_name: MediClin Kraichgau-Klinik in Bad Rappenau | company_website: https://kraichgau-klinik.de | city: Bad Rappenau | country: DE | company_type: rehab_clinic | first_name: Bianca | last_name: Ederle | full_name: Bianca Ederle | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_049
+- Return only the requested result.
+- Use public information only.
