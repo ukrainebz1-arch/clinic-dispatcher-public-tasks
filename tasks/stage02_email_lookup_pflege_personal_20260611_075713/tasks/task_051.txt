@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_051
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_051
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4192 | company_id: 2187 | company_name: Median Reha-Zentrum Wiesbaden Sonnenberg | company_website: https://median-kliniken.de/de/median-reha-zentrum-wiesbaden-sonnenberg | city: Wiesbaden | country: DE | company_type: rehab_clinic | first_name: Sabine | last_name: Rauth | full_name: Sabine Rauth | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 4193 | company_id: 1891 | company_name: Median Tagesklinik Grünstadt | company_website: https://median-kliniken.de/de/median-tagesklinik-gruenstadt | city: Grünstadt | country: DE | company_type: clinic_location | first_name: Vera | last_name: Augustin | full_name: Vera Augustin | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 4194 | company_id: 1885 | company_name: Median Tagesklinik Neustadt | company_website: https://median-kliniken.de/de/median-tagesklinik-neustadt-an-der-weinstrasse | city: Neustadt an der Weinstraße | country: DE | company_type: clinic_location | first_name: Vera | last_name: Augustin | full_name: Vera Augustin | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+4. person_id: 4195 | company_id: 838 | company_name: Median-Klinik Grünheide | company_website: http://median-kliniken.de/de/standorte/median-klinik-gruenheide/klinikprofil | city: Grünheide | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Kurz | full_name: Kerstin Kurz | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+5. person_id: 4196 | company_id: 1242 | company_name: Medic-Center Klinik in Fürth | company_website: https://medic-center-nuernberg.de | city: Fürth | country: DE | company_type: clinic_location | first_name: Doris | last_name: Acar | full_name: Doris Acar | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 4197 | company_id: 1502 | company_name: Medical Park Bad Camberg | company_website: https://kliniken.medicalpark.de/bad-camberg | city: Bad Camberg | country: DE | company_type: clinic_location | first_name: Marguerite | last_name: Licht | full_name: Marguerite Licht | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 4198 | company_id: 1502 | company_name: Medical Park Bad Camberg | company_website: https://kliniken.medicalpark.de/bad-camberg | city: Bad Camberg | country: DE | company_type: clinic_location | first_name: Tina | last_name: Ferdinand | full_name: Tina Ferdinand | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 4199 | company_id: 1205 | company_name: Medical Park Bad Rodach | company_website: http://medicalpark.de | city: Bad Rodach | country: DE | company_type: clinic_location | first_name: Katrin | last_name: Seifarth | full_name: Katrin Seifarth | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 4200 | company_id: 2137 | company_name: Medical Park Berlin Humboldtmühle | company_website: https://medicalpark.de/humboldtmuehle | city: Berlin | country: DE | company_type: rehab_clinic | first_name: Heike | last_name: Neels-Herzmann | full_name: Heike Neels-Herzmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 4201 | company_id: 1026 | company_name: Medical Park Chiemseeblick | company_website: https://medicalpark.de/de/Kliniken_und_Zentren/Chiemseeblick__Bernau-Felden.html | city: Bernau am Chiemsee | country: DE | company_type: clinic_location | first_name: Maria | last_name: Neu | full_name: Maria Neu | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 4202 | company_id: 2116 | company_name: Medical Park Loipl in Bischofswiesen | company_website: https://medicalpark.de/de/Kliniken_und_Zentren/Loipl__Bischofswiesen.html | city: Bischofswiesen | country: DE | company_type: rehab_clinic | first_name: Stefan | last_name: Fuchs | full_name: Stefan Fuchs | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+12. person_id: 4203 | company_id: 2125 | company_name: Medical Park St. Hubertus Bad Wiessee | company_website: https://medicalpark.de/de/Kliniken_und_Zentren/St__Hubertus__Bad_Wiessee.html | city: Bad Wiessee | country: DE | company_type: rehab_clinic | first_name: Petra | last_name: Wied | full_name: Petra Wied | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 4204 | company_id: 1559 | company_name: Medizinische Hochschule Hannover | company_website: http://mhh.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Bredthauer | full_name: Claudia Bredthauer | role: Pflegedirektorin Geschäftsführung Pflege | role_bucket: pflege_director | priority: 1
+14. person_id: 4205 | company_id: 1559 | company_name: Medizinische Hochschule Hannover | company_website: http://mhh.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Karol | last_name: Martens | full_name: Karol Martens | role: Pflegedirektor Geschäftsführung Pflege | role_bucket: pflege_director | priority: 1
+15. person_id: 4206 | company_id: 1789 | company_name: Medizinisches Zentrum Lahnhöhe am Mittelrhein in Lahnstein | company_website: https://lahnhoehe.de | city: Lahnstein | country: DE | company_type: clinic_location | first_name: Martina | last_name: Schraub-Neumann | full_name: Martina Schraub-Neumann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+16. person_id: 4208 | company_id: 2052 | company_name: Mettnau Werner-Messmer-Klinik in Radolfzell am Bodensee | company_website: https://mettnau.com/werner-messmer-klinik | city: Radolfzell am Bodensee | country: DE | company_type: rehab_clinic | first_name: Norbert | last_name: Ludewig | full_name: Norbert Ludewig | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 4210 | company_id: 2248 | company_name: Mittelrhein-Klinik Bad Salzig in Boppard, Rhein | company_website: https://mittelrhein-klinik.de | city: Boppard | country: DE | company_type: rehab_clinic | first_name: Elke | last_name: Kabbani | full_name: Elke Kabbani | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 4211 | company_id: 2268 | company_name: Moritz Klinik in Bad Klosterlausnitz | company_website: https://moritz-klinik.de | city: Bad Klosterlausnitz | country: DE | company_type: rehab_clinic | first_name: Silke | last_name: Radeck | full_name: Silke Radeck | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 4212 | company_id: 1838 | company_name: Mosel-Eifel-Klinik in Bad Bertrich | company_website: https://mosel-eifel-klinik.de | city: Bad Bertrich | country: DE | company_type: clinic_location | first_name: Kitty | last_name: Donner | full_name: Kitty Donner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 4213 | company_id: 2258 | company_name: Mühlenbergklinik Holsteinische Schweiz in Malente | company_website: http://muehlenbergklinik-holsteinische-schweiz.de | city: Malente | country: DE | company_type: rehab_clinic | first_name: Olaf | last_name: Hambach | full_name: Olaf Hambach | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_051
+- Return only the requested result.
+- Use public information only.
