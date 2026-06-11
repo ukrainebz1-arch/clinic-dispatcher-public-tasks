@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_075
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_075
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4761 | company_id: 791 | company_name: Vivantes Klinikum Neukölln Psychosomatische Tagesklinik Sonnenallee in Berlin | company_website: https://vivantes.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Peggy | last_name: Dubois | full_name: Peggy Dubois | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+2. person_id: 4763 | company_id: 729 | company_name: Vivantes Klinikum Neukölln in Berlin | company_website: https://vivantes.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Peggy | last_name: Dubois | full_name: Peggy Dubois | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+3. person_id: 4766 | company_id: 733 | company_name: Vivantes Klinikum im Friedrichshain in Berlin | company_website: https://vivantes.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Martina | last_name: Henke | full_name: Martina Henke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 4768 | company_id: 756 | company_name: Vivantes Wenckebach-Klinikum in Berlin | company_website: https://vivantes.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Katrin | last_name: Fromm | full_name: Katrin Fromm | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 4770 | company_id: 1512 | company_name: Vogelsbergklinik in Grebenhain | company_website: http://vogelsbergklinik.de | city: Grebenhain | country: DE | company_type: clinic_location | first_name: Christel | last_name: Ochs | full_name: Christel Ochs | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 4771 | company_id: 2123 | company_name: Waldburg-Zeil Klinik Oberammergau | company_website: https://klinik-oberammergau.de | city: Oberammergau | country: DE | company_type: rehab_clinic | first_name: Sebastian | last_name: Noetzel | full_name: Sebastian Noetzel | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+7. person_id: 4772 | company_id: 1179 | company_name: Waldhausklinik Deuringen in Stadtbergen | company_website: http://waldhausklinik.de | city: Stadtbergen | country: DE | company_type: clinic_location | first_name: Renate | last_name: Reiter | full_name: Renate Reiter | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 4773 | company_id: 1691 | company_name: Waldklinik Jesteburg | company_website: http://waldklinik-jesteburg.de | city: Jesteburg | country: DE | company_type: clinic_location | first_name: Erik | last_name: Engel | full_name: Erik Engel | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+9. person_id: 4775 | company_id: 443 | company_name: Waldkrankenhaus Bonn | city: Bonn | country: Germany | company_type: clinic_location | first_name: Hartmut | last_name: Wirtz | full_name: Hartmut Wirtz | role: Pflegedienstleitung Waldkrankenhaus | role_bucket: pflege_director | priority: 1
+10. person_id: 4774 | company_id: 443 | company_name: Waldkrankenhaus Bonn | city: Bonn | country: Germany | company_type: clinic_location | first_name: Kai | last_name: Mückenhaupt | full_name: Kai Mückenhaupt | role: Pflegedirektor Johanniter-Kliniken Bonn | role_bucket: pflege_director | priority: 1
+11. person_id: 4776 | company_id: 980 | company_name: Waldkrankenhaus St. Marien in Erlangen | company_website: https://waldkrankenhaus.de | city: Erlangen | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Paule | full_name: Thomas Paule | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+12. person_id: 4778 | company_id: 1338 | company_name: Warnow-Klinik Bützow | company_website: https://warnowklinik.de | city: Bützow | country: DE | company_type: clinic_location | first_name: Monique | last_name: Mauck | full_name: Monique Mauck | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 4779 | company_id: 1408 | company_name: Werner Wicker Klinik in Bad Wildungen | company_website: https://wicker.de/kliniken/werner-wicker-klinik | city: Bad Wildungen | country: DE | company_type: clinic_location | first_name: Tobias | last_name: Krumm | full_name: Tobias Krumm | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+14. person_id: 4781 | company_id: 171 | company_name: Werner-Schwidder-Klinik in Bad Krozingen | city: Bad Krozingen | country: Germany | company_type: clinic_location | first_name: Michael | last_name: Haase | full_name: Michael Haase | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/michael-haase-25a331146
+15. person_id: 4782 | company_id: 1998 | company_name: Wertachklinik Bobingen | company_website: http://wertachkliniken.de | city: Bobingen | country: DE | company_type: clinic_location | first_name: Daniel | last_name: Hierl | full_name: Daniel Hierl | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/daniel-hierl-a3b1b3211
+16. person_id: 4783 | company_id: 1061 | company_name: Wertachklinik Schwabmünchen | company_website: http://wertachkliniken.de | city: Schwabmünchen | country: DE | company_type: clinic_location | first_name: Daniel | last_name: Hierl | full_name: Daniel Hierl | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 4784 | company_id: 2219 | company_name: Weserland-Klinik Bad Hopfenberg in Petershagen (Weser) | company_website: https://bad-hopfenberg.de | city: Petershagen | country: DE | company_type: rehab_clinic | first_name: Christoph | last_name: Koloff | full_name: Christoph Koloff | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 4785 | company_id: 1327 | company_name: Westmecklenburg Klinikum Helene von Bülow (Hagenow) | company_website: https://wmk-hvb.de | city: Hagenow | country: DE | company_type: clinic_location | first_name: René | last_name: Pfalzgraf | full_name: René Pfalzgraf | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+19. person_id: 4786 | company_id: 1330 | company_name: Westmecklenburg Klinikum Helene von Bülow (Ludwigslust) | company_website: http://wmk-hvb.de | city: Ludwigslust | country: DE | company_type: clinic_location | first_name: René | last_name: Pfalzgraf | full_name: René Pfalzgraf | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+20. person_id: 4787 | company_id: 1768 | company_name: Westpfalz-Klinikum (Kaiserslautern) | company_website: https://westpfalz-klinikum.eu | city: Kaiserslautern | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Bergsträßer | full_name: Andrea Bergsträßer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_075
+- Return only the requested result.
+- Use public information only.
