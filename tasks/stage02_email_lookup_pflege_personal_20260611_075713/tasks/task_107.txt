@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_107
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_107
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5551 | company_id: 846 | company_name: Krankenhaus Herzberg | company_website: http://elbe-elster-klinikum.de | city: Herzberg | country: DE | company_type: clinic_location | last_name: Strauch | full_name: Frau Strauch | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+2. person_id: 5552 | company_id: 1293 | company_name: Krankenhaus Jerusalem in Hamburg | company_website: http://jerusalem-hamburg.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Christian | last_name: Wall | full_name: Christian Wall | role: Personalleiter | role_bucket: personalleitung | priority: 2
+3. person_id: 5553 | company_id: 966 | company_name: Krankenhaus Landshut-Achdorf | company_website: http://lakumed.de | city: Landshut | country: DE | company_type: clinic_location | first_name: Rebecca | last_name: Bleeck | full_name: Rebecca Bleeck | role: Leitung Personalmanagement Kliniken Landshut-Achdorf Vilsbiburg und Schlossklinik Rottenburg | role_bucket: personalleitung | priority: 2
+4. person_id: 5554 | company_id: 80 | company_name: Krankenhaus Leonberg | city: Leonberg | country: Germany | company_type: clinic_location | first_name: Kathrin | last_name: Bahnmüller | full_name: Kathrin Bahnmüller | role: Ressortleiterin Personal & Bildung | role_bucket: personalleitung | priority: 2
+5. person_id: 5556 | company_id: 1678 | company_name: Krankenhaus Lindenbrunn in Coppenbrügge | company_website: http://krankenhaus-lindenbrunn.de | city: Coppenbrügge | country: DE | company_type: clinic_location | first_name: Markus | last_name: Cämmerer | full_name: Markus Cämmerer | role: Leiter Personalwesen | role_bucket: personalleitung | priority: 2
+6. person_id: 5557 | company_id: 1583 | company_name: Krankenhaus Ludmillenstift in Meppen | company_website: http://ludmillenstift.de | city: Meppen | country: DE | company_type: clinic_location | first_name: Jens | last_name: Eilers | full_name: Dr. Jens Eilers | role: Personaldirektor St. Bonifatius Hospitalgesellschaft | role_bucket: personalleitung | priority: 2
+7. person_id: 5558 | company_id: 1112 | company_name: Krankenhaus Mainburg | company_website: http://ilmtalklinik.de | city: Mainburg | country: DE | company_type: clinic_location | first_name: Sharon | last_name: Schulze-Reimpell | full_name: Sharon Schulze-Reimpell | role: Head of HR Ilmtalklinik GmbH | role_bucket: personalleitung | priority: 2
+8. person_id: 5559 | company_id: 1791 | company_name: Krankenhaus Maria Hilf in Bad Neuenahr-Ahrweiler | company_website: http://marienhaus-klinikum-ahr.de | city: Bad Neuenahr-Ahrweiler | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+9. person_id: 5560 | company_id: 1799 | company_name: Krankenhaus Maria Hilf in Daun | company_website: http://krankenhaus-maria-hilf.de | city: Daun | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+10. person_id: 5561 | company_id: 557 | company_name: Krankenhaus Maria Hilf in Warstein | city: Warstein | country: Germany | company_type: clinic_location | first_name: Nadja | last_name: Perschke | full_name: Nadja Perschke | role: Personalleitung Krankenhaus Maria Hilf Warstein | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/nadja-perschke-4ab114255
+11. person_id: 5562 | company_id: 347 | company_name: Krankenhaus Mechernich | city: Mechernich | country: Germany | company_type: clinic_location | first_name: Marco | last_name: Hionsek | full_name: Marco Hionsek | role: Personalleiter Kreiskrankenhaus Mechernich GmbH | role_bucket: personalleitung | priority: 2
+12. person_id: 5563 | company_id: 1916 | company_name: Krankenhaus Mittweida | company_website: http://lmkgmbh.de | city: Mittweida | country: DE | company_type: clinic_location | first_name: Ivette | last_name: Lautenfeld | full_name: Ivette Lautenfeld | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+13. person_id: 5564 | company_id: 841 | company_name: Krankenhaus Märkisch Oderland Strausberg | company_website: http://krankenhaus-mol-de | city: Strausberg | country: DE | company_type: clinic_location | first_name: Ina | last_name: Seifert | full_name: Ina Seifert | role: Personalleitung | role_bucket: personalleitung | priority: 2
+14. person_id: 5565 | company_id: 852 | company_name: Krankenhaus Märkisch-Oderland Wriezen | company_website: http://krankenhaus-mol-de | city: Wriezen | country: DE | company_type: clinic_location | first_name: Ina | last_name: Seifert | full_name: Ina Seifert | role: Personalleitung | role_bucket: personalleitung | priority: 2
+15. person_id: 5566 | company_id: 104 | company_name: Krankenhaus Mühlacker | city: Mühlacker | country: Germany | company_type: clinic_location | first_name: Michael | last_name: Jung | full_name: Michael Jung | role: Personaldirektor RKH | role_bucket: personalleitung | priority: 2
+16. person_id: 5567 | company_id: 153 | company_name: Krankenhaus Neuenbürg | city: Neuenbürg | country: Germany | company_type: clinic_location | first_name: Michael | last_name: Jung | full_name: Michael Jung | role: Personaldirektor RKH | role_bucket: personalleitung | priority: 2
+17. person_id: 5568 | company_id: 411 | company_name: Krankenhaus Neuwerk (Maria von den Aposteln) in Mönchengladbach | city: Mönchengladbach | country: Germany | company_type: clinic_location | first_name: Karin | last_name: Mehwald | full_name: Karin Mehwald | role: Personalleiterin St. Augustinus Gruppe | role_bucket: personalleitung | priority: 2
+18. person_id: 5569 | company_id: 1066 | company_name: Krankenhaus Neuwittelsbach in München | company_website: https://krankenhaus-neuwittelsbach.de | city: München | country: DE | company_type: clinic_location | first_name: Alexander | last_name: Behringer | full_name: Alexander Behringer | role: Leiter Personal | role_bucket: personalleitung | priority: 2
+19. person_id: 5570 | company_id: 1386 | company_name: Krankenhaus Nordwest in Frankfurt am Main | company_website: http://krankenhaus-nordwest.de | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Jürgen | last_name: Failing | full_name: Jürgen Failing | role: Leiter Personal und Arbeitsrecht | role_bucket: personalleitung | priority: 2
+20. person_id: 5571 | company_id: 581 | company_name: Krankenhaus Plettenberg | city: Plettenberg | country: Germany | company_type: clinic_location | first_name: Elena | last_name: Dazenko | full_name: Elena Dazenko | role: Personalleitung NRW | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_107
+- Return only the requested result.
+- Use public information only.
