@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_037
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_037
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 1463 | company_id: 907 | company_name: Klinikum Nürnberg Nord | company_website: http://klinikum-nuernberg.de | city: Nürnberg | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Nätscher | full_name: Andrea Nätscher | role: Pflegedirektorin Campus Nord | role_bucket: pflege_director | priority: 1
+2. person_id: 1464 | company_id: 915 | company_name: Klinikum Nürnberg Süd | company_website: http://klinikum-nuernberg.de | city: Nürnberg | country: DE | company_type: clinic_location | first_name: Nadine | last_name: Heym | full_name: Nadine Heym | role: Pflegedirektorin Campus Süd | role_bucket: pflege_director | priority: 1
+3. person_id: 1465 | company_id: 1895 | company_name: Klinikum Obergöltzsch Rodewisch | company_website: http://klinikum-obergoeltzsch.de | city: Rodewisch | country: DE | company_type: clinic_location | first_name: Mirko | last_name: Klinkosch | full_name: Mirko Klinkosch | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+4. person_id: 1466 | company_id: 1905 | company_name: Klinikum Oberlausitzer Bergland (Zittau) | company_website: http://k-ob.de | city: Zittau | country: DE | company_type: clinic_location | first_name: Julia | last_name: Malke | full_name: Julia Malke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 1467 | company_id: 1920 | company_name: Klinikum Oberlausitzer Bergland in Ebersbach / Sachsen | company_website: http://k-ob.de | city: Ebersbach | country: DE | company_type: clinic_location | first_name: Julia | last_name: Malke | full_name: Julia Malke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 1468 | company_id: 1567 | company_name: Klinikum Oldenburg | company_website: http://klinikum-oldenburg.de | city: Oldenburg | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Hög-Engelage | full_name: Michaela Hög-Engelage | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 1469 | company_id: 1561 | company_name: Klinikum Osnabrück | company_website: http://klinikum-os.de | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Oliver | last_name: Geers | full_name: Oliver Geers | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 1470 | company_id: 926 | company_name: Klinikum Passau | company_website: http://klinikum-passau.de | city: Passau | country: DE | company_type: clinic_location | first_name: Christian | last_name: Maier | full_name: Christian Maier | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+9. person_id: 1471 | company_id: 1611 | company_name: Klinikum Peine | company_website: http://klinikum-peine.de | city: Peine | country: DE | company_type: clinic_location | first_name: Florian | last_name: Hinz | full_name: Florian Hinz | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+10. person_id: 1472 | company_id: 1100 | company_name: Klinikum Penzberg | company_website: https://klinikum-penzberg.de | city: Penzberg | country: DE | company_type: clinic_location | first_name: Stefanie | last_name: Son | full_name: Stefanie Son | role: Pflegedirektorin Konzern | role_bucket: pflege_director | priority: 1
+11. person_id: 1475 | company_id: 280 | company_name: Klinikum Rheine | city: Rheine | country: Germany | company_type: clinic_location | first_name: Karin | last_name: Christian | full_name: Karin Christian | role: Pflegedirektorin Mathias-Stiftung Rheine | role_bucket: pflege_director | priority: 1
+12. person_id: 1476 | company_id: 1754 | company_name: Klinikum Saarbrücken | company_website: http://klinikum-saarbruecken.de | city: Saarbrücken | country: DE | company_type: clinic_location | first_name: Hagen | last_name: Kern | full_name: Hagen Kern | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+13. person_id: 1477 | company_id: 1421 | company_name: Klinikum Schwalmstadt | company_website: http://asklepios.com/schwalm_eder | city: Schwalmstadt | country: DE | company_type: clinic_location | first_name: Serhat | last_name: Avci | full_name: Serhat Avci | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 1478 | company_id: 1133 | company_name: Klinikum Seefeld | company_website: https://klinikum-seefeld.de | city: Seefeld | country: DE | company_type: clinic_location | first_name: Stefanie | last_name: Son | full_name: Stefanie Son | role: Pflegedirektorin Konzern | role_bucket: pflege_director | priority: 1
+15. person_id: 3860 | company_id: 947 | company_name: Klinikum St. Elisabeth Straubing | company_website: https://klinikum-straubing.de | city: Straubing | country: DE | company_type: clinic_location | first_name: Hubert | last_name: Langmantl | full_name: Hubert Langmantl | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+16. person_id: 3862 | company_id: 1913 | company_name: Klinikum St. Georg (Standort Grünau) in Leipzig | company_website: https://sanktgeorg.de/home.html | city: Leipzig | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Schienbein | full_name: Birgit Schienbein | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+17. person_id: 3863 | company_id: 1969 | company_name: Klinikum St. Georg - Verbund Gemeindenahe Psychiatrie - Demmering Str. 49 in Leipzig | company_website: https://sanktgeorg.de/home.html | city: Leipzig | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Schienbein | full_name: Birgit Schienbein | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+18. person_id: 3864 | company_id: 1967 | company_name: Klinikum St. Georg - Verbund Gemeindenahe Psychiatrie - Holzhäuser Str. 74 in Leipzig | company_website: https://sanktgeorg.de/home.html | city: Leipzig | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Schienbein | full_name: Birgit Schienbein | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+19. person_id: 3865 | company_id: 1966 | company_name: Klinikum St. Georg - Verbund Gemeindenahe Psychiatrie - Karlsruher Str. 54 in Leipzig | company_website: https://sanktgeorg.de/home.html | city: Leipzig | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Schienbein | full_name: Birgit Schienbein | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+20. person_id: 3866 | company_id: 1839 | company_name: Klinikum St. Georg in Leipzig | company_website: https://sanktgeorg.de/home.html | city: Leipzig | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Schienbein | full_name: Birgit Schienbein | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_037
+- Return only the requested result.
+- Use public information only.
