@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_043
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_043
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3984 | company_id: 1628 | company_name: Krankenhaus St. Elisabeth in Damme, Dümmer | company_website: http://krankenhaus-damme.de | city: Damme | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Tönsing | full_name: Thomas Tönsing | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+2. person_id: 3985 | company_id: 804 | company_name: Krankenhaus St. Joseph-Stift Bremen | company_website: http://sjs-bremen.de | city: Bremen | country: DE | company_type: clinic_location | first_name: Antje | last_name: Eekhoff | full_name: Antje Eekhoff | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+3. person_id: 3987 | company_id: 1903 | company_name: Krankenhaus St. Joseph-Stift Dresden | company_website: https://josephstift-dresden.de | city: Dresden | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Hasselbach | full_name: Andrea Hasselbach | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+4. person_id: 3988 | company_id: 1792 | company_name: Krankenhaus St. Marienwörth in Bad Kreuznach | company_website: http://st-marienwoerth.de | city: Bad Kreuznach | country: DE | company_type: clinic_location | first_name: Jutta | last_name: Magmer-Melaas | full_name: Jutta Magmer-Melaas | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3990 | company_id: 151 | company_name: Krankenhaus St. Vincentius in Heidelberg | city: Heidelberg | country: Germany | company_type: clinic_location | first_name: Uwe | last_name: Jäger | full_name: Uwe Jäger | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+6. person_id: 3991 | company_id: 1763 | company_name: Krankenhaus Sulzbach | company_website: https://kksaar.de | city: Sulzbach | country: DE | company_type: clinic_location | first_name: Marc | last_name: Detzler | full_name: Marc Detzler | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 3992 | company_id: 1047 | company_name: Krankenhaus Tirschenreuth | company_website: http://kliniken-nordoberpfalz.de | city: Tirschenreuth | country: DE | company_type: clinic_location | first_name: Nadine | last_name: Zeis | full_name: Nadine Zeis | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 3993 | company_id: 1003 | company_name: Krankenhaus Vilsbiburg | company_website: http://lakumed.de | city: Vilsbiburg | country: DE | company_type: clinic_location | first_name: Michael | last_name: Zehentner | full_name: Michael Zehentner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 3994 | company_id: 1996 | company_name: Krankenhaus Vilshofen | company_website: http://ge-passau.de | city: Vilshofen an der Donau | country: DE | company_type: clinic_location | first_name: Martin | last_name: Marek | full_name: Martin Marek | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+10. person_id: 3995 | company_id: 766 | company_name: Krankenhaus Waldfriede in Berlin | company_website: http://krankenhaus-waldfriede.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Kobalz | full_name: Thomas Kobalz | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+11. person_id: 3997 | company_id: 1630 | company_name: Krankenhaus Walsrode | company_website: http://heidekreis-klinikum.de | city: Walsrode | country: DE | company_type: clinic_location | first_name: Meike | last_name: Heins | full_name: Meike Heins | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 3998 | company_id: 1123 | company_name: Krankenhaus Wegscheid | company_website: http://ge-passau.de | city: Wegscheid | country: DE | company_type: clinic_location | first_name: Martin | last_name: Marek | full_name: Martin Marek | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+13. person_id: 3999 | company_id: 1019 | company_name: Krankenhaus Weilheim-Schongau | company_website: https://meinkrankenhaus2030.de | city: Weilheim in Oberbayern | country: DE | company_type: clinic_location | first_name: Anne | last_name: Ertel | full_name: Anne Ertel | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+14. person_id: 4000 | company_id: 1019 | company_name: Krankenhaus Weilheim-Schongau | company_website: https://meinkrankenhaus2030.de | city: Weilheim in Oberbayern | country: DE | company_type: clinic_location | first_name: Sandra | last_name: Buchner | full_name: Sandra Buchner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 4001 | company_id: 1622 | company_name: Krankenhaus Winsen | company_website: http://krankenhaus-winsen.de | city: Winsen | country: DE | company_type: clinic_location | first_name: Heike | last_name: Landig | full_name: Heike Landig | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/heike-landig-640999121
+16. person_id: 4002 | company_id: 1622 | company_name: Krankenhaus Winsen | company_website: http://krankenhaus-winsen.de | city: Winsen | country: DE | company_type: clinic_location | first_name: Nadine | last_name: Hausfeld | full_name: Nadine Hausfeld | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 4003 | company_id: 1652 | company_name: Krankenhaus Wittmund | company_website: https://kh-wtm.de | city: Wittmund | country: DE | company_type: clinic_location | first_name: Stefan | last_name: Richter | full_name: Stefan Richter | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 4005 | company_id: 1928 | company_name: Krankenhaus Wurzen | company_website: http://kh-muldental.de | city: Wurzen | country: DE | company_type: clinic_location | first_name: Christina | last_name: Meier | full_name: Christina Meier | role: Pflegedirektion Leitung Kompetenzbereich Personal | role_bucket: pflege_director | priority: 1
+19. person_id: 4006 | company_id: 1928 | company_name: Krankenhaus Wurzen | company_website: http://kh-muldental.de | city: Wurzen | country: DE | company_type: clinic_location | first_name: Rodin | last_name: Kanitz | full_name: Rodin Kanitz | role: Pflegedirektion Leitung Kompetenzbereich Qualität/Prozesse | role_bucket: pflege_director | priority: 1
+20. person_id: 4008 | company_id: 1807 | company_name: Krankenhaus Zum Guten Hirten in Ludwigshafen am Rhein | company_website: http://guterhirte-ludwigshafen.de | city: Ludwigshafen am Rhein | country: DE | company_type: clinic_location | first_name: Daniel | last_name: Eisenhut | full_name: Daniel Eisenhut | role: Pflegedirektor Psychiatrie/Psychotherapie | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_043
+- Return only the requested result.
+- Use public information only.
