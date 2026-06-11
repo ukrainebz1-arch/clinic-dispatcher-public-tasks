@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_127
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_127
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 6024 | company_id: 451 | company_name: St. Franziskus-Hospital Ahlen in Ahlen, Westfalen | city: Ahlen | country: Germany | company_type: clinic_location | first_name: Anne | last_name: Rohlmann | full_name: Anne Rohlmann | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+2. person_id: 6025 | company_id: 291 | company_name: St. Franziskus-Hospital Münster | city: Münster | country: Germany | company_type: clinic_location | first_name: Volker | last_name: Bach | full_name: Volker Bach | role: Personalleiter | role_bucket: personalleitung | priority: 2
+3. person_id: 6026 | company_id: 1656 | company_name: St. Franziskus-Hospital in Lohne (Oldenburg) | company_website: https://franziskushospital-lohne.de | city: Lohne | country: DE | company_type: clinic_location | first_name: Heinrich | last_name: Arlinghaus | full_name: Heinrich Arlinghaus | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+4. person_id: 6027 | company_id: 747 | company_name: St. Hedwig-Krankenhaus Berlin | company_website: http://alexianer-berlin-hedwigkliniken.de/st_hedwig_krankenhaus/home | city: Berlin | country: DE | company_type: clinic_location | first_name: Matthias | last_name: Ziechmann | full_name: Matthias Ziechmann | role: Leiter Personalabteilung | role_bucket: personalleitung | priority: 2
+5. person_id: 6028 | company_id: 539 | company_name: St. Irmgardis-Krankenhaus Viersen-Süchteln | city: Viersen | country: Germany | company_type: clinic_location | first_name: Joachim | last_name: Reifer | full_name: Joachim Reifer | role: Personalleiter für die Region Niederrhein | role_bucket: personalleitung | priority: 2
+6. person_id: 6029 | company_id: 1197 | company_name: St. Johannes Klinik in Auerbach in der Oberpfalz | company_website: http://kh-as.de | city: Auerbach in der Oberpfalz | country: DE | company_type: clinic_location | first_name: Christine | last_name: Arnold | full_name: Christine Arnold | role: Personalleitung | role_bucket: personalleitung | priority: 2
+7. person_id: 6031 | company_id: 583 | company_name: St. Johannes-Hospital Neheim in Arnsberg | city: Arnsberg | country: Germany | company_type: clinic_location | first_name: Lisanne | last_name: Wiese | full_name: Lisanne Wiese | role: Leitung Personal Alexianer Klinikum Hochsauerland | role_bucket: personalleitung | priority: 2
+8. person_id: 6032 | company_id: 1651 | company_name: St. Johannes-Hospital Varel | company_website: http://krankenhaus-varel.de | city: Varel | country: DE | company_type: clinic_location | first_name: Holger | last_name: Weyrauch | full_name: Holger Weyrauch | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+9. person_id: 6033 | company_id: 570 | company_name: St. Johannes-Hospital in Hagen | city: Hagen | country: Germany | company_type: clinic_location | first_name: Claudia | last_name: Wiemann | full_name: Claudia Wiemann | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+10. person_id: 6035 | company_id: 456 | company_name: St. Josef Hospital Bad Driburg | city: Bad Driburg | country: Germany | company_type: clinic_location | first_name: Maik | last_name: Möller | full_name: Maik Möller | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+11. person_id: 6037 | company_id: 535 | company_name: St. Josef Krankenhaus Essen-Werden | city: Essen | country: Germany | company_type: clinic_location | first_name: Andrea | last_name: Hoesen | full_name: Andrea Hoesen | role: Personaldirektorin | role_bucket: personalleitung | priority: 2
+12. person_id: 6036 | company_id: 535 | company_name: St. Josef Krankenhaus Essen-Werden | city: Essen | country: Germany | company_type: clinic_location | first_name: Jörg | last_name: Hantel | full_name: Jörg Hantel | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+13. person_id: 6038 | company_id: 1524 | company_name: St. Josef Krankenhaus Königstein | company_website: https://hochtaunus-kliniken.de/medizinische-fachabteilungen/koenigstein | city: Königstein im Taunus | country: DE | company_type: clinic_location | first_name: Dirk | last_name: Topnik | full_name: Dirk Topnik | role: Personalleiter | role_bucket: personalleitung | priority: 2
+14. person_id: 6039 | company_id: 365 | company_name: St. Josef Krankenhaus Moers | city: Moers | country: Germany | company_type: clinic_location | first_name: David | last_name: Hettmer | full_name: David Hettmer | role: Personalleiter | role_bucket: personalleitung | priority: 2
+15. person_id: 6040 | company_id: 286 | company_name: St. Josef-Hospital in Bochum | city: Bochum | country: Germany | company_type: clinic_location | first_name: Daniel | last_name: Gohres | full_name: Daniel Gohres | role: Leiter Personal | role_bucket: personalleitung | priority: 2
+16. person_id: 6042 | company_id: 1825 | company_name: St. Josef-Krankenhaus Hermeskeil | company_website: http://krankenhaus-hermeskeil.de | city: Hermeskeil | country: DE | company_type: clinic_location | first_name: Valérie | last_name: Bultel | full_name: Valérie Bultel | role: Personalleitung des Marienhaus Klinikums Eifel und St. Josef-Krankenhaus Hermeskeil | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/val%C3%A9rie-bultel-17835a234
+17. person_id: 6043 | company_id: 421 | company_name: St. Josef-Krankenhaus Kupferdreh in Essen | city: Essen | country: Germany | company_type: clinic_location | first_name: Kemal | last_name: Erarslan | full_name: Dr. Kemal Erarslan | role: Personalleiter / Leiter Personal und Arbeitsrecht | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/dr-kemal-erarslan-806a7a315
+18. person_id: 6044 | company_id: 380 | company_name: St. Josef-Stift Sendenhorst | city: Sendenhorst | country: Germany | company_type: clinic_location | first_name: Gregor | last_name: Fauser | full_name: Gregor Fauser | role: Leiter Personal | role_bucket: personalleitung | priority: 2
+19. person_id: 6045 | company_id: 1623 | company_name: St. Josefs-Hospital Cloppenburg | company_website: https://josefshospital-cloppenburg.de | city: Cloppenburg | country: DE | company_type: clinic_location | first_name: Heinrich | last_name: Arlinghaus | full_name: Heinrich Arlinghaus | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+20. person_id: 6046 | company_id: 369 | company_name: St. Josefs-Hospital in Hagen | city: Hagen | country: Germany | company_type: clinic_location | first_name: Claudia | last_name: Wiemann | full_name: Claudia Wiemann | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_127
+- Return only the requested result.
+- Use public information only.
