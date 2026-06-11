@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_113
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_113
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5702 | company_id: 321 | company_name: Marien-Hospital Wattenscheid in Bochum | city: Bochum | country: Germany | company_type: clinic_location | first_name: Daniel | last_name: Gohres | full_name: Daniel Gohres | role: Leiter Personal | role_bucket: personalleitung | priority: 2
+2. person_id: 5703 | company_id: 332 | company_name: Marien-Hospital in Wesel | city: Wesel | country: Germany | company_type: clinic_location | first_name: Markus | last_name: Schmidt | full_name: Markus Schmidt | role: Zentrale Personalleitung | role_bucket: personalleitung | priority: 2
+3. person_id: 5705 | company_id: 415 | company_name: Marien-Krankenhaus in Bergisch Gladbach | city: Bergisch Gladbach | country: Germany | company_type: clinic_location | first_name: Philipp | last_name: Junge-Illies | full_name: Philipp Junge-Illies | role: Personalleiter für die GFO Kliniken Rhein-Berg und GFO Kliniken Mettmann-Süd | role_bucket: personalleitung | priority: 2
+4. person_id: 5706 | company_id: 523 | company_name: Marienborn Fachklinik für Psychiatrie und Psychotherapie in Zülpich | city: Zülpich | country: Germany | company_type: clinic_location | first_name: Stefan | last_name: Wirtz | full_name: Stefan Wirtz | role: Ressortleiter Personal | role_bucket: personalleitung | priority: 2
+5. person_id: 5707 | company_id: 521 | company_name: Marienborn Tagesklinik für Psychiatrie und Psychotherapie in Hürth, Rheinland | city: Hürth | country: Germany | company_type: clinic_location | first_name: Stefan | last_name: Wirtz | full_name: Stefan Wirtz | role: Ressortleiter Personal | role_bucket: personalleitung | priority: 2
+6. person_id: 5708 | company_id: 1794 | company_name: Marienhaus Klinikum Eifel (Bitburg) | company_website: http://marienhaus-klinikum-eifel.de | city: Bitburg | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+7. person_id: 5709 | company_id: 1813 | company_name: Marienhaus Klinikum Eifel (St. Elisabeth Gerolstein) | company_website: http://marienhaus-klinikum-eifel.de | city: Gerolstein | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+8. person_id: 5710 | company_id: 1780 | company_name: Marienhaus Klinikum Hetzelstift in Neustadt an der Weinstraße | company_website: http://hetzelstift.de | city: Neustadt an der Weinstraße | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+9. person_id: 5711 | company_id: 1775 | company_name: Marienhaus Klinikum Mainz | company_website: http://marienhaus-klinikum-mainz.de | city: Mainz | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+10. person_id: 5712 | company_id: 2021 | company_name: Marienhaus Klinikum Neunkirchen | company_website: https://marienhaus-neunkirchen.de | city: Neunkirchen | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+11. person_id: 5713 | company_id: 1761 | company_name: Marienhaus Klinikum Saarlouis-Dillingen (Saarlouis) | company_website: http://marienhaus-klinikum-saar.de | city: Saarlouis | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+12. person_id: 5714 | company_id: 1820 | company_name: Marienhaus Klinikum St. Antonius Waldbreitbach | company_website: http://marienhaus-klinikum.de | city: Waldbreitbach | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus-Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+13. person_id: 5715 | company_id: 1820 | company_name: Marienhaus Klinikum St. Antonius Waldbreitbach | company_website: http://marienhaus-klinikum.de | city: Waldbreitbach | country: DE | company_type: clinic_location | first_name: Valérie | last_name: Bultel | full_name: Valérie Bultel | role: Personalleitung Marienhaus-Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/val%C3%A9rie-bultel-17835a234
+14. person_id: 5716 | company_id: 1776 | company_name: Marienhaus Klinikum St. Elisabeth Neuwied | company_website: http://marienhaus-klinikum.de | city: Neuwied | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus-Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+15. person_id: 5717 | company_id: 1776 | company_name: Marienhaus Klinikum St. Elisabeth Neuwied | company_website: http://marienhaus-klinikum.de | city: Neuwied | country: DE | company_type: clinic_location | first_name: Valérie | last_name: Bultel | full_name: Valérie Bultel | role: Personalleitung Marienhaus-Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/val%C3%A9rie-bultel-17835a234
+16. person_id: 5718 | company_id: 1759 | company_name: Marienhaus Klinikum St. Wendel-Ottweiler - Standort Wendel | company_website: https://marienhaus-st-wendel-ottweiler.de/startseite | city: Sankt Wendel | country: DE | company_type: clinic_location | first_name: Claudia | last_name: Kraus | full_name: Claudia Kraus | role: Leitung Personal Marienhaus-Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/claudia-kraus-32879980
+17. person_id: 5719 | company_id: 1759 | company_name: Marienhaus Klinikum St. Wendel-Ottweiler - Standort Wendel | company_website: https://marienhaus-st-wendel-ottweiler.de/startseite | city: Sankt Wendel | country: DE | company_type: clinic_location | first_name: Valérie | last_name: Bultel | full_name: Valérie Bultel | role: Personalleitung Marienhaus-Gruppe | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/val%C3%A9rie-bultel-17835a234
+18. person_id: 5720 | company_id: 412 | company_name: Marienhospital Aachen | city: Aachen | country: Germany | company_type: clinic_location | first_name: Frank | last_name: Thieme | full_name: Frank Thieme | role: Personalleiter/Prokurist | role_bucket: personalleitung | priority: 2
+19. person_id: 5723 | company_id: 528 | company_name: Marienhospital Oelde in Oelde, Westfalen | city: Oelde | country: Germany | company_type: clinic_location | first_name: Franz | last_name: Diekmann | full_name: Franz Diekmann | role: Personalleiter | role_bucket: personalleitung | priority: 2
+20. person_id: 5724 | company_id: 11 | company_name: Marienhospital Stuttgart | city: Stuttgart | country: Germany | company_type: clinic_location | first_name: Andrea | last_name: Birkenbach | full_name: Andrea Birkenbach | role: Geschäftsbereichsleiterin Personal | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_113
+- Return only the requested result.
+- Use public information only.
