@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_079
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_079
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4881 | company_id: 1749 | company_name: AMEOS Klinikum Hildesheim - Standort Holzminden | company_website: https://ameos.eu/standorte/ameos-west/holzminden/ameos-klinikum-holzminden | city: Holzminden | country: DE | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+2. person_id: 4882 | company_id: 1727 | company_name: AMEOS Klinikum Hildesheim - Tagesklinik Alfeld | company_website: https://ameos.eu/standorte/ameos-west/alfeld/ameos-klinikum-alfeld/leistungen/psychiatrie-und-psychotherapie/tagesklinik-fuer-erwachsene | city: Alfeld | country: DE | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+3. person_id: 4883 | company_id: 1147 | company_name: AMEOS Klinikum Inntal | company_website: http://ameos.eu | city: Simbach am Inn | country: DE | company_type: clinic_location | first_name: Jenny | last_name: Schall | full_name: Jenny Schall | role: Leiterin Personalmanagement AMEOS Süd | role_bucket: personalleitung | priority: 2
+4. person_id: 4884 | company_id: 1590 | company_name: AMEOS Klinikum Osnabrück | company_website: http://ameos.eu/standorte/ameos-west/osnabrueck | city: Osnabrück | country: DE | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+5. person_id: 4885 | company_id: 1723 | company_name: AMEOS Klinikum Osterholz-Scharmbeck | company_website: https://ameos.de/klinikum-osterholz-scharmbeck | city: Osterholz-Scharmbeck | country: DE | company_type: clinic_location | first_name: Maximilian | last_name: Ulverich | full_name: Maximilian Ulverich | role: Leiter Personalmanagement AMEOS Nord | role_bucket: personalleitung | priority: 2
+6. person_id: 4886 | company_id: 1358 | company_name: AMEOS Klinikum Pasewalk | company_website: http://ameos.eu | city: Pasewalk | country: DE | company_type: clinic_location | first_name: Maximilian | last_name: Ulverich | full_name: Maximilian Ulverich | role: Leiter Personalmanagement AMEOS Nord | role_bucket: personalleitung | priority: 2
+7. person_id: 4887 | company_id: 1621 | company_name: AMEOS Klinikum Seepark Geestland in Langen bei Bremerhaven | company_website: https://ameos.eu/standorte/ameos-west/geestland/ameos-klinikum-seepark-geestland | city: Langen bei Bremerhaven | country: DE | company_type: clinic_location | first_name: Maximilian | last_name: Ulverich | full_name: Maximilian Ulverich | role: Leiter Personalmanagement AMEOS Nord | role_bucket: personalleitung | priority: 2
+8. person_id: 4888 | company_id: 397 | company_name: AMEOS Klinikum St. Clemens Oberhausen | city: Oberhausen | country: Germany | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+9. person_id: 4889 | company_id: 2039 | company_name: AMEOS Klinikum St. Elisabeth Neuburg | company_website: https://ameos.de/neuburg | city: Neuburg an der Donau | country: DE | company_type: clinic_location | first_name: Jenny | last_name: Schall | full_name: Jenny Schall | role: Leiterin Personalmanagement AMEOS Süd | role_bucket: personalleitung | priority: 2
+10. person_id: 4890 | company_id: 1215 | company_name: AMEOS Klinikum St. Elisabeth Neuburg - Kinder- und Jugendmedizin Standort Ingolstadt | company_website: https://ameos.de/neuburg | city: Ingolstadt | country: DE | company_type: clinic_location | first_name: Jenny | last_name: Schall | full_name: Jenny Schall | role: Leiterin Personalmanagement AMEOS Süd | role_bucket: personalleitung | priority: 2
+11. person_id: 4891 | company_id: 434 | company_name: AMEOS Klinikum St. Josef Oberhausen | city: Oberhausen | country: Germany | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+12. person_id: 4892 | company_id: 575 | company_name: AMEOS Klinikum St. Marien Oberhausen | city: Oberhausen | country: Germany | company_type: clinic_location | first_name: Diana | last_name: Illgen | full_name: Diana Illgen | role: Leiterin Personalmanagement AMEOS Ost und AMEOS West | role_bucket: personalleitung | priority: 2
+13. person_id: 4893 | company_id: 1319 | company_name: AMEOS Klinikum Ueckermünde | company_website: http://ameos.eu | city: Ueckermünde | country: DE | company_type: clinic_location | first_name: Maximilian | last_name: Ulverich | full_name: Maximilian Ulverich | role: Leiter Personalmanagement AMEOS Nord | role_bucket: personalleitung | priority: 2
+14. person_id: 4894 | company_id: 1291 | company_name: ATOS Klinik Fleetinsel in Hamburg | company_website: https://atos-kliniken.com/de/atos-fleetinsel-hamburg | city: Hamburg | country: DE | company_type: clinic_location | first_name: Simon | last_name: Seifert | full_name: Simon Seifert | role: Personalleitung bei ATOS Klinik Fleetinsel Hamburg GmbH & Co. KG | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/simon-seifert-006592150
+15. person_id: 4895 | company_id: 1562 | company_name: AWO Psychiatriezentrum in Königslutter am Elm | company_website: http://awo-psychiatriezentrum.de | city: Königslutter am Elm | country: DE | company_type: clinic_location | first_name: Alessa | last_name: Voigt | full_name: Alessa Voigt | role: Geschäftsbereichsleiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+16. person_id: 4896 | company_id: 826 | company_name: Achenbach Krankenhaus Königs Wusterhausen | company_website: https://klinikum-ds.de | city: Königs Wusterhausen | country: DE | company_type: clinic_location | first_name: Sylke | last_name: Wenzlaff | full_name: Sylke Wenzlaff | role: Leiterin Personalabteilung | role_bucket: personalleitung | priority: 2
+17. person_id: 4897 | company_id: 175 | company_name: Acura Fachklinik in Albstadt | city: Albstadt | country: Germany | company_type: clinic_location | last_name: Lange | full_name: Frau Lange | role: Personalleitung | role_bucket: personalleitung | priority: 2
+18. person_id: 4898 | company_id: 315 | company_name: Agaplesion Allgemeines Krankenhaus Hagen | city: Hagen | country: Germany | company_type: clinic_location | first_name: Sabine | last_name: Brockhaus | full_name: Sabine Brockhaus | role: Personalleitung am AKH | role_bucket: personalleitung | priority: 2
+19. person_id: 4899 | company_id: 377 | company_name: Agaplesion Bethesda Krankenhaus Wuppertal | city: Wuppertal | country: Germany | company_type: clinic_location | last_name: Dobbert | full_name: Herr Dobbert | role: Personalleitung | role_bucket: personalleitung | priority: 2
+20. person_id: 4900 | company_id: 1402 | company_name: Agaplesion Diakonie Kliniken Kassel | company_website: https://diako-kassel.de | city: Kassel | country: DE | company_type: clinic_location | first_name: Annika | last_name: Pietzsch | full_name: Annika Pietzsch | role: Personalleitung | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_079
+- Return only the requested result.
+- Use public information only.
