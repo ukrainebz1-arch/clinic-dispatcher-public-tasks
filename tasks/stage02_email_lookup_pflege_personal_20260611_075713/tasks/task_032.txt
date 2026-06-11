@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_032
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_032
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3754 | company_id: 1152 | company_name: Klinik Wartenberg | company_website: http://klinik-wartenberg.de | city: Wartenberg | country: DE | company_type: clinic_location | first_name: Florian | last_name: Dittrich | full_name: Florian Dittrich | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 3755 | company_id: 1164 | company_name: Klinik Wirsberg | company_website: http://klinik-wirsberg.de | city: Wirsberg | country: DE | company_type: clinic_location | first_name: Ines | last_name: Steger | full_name: Ines Steger | role: Pflegeleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 3756 | company_id: 565 | company_name: Klinik Wittgenstein in Bad Berleburg | city: Bad Berleburg | country: Germany | company_type: clinic_location | first_name: Stefan | last_name: Schneider | full_name: Stefan Schneider | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+4. person_id: 3757 | company_id: 1158 | company_name: Klinik am Birkenwald in Nürnberg | company_website: http://klinik-am-birkenwald.de | city: Nürnberg | country: DE | company_type: clinic_location | first_name: Christine | last_name: Broichhaus | full_name: Christine Broichhaus | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+5. person_id: 3758 | company_id: 1227 | company_name: Klinik am Greinberg in Würzburg | company_website: http://kjp.ukw.de/klinik/klinikbereiche/klinik-am-greinberg.html | city: Würzburg | country: DE | company_type: clinic_location | first_name: Detlef | last_name: Lumbsch | full_name: Detlef Lumbsch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 3759 | company_id: 1510 | company_name: Klinik am Hainberg in Bad Hersfeld | company_website: https://klinikum-bad-hersfeld.de | city: Bad Hersfeld | country: DE | company_type: clinic_location | first_name: Dorothea | last_name: Wiedemann | full_name: Dorothea Wiedemann | role: Leitung Pflege | role_bucket: pflege_director | priority: 1
+7. person_id: 3760 | company_id: 1191 | company_name: Klinik am Park Bad Steben | company_website: https://ebel-kliniken.com/klinik-am-park-bad-steben | city: Bad Steben | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Brendel | full_name: Susanne Brendel | role: Pflege PDL | role_bucket: pflege_director | priority: 1
+8. person_id: 918 | company_id: 538 | company_name: Klinik am Park Lünen | city: Lünen | country: Germany | company_type: clinic_location | first_name: Neslihan | last_name: Cörten | full_name: Neslihan Cörten | role: Mobile-Pflegedienstleitung | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/neslihan-c%C3%B6rten-a0a41a216
+9. person_id: 3761 | company_id: 2133 | company_name: Klinik am Park in Bad Steben | company_website: https://ebel-kliniken.com/klinik-am-park-bad-steben | city: Bad Steben | country: DE | company_type: rehab_clinic | first_name: Susanne | last_name: Brendel | full_name: Susanne Brendel | role: Pflege PDL | role_bucket: pflege_director | priority: 1
+10. person_id: 3762 | company_id: 2254 | company_name: Klinik am Tharandter Wald in Halsbrücke | company_website: https://reha-hetzdorf.de | city: Halsbrücke | country: DE | company_type: rehab_clinic | first_name: Carola | last_name: Wetzel | full_name: Carola Wetzel | role: Leitung Pflege | role_bucket: pflege_director | priority: 1
+11. person_id: 3764 | company_id: 1869 | company_name: Klinik für GefässChirurgie und GefässMedizin im Kreis Ahrweiler in Bad Neuenahr-Ahrweiler | company_website: http://gefaesszentrum-dr-bauer.de | city: Bad Neuenahr-Ahrweiler | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Pavlovic | full_name: Sr. Michaela Pavlovic | role: Leitung Pflege- und Stationsbereich | role_bucket: pflege_director | priority: 1
+12. person_id: 3763 | company_id: 1869 | company_name: Klinik für GefässChirurgie und GefässMedizin im Kreis Ahrweiler in Bad Neuenahr-Ahrweiler | company_website: http://gefaesszentrum-dr-bauer.de | city: Bad Neuenahr-Ahrweiler | country: DE | company_type: clinic_location | first_name: Patricia | last_name: Scherer | full_name: Sr. Patricia Scherer | role: Leitung Pflege- und Stationsbereich | role_bucket: pflege_director | priority: 1
+13. person_id: 3765 | company_id: 1500 | company_name: Klinik für Kinder- und Jugendpsychiatrie Psychosomatik und Psychotherapie in Marburg | company_website: https://ukgm.de | city: Marburg | country: DE | company_type: clinic_location | first_name: Olaf | last_name: Heckmann | full_name: Olaf Heckmann B.A. | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3766 | company_id: 1694 | company_name: Klinik für Kinder- und Jugendpsychiatrie Wichernstift in Ganderkesee | company_website: http://wichernstift.de | city: Ganderkesee | country: DE | company_type: clinic_location | first_name: Anke | last_name: Weber | full_name: Anke Weber | role: Pflegedienstleitung Klinik | role_bucket: pflege_director | priority: 1
+15. person_id: 1036 | company_id: 611 | company_name: Klinik für Kinder- und Jugendpsychiatrie und Psychotherapie in Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Raphael | last_name: Lüdenbach | full_name: Raphael Lüdenbach | role: Pflegedirektor | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/raphael-l%C3%BCdenbach-m-a-15b336259
+16. person_id: 1035 | company_id: 611 | company_name: Klinik für Kinder- und Jugendpsychiatrie und Psychotherapie in Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Ryan | last_name: de Guzman | full_name: Ryan de Guzman | role: Pflegedienstleitung KJPP | role_bucket: pflege_director | priority: 1
+17. person_id: 3767 | company_id: 548 | company_name: Klinik für Manuelle Therapie in Hamm | city: Hamm | country: Germany | company_type: clinic_location | first_name: Irene | last_name: Herauf | full_name: Irene Herauf | role: Gesamt-Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 3768 | company_id: 1489 | company_name: Klinik für Psychiatrie und Psychotherapie Friedberg | company_website: https://gesundheitszentrum-wetterau.de | city: Friedberg | country: DE | company_type: clinic_location | first_name: Nadine | last_name: Eiskirch | full_name: Nadine Eiskirch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+19. person_id: 3769 | company_id: 1069 | company_name: Klinik für Psychiatrie und Psychotherapie Fürth | company_website: http://bezirkskliniken-mfr.de | city: Fürth | country: DE | company_type: clinic_location | first_name: Mathias | last_name: Welberts | full_name: Mathias Welberts | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 3771 | company_id: 1720 | company_name: Klinik für Psychosomatische Medizin und Psychotherapie in Westerstede | company_website: https://karl-jaspers-klinik.de | city: Westerstede | country: DE | company_type: clinic_location | first_name: Dirk | last_name: Tenfelde | full_name: Dirk Tenfelde | role: Klinikpflegedienstleitung Psychosomatik | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_032
+- Return only the requested result.
+- Use public information only.
