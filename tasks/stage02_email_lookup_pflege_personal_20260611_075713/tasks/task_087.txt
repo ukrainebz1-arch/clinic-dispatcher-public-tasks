@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_087
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_087
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5057 | company_id: 1604 | company_name: Delme-Klinikum Delmenhorst | company_website: https://delme-klinikum.de | city: Delmenhorst | country: DE | company_type: clinic_location | first_name: Sönke | last_name: Arendt | full_name: Sönke Arendt | role: Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/s%C3%B6nke-arendt-80abb5204
+2. person_id: 5058 | company_id: 1004 | company_name: Deutsches Herzzentrum München | company_website: https://deutsches-herzzentrum-muenchen.de | city: München | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Schmid | full_name: Thomas Schmid | role: Personalleiter CHRO | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/dhmschmid
+3. person_id: 5059 | company_id: 1892 | company_name: Deutsches Rotes Kreuz Krankenhaus Chemnitz-Rabenstein | company_website: http://rab.drk-khs.de | city: Chemnitz | country: DE | company_type: clinic_location | first_name: Maria | last_name: Karl | full_name: Maria Karl | role: Leiterin Personal / Lohn | role_bucket: personalleitung | priority: 2
+4. person_id: 5060 | company_id: 1923 | company_name: Deutsches Rotes Kreuz Krankenhaus Lichtenstein | company_website: http://li.drk-khs.de | city: Lichtenstein | country: DE | company_type: clinic_location | first_name: Maria | last_name: Karl | full_name: Maria Karl | role: Leiterin Personal / Lohn | role_bucket: personalleitung | priority: 2
+5. person_id: 5061 | company_id: 1090 | company_name: Deutsches Zentrum für Kinder- und Jugendrheumatologie in Garmisch-Partenkirchen | company_website: https://rheuma-kinderklinik.de/rheuma-zentrum | city: Garmisch-Partenkirchen | country: DE | company_type: clinic_location | first_name: Eva | last_name: Wilde | full_name: Eva Wilde | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+6. person_id: 5062 | company_id: 317 | company_name: Diakonie Klinikum Jung-Stilling in Siegen | city: Siegen | country: Germany | company_type: clinic_location | first_name: Jörn | last_name: Baaske | full_name: Dr. Jörn Baaske | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+7. person_id: 5064 | company_id: 537 | company_name: Diakonie Klinikum Krankenhaus Bethesda in Freudenberg, Westfalen | city: Freudenberg | country: Germany | company_type: clinic_location | first_name: Jörn | last_name: Baaske | full_name: Dr. Jörn Baaske | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+8. person_id: 5066 | company_id: 134 | company_name: Diakonie-Klinik Mosbach | city: Mosbach | country: Germany | company_type: clinic_location | first_name: Werner | last_name: Koch | full_name: Werner Koch | role: Leitung Zentralbereich Personal und Recht | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/werner-koch-157a157b
+9. person_id: 5067 | company_id: 135 | company_name: Diakonie-Klinik Mosbach, Standort Tauberbischofsheim | city: Tauberbischofsheim | country: Germany | company_type: clinic_location | first_name: Werner | last_name: Koch | full_name: Werner Koch | role: Leitung Zentralbereich Personal und Recht | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/werner-koch-157a157b
+10. person_id: 5068 | company_id: 88 | company_name: Die Filderklinik in Filderstadt | city: Filderstadt | country: Germany | company_type: clinic_location | first_name: Anja | last_name: Baitinger | full_name: Anja Baitinger | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+11. person_id: 5073 | company_id: 981 | company_name: Donau-Ries Klinik Donauwörth | company_website: http://donkliniken.de | city: Donauwörth | country: DE | company_type: clinic_location | first_name: Katrin | last_name: Baumgärtner | full_name: Katrin Baumgärtner | role: Kommissarische Personalleitung | role_bucket: personalleitung | priority: 2
+12. person_id: 5074 | company_id: 1143 | company_name: Donau-Ries-Klinik Oettingen | company_website: http://donkliniken.de | city: Oettingen in Bayern | country: DE | company_type: clinic_location | first_name: Katrin | last_name: Baumgärtner | full_name: Katrin Baumgärtner | role: Kommissarische Personalleitung | role_bucket: personalleitung | priority: 2
+13. person_id: 5075 | company_id: 1091 | company_name: Donauisar Klinikum Landau | company_website: http://donau-isar-klinikum.de | city: Landau an der Isar | country: DE | company_type: clinic_location | first_name: Carmen | last_name: Bauer-Wanninger | full_name: Carmen Bauer-Wanninger | role: Personalleitung | role_bucket: personalleitung | priority: 2
+14. person_id: 5076 | company_id: 1606 | company_name: Dr. Fontheim Mentale Gesundheit in Liebenburg | company_website: https://fontheim.de | city: Liebenburg | country: DE | company_type: clinic_location | first_name: Kristina | last_name: Bormann | full_name: Kristina Bormann | role: Personalleitung | role_bucket: personalleitung | priority: 2
+15. person_id: 5077 | company_id: 511 | company_name: Dreifaltigkeits-Krankenhaus Wesseling | city: Wesseling | country: Germany | company_type: clinic_location | first_name: Marite | last_name: Fonseca Valles | full_name: Marite Fonseca Valles | role: Personalleitung | role_bucket: personalleitung | priority: 2
+16. person_id: 5078 | company_id: 253 | company_name: EchTAZ in Reutlingen | city: Reutlingen | country: Germany | company_type: clinic_location | first_name: Christian | last_name: Anton | full_name: Christian Anton | role: Leitung Geschäftsbereich Personal | role_bucket: personalleitung | priority: 2
+17. person_id: 5079 | company_id: 1945 | company_name: Elbland Rehabilitationsklinik Großenhain in Großenhain, Sachsen | company_website: http://elbland-reha.de | city: Großenhain | country: DE | company_type: clinic_location | first_name: Rainer | last_name: Zugehör | full_name: Rainer Zugehör | role: Leitung Personal und Vorstand | role_bucket: personalleitung | priority: 2
+18. person_id: 5080 | company_id: 1865 | company_name: Elblandklinikum Meißen in Meißen, Sachsen | company_website: http://elblandkliniken.de | city: Meißen | country: DE | company_type: clinic_location | first_name: Rainer | last_name: Zugehör | full_name: Rainer Zugehör | role: Leitung Personal und Vorstand | role_bucket: personalleitung | priority: 2
+19. person_id: 5081 | company_id: 1866 | company_name: Elblandklinikum Radebeul | company_website: http://elblandkliniken.de | city: Radebeul | country: DE | company_type: clinic_location | first_name: Rainer | last_name: Zugehör | full_name: Rainer Zugehör | role: Leitung Personal und Vorstand | role_bucket: personalleitung | priority: 2
+20. person_id: 5082 | company_id: 1879 | company_name: Elblandklinikum Riesa | company_website: http://elblandkliniken.de | city: Riesa | country: DE | company_type: clinic_location | first_name: Rainer | last_name: Zugehör | full_name: Rainer Zugehör | role: Leitung Personal und Vorstand | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_087
+- Return only the requested result.
+- Use public information only.
