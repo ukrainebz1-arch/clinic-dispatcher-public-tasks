@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_117
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_117
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5790 | company_id: 1308 | company_name: Neonatologische Intensivstation im Albertinen-Krankenhaus in Hamburg | company_website: https://kinderkrankenhaus.net | city: Hamburg | country: DE | company_type: clinic_location | first_name: Christine | last_name: Schönfeld | full_name: Christine Schönfeld | role: Personalleitung | role_bucket: personalleitung | priority: 2
+2. person_id: 5791 | company_id: 1315 | company_name: Neonatologische Station am AK Wandsbek in Hamburg | city: Hamburg | country: DE | company_type: clinic_location | first_name: Meinrad | last_name: Weingärtner | full_name: Meinrad Weingärtner | role: Personalleiter | role_bucket: personalleitung | priority: 2
+3. person_id: 5792 | company_id: 236 | company_name: Neurochirurgisches Zentrum Ludwigsburg-Heilbronn / Standort Heilbronn / Klinikum am Gesundbrunnen | city: Heilbronn | country: Germany | company_type: clinic_location | first_name: Kathrin | last_name: Armbruster | full_name: Kathrin Armbruster | role: Personalleitung | role_bucket: personalleitung | priority: 2
+4. person_id: 5793 | company_id: 2202 | company_name: Neurologisches Rehabilitationszentrum Godeshöhe in Bonn | company_website: https://johanniter.de/johanniter-kliniken/neurologisches-rehabilitationszentrum-godeshoehe | city: Bonn | country: DE | company_type: rehab_clinic | first_name: Vanessa | last_name: Glomb | full_name: Vanessa Glomb | role: Personalleitung | role_bucket: personalleitung | priority: 2
+5. person_id: 1820 | company_id: 2088 | company_name: Neurologisches Rehabilitationszentrum Quellenhof in Bad Wildbad | company_website: https://sana.de/quellenhof-wildbad | city: Bad Wildbad | country: DE | company_type: rehab_clinic | first_name: Stefan | last_name: Waibel | full_name: Dr. Stefan Waibel | role: Leiter Personal | role_bucket: personalleitung | priority: 2
+6. person_id: 5794 | company_id: 2215 | company_name: Niederrhein-Klinik Korschenbroich | company_website: https://niederrhein-klinik.de | city: Korschenbroich | country: DE | company_type: rehab_clinic | first_name: Karin | last_name: Mehwald | full_name: Karin Mehwald | role: Personalleiterin der St. Augustinus Gruppe | role_bucket: personalleitung | priority: 2
+7. person_id: 5795 | company_id: 179 | company_name: Nierenzentrum Heidelberg | city: Heidelberg | country: Germany | company_type: clinic_location | first_name: Grit | last_name: Kraushaar | full_name: Grit Kraushaar | role: Geschäftsbereichsleiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+8. person_id: 5796 | company_id: 1594 | company_name: Nordwest-Krankenhaus Sanderbusch | company_website: http://sanderbusch.de | city: Sande | country: DE | company_type: clinic_location | first_name: Stefan | last_name: Schoenauer | full_name: Stefan Schoenauer | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+9. person_id: 5797 | company_id: 870 | company_name: Oberhavel Klinik Gransee | company_website: http://oberhavel-kliniken.de | city: Gransee | country: DE | company_type: clinic_location | first_name: Constanze | last_name: Hennig | full_name: Constanze Hennig | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+10. person_id: 5798 | company_id: 857 | company_name: Oder-Spree Krankenhaus in Beeskow | company_website: http://os-kh.de | city: Beeskow | country: DE | company_type: clinic_location | first_name: Juliane | last_name: Schulze | full_name: Juliane Schulze B.A. | role: Personalleitung | role_bucket: personalleitung | priority: 2
+11. person_id: 5799 | company_id: 79 | company_name: Ortenau Klinikum Achern-Oberkirch (Achern) | city: Achern | country: Germany | company_type: clinic_location | first_name: Constantin | last_name: Schmidt | full_name: Constantin Schmidt | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+12. person_id: 5800 | company_id: 79 | company_name: Ortenau Klinikum Achern-Oberkirch (Achern) | city: Achern | country: Germany | company_type: clinic_location | first_name: Melanie | last_name: Angielsky | full_name: Melanie Angielsky | role: Bereichsleiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+13. person_id: 5801 | company_id: 123 | company_name: Ortenau Klinikum Kehl | city: Kehl | country: Germany | company_type: clinic_location | first_name: Constantin | last_name: Schmidt | full_name: Constantin Schmidt | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+14. person_id: 5802 | company_id: 123 | company_name: Ortenau Klinikum Kehl | city: Kehl | country: Germany | company_type: clinic_location | first_name: Melanie | last_name: Angielsky | full_name: Melanie Angielsky | role: Bereichsleiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+15. person_id: 5803 | company_id: 18 | company_name: Ortenau Klinikum Offenburg-Kehl Standort Offenburg | city: Offenburg | country: Germany | company_type: clinic_location | first_name: Constantin | last_name: Schmidt | full_name: Constantin Schmidt | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+16. person_id: 5804 | company_id: 18 | company_name: Ortenau Klinikum Offenburg-Kehl Standort Offenburg | city: Offenburg | country: Germany | company_type: clinic_location | first_name: Melanie | last_name: Angielsky | full_name: Melanie Angielsky | role: Bereichsleiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+17. person_id: 5805 | company_id: 155 | company_name: Ortenau Klinikum Wolfach | city: Wolfach | country: Germany | company_type: clinic_location | first_name: Constantin | last_name: Schmidt | full_name: Constantin Schmidt | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+18. person_id: 5807 | company_id: 1010 | company_name: Orthopädische Klinik König-Ludwig-Haus in Würzburg | company_website: https://klinik-koenig-ludwig-haus.de | city: Würzburg | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Stolzenberger | full_name: Andreas Stolzenberger | role: Leiter Personalabteilung | role_bucket: personalleitung | priority: 2
+19. person_id: 5809 | company_id: 93 | company_name: Orthopädische Klinik Markgröningen | city: Markgröningen | country: Germany | company_type: clinic_location | first_name: Michael | last_name: Jung | full_name: Michael Jung | role: Direktor Ressort Personal und Arbeit / Personaldirektor RKH | role_bucket: personalleitung | priority: 2
+20. person_id: 5810 | company_id: 2266 | company_name: Orthopädische Rehaklinik Eisenberg | company_website: https://reha-eisenberg.de | city: Eisenberg | country: DE | company_type: rehab_clinic | first_name: Sylvia | last_name: Orlamünder | full_name: Sylvia Orlamünder | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_117
+- Return only the requested result.
+- Use public information only.
