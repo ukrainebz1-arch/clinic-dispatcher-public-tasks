@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_026
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_026
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3627 | company_id: 1711 | company_name: KRH Geriatrie Langenhagen | company_website: https://geriatrie-langenhagen.krh.de | city: Langenhagen | country: DE | company_type: clinic_location | first_name: Carsten | last_name: Schock | full_name: Carsten Schock | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+2. person_id: 3628 | company_id: 1629 | company_name: KRH Klinikum Agnes Karll Laatzen | company_website: https://laatzen.krh.de | city: Laatzen bei Hannover | country: DE | company_type: clinic_location | first_name: Elke | last_name: Schmidt | full_name: Elke Schmidt | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+3. person_id: 3629 | company_id: 1629 | company_name: KRH Klinikum Agnes Karll Laatzen | company_website: https://laatzen.krh.de | city: Laatzen bei Hannover | country: DE | company_type: clinic_location | first_name: Isa | last_name: Wöbbecke | full_name: Isa Wöbbecke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+4. person_id: 3630 | company_id: 1631 | company_name: KRH Klinikum Großburgwedel in Burgwedel | company_website: https://grossburgwedel.krh.de | city: Burgwedel | country: DE | company_type: clinic_location | first_name: Anne | last_name: Gottselig | full_name: Anne Gottselig | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3631 | company_id: 1631 | company_name: KRH Klinikum Großburgwedel in Burgwedel | company_website: https://grossburgwedel.krh.de | city: Burgwedel | country: DE | company_type: clinic_location | first_name: Oke | last_name: Fedders | full_name: Oke Fedders | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+6. person_id: 3632 | company_id: 1648 | company_name: KRH Klinikum Lehrte | company_website: https://lehrte.krh.de | city: Lehrte bei Hannover | country: DE | company_type: clinic_location | first_name: Anne | last_name: Gottselig | full_name: Anne Gottselig | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 3633 | company_id: 1615 | company_name: KRH Klinikum Neustadt am Rübenberge | company_website: https://neustadt.krh.de | city: Neustadt am Rübenberge | country: DE | company_type: clinic_location | first_name: Angela | last_name: Schurr | full_name: Angela Schurr | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 3634 | company_id: 1585 | company_name: KRH Klinikum Nordstadt in Hannover | company_website: https://nordstadt.krh.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Elke | last_name: Schmidt | full_name: Elke Schmidt | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+9. person_id: 3635 | company_id: 1585 | company_name: KRH Klinikum Nordstadt in Hannover | company_website: https://nordstadt.krh.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Simone | last_name: Rothert | full_name: Simone Rothert | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 3636 | company_id: 1595 | company_name: KRH Klinikum Robert Koch Gehrden | company_website: http://gehrden.krh.de | city: Gehrden | country: DE | company_type: clinic_location | first_name: Sandra | last_name: Pick | full_name: Sandra Pick | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 3637 | company_id: 1571 | company_name: KRH Klinikum Siloah in Hannover | company_website: http://krh.eu/siloah | city: Hannover | country: DE | company_type: clinic_location | first_name: Elke | last_name: Schmidt | full_name: Elke Schmidt | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 3638 | company_id: 1571 | company_name: KRH Klinikum Siloah in Hannover | company_website: http://krh.eu/siloah | city: Hannover | country: DE | company_type: clinic_location | first_name: Jessica | last_name: Fischer | full_name: Jessica Fischer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 3639 | company_id: 1637 | company_name: KRH Psychiatrie Langenhagen | company_website: https://psychiatrie-langenhagen.krh.de | city: Langenhagen | country: DE | company_type: clinic_location | first_name: Bastian | last_name: Flohr | full_name: Bastian Flohr | role: Geschäftsführender Direktor und Pflegedirektor | role_bucket: pflege_director | priority: 1
+14. person_id: 3640 | company_id: 1637 | company_name: KRH Psychiatrie Langenhagen | company_website: https://psychiatrie-langenhagen.krh.de | city: Langenhagen | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Wulbrandt | full_name: Birgit Wulbrandt | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 3641 | company_id: 1582 | company_name: KRH Psychiatrie Wunstorf | company_website: https://krh.de | city: Wunstorf | country: DE | company_type: clinic_location | first_name: Bastian | last_name: Flohr | full_name: Bastian Flohr | role: Geschäftsführender Direktor und Pflegedirektor | role_bucket: pflege_director | priority: 1
+16. person_id: 3642 | company_id: 1735 | company_name: KRH Psychiatrie Wunstorf Tagesklinik Deisterstraße in Hannover | company_website: https://krh.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Bastian | last_name: Flohr | full_name: Bastian Flohr | role: Geschäftsführender Direktor und Pflegedirektor | role_bucket: pflege_director | priority: 1
+17. person_id: 3643 | company_id: 1743 | company_name: KRH Psychiatrie Wunstorf Tagesklinik Nienburg | company_website: https://krh.de | city: Nienburg | country: DE | company_type: clinic_location | first_name: Bastian | last_name: Flohr | full_name: Bastian Flohr | role: Geschäftsführender Direktor und Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 2405 | company_id: 1477 | company_name: Kaiserin-Auguste-Victoria Krankenhaus in Ehringshausen, Dill | company_website: http://kav-krankenhaus.de | city: Ehringshausen | country: DE | company_type: clinic_location | first_name: Michael | last_name: Werner | full_name: Michael Werner | role: Pflegedienstleitung des Krankenhauses | role_bucket: pflege_director | priority: 1
+19. person_id: 3645 | company_id: 501 | company_name: Karl-Hansen-Klinik in Bad Lippspringe | city: Bad Lippspringe | country: Germany | company_type: clinic_location | first_name: Niclas | last_name: Frie | full_name: Niclas Frie | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+20. person_id: 3646 | company_id: 1574 | company_name: Karl-Jaspers-Klinik in Bad Zwischenahn | company_website: https://karl-jaspers-klinik.de | city: Bad Zwischenahn | country: DE | company_type: clinic_location | first_name: Monika | last_name: Jüttner | full_name: Monika Jüttner | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_026
+- Return only the requested result.
+- Use public information only.
