@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_085
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_085
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5016 | company_id: 2082 | company_name: Celenus Gotthard-Schettler-Klinik in Bad Schönborn | company_website: https://gotthard-schettler-klinik.de | city: Bad Schönborn | country: DE | company_type: rehab_clinic | first_name: Albert | last_name: Schuster | full_name: Albert Schuster | role: Head of HR | role_bucket: personalleitung | priority: 2
+2. person_id: 5017 | company_id: 730 | company_name: Charité - Universitätsmedizin Berlin | company_website: http://charite.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Jörg | last_name: Schäfer | full_name: Jörg Schäfer | role: Leitung Geschäftsbereich Personal und Organisationsentwicklung | role_bucket: personalleitung | priority: 2
+3. person_id: 5018 | company_id: 187 | company_name: Charlottenklinik für Augenheilkunde in Stuttgart | city: Stuttgart | country: Germany | company_type: clinic_location | first_name: Lucia | last_name: Siena | full_name: Lucia Siena | role: Personalleitung | role_bucket: personalleitung | priority: 2
+4. person_id: 5019 | company_id: 2135 | company_name: Chiemgau-Klinik in Marquartstein | company_website: https://kbs.de/DE/Kliniken/RehaKliniken/KlinikauswahlNachStandort/Marquartstein/marquartstein_node.html | city: Marquartstein | country: DE | company_type: rehab_clinic | first_name: Angela | last_name: Klouceck | full_name: Angela Klouceck | role: Personalleitung | role_bucket: personalleitung | priority: 2
+5. person_id: 5020 | company_id: 370 | company_name: Christliches Klinikum Unna MITTE | city: Unna | country: Germany | company_type: clinic_location | first_name: Jutta | last_name: Kappel | full_name: Jutta Kappel | role: Personalleiterin | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/jutta-kappel-6405b3122
+6. person_id: 5021 | company_id: 404 | company_name: Christliches Klinikum Unna WEST | city: Unna | country: Germany | company_type: clinic_location | first_name: Jutta | last_name: Kappel | full_name: Jutta Kappel | role: Personalleiterin | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/jutta-kappel-6405b3122
+7. person_id: 5022 | company_id: 1576 | company_name: Christliches Krankenhaus Quakenbrück | company_website: http://ckq-gmbh.de | city: Quakenbrück | country: DE | company_type: clinic_location | first_name: Manfred | last_name: Janknecht | full_name: Manfred Janknecht | role: Personalleiter / Prokurist | role_bucket: personalleitung | priority: 2
+8. person_id: 5023 | company_id: 394 | company_name: Christophorus-Kliniken Coesfeld | city: Coesfeld | country: Germany | company_type: clinic_location | first_name: Alexander | last_name: Meinert | full_name: Alexander Meinert | role: Personalleiter | role_bucket: personalleitung | priority: 2
+9. person_id: 5024 | company_id: 544 | company_name: Christophorus-Kliniken Dülmen | city: Dülmen | country: Germany | company_type: clinic_location | first_name: Alexander | last_name: Meinert | full_name: Alexander Meinert | role: Personalleiter | role_bucket: personalleitung | priority: 2
+10. person_id: 5025 | company_id: 595 | company_name: Christophorus-Kliniken Nottuln | city: Nottuln | country: Germany | company_type: clinic_location | first_name: Alexander | last_name: Meinert | full_name: Alexander Meinert | role: Personalleiter | role_bucket: personalleitung | priority: 2
+11. person_id: 5026 | company_id: 1488 | company_name: Clementine Kinderhospital in Frankfurt am Main | company_website: http://clementine-kinderhospital.de | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Caspar | last_name: Vaughan | full_name: Caspar Vaughan | role: Prokurist Personalleiter | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/caspar-vaughan-6b652215b
+12. person_id: 5027 | company_id: 1806 | company_name: Cusanus Krankenhaus Bernkastel-Kues | company_website: https://verbund-krankenhaus.de | city: Bernkastel-Kues | country: DE | company_type: clinic_location | first_name: Annalena | last_name: Willems | full_name: Annalena Willems | role: Personalleitung | role_bucket: personalleitung | priority: 2
+13. person_id: 5028 | company_id: 807 | company_name: DIAKO Ev. Diakonie-Krankenhaus in Bremen | company_website: https://diako-bremen.de | city: Bremen | country: DE | company_type: clinic_location | first_name: Gero | last_name: Knebel | full_name: Gero Knebel | role: Leiter Personal & Recht | role_bucket: personalleitung | priority: 2
+14. person_id: 5030 | company_id: 1646 | company_name: DIAKOVERE Annastift in Hannover | company_website: https://diakovere.de/unternehmen-mehr/krankenhaeuser/annastift | city: Hannover | country: DE | company_type: clinic_location | first_name: Arthur | last_name: Starnofsky | full_name: Arthur Starnofsky | role: Leitung Geschäftsbereich Personal | role_bucket: personalleitung | priority: 2
+15. person_id: 5031 | company_id: 1578 | company_name: DIAKOVERE Friederikenstift Humboldtstraße in Hannover | company_website: http://diakovere.de/friederikenstift | city: Hannover | country: DE | company_type: clinic_location | first_name: Arthur | last_name: Starnofsky | full_name: Arthur Starnofsky | role: Leitung Geschäftsbereich Personal | role_bucket: personalleitung | priority: 2
+16. person_id: 5032 | company_id: 1639 | company_name: DIAKOVERE Henriettenstift Standort Kirchrode in Hannover | company_website: http://diakovere.de/henriettenstift | city: Hannover | country: DE | company_type: clinic_location | first_name: Arthur | last_name: Starnofsky | full_name: Arthur Starnofsky | role: Leitung Geschäftsbereich Personal | role_bucket: personalleitung | priority: 2
+17. person_id: 5033 | company_id: 1601 | company_name: DIAKOVERE Henriettenstift in Hannover | company_website: http://diakovere.de/henriettenstift | city: Hannover | country: DE | company_type: clinic_location | first_name: Arthur | last_name: Starnofsky | full_name: Arthur Starnofsky | role: Leitung Geschäftsbereich Personal | role_bucket: personalleitung | priority: 2
+18. person_id: 5034 | company_id: 1456 | company_name: DKD Helios Klinik Wiesbaden | company_website: https://helios-gesundheit.de/kliniken/wiesbaden-dkd | city: Wiesbaden | country: DE | company_type: clinic_location | first_name: Roland | last_name: Hahn | full_name: Roland Hahn | role: Personalleiter und Clusterleiter HR des Clusters Wiesbaden-Taunus | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/roland-hahn-119949100
+19. person_id: 5035 | company_id: 1874 | company_name: DRK Fachklinik Bad Neuenahr | company_website: https://www-drk-fk-badneuenahr.de | city: Bad Neuenahr-Ahrweiler | country: DE | company_type: clinic_location | first_name: Juliane | last_name: von Kleist | full_name: Juliane von Kleist | role: Personaldirektorin | role_bucket: personalleitung | priority: 2
+20. person_id: 5036 | company_id: 1816 | company_name: DRK Kamillus Klinik in Asbach, Westerwald | company_website: https://drk-kamillus-klinik.de | city: Asbach | country: DE | company_type: clinic_location | first_name: Juliane | last_name: von Kleist | full_name: Juliane von Kleist | role: Personaldirektorin | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_085
+- Return only the requested result.
+- Use public information only.
