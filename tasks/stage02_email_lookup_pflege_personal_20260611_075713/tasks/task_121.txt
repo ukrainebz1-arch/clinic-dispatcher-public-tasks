@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_121
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_121
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5885 | company_id: 1556 | company_name: Psychosomatische Klinik Ginsterhof in Rosengarten | company_website: https://ginsterhof.de | city: Rosengarten | country: DE | company_type: clinic_location | first_name: Susanne | last_name: von Rönnen | full_name: Susanne von Rönnen | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+2. person_id: 5886 | company_id: 1149 | company_name: Psychosomatische Klinik Kloster Dießen | company_website: https://psychosomatik-diessen.de | city: Dießen am Ammersee | country: DE | company_type: clinic_location | first_name: Michael | last_name: Schaupp | full_name: Michael Schaupp | role: Bereichsleiter Personalmanagement | role_bucket: personalleitung | priority: 2
+3. person_id: 5887 | company_id: 1202 | company_name: Psychosomatische Tagesklinik Passau | company_website: http://ge-passau.de | city: Passau | country: DE | company_type: clinic_location | first_name: Marvin | last_name: Wunner | full_name: Marvin Wunner | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+4. person_id: 5889 | company_id: 1288 | company_name: Psychosomatische Tagesklinik Ulmenhof in Hamburg | company_website: https://asklepios.com/hamburg/westklinikum/experten/p sychosomatische-medizin/tagesklinik-ulmenhof | city: Hamburg | country: DE | company_type: clinic_location | first_name: Kai | last_name: Bolten | full_name: Kai Bolten | role: Personalleiter | role_bucket: personalleitung | priority: 2
+5. person_id: 5890 | company_id: 1198 | company_name: Pychiatrische Tagklinik Freising (kbo-Isar-Amper-Kinikum Taufkirchen) | company_website: http://kbo-iak.de | city: Freising | country: DE | company_type: clinic_location | first_name: Stefanie | last_name: Becker | full_name: Stefanie Becker | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+6. person_id: 5891 | company_id: 77 | company_name: RKU - Universitäts- und Rehabilitationskliniken Ulm | city: Ulm | country: Germany | company_type: clinic_location | first_name: Lucia | last_name: Linder-Biel | full_name: Lucia Linder-Biel | role: Personalleitung | role_bucket: personalleitung | priority: 2
+7. person_id: 5892 | company_id: 2046 | company_name: RKU – Zentrum für Integrierte Rehabilitation in Ulm | company_website: https://rku.de/fachbereiche/orthopaedische-rehabilitation-zir | city: Ulm | country: DE | company_type: rehab_clinic | first_name: Lucia | last_name: Linder-Biel | full_name: Lucia Linder-Biel | role: Personalleitung | role_bucket: personalleitung | priority: 2
+8. person_id: 5893 | company_id: 1853 | company_name: RZ Rheumazentrum Rheinland-Pfalz in Bad Kreuznach | company_website: https://rheumazentrum-rlp.de | city: Bad Kreuznach | country: DE | company_type: clinic_location | first_name: Candan | last_name: Aksoy | full_name: Candan Aksoy | role: Personalleitung / Leiter der Personalabteilung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/candan-aksoy-944013341
+9. person_id: 5894 | company_id: 448 | company_name: Raphaelsklinik in Münster | city: Münster | country: Germany | company_type: clinic_location | first_name: Marite | last_name: Fonseca Valles | full_name: Marite Fonseca Valles | role: Personalleitung | role_bucket: personalleitung | priority: 2
+10. person_id: 5895 | company_id: 126 | company_name: Rechbergklinik Bretten | city: Bretten | country: Germany | company_type: clinic_location | first_name: Michael | last_name: Jung | full_name: Michael Jung | role: Leitung Personal & Arbeit | role_bucket: personalleitung | priority: 2
+11. person_id: 5896 | company_id: 1986 | company_name: Regiomed Klinikum Lichtenfels in Lichtenfels, Bayern | company_website: http://regiomed-kliniken.de | city: Lichtenfels | country: DE | company_type: clinic_location | first_name: Lilli | last_name: Herzog | full_name: Lilli Herzog | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+12. person_id: 5897 | company_id: 2074 | company_name: Reha-Klinik Schwäbische Alb Bad Urach | company_website: http://gesundheitszentrum-schwaebische-alb.de | city: Bad Urach | country: DE | company_type: rehab_clinic | first_name: Anastasia | last_name: Hensch | full_name: Anastasia Hensch | role: Personalleitung | role_bucket: personalleitung | priority: 2
+13. person_id: 5898 | company_id: 2065 | company_name: Reha-Klinikum Bad Säckingen | company_website: https://rkbs.de/startseite.html | city: Bad Säckingen | country: DE | company_type: rehab_clinic | first_name: Natalie | last_name: Goran | full_name: Natalie Goran | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+14. person_id: 5900 | company_id: 1228 | company_name: Reha-Zentrum Nittenau | company_website: https://passauerwolf.de | city: Nittenau | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Herzog | full_name: Andreas Herzog | role: Geschäftsführer und Leiter Personal | role_bucket: personalleitung | priority: 2
+15. person_id: 5901 | company_id: 1228 | company_name: Reha-Zentrum Nittenau | company_website: https://passauerwolf.de | city: Nittenau | country: DE | company_type: clinic_location | first_name: Oliver | last_name: Weithmann | full_name: Oliver Weithmann | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+16. person_id: 5902 | company_id: 2148 | company_name: Reha-Zentrum am Meer in Bad Zwischenahn | company_website: https://rehazentrum-am-meer.de | city: Bad Zwischenahn | country: DE | company_type: rehab_clinic | first_name: Ulrike | last_name: Rösener-Schielke | full_name: Ulrike Rösener-Schielke | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+17. person_id: 5903 | company_id: 660 | company_name: RehaNova Köln | city: Köln | country: Germany | company_type: clinic_location | first_name: Kirsten | last_name: Eschweiler | full_name: Kirsten Eschweiler | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+18. person_id: 5904 | company_id: 2128 | company_name: Rehabilitations- und Präventionszentrum Bad Bocklet | company_website: https://rehazentrum-bb.de | city: Bad Bocklet | country: DE | company_type: rehab_clinic | first_name: Sarah | last_name: Hartmann | full_name: Sarah Hartmann | role: Konzernleitung Personal | role_bucket: personalleitung | priority: 2
+19. person_id: 5906 | company_id: 2238 | company_name: Rehabilitationsklinik Bad Salzelmen in Schönebeck (Elbe) | company_website: https://rehaklinik-bad-salzelmen.de | city: Schönebeck | country: DE | company_type: rehab_clinic | first_name: Stefanie | last_name: Günther | full_name: Stefanie Günther | role: Leitung Geschäftsbereich Personal | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/stefanie-g%C3%BCnther-b2b3582b5
+20. person_id: 5907 | company_id: 2061 | company_name: Rehabilitationsklinik Saulgau | company_website: https://rehabilitationsklinik-saulgau.de | city: Bad Saulgau | country: DE | company_type: rehab_clinic | first_name: Stefanie | last_name: Günther | full_name: Stefanie Günther | role: Leitung Geschäftsbereich Personal | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/stefanie-g%C3%BCnther-b2b3582b5
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_121
+- Return only the requested result.
+- Use public information only.
