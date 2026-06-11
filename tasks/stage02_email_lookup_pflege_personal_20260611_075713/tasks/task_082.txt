@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_082
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_082
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4949 | company_id: 1828 | company_name: Asklepios Südpfalzklinik Germersheim | company_website: http://asklepios.com/germersheim | city: Germersheim | country: DE | company_type: clinic_location | first_name: Marianne | last_name: Heurich | full_name: Marianne Heurich | role: Personalleitung | role_bucket: personalleitung | priority: 2
+2. person_id: 4950 | company_id: 1811 | company_name: Asklepios Südpfalzkliniken Kandel in Kandel, Pfalz | company_website: http://asklepios.com/kandel | city: Kandel | country: DE | company_type: clinic_location | first_name: Marianne | last_name: Heurich | full_name: Marianne Heurich | role: Personalleitung | role_bucket: personalleitung | priority: 2
+3. person_id: 4951 | company_id: 884 | company_name: Asklepios Tagesklinik Brandenburg an der Havel | company_website: http://asklepios.com/Brandenburg | city: Brandenburg an der Havel | country: DE | company_type: clinic_location | first_name: Roland | last_name: Ott | full_name: Roland Ott | role: Personalleiter Psychiatrie-Cluster | role_bucket: personalleitung | priority: 2
+4. person_id: 4952 | company_id: 881 | company_name: Asklepios Tagesklinik Cottbus | company_website: http://asklepios.com/luebben | city: Cottbus | country: DE | company_type: clinic_location | first_name: Roland | last_name: Ott | full_name: Roland Ott | role: Personalleiter Psychiatrie-Cluster | role_bucket: personalleitung | priority: 2
+5. person_id: 4953 | company_id: 885 | company_name: Asklepios Tagesklinik Königs Wusterhausen | company_website: http://asklepios.com/teupitz | city: Königs Wusterhausen | country: DE | company_type: clinic_location | first_name: Roland | last_name: Ott | full_name: Roland Ott | role: Personalleiter Psychiatrie-Cluster | role_bucket: personalleitung | priority: 2
+6. person_id: 4954 | company_id: 886 | company_name: Asklepios Tagesklinik Ludwigsfelde | company_website: http://asklepios.com/teupitz | city: Ludwigsfelde | country: DE | company_type: clinic_location | first_name: Roland | last_name: Ott | full_name: Roland Ott | role: Personalleiter Psychiatrie-Cluster | role_bucket: personalleitung | priority: 2
+7. person_id: 4955 | company_id: 878 | company_name: Asklepios Tagesklinik Potsdam | company_website: http://asklepios.com/Brandenburg | city: Potsdam | country: DE | company_type: clinic_location | first_name: Roland | last_name: Ott | full_name: Roland Ott | role: Personalleiter Psychiatrie-Cluster | role_bucket: personalleitung | priority: 2
+8. person_id: 4956 | company_id: 891 | company_name: Asklepios Tagesklinik Rathenow | company_website: http://asklepios.com/Brandenburg | city: Rathenow | country: DE | company_type: clinic_location | first_name: Roland | last_name: Ott | full_name: Roland Ott | role: Personalleiter Psychiatrie-Cluster | role_bucket: personalleitung | priority: 2
+9. person_id: 4957 | company_id: 899 | company_name: Asklepios Tagesklinik Schönefeld-Waßmannsdorf | company_website: http://asklepios.com/teupitz | city: Schönefeld bei Berlin | country: DE | company_type: clinic_location | first_name: Roland | last_name: Ott | full_name: Roland Ott | role: Personalleiter Psychiatrie-Cluster | role_bucket: personalleitung | priority: 2
+10. person_id: 4958 | company_id: 888 | company_name: Asklepios Tagesklinik Teltow | company_website: http://asklepios.com/Brandenburg | city: Teltow | country: DE | company_type: clinic_location | first_name: Roland | last_name: Ott | full_name: Roland Ott | role: Personalleiter Psychiatrie-Cluster | role_bucket: personalleitung | priority: 2
+11. person_id: 4959 | company_id: 889 | company_name: Asklepios Tagesklinik Werder | company_website: http://asklepios.com/Brandenburg | city: Werder | country: DE | company_type: clinic_location | first_name: Roland | last_name: Ott | full_name: Roland Ott | role: Personalleiter Psychiatrie-Cluster | role_bucket: personalleitung | priority: 2
+12. person_id: 4960 | company_id: 1268 | company_name: Asklepios Westklinikum Hamburg | company_website: http://asklepios.com/westklinikum | city: Hamburg | country: DE | company_type: clinic_location | first_name: Kai | last_name: Bolten | full_name: Kai Bolten | role: Personalleiter | role_bucket: personalleitung | priority: 2
+13. person_id: 4961 | company_id: 2104 | company_name: Asklepios Zentrum für Rehabilitation Bad Abbach | company_website: https://asklepios.com/bad-abbach/reha | city: Bad Abbach | country: DE | company_type: rehab_clinic | first_name: Christina | last_name: Ott | full_name: Christina Ott | role: Personalleitung Cluster Ostbayern | role_bucket: personalleitung | priority: 2
+14. person_id: 4962 | company_id: 1926 | company_name: Asklepios-ASB Klinik Radeberg | company_website: https://asklepios.com/radeberg | city: Radeberg | country: DE | company_type: clinic_location | first_name: Felix | last_name: Binkau | full_name: Felix Binkau | role: Personalleiter Asklepios Region Sachsen/Sachsen-Anhalt | role_bucket: personalleitung | priority: 2
+15. person_id: 4963 | company_id: 1466 | company_name: Atos Orthopädische Klinik Braunfels | company_website: https://atos.de | city: Braunfels | country: DE | company_type: clinic_location | first_name: Britta | last_name: Göbel | full_name: Britta Göbel | role: Personalleitung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/britta-g%C3%B6bel-34987a313
+16. person_id: 4964 | company_id: 1206 | company_name: Atos Starmed Klinik in München | company_website: http://starmedklinik.de | city: München | country: DE | company_type: clinic_location | first_name: Axel | last_name: Knöbel | full_name: Axel Knöbel | role: HR Manager/Personalleiter ATOS Kliniken München | role_bucket: personalleitung | priority: 2
+17. person_id: 4965 | company_id: 1624 | company_name: Auf Der Bult Kinder- und Jugendkrankenhaus in Hannover | company_website: https://auf-der-bult.de | city: Hannover | country: DE | company_type: clinic_location | first_name: Meike | last_name: Botur-Zillmer | full_name: Meike Botur-Zillmer | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+18. person_id: 4967 | company_id: 1732 | company_name: Augenklinik Dr. Hoffmann in Braunschweig | company_website: http://augenklinik-dr-hoffmann.de | city: Braunschweig | country: DE | company_type: clinic_location | first_name: Tanja | last_name: Tucholla | full_name: Tanja Tucholla | role: Personalleitung | role_bucket: personalleitung | priority: 2
+19. person_id: 4968 | company_id: 632 | company_name: Augusta-Kranken-Anstalt (Bochum-Linden) | city: Bochum | country: Germany | company_type: clinic_location | first_name: Monika | last_name: Borggrebe | full_name: Monika Borggrebe | role: Personalleitung | role_bucket: personalleitung | priority: 2
+20. person_id: 545 | company_id: 328 | company_name: Augusta-Kranken-Anstalt (Bochum-Mitte) | city: Bochum | country: Germany | company_type: clinic_location | first_name: Monika | last_name: Borggrebe | full_name: Monika Borggrebe | role: Personalleitung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/monika-borggrebe-8aa553231
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_082
+- Return only the requested result.
+- Use public information only.
