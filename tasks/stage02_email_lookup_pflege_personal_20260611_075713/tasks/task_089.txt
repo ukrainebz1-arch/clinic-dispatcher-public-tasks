@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_089
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_089
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5104 | company_id: 311 | company_name: Evangelisches Krankenhaus Düsseldorf | city: Düsseldorf | country: Germany | company_type: clinic_location | first_name: Stefanie | last_name: Mette | full_name: Stefanie Mette | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+2. person_id: 5105 | company_id: 1579 | company_name: Evangelisches Krankenhaus Göttingen-Weende | company_website: http://ekweende.de | city: Göttingen | country: DE | company_type: clinic_location | first_name: Christian | last_name: Habenicht | full_name: Christian Habenicht | role: Personalleitung im Unternehmensverbund | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/christian-habenicht-957511231
+3. person_id: 5106 | company_id: 1680 | company_name: Evangelisches Krankenhaus Göttingen-Weende - Krankenhaus Neu-Mariahilf | company_website: http://ekweende.de | city: Göttingen | country: DE | company_type: clinic_location | first_name: Christian | last_name: Habenicht | full_name: Christian Habenicht | role: Personalleitung im Unternehmensverbund | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/christian-habenicht-957511231
+4. person_id: 5108 | company_id: 736 | company_name: Evangelisches Krankenhaus Königin Elisabeth Herzberge in Berlin | company_website: https://keh-berlin.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Daniela | last_name: Schüttler | full_name: Daniela Schüttler | role: Personalleitung | role_bucket: personalleitung | priority: 2
+5. person_id: 5109 | company_id: 457 | company_name: Evangelisches Krankenhaus Mettmann | city: Mettmann | country: Germany | company_type: clinic_location | first_name: Holger | last_name: von Gehlen | full_name: Holger von Gehlen | role: Leiter Personalwesen | role_bucket: personalleitung | priority: 2
+6. person_id: 5110 | company_id: 288 | company_name: Evangelisches Krankenhaus Mülheim an der Ruhr | city: Mülheim an der Ruhr | country: Germany | company_type: clinic_location | first_name: Dirk | last_name: Huiskens | full_name: Dirk Huiskens | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+7. person_id: 5111 | company_id: 326 | company_name: Evangelisches Krankenhaus Oberhausen | city: Oberhausen | country: Germany | company_type: clinic_location | first_name: Dirk | last_name: Huiskens | full_name: Dirk Huiskens | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+8. person_id: 5112 | company_id: 1580 | company_name: Evangelisches Krankenhaus Oldenburg | company_website: http://evangelischeskrankenhaus.de | city: Oldenburg | country: DE | company_type: clinic_location | first_name: Melanie | last_name: Prasse | full_name: Melanie Prasse | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+9. person_id: 5115 | company_id: 868 | company_name: Evangelisches Zentrum für Altersmedizin in Potsdam | company_website: http://altersmedizin-potsdam.de | city: Potsdam | country: DE | company_type: clinic_location | first_name: Marite | last_name: Fonseca Valles | full_name: Marite Fonseca Valles | role: Personalleitung | role_bucket: personalleitung | priority: 2
+10. person_id: 5116 | company_id: 2156 | company_name: Fachklinik Bad Bentheim | company_website: https://fk-bentheim.de | city: Bad Bentheim | country: DE | company_type: rehab_clinic | last_name: Honermann | full_name: Frau Honermann | role: Personalleitung | role_bucket: personalleitung | priority: 2
+11. person_id: 5117 | company_id: 1081 | company_name: Fachklinik Berchtesgaden | company_website: http://kliniken-suedostbayern.de/de/leistungsspektrum/kreisklinik-berchtesgaden.htm | city: Berchtesgaden | country: DE | company_type: clinic_location | first_name: Steffen | last_name: Köhler | full_name: Steffen Köhler | role: Leitung Geschäftsbereich Personal und Bildung | role_bucket: personalleitung | priority: 2
+12. person_id: 5120 | company_id: 96 | company_name: Fachklinik Löwenstein | city: Löwenstein | country: Germany | company_type: clinic_location | first_name: Kathrin | last_name: Armbruster | full_name: Kathrin Armbruster | role: Personalleitung | role_bucket: personalleitung | priority: 2
+13. person_id: 5121 | company_id: 630 | company_name: Fachklinik St. Camillus in Duisburg | city: Duisburg | country: Germany | company_type: clinic_location | first_name: David | last_name: Hettmer | full_name: David Hettmer | role: Personalleiter | role_bucket: personalleitung | priority: 2
+14. person_id: 5122 | company_id: 1207 | company_name: Fachklinik Stadtsteinach | company_website: https://klinikum-kulmbach.de | city: Stadtsteinach | country: DE | company_type: clinic_location | first_name: Yvonne | last_name: Wagner | full_name: Yvonne Wagner | role: Sachgebietsleiterin Personalwesen | role_bucket: personalleitung | priority: 2
+15. person_id: 5123 | company_id: 638 | company_name: Fachklinik für Kinderneurologie und Sozialpädiatrie Königsborn in Unna | city: Unna | country: Germany | company_type: clinic_location | first_name: Lennart | last_name: Kimpel | full_name: Lennart Kimpel | role: Bereichsleiter Personal- und Organisationsentwicklung | role_bucket: personalleitung | priority: 2
+16. person_id: 5124 | company_id: 2145 | company_name: Fachklinik und Moorbad Bad Freienwalde | company_website: https://reha-freienwalde.de | city: Bad Freienwalde | country: DE | company_type: rehab_clinic | first_name: Ina | last_name: Seifert | full_name: Ina Seifert | role: Personalleitung | role_bucket: personalleitung | priority: 2
+17. person_id: 5126 | company_id: 108 | company_name: Fachkliniken Wangen | city: Wangen im Allgäu | country: Germany | company_type: clinic_location | first_name: Stefanie | last_name: Günther | full_name: Stefanie Günther | role: Leitung Personal | role_bucket: personalleitung | priority: 2
+18. person_id: 5127 | company_id: 2242 | company_name: Fachklinikum Brandis | company_website: https://fachklinikum-brandis.de | city: Brandis bei Wurzen | country: DE | company_type: rehab_clinic | first_name: Stefan | last_name: Wollschläger | full_name: Stefan Wollschläger | role: Chief People Officer | role_bucket: personalleitung | priority: 2
+19. person_id: 5128 | company_id: 1182 | company_name: Fachklinikum Mainschleife in Volkach | company_website: https://fachklinikum-mainschleife.de | city: Volkach | country: DE | company_type: clinic_location | first_name: Kristina | last_name: Ulrich | full_name: Kristina Ulrich | role: Personalleitung | role_bucket: personalleitung | priority: 2
+20. person_id: 5129 | company_id: 497 | company_name: Fachkrankenhaus Kloster Grafschaft in Schmallenberg | city: Schmallenberg | country: Germany | company_type: clinic_location | first_name: Michael | last_name: Grell | full_name: Michael Grell | role: Leitung Personalabteilung, Prokurist | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/michael-grell-637720256
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_089
+- Return only the requested result.
+- Use public information only.
