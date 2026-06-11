@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_109
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_109
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5596 | company_id: 1826 | company_name: Krankenhaus der Elisabeth Stiftung in Birkenfeld, Nahe | company_website: https://e-s-b.org/krankenhaus | city: Birkenfeld | country: DE | company_type: clinic_location | first_name: Hartmut | last_name: Lobien | full_name: Hartmut Lobien | role: Personalleiter | role_bucket: personalleitung | priority: 2
+2. person_id: 5597 | company_id: 1826 | company_name: Krankenhaus der Elisabeth Stiftung in Birkenfeld, Nahe | company_website: https://e-s-b.org/krankenhaus | city: Birkenfeld | country: DE | company_type: clinic_location | first_name: Sandra | last_name: Pulch | full_name: Sandra Pulch | role: Teamleiterin Personal | role_bucket: personalleitung | priority: 2
+3. person_id: 5598 | company_id: 1083 | company_name: Krankenhaus für Naturheilweisen in München | company_website: http://krankenhaus-naturheilweisen.de | city: München | country: DE | company_type: clinic_location | first_name: Nadeschda | last_name: Gutschmidt | full_name: Nadeschda Gutschmidt | role: HR-Manager / Personalleitung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/nadeschda-gutschmidt-a24465206
+4. person_id: 5600 | company_id: 976 | company_name: Kreisklinik Bad Reichenhall | company_website: http://kliniken-suedostbayern.de/de/leistungsspektrum/kreisklinik-bad-reichenhall.htm | city: Bad Reichenhall | country: DE | company_type: clinic_location | first_name: Julia | last_name: Schoel | full_name: Julia Schoel | role: Personalleitung und Bildung | role_bucket: personalleitung | priority: 2
+5. person_id: 5602 | company_id: 1394 | company_name: Kreisklinik Groß-Umstadt | company_website: http://kreiskliniken-dadi.de | city: Groß-Umstadt | country: DE | company_type: clinic_location | first_name: Yvonne | last_name: Kaiser | full_name: Yvonne Kaiser | role: Personalleitung | role_bucket: personalleitung | priority: 2
+6. person_id: 5603 | company_id: 1031 | company_name: Kreisklinik Krumbach | company_website: https://kliniken-gz-kru.de | city: Krumbach | country: DE | company_type: clinic_location | first_name: Sabrina | last_name: Berger | full_name: Sabrina Berger | role: Personalleitung | role_bucket: personalleitung | priority: 2
+7. person_id: 5604 | company_id: 1058 | company_name: Kreisklinik Mindelheim | company_website: https://klinikverbund-allgaeu.de | city: Mindelheim | country: DE | company_type: clinic_location | first_name: Katharina | last_name: Schäfer | full_name: Katharina Schäfer | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+8. person_id: 5605 | company_id: 1076 | company_name: Kreisklinik Ottobeuren | company_website: https://klinikverbund-allgaeu.de | city: Ottobeuren | country: DE | company_type: clinic_location | first_name: Katharina | last_name: Schäfer | full_name: Katharina Schäfer | role: Leitung Personal und Recht | role_bucket: personalleitung | priority: 2
+9. person_id: 5606 | company_id: 2040 | company_name: Kreisklinik Roth in Roth, Mittelfranken | company_website: https://kreisklinik-roth.de | city: Roth | country: DE | company_type: clinic_location | first_name: Jürgen | last_name: Streit | full_name: Jürgen Streit | role: Personalleiter | role_bucket: personalleitung | priority: 2
+10. person_id: 5607 | company_id: 1000 | company_name: Kreisklinik St. Elisabeth in Dillingen an der Donau | company_website: http://khdw.de | city: Dillingen an der Donau | country: DE | company_type: clinic_location | first_name: Bianca | last_name: Strobel | full_name: Bianca Strobel | role: Personalleitung Abteilung Personalwesen und Bildung | role_bucket: personalleitung | priority: 2
+11. person_id: 5608 | company_id: 1994 | company_name: Kreisklinik Trostberg | company_website: http://kliniken-suedostbayern.de/de/leistungsspektrum/kreisklinik-trostberg.htm | city: Trostberg | country: DE | company_type: clinic_location | first_name: Julia | last_name: Schoel | full_name: Julia Schoel | role: Personalleitung und Bildung | role_bucket: personalleitung | priority: 2
+12. person_id: 5609 | company_id: 1080 | company_name: Kreisklinik Wertingen | company_website: https://khdw.de | city: Niederpöcking | country: DE | company_type: clinic_location | first_name: Bianca | last_name: Strobel | full_name: Bianca Strobel | role: Personalleitung Abteilung Personalwesen und Bildung | role_bucket: personalleitung | priority: 2
+13. person_id: 4037 | company_id: 1034 | company_name: Kreisklinik Wolfratshausen | company_website: https://kreisklinik-wolfratshausen.de | city: Wolfratshausen | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Reichart | full_name: Thomas Reichart | role: Personalleitung | role_bucket: personalleitung | priority: 2
+14. person_id: 5610 | company_id: 1077 | company_name: Kreisklinik Wörth an der Donau | company_website: https://kreisklinik-woerth.de | city: Wörth an der Donau | country: DE | company_type: clinic_location | first_name: Gerhard | last_name: Högerl | full_name: Gerhard Högerl | role: Personalleitung | role_bucket: personalleitung | priority: 2
+15. person_id: 5611 | company_id: 1550 | company_name: Kreiskliniken Darmstadt Dieburg ZfSG Tagesklinik Dieburg | company_website: http://kreiskliniken-dadi.de | city: Dieburg | country: DE | company_type: clinic_location | first_name: Yvonne | last_name: Kaiser | full_name: Yvonne Kaiser | role: Personalleitung | role_bucket: personalleitung | priority: 2
+16. person_id: 5612 | company_id: 292 | company_name: Kreisklinikum Siegen | city: Siegen | country: Germany | company_type: clinic_location | first_name: Daniel | last_name: Weber | full_name: Daniel Weber | role: Personalleiter | role_bucket: personalleitung | priority: 2
+17. person_id: 5614 | company_id: 684 | company_name: Kreisklinikum Siegen - Standort Wellersbergstraße | city: Siegen | country: Germany | company_type: clinic_location | first_name: Daniel | last_name: Weber | full_name: Daniel Weber | role: Personalleiter | role_bucket: personalleitung | priority: 2
+18. person_id: 5616 | company_id: 1412 | company_name: Kreiskrankenhaus Bergstraße in Heppenheim | company_website: http://kkh-bergstrasse.de | city: Heppenheim | country: DE | company_type: clinic_location | first_name: Inka | last_name: Dölker | full_name: Inka Dölker | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+19. person_id: 5617 | company_id: 1937 | company_name: Kreiskrankenhaus Delitzsch | city: Delitzsch | country: DE | company_type: clinic_location | first_name: Katrin | last_name: Kirchhof | full_name: Katrin Kirchhof | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+20. person_id: 5618 | company_id: 1936 | company_name: Kreiskrankenhaus Delitzsch Standort Eilenburg | company_website: https://klinik-delitzsch.de | city: Eilenburg | country: DE | company_type: clinic_location | first_name: Katrin | last_name: Kirchhof | full_name: Katrin Kirchhof | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_109
+- Return only the requested result.
+- Use public information only.
