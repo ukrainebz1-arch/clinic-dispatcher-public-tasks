@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_048
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_048
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4109 | company_id: 2103 | company_name: MEDICLIN Staufenburg Klinik in Durbach | company_website: https://staufenburg-klinik.de | city: Durbach | country: DE | company_type: rehab_clinic | first_name: Liljana | last_name: Ristova | full_name: Liljana Ristova | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 4111 | company_id: 1388 | company_name: Main-Kinzig-Kliniken Gelnhausen | company_website: http://mkkliniken.de | city: Gelnhausen | country: DE | company_type: clinic_location | first_name: Samuel | last_name: Palitzsch | full_name: Samuel Palitzsch | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+3. person_id: 4113 | company_id: 1552 | company_name: Main-Kinzig-Kliniken Gelnhausen Psychiatrische Tagesklinik | company_website: http://mkkliniken.de | city: Gelnhausen | country: DE | company_type: clinic_location | first_name: Samuel | last_name: Palitzsch | full_name: Samuel Palitzsch | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+4. person_id: 4115 | company_id: 1400 | company_name: Main-Kinzig-Kliniken Schlüchtern | company_website: http://mkkliniken.de | city: Schlüchtern | country: DE | company_type: clinic_location | first_name: Samuel | last_name: Palitzsch | full_name: Samuel Palitzsch | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+5. person_id: 4117 | company_id: 1155 | company_name: Maria-Theresia-Klinik in München | company_website: https://maria-theresia-klinik.de | city: München | country: DE | company_type: clinic_location | first_name: Roberta | last_name: Palavra | full_name: Roberta Palavra | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 4119 | company_id: 1059 | company_name: Marianne-Strauß-Klinik in Berg (Starnberger See) | company_website: http://ms-klinik.de | city: Berg | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Böttcher | full_name: Thomas Böttcher | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 4120 | company_id: 1614 | company_name: Marien Hospital Papenburg Aschendorf | company_website: http://marien-hospital-papenburg.de | city: Papenburg | country: DE | company_type: clinic_location | first_name: Marita | last_name: Bäcker | full_name: Marita Bäcker | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 4122 | company_id: 1613 | company_name: Marien Hospital Papenburg Aschendorf - Kinder- & Jugendpsychiatrie | company_website: http://marien-hospital-papenburg.de | city: Papenburg | country: DE | company_type: clinic_location | first_name: Marita | last_name: Bäcker | full_name: Marita Bäcker | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+9. person_id: 4124 | company_id: 1609 | company_name: Marien Hospital Papenburg Aschendorf - Standort Papenburg | company_website: http://marien-hospital-papenburg.de | city: Papenburg | country: DE | company_type: clinic_location | first_name: Marita | last_name: Bäcker | full_name: Marita Bäcker | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+10. person_id: 553 | company_id: 332 | company_name: Marien-Hospital in Wesel | city: Wesel | country: Germany | company_type: clinic_location | first_name: Wolfgang | last_name: Stratenschulte | full_name: Wolfgang Stratenschulte | role: Pflegedirektor Marien-Hospital | role_bucket: pflege_director | priority: 1
+11. person_id: 4126 | company_id: 1794 | company_name: Marienhaus Klinikum Eifel (Bitburg) | company_website: http://marienhaus-klinikum-eifel.de | city: Bitburg | country: DE | company_type: clinic_location | first_name: Bianca | last_name: Nonweiler | full_name: Bianca Nonweiler | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 4127 | company_id: 1794 | company_name: Marienhaus Klinikum Eifel (Bitburg) | company_website: http://marienhaus-klinikum-eifel.de | city: Bitburg | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Wilkins | full_name: Michaela Wilkins | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 4128 | company_id: 1813 | company_name: Marienhaus Klinikum Eifel (St. Elisabeth Gerolstein) | company_website: http://marienhaus-klinikum-eifel.de | city: Gerolstein | country: DE | company_type: clinic_location | first_name: Bianca | last_name: Nonweiler | full_name: Bianca Nonweiler | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+14. person_id: 4129 | company_id: 1813 | company_name: Marienhaus Klinikum Eifel (St. Elisabeth Gerolstein) | company_website: http://marienhaus-klinikum-eifel.de | city: Gerolstein | country: DE | company_type: clinic_location | first_name: Michaela | last_name: Wilkins | full_name: Michaela Wilkins | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+15. person_id: 4130 | company_id: 1780 | company_name: Marienhaus Klinikum Hetzelstift in Neustadt an der Weinstraße | company_website: http://hetzelstift.de | city: Neustadt an der Weinstraße | country: DE | company_type: clinic_location | first_name: Susann | last_name: Susset | full_name: Susann Susset | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+16. person_id: 4132 | company_id: 1775 | company_name: Marienhaus Klinikum Mainz | company_website: http://marienhaus-klinikum-mainz.de | city: Mainz | country: DE | company_type: clinic_location | first_name: Bettina | last_name: Vor | full_name: Bettina Vor | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+17. person_id: 4135 | company_id: 2021 | company_name: Marienhaus Klinikum Neunkirchen | company_website: https://marienhaus-neunkirchen.de | city: Neunkirchen | country: DE | company_type: clinic_location | first_name: Angela | last_name: Oberringer | full_name: Angela Oberringer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 4134 | company_id: 2021 | company_name: Marienhaus Klinikum Neunkirchen | company_website: https://marienhaus-neunkirchen.de | city: Neunkirchen | country: DE | company_type: clinic_location | first_name: Nicole | last_name: Busch | full_name: Nicole Busch | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+19. person_id: 4137 | company_id: 1761 | company_name: Marienhaus Klinikum Saarlouis-Dillingen (Saarlouis) | company_website: http://marienhaus-klinikum-saar.de | city: Saarlouis | country: DE | company_type: clinic_location | first_name: Christian | last_name: Hübsch | full_name: Christian Hübsch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 4136 | company_id: 1761 | company_name: Marienhaus Klinikum Saarlouis-Dillingen (Saarlouis) | company_website: http://marienhaus-klinikum-saar.de | city: Saarlouis | country: DE | company_type: clinic_location | first_name: Sascha | last_name: Moullion | full_name: Sascha Moullion | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_048
+- Return only the requested result.
+- Use public information only.
