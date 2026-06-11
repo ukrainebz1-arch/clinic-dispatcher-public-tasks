@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_098
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_098
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5323 | company_id: 312 | company_name: Karolinen-Hospital Hüsten in Arnsberg | city: Arnsberg | country: Germany | company_type: clinic_location | first_name: Lisanne | last_name: Wiese | full_name: Lisanne Wiese | role: Leitung Personal Alexianer Klinikum Hochsauerland | role_bucket: personalleitung | priority: 2
+2. person_id: 5324 | company_id: 1267 | company_name: Kath. Marienkrankenhaus in Hamburg | company_website: http://marienkrankenhaus.org | city: Hamburg | country: DE | company_type: clinic_location | first_name: Christina | last_name: Schmidt | full_name: Dr. Christina Schmidt | role: Personaldirektorin | role_bucket: personalleitung | priority: 2
+3. person_id: 5325 | company_id: 1778 | company_name: Katholisches Klinikum Koblenz·Montabaur | company_website: https://kk-km.de | city: Koblenz | country: DE | company_type: clinic_location | first_name: Michael | last_name: Laub | full_name: Michael Laub | role: Personalleiter | role_bucket: personalleitung | priority: 2
+4. person_id: 5326 | company_id: 1406 | company_name: Ketteler Krankenhaus in Offenbach am Main | company_website: https://ketteler-krankenhaus.org | city: Offenbach am Main | country: DE | company_type: clinic_location | first_name: Patrick | last_name: Vollhardt | full_name: Patrick Vollhardt | role: Personalleiter | role_bucket: personalleitung | priority: 2
+5. person_id: 5327 | company_id: 1070 | company_name: Kinderkrankenhaus St. Marien in Landshut | company_website: http://kinderkrankenhaus-landshut.de | city: Landshut | country: DE | company_type: clinic_location | first_name: Marlene | last_name: Nitsche | full_name: Marlene Nitsche | role: Leitung Personalabteilung Kinderklinik St. Marien | role_bucket: personalleitung | priority: 2
+6. person_id: 5329 | company_id: 1210 | company_name: Klinik Angermühle in Deggendorf | company_website: http://klinik-angermuehle.de | city: Deggendorf | country: DE | company_type: clinic_location | first_name: Simone | last_name: Fuchs | full_name: Simone Fuchs | role: Leitung Personal, Finanzen und Controlling | role_bucket: personalleitung | priority: 2
+7. person_id: 5330 | company_id: 1814 | company_name: Klinik Bad Bergzabern in Landau in der Pfalz | company_website: https://klinikum-ld-suew.de | city: Landau in der Pfalz | country: DE | company_type: clinic_location | first_name: Eva-Maria | last_name: Lanzet | full_name: Eva-Maria Lanzet | role: Prokuristin Personaldirektorin | role_bucket: personalleitung | priority: 2
+8. person_id: 5331 | company_id: 903 | company_name: Klinik Bad Windsheim | company_website: http://kliniken-nea.de | city: Bad Windsheim | country: DE | company_type: clinic_location | first_name: Gerd | last_name: Schülein | full_name: Gerd Schülein | role: Personalleiter | role_bucket: personalleitung | priority: 2
+9. person_id: 5334 | company_id: 562 | company_name: Klinik Blankenstein in Hattingen | city: Hattingen | country: Germany | company_type: clinic_location | first_name: Daniel | last_name: Gohres | full_name: Daniel Gohres | role: Leiter Personal | role_bucket: personalleitung | priority: 2
+10. person_id: 5335 | company_id: 1078 | company_name: Klinik Donaustauf | company_website: https://csm-donaustauf.de | city: Donaustauf | country: DE | company_type: clinic_location | first_name: Hans-Jörg | last_name: Schmidt | full_name: Hans-Jörg Schmidt | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+11. person_id: 5336 | company_id: 2048 | company_name: Klinik Dr. Franz Dengler in Baden-Baden | company_website: https://dengler.de/de | city: Baden-Baden | country: DE | company_type: rehab_clinic | first_name: Claudia | last_name: Kiefer | full_name: Claudia Kiefer | role: Personalleitung | role_bucket: personalleitung | priority: 2
+12. person_id: 5337 | company_id: 1064 | company_name: Klinik Dr. Robert Schindlbeck in Herrsching am Ammersee | company_website: http://klinikum-herrsching.de | city: Herrsching am Ammersee | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Richter | full_name: Kerstin Richter | role: Leiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+13. person_id: 5338 | company_id: 2159 | company_name: Klinik Fallingbostel | company_website: https://klinik-fallingbostel.de | city: Bad Fallingbostel | country: DE | company_type: rehab_clinic | first_name: Desiree | last_name: Bachmann | full_name: Desiree Bachmann | role: Personalleiterin und Ausbilderin | role_bucket: personalleitung | priority: 2
+14. person_id: 5339 | company_id: 2004 | company_name: Klinik Fränkische Schweiz (Ebermannstadt) | company_website: https://klinik-fraenkische-schweiz.de | city: Ebermannstadt | country: DE | company_type: clinic_location | first_name: Christian | last_name: Sperber | full_name: Dr. Christian Sperber | role: Leitung Personalabteilung/Recht/Compliance | role_bucket: personalleitung | priority: 2
+15. person_id: 5340 | company_id: 993 | company_name: Klinik Günzburg | company_website: http://kliniken-gz-kru.de | city: Günzburg | country: DE | company_type: clinic_location | first_name: Sabrina | last_name: Berger | full_name: Sabrina Berger | role: Personalleitung | role_bucket: personalleitung | priority: 2
+16. person_id: 5341 | company_id: 819 | company_name: Klinik Hennigsdorf | company_website: http://oberhavel-kliniken.de | city: Hennigsdorf | country: DE | company_type: clinic_location | first_name: Constanze | last_name: Hennig | full_name: Constanze Hennig | role: Leiterin Personal und Recht | role_bucket: personalleitung | priority: 2
+17. person_id: 5342 | company_id: 1525 | company_name: Klinik Hohe Mark - Tagesklinik Frankfurt | company_website: https://hohemark.de | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Martin | last_name: Herziger | full_name: Martin Herziger | role: Personalleiter | role_bucket: personalleitung | priority: 2
+18. person_id: 5343 | company_id: 1414 | company_name: Klinik Hohe Mark in Oberursel (Taunus) | company_website: https://hohemark.de | city: Oberursel | country: DE | company_type: clinic_location | first_name: Martin | last_name: Herziger | full_name: Martin Herziger | role: Personalleiter | role_bucket: personalleitung | priority: 2
+19. person_id: 5344 | company_id: 969 | company_name: Klinik Hohe Warte in Bayreuth | company_website: http://klinikum-bayreuth.de | city: Bayreuth | country: DE | company_type: clinic_location | first_name: Martin | last_name: Neuhaus | full_name: Martin Neuhaus | role: Personalleiter | role_bucket: personalleitung | priority: 2
+20. person_id: 5345 | company_id: 2132 | company_name: Klinik Höhenried in Bernried, Starnberger See | company_website: https://hoehenried.de | city: Bernried | country: DE | company_type: rehab_clinic | first_name: Eduard | last_name: Graßl | full_name: Eduard Graßl | role: Personalleiter und Mitglied der Klinikleitung | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/eduard-gra%C3%9Fl-844568b9
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_098
+- Return only the requested result.
+- Use public information only.
