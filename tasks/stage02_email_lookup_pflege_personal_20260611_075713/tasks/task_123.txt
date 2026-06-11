@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_123
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_123
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5930 | company_id: 1054 | company_name: RoMed Klinik Prien am Chiemsee | company_website: http://romed-kliniken.de | city: Prien am Chiemsee | country: DE | company_type: clinic_location | first_name: Christine | last_name: Halfstad | full_name: Christine Halfstad | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+2. person_id: 5932 | company_id: 1999 | company_name: RoMed Klinik Wasserburg | company_website: https://romed-kliniken.de/de/wasserburg/die-klinik-im-ueberblick.htm | city: Wasserburg am Inn | country: DE | company_type: clinic_location | first_name: Christine | last_name: Halfstad | full_name: Christine Halfstad | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+3. person_id: 5934 | company_id: 933 | company_name: RoMed Klinikum Rosenheim | company_website: http://romed-kliniken.de | city: Rosenheim | country: DE | company_type: clinic_location | first_name: Christine | last_name: Halfstad | full_name: Christine Halfstad | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+4. person_id: 5936 | company_id: 113 | company_name: Robert-Bosch-Krankenhaus, Standort City in Stuttgart | city: Stuttgart | country: Germany | company_type: clinic_location | first_name: Sabine | last_name: Velte | full_name: Sabine Velte | role: Personaldirektorin | role_bucket: personalleitung | priority: 2
+5. person_id: 5937 | company_id: 1098 | company_name: Rotkreuzklinik Würzburg | company_website: https://rotkreuzklinik-wuerzburg.de | city: Würzburg | country: DE | company_type: clinic_location | first_name: Anne Kathrin | last_name: Liepsky | full_name: Anne Kathrin Liepsky | role: Leitung Personalabteilung | role_bucket: personalleitung | priority: 2
+6. person_id: 5938 | company_id: 946 | company_name: Rotkreuzklinikum München | company_website: https://rotkreuzklinikum-muenchen.de | city: München | country: DE | company_type: clinic_location | first_name: Kai | last_name: Hoffmann | full_name: Kai Hoffmann | role: Leitung Personal | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/kai-hoffmann-58a741204
+7. person_id: 5939 | company_id: 1881 | company_name: Rudolf Virchow Klinikum Glauchau | company_website: http://klinikum-glauchau.de | city: Glauchau | country: DE | company_type: clinic_location | first_name: Nadine | last_name: Mennicke | full_name: Nadine Mennicke | role: Leiterin Personalmanagement | role_bucket: personalleitung | priority: 2
+8. person_id: 5941 | company_id: 472 | company_name: Ruhrlandklinik in Essen | city: Essen | country: Germany | company_type: clinic_location | first_name: Andrea | last_name: Hoesen | full_name: Andrea Hoesen | role: Personaldirektorin | role_bucket: personalleitung | priority: 2
+9. person_id: 5940 | company_id: 472 | company_name: Ruhrlandklinik in Essen | city: Essen | country: Germany | company_type: clinic_location | first_name: Joerg | last_name: Hantel | full_name: Joerg Hantel | role: Personaldirektor | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/j%C3%B6rg-hantel-97a954295
+10. person_id: 5942 | company_id: 1760 | company_name: SH Klinikum Merzig | company_website: http://mzg.shg-kliniken.de | city: Merzig | country: DE | company_type: clinic_location | first_name: Mario | last_name: Braun | full_name: Mario Braun | role: Personalleiter | role_bucket: personalleitung | priority: 2
+11. person_id: 5946 | company_id: 1298 | company_name: SKH Stadtteilklinik Hamburg | company_website: http://stadtteilklinik-hamburg.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Tewes | last_name: Bosselmann | full_name: Tewes Bosselmann | role: Bereichsleiter Personal | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/tewes-bosselmann-706937163/en
+12. person_id: 5947 | company_id: 164 | company_name: SRH Fachkrankenhaus Neresheim | city: Neresheim | country: Germany | company_type: clinic_location | first_name: Tobias | last_name: Tettmann | full_name: Tobias Tettmann | role: Personalleiter | role_bucket: personalleitung | priority: 2
+13. person_id: 5948 | company_id: 25 | company_name: SRH Krankenhaus Sigmaringen | city: Sigmaringen | country: Germany | company_type: clinic_location | first_name: Martina | last_name: Linseis | full_name: Martina Linseis | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/martina-linseis-023b74252
+14. person_id: 5949 | company_id: 1707 | company_name: STENUM Ortho in Ganderkesee | company_website: http://stenum-ortho.de | city: Ganderkesee | country: DE | company_type: clinic_location | first_name: Susanne | last_name: Langfeld | full_name: Susanne Langfeld | role: Personalleitung | role_bucket: personalleitung | priority: 2
+15. person_id: 5950 | company_id: 2058 | company_name: Salinenklinik Bad Rappenau | company_website: https://kurbadrappenau.de/kliniken/salinenklinik | city: Bad Rappenau | country: DE | company_type: rehab_clinic | first_name: Luisa | last_name: Mann | full_name: Luisa Mann | role: Personalleitung | role_bucket: personalleitung | priority: 2
+16. person_id: 5951 | company_id: 591 | company_name: Sana Fabricius-Klinik Remscheid | city: Remscheid | country: Germany | company_type: clinic_location | first_name: Alexander | last_name: Huckenbeck | full_name: Alexander Huckenbeck | role: Personalleiter - Head of People & Culture Cluster Bergisch Land | role_bucket: personalleitung | priority: 2
+17. person_id: 5952 | company_id: 1312 | company_name: Sana Hanse-Klinikum Wismar | company_website: http://sana.de | city: Wismar | country: DE | company_type: clinic_location | first_name: Jacqueline | last_name: Bernier | full_name: Jacqueline Bernier | role: Personalleiterin/Koordinatorin Beruf und Familie | role_bucket: personalleitung | priority: 2
+18. person_id: 5953 | company_id: 1360 | company_name: Sana Hanse-Klinikum Wismar- Tagesklinik Grevesmühlen | company_website: http://sana.de | city: Grevesmühlen | country: DE | company_type: clinic_location | first_name: Jacqueline | last_name: Bernier | full_name: Jacqueline Bernier | role: Personalleiterin/Koordinatorin Beruf und Familie | role_bucket: personalleitung | priority: 2
+19. person_id: 5954 | company_id: 1344 | company_name: Sana Hanse-Klinikum Wismar- Tagesklinik Wismar | company_website: http://sana.de | city: Wismar | country: DE | company_type: clinic_location | first_name: Jacqueline | last_name: Bernier | full_name: Jacqueline Bernier | role: Personalleiterin/Koordinatorin Beruf und Familie | role_bucket: personalleitung | priority: 2
+20. person_id: 5955 | company_id: 1949 | company_name: Sana Klinik Zwenkau | company_website: https://kliniken-leipziger-land.de/home.html | city: Zwenkau | country: DE | company_type: clinic_location | first_name: Nico | last_name: Horn | full_name: Nico Horn | role: Personalleiter | role_bucket: personalleitung | priority: 2
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_123
+- Return only the requested result.
+- Use public information only.
