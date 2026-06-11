@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_066
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_066
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4522 | company_id: 1035 | company_name: Stiftungsklinik Weißenhorn | company_website: http://stiftungsklinik-weissenhorn.de | city: Weißenhorn | country: DE | company_type: clinic_location | first_name: Franziska | last_name: Oechsle | full_name: Franziska Oechsle | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+2. person_id: 4523 | company_id: 1024 | company_name: Stiftungskrankenhaus Nördlingen | company_website: http://donkliniken.de | city: Nördlingen | country: DE | company_type: clinic_location | first_name: Bernd | last_name: Meyr | full_name: Bernd Meyr | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 4525 | company_id: 1974 | company_name: Stroke Unit am GLG Werner Forßmann Klinikum in Eberswalde | company_website: https://glg-gesundheit.de | city: Eberswalde | country: DE | company_type: clinic_location | first_name: Jana | last_name: Graeber | full_name: Jana Graeber | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+4. person_id: 4527 | company_id: 1558 | company_name: Städtisches Klinikum Braunschweig | company_website: https://klinikum-braunschweig.de | city: Braunschweig | country: DE | company_type: clinic_location | first_name: Rick | last_name: Pieger | full_name: Rick Pieger | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+5. person_id: 2065 | company_id: 1907 | company_name: Städtisches Klinikum Dresden (Weißer Hirsch) | company_website: https://klinikum-dresden.de | city: Dresden | country: DE | company_type: clinic_location | first_name: Petra | last_name: Vitzthum | full_name: Petra Vitzthum | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 4528 | company_id: 1849 | company_name: Städtisches Klinikum Görlitz | company_website: https://klinikum-goerlitz.de | city: Görlitz | country: DE | company_type: clinic_location | first_name: Birgit | last_name: Bieder | full_name: Birgit Bieder | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+7. person_id: 4529 | company_id: 1569 | company_name: Städtisches Klinikum Lüneburg | company_website: https://klinikum-lueneburg.de | city: Lüneburg | country: DE | company_type: clinic_location | first_name: Patrick | last_name: Evel | full_name: Patrick Evel | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+8. person_id: 4530 | company_id: 1608 | company_name: Städtisches Klinikum Wolfenbüttel | company_website: https://klinikum-wolfenbuettel.de | city: Wolfenbüttel | country: DE | company_type: clinic_location | first_name: Wenke | last_name: Lubosch | full_name: Wenke Lubosch | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+9. person_id: 4532 | company_id: 1980 | company_name: Städtisches Krankenhaus Eisenhüttenstadt | company_website: http://khehst.de | city: Eisenhüttenstadt | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Hirsch | full_name: Andrea Hirsch | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+10. person_id: 4533 | company_id: 525 | company_name: Städtisches Krankenhaus Nettetal | city: Nettetal | country: Germany | company_type: clinic_location | first_name: David | last_name: Girbig | full_name: David Girbig | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 4534 | company_id: 1782 | company_name: Städtisches Krankenhaus Pirmasens | company_website: http://kh-pirmasens.de | city: Pirmasens | country: DE | company_type: clinic_location | first_name: Bernd | last_name: Henner | full_name: Bernd Henner | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+12. person_id: 4536 | company_id: 1930 | company_name: Sächsische Schweiz Klinik Sebnitz | company_website: http://asklepios.com/sebnitz | city: Sebnitz | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Pfennig | full_name: Thomas Pfennig | role: Pflegedirektor Region Sachsen/Sachsen-Anhalt | role_bucket: pflege_director | priority: 1
+13. person_id: 2078 | company_id: 1964 | company_name: Sächsisches Krankenhaus Großschweidnitz Tagesklinik Görlitz | company_website: https://skh-grossschweidnitz.sachsen.de | city: Görlitz | country: DE | company_type: clinic_location | first_name: J. | last_name: Jährig-Kutschmann | full_name: J. Jährig-Kutschmann | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+14. person_id: 4539 | company_id: 1947 | company_name: Sächsisches Krankenhaus Großschweidnitz Tagesklinik Hoyerswerda | company_website: https://skh-grossschweidnitz.sachsen.de | city: Hoyerswerda | country: DE | company_type: clinic_location | first_name: Jens | last_name: Jährig-Kutschmann | full_name: Jens Jährig-Kutschmann | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+15. person_id: 4540 | company_id: 1954 | company_name: Sächsisches Krankenhaus Großschweidnitz Tagesklinik Löbau | company_website: https://skh-grossschweidnitz.sachsen.de | city: Löbau | country: DE | company_type: clinic_location | first_name: Jens | last_name: Jährig-Kutschmann | full_name: Jens Jährig-Kutschmann | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+16. person_id: 4541 | company_id: 1951 | company_name: Sächsisches Krankenhaus Großschweidnitz Tagesklinik Weißwasser | company_website: https://skh-grossschweidnitz.sachsen.de | city: Weißwasser | country: DE | company_type: clinic_location | first_name: Jens | last_name: Jährig-Kutschmann | full_name: Jens Jährig-Kutschmann | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+17. person_id: 4542 | company_id: 1901 | company_name: Sächsisches Krankenhaus Rodewisch | company_website: http://skh-rodewisch.de | city: Rodewisch | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Winkler | full_name: Thomas Winkler | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 4544 | company_id: 1192 | company_name: TCE - Therapie-Centrum für Essstörungen in München | company_website: https://dritter-orden.de | city: München | country: DE | company_type: clinic_location | first_name: Martina | last_name: Amerhauser | full_name: Martina Amerhauser | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+19. person_id: 4546 | company_id: 1131 | company_name: TCM-Klinik Bad Kötzting | company_website: http://tcm.info | city: Bad Kötzting | country: DE | company_type: clinic_location | first_name: Ruth | last_name: Rießelmann | full_name: Ruth Rießelmann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 4548 | company_id: 1284 | company_name: Tagesklinik Altona in Hamburg | company_website: https://asklepios.com/hamburg/westklinikum/experten/psychiatrie_und_psychotherapie/tagesklinik-altona | city: Hamburg | country: DE | company_type: clinic_location | first_name: Richard | last_name: Hockl | full_name: Richard Hockl | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_066
+- Return only the requested result.
+- Use public information only.
