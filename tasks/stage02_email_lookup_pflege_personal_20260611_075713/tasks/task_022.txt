@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_022
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_022
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3543 | company_id: 115 | company_name: Helios Klinik Müllheim | city: Müllheim | country: Germany | company_type: clinic_location | first_name: Natalie | last_name: Waldherr | full_name: Natalie Waldherr | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+2. person_id: 3544 | company_id: 1040 | company_name: Helios Klinik München Perlach | company_website: http://helios-gesundheit.de/muenchen-perlach | city: München | country: DE | company_type: clinic_location | first_name: Aldin | last_name: Gazdic | full_name: Aldin Gazdic | role: Pflegedirektor Helios Klinikum München West und Helios Klinik München Perlach | role_bucket: pflege_director | priority: 1
+3. person_id: 3545 | company_id: 1445 | company_name: Helios Klinik Oberwald Grebenhain | company_website: https://helios-kliniken.de/klinik/grebenhain.html | city: Grebenhain | country: DE | company_type: clinic_location | first_name: Michael | last_name: Klemm | full_name: Michael Klemm | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+4. person_id: 3546 | company_id: 1924 | company_name: Helios Klinik Schkeuditz | company_website: http://helios-kliniken.de/klinik/schkeuditz.html | city: Schkeuditz | country: DE | company_type: clinic_location | first_name: Manja | last_name: Riese | full_name: Manja Riese | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3547 | company_id: 372 | company_name: Helios Klinikum Schwelm | city: Schwelm | country: Germany | company_type: clinic_location | first_name: Sonja | last_name: Schrader | full_name: Sonja Schrader | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 3548 | company_id: 378 | company_name: Helios Klinikum Siegburg | city: Siegburg | country: Germany | company_type: clinic_location | first_name: Mark | last_name: Bierther | full_name: Mark Bierther | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+7. person_id: 3549 | company_id: 1610 | company_name: Helios Klinikum Uelzen | city: Uelzen | country: DE | company_type: clinic_location | first_name: Christian | last_name: Irmisch | full_name: Christian Irmisch | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+8. person_id: 3550 | company_id: 556 | company_name: Helios Klinikum Warburg | city: Warburg | country: Germany | company_type: clinic_location | first_name: Andrea | last_name: Störmer | full_name: Andrea Störmer | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+9. person_id: 3551 | company_id: 1278 | company_name: Helios Mariahilf Klinik Hamburg | company_website: http://helios-kliniken.de/klinik/hamburg-mariahilf-klinik.html | city: Hamburg | country: DE | company_type: clinic_location | first_name: Rüdiger | last_name: Zahmel | full_name: Rüdiger Zahmel | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+10. person_id: 3552 | company_id: 367 | company_name: Helios Marien Klinik in Duisburg | city: Duisburg | country: Germany | company_type: clinic_location | first_name: Carolina | last_name: Korioth | full_name: Carolina Korioth | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 3553 | company_id: 1161 | company_name: Helios OrthoClinic Hammelburg | company_website: https://helios-gesundheit.de/kliniken/hammelburg-orthoclinic | city: Hammelburg | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Garten | full_name: Thomas Garten | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+12. person_id: 3554 | company_id: 1841 | company_name: Helios Park-Klinikum Leipzig | company_website: https://helios-gesundheit.de/kliniken/leipzig-park-klinikum | city: Leipzig | country: DE | company_type: clinic_location | first_name: Sebastian | last_name: Hunger | full_name: Sebastian Hunger | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+13. person_id: 3556 | company_id: 1961 | company_name: Helios Park-Klinikum Leipzig - Kompetenzzentrum Wurzen | company_website: http://helios-gesundheit.de/kliniken/leipzig-park-klinikum/unser-angebot/unsere-fachbereiche/kjp/wurzen | city: Wurzen | country: DE | company_type: clinic_location | first_name: Sebastian | last_name: Hunger | full_name: Sebastian Hunger | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+14. person_id: 3558 | company_id: 1356 | company_name: Helios Psychiatrische Tagesklinik und Institutsambulanz Ribnitz-Damgarten | company_website: http://helios-gesundheit.de/stralsund | city: Ribnitz-Damgarten | country: DE | company_type: clinic_location | first_name: Carena | last_name: Schwark | full_name: Carena Schwark | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+15. person_id: 3559 | company_id: 1355 | company_name: Helios Psychiatrische Tagesklinik und Institutsambulanz in Bergen | company_website: http://helios-gesundheit.de/stralsund | city: Bergen auf Rügen | country: DE | company_type: clinic_location | first_name: Carena | last_name: Schwark | full_name: Carena Schwark | role: Pflegedienstleiterin | role_bucket: pflege_director | priority: 1
+16. person_id: 3560 | company_id: 505 | company_name: Helios St. Elisabeth Klinik Oberhausen | city: Oberhausen | country: Germany | company_type: clinic_location | first_name: Christoph | last_name: Wilde | full_name: Christoph Wilde | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+17. person_id: 3561 | company_id: 994 | company_name: Helios St. Elisabeth-Krankenhaus Bad Kissingen | company_website: https://helios-gesundheit.de/kliniken/bad-kissingen | city: Bad Kissingen | country: DE | company_type: clinic_location | first_name: Sebastian | last_name: Panhans | full_name: Sebastian Panhans | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 3562 | company_id: 297 | company_name: Helios St. Johannes Klinik in Duisburg | city: Duisburg | country: Germany | company_type: clinic_location | first_name: Carolina | last_name: Korioth | full_name: Carolina Korioth | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+19. person_id: 3564 | company_id: 516 | company_name: Helios St. Josefshospital Uerdingen in Krefeld | city: Krefeld | country: Germany | company_type: clinic_location | first_name: Nicola | last_name: Küppers | full_name: Nicola Küppers | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+20. person_id: 3566 | company_id: 1612 | company_name: Helios St. Marienberg Klinik Helmstedt | company_website: https://helios-gesundheit.de/kliniken/helmstedt | city: Helmstedt | country: DE | company_type: clinic_location | first_name: Aline | last_name: Prasse | full_name: Aline Prasse | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_022
+- Return only the requested result.
+- Use public information only.
