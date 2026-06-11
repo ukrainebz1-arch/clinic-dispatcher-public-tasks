@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_058
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_058
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4344 | company_id: 1999 | company_name: RoMed Klinik Wasserburg | company_website: https://romed-kliniken.de/de/wasserburg/die-klinik-im-ueberblick.htm | city: Wasserburg am Inn | country: DE | company_type: clinic_location | first_name: Simon | last_name: Brunnlechner | full_name: Simon Brunnlechner | role: Pflegedienstleitung Wasserburg am Inn | role_bucket: pflege_director | priority: 1
+2. person_id: 4346 | company_id: 933 | company_name: RoMed Klinikum Rosenheim | company_website: http://romed-kliniken.de | city: Rosenheim | country: DE | company_type: clinic_location | first_name: Lothar | last_name: Kesselring | full_name: Lothar Kesselring | role: Kommissarische Pflegedienstleitung Rosenheim | role_bucket: pflege_director | priority: 1
+3. person_id: 4347 | company_id: 933 | company_name: RoMed Klinikum Rosenheim | company_website: http://romed-kliniken.de | city: Rosenheim | country: DE | company_type: clinic_location | first_name: Sandra | last_name: Schaber | full_name: Sandra Schaber | role: Kommissarische Pflegedienstleitung Rosenheim | role_bucket: pflege_director | priority: 1
+4. person_id: 4348 | company_id: 810 | company_name: Roland Klinik in Bremen | company_website: http://roland-klinik.de | city: Bremen | country: DE | company_type: clinic_location | first_name: Jens | last_name: Bergmann | full_name: Jens Bergmann | role: Pflegedienstleiter / Pflegedirektion | role_bucket: pflege_director | priority: 1
+5. person_id: 4349 | company_id: 2081 | company_name: Rosengarten Klinik Heiligenfeld in Bad Kissingen | company_website: https://heiligenfeld.de/kliniken/rosengarten-klinik-heiligenfeld | city: Bad Kissingen | country: DE | company_type: rehab_clinic | first_name: Kordula | last_name: Dorsch | full_name: Kordula Dorsch | role: Pflegedienstleitung Heiligenfeld Kliniken Bad Kissingen | role_bucket: pflege_director | priority: 1
+6. person_id: 1949 | company_id: 820 | company_name: Rotes Kreuz Krankenhaus Bremen | company_website: http://roteskreuzkrankenhaus.de | city: Bremen | country: DE | company_type: clinic_location | first_name: Bettina | last_name: Klatt | full_name: Bettina Klatt | role: Pflegedirektion | role_bucket: pflege_director | priority: 1
+7. person_id: 4350 | company_id: 1098 | company_name: Rotkreuzklinik Würzburg | company_website: https://rotkreuzklinik-wuerzburg.de | city: Würzburg | country: DE | company_type: clinic_location | first_name: Simone | last_name: Fabiunke | full_name: Simone Fabiunke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 4351 | company_id: 946 | company_name: Rotkreuzklinikum München | company_website: https://rotkreuzklinikum-muenchen.de | city: München | country: DE | company_type: clinic_location | first_name: Carola | last_name: Riedl | full_name: Carola Riedl | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 4352 | company_id: 935 | company_name: Rottal-Inn Kliniken Eggenfelden | company_website: https://rottalinnkliniken.de | city: Eggenfelden | country: DE | company_type: clinic_location | first_name: Maria-Theresia | last_name: Linner | full_name: Maria-Theresia Linner | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+10. person_id: 4354 | company_id: 937 | company_name: Rottal-Inn Kliniken Pfarrkirchen in Pfarrkirchen, Niederbayern | company_website: https://rottalinnkliniken.de | city: Pfarrkirchen | country: DE | company_type: clinic_location | first_name: Maria-Theresia | last_name: Linner | full_name: Maria-Theresia Linner | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 4356 | company_id: 1760 | company_name: SH Klinikum Merzig | company_website: http://mzg.shg-kliniken.de | city: Merzig | country: DE | company_type: clinic_location | first_name: Sascha | last_name: Krames | full_name: Sascha Krames | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+12. person_id: 4358 | company_id: 1757 | company_name: SHG-Kliniken Sonnenberg in Saarbrücken | company_website: http://sb.shg-kliniken.de | city: Saarbrücken | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Becker | full_name: Thomas Becker | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+13. person_id: 4360 | company_id: 2027 | company_name: SHG-Kliniken Sonnenberg, KJP Tagesklinik St. Wendel | company_website: http://sb.shg-kliniken.de | city: Sankt Wendel | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Becker | full_name: Thomas Becker | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+14. person_id: 4362 | company_id: 2029 | company_name: SHG-Kliniken Sonnenberg, Tageskliniken Rastpfuhl in Saarbrücken | company_website: http://sb.shg-kliniken.de | city: Saarbrücken | country: DE | company_type: clinic_location | first_name: Thomas | last_name: Becker | full_name: Thomas Becker | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+15. person_id: 4365 | company_id: 1758 | company_name: SHG-Kliniken Völklingen | company_website: https://shg-kliniken.de/voelklingen | city: Völklingen | country: DE | company_type: clinic_location | first_name: Jennifer | last_name: Paul | full_name: Jennifer Paul | role: Pflegedirektion | role_bucket: pflege_director | priority: 1
+16. person_id: 4364 | company_id: 1758 | company_name: SHG-Kliniken Völklingen | company_website: https://shg-kliniken.de/voelklingen | city: Völklingen | country: DE | company_type: clinic_location | first_name: Sabine | last_name: Keller | full_name: Sabine Keller | role: Pflegedirektion | role_bucket: pflege_director | priority: 1
+17. person_id: 4366 | company_id: 1298 | company_name: SKH Stadtteilklinik Hamburg | company_website: http://stadtteilklinik-hamburg.de | city: Hamburg | country: DE | company_type: clinic_location | first_name: Franziska | last_name: Manzke | full_name: Franziska Manzke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+18. person_id: 4367 | company_id: 2089 | company_name: SRH Gesundheitszentrum Bad Herrenalb | company_website: https://gesundheitszentren-nordschwarzwald.de/gesundheitszentren/unsere-drei-gesundheitszentren/srh-gesundheitszentrum-bad-herrenalb | city: Bad Herrenalb | country: DE | company_type: rehab_clinic | first_name: Katharina | last_name: Müller | full_name: Katharina Müller | role: Pflegedienstleitung SRH Gesundheitszentren Dobel und Bad Herrenalb | role_bucket: pflege_director | priority: 1
+19. person_id: 4368 | company_id: 1707 | company_name: STENUM Ortho in Ganderkesee | company_website: http://stenum-ortho.de | city: Ganderkesee | country: DE | company_type: clinic_location | first_name: Katharina | last_name: Helwig | full_name: Katharina Helwig | role: Klinikleitung / Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 1964 | company_id: 2247 | company_name: Sachsenklinik Bad Lausick | company_website: https://michelskliniken.de/kliniken/sachsenklinik-bad-lausick | city: Bad Lausick | country: DE | company_type: rehab_clinic | first_name: Lars | last_name: F. Werner | full_name: Lars F. Werner | role: Pflegedirektor Michels Kliniken Sachsen | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_058
+- Return only the requested result.
+- Use public information only.
