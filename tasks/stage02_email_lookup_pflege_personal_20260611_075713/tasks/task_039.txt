@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_039
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_039
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3896 | company_id: 2270 | company_name: Klinikzentrum Bad Sulza | company_website: https://toskanaworld.net/klinikzentrum-bad-sulza-de | city: Bad Sulza | country: DE | company_type: rehab_clinic | first_name: Mandy | last_name: Kusch | full_name: Mandy Kusch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 638 | company_id: 373 | company_name: Knappschaft Kliniken Bottrop | city: Bottrop | country: Germany | company_type: clinic_location | first_name: Christina | last_name: Ostermann | full_name: Christina Ostermann | role: Standortübergreifende Pflegedirektorin | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/christina-ostermann-57b123360
+3. person_id: 640 | company_id: 373 | company_name: Knappschaft Kliniken Bottrop | city: Bottrop | country: Germany | company_type: clinic_location | first_name: Kevin | last_name: Callenberg | full_name: Kevin Callenberg | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+4. person_id: 678 | company_id: 388 | company_name: Knappschaft Kliniken Gelsenkirchen-Buer | city: Gelsenkirchen | country: Germany | company_type: clinic_location | first_name: Martina | last_name: Koch | full_name: Martina Koch | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/martina-koch-87a1252a4
+5. person_id: 3897 | company_id: 2228 | company_name: Knappschafts-Klinik Bad Driburg | company_website: https://kbs.de/DE/Kliniken/RehaKliniken/KlinikauswahlNachStandort/BadDriburg/baddriburg_node.html | city: Bad Driburg | country: DE | company_type: rehab_clinic | first_name: Annette | last_name: Baacke | full_name: Annette Baacke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+6. person_id: 547 | company_id: 330 | company_name: Knappschaftskrankenhaus Dortmund | city: Dortmund | country: Germany | company_type: clinic_location | first_name: Klaus | last_name: Böckmann | full_name: Klaus Böckmann | role: Pflegedirektor Knappschaft Kliniken Westfalen | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/klaus-b%C3%B6ckmann-4a2b99288
+7. person_id: 549 | company_id: 330 | company_name: Knappschaftskrankenhaus Dortmund | city: Dortmund | country: Germany | company_type: clinic_location | first_name: Marcus | last_name: Dangel | full_name: Marcus Dangel | role: Pflegedienstleitung Dortmund | role_bucket: pflege_director | priority: 1
+8. person_id: 754 | company_id: 430 | company_name: Knappschaftskrankenhaus Lütgendortmund in Dortmund | city: Dortmund | country: Germany | company_type: clinic_location | first_name: Rudolf | last_name: Bernwald | full_name: Rudolf Bernwald | role: Pflegedienstleitung Lütgendortmund | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/rudolf-bernwald-6aa496214
+9. person_id: 3898 | company_id: 1102 | company_name: Krankenhaus Aichach | company_website: http://klipa.de | city: Aichach an der Paar | country: DE | company_type: clinic_location | first_name: Cornelia | last_name: Geppert | full_name: Cornelia Geppert | role: Standortübergreifende Pflegedirektorin | role_bucket: pflege_director | priority: 1
+10. person_id: 1487 | company_id: 1119 | company_name: Krankenhaus Altdorf | company_website: https://kh-nuernberger-land.de | city: Altdorf bei Nürnberg | country: DE | company_type: clinic_location | first_name: Guido | last_name: Schmidt | full_name: Guido Schmidt | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+11. person_id: 3900 | company_id: 861 | company_name: Krankenhaus Angermünde | company_website: https://glg-gesundheit.de | city: Angermünde | country: DE | company_type: clinic_location | first_name: René | last_name: Bartsch | full_name: René Bartsch | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+12. person_id: 3902 | company_id: 1459 | company_name: Krankenhaus Bad Arolsen | company_website: https://gesundheit-nordhessen.de/krankenhaus-bad-arolsen | city: Bad Arolsen | country: DE | company_type: clinic_location | first_name: Barbara | last_name: Heidemann | full_name: Barbara Heidemann | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 3901 | company_id: 1459 | company_name: Krankenhaus Bad Arolsen | company_website: https://gesundheit-nordhessen.de/krankenhaus-bad-arolsen | city: Bad Arolsen | country: DE | company_type: clinic_location | first_name: Helmut | last_name: Zeilfelder | full_name: Helmut Zeilfelder | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+14. person_id: 3903 | company_id: 2010 | company_name: Krankenhaus Bad Doberan | company_website: https://sana.de/bad-doberan | city: Hohenfelde bei Bad Doberan | country: DE | company_type: clinic_location | first_name: Antje | last_name: Wiebe | full_name: Antje Wiebe | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+15. person_id: 3904 | company_id: 1163 | company_name: Krankenhaus Bad Kötzting | company_website: https://diekliniken.de | city: Bad Kötzting | country: DE | company_type: clinic_location | first_name: Andreas | last_name: Zach | full_name: Andreas Zach | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+16. person_id: 3906 | company_id: 1393 | company_name: Krankenhaus Bad Soden | company_website: http://varisano.de/kliniken-mtk | city: Bad Soden am Taunus | country: DE | company_type: clinic_location | first_name: Astrid | last_name: Eisenberg | full_name: Astrid Eisenberg | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+17. person_id: 3907 | company_id: 970 | company_name: Krankenhaus Barmherzige Brüder München | company_website: http://barmherzige-muenchen.de | city: München | country: DE | company_type: clinic_location | first_name: Stefan | last_name: Hoppe | full_name: Stefan Hoppe | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 3909 | company_id: 913 | company_name: Krankenhaus Barmherzige Brüder Regensburg | company_website: http://barmherzige-regensburg.de | city: Regensburg | country: DE | company_type: clinic_location | first_name: Hendrik | last_name: Ott-Loffhagen | full_name: Hendrik Ott-Loffhagen | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+19. person_id: 3911 | company_id: 1856 | company_name: Krankenhaus Bautzen | company_website: http://oberlausitz-kliniken.de | city: Bautzen | country: DE | company_type: clinic_location | first_name: Manja | last_name: Hollmann | full_name: Manja Hollmann | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+20. person_id: 3912 | company_id: 1950 | company_name: Krankenhaus Bethanien Plauen | company_website: http://bethanien-plauen.de | city: Plauen | country: DE | company_type: clinic_location | first_name: Monika | last_name: Kästner | full_name: Monika Kästner | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_039
+- Return only the requested result.
+- Use public information only.
