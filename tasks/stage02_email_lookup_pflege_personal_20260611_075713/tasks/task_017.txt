@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_017
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_017
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3436 | company_id: 1057 | company_name: Fachklinik Heiligenfeld in Bad Kissingen | company_website: http://fachklinik.heiligenfeld.de | city: Bad Kissingen | country: DE | company_type: clinic_location | first_name: Kordula | last_name: Dorsch | full_name: Kordula Dorsch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+2. person_id: 3437 | company_id: 1055 | company_name: Fachklinik Ichenhausen | company_website: http://fachklinik-ichenhausen.de | city: Ichenhausen | country: DE | company_type: clinic_location | first_name: Andrea | last_name: Jäger | full_name: Andrea Jäger | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 3438 | company_id: 1840 | company_name: Fachklinik Katzenelnbogen | company_website: http://fachklinik-katzenelnbogen.de | city: Katzenelnbogen | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Maaßen | full_name: Kerstin Maaßen | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+4. person_id: 3439 | company_id: 1060 | company_name: Fachklinik Osterhofen in Osterhofen, Niederbayern | company_website: http://fachklinik-osterhofen.de | city: Osterhofen | country: DE | company_type: clinic_location | first_name: Reiner | last_name: Triebsch | full_name: Reiner Triebsch | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+5. person_id: 1061 | company_id: 630 | company_name: Fachklinik St. Camillus in Duisburg | city: Duisburg | country: Germany | company_type: clinic_location | first_name: Markus | last_name: Albat | full_name: Markus Albat | role: Pflegedienstleitung Psychiatrie | role_bucket: pflege_director | priority: 1
+6. person_id: 3442 | company_id: 1117 | company_name: Fachklinik St. Lukas in Bad Griesbach im Rottal | company_website: http://fachklinik-sankt-lukas.de | city: Bad Griesbach im Rottal | country: DE | company_type: clinic_location | first_name: Ann-Kathrin | last_name: Knößlsdorfer | full_name: Ann-Kathrin Knößlsdorfer | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+7. person_id: 3441 | company_id: 1117 | company_name: Fachklinik St. Lukas in Bad Griesbach im Rottal | company_website: http://fachklinik-sankt-lukas.de | city: Bad Griesbach im Rottal | country: DE | company_type: clinic_location | first_name: Melanie | last_name: Oswald | full_name: Melanie Oswald | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+8. person_id: 3443 | company_id: 1207 | company_name: Fachklinik Stadtsteinach | company_website: https://klinikum-kulmbach.de | city: Stadtsteinach | country: DE | company_type: clinic_location | first_name: Julia | last_name: Reger-Rauseo | full_name: Julia Reger-Rauseo | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 3445 | company_id: 2151 | company_name: Fachklinik Weserland in Bad Pyrmont | company_website: https://fachklinik-weserland.de | city: Bad Pyrmont | country: DE | company_type: rehab_clinic | first_name: Carsten | last_name: Texter | full_name: Carsten Texter | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+10. person_id: 1068 | company_id: 638 | company_name: Fachklinik für Kinderneurologie und Sozialpädiatrie Königsborn in Unna | city: Unna | country: Germany | company_type: clinic_location | first_name: Kathrin | last_name: Rubner | full_name: Kathrin Rubner | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+11. person_id: 3446 | company_id: 2145 | company_name: Fachklinik und Moorbad Bad Freienwalde | company_website: https://reha-freienwalde.de | city: Bad Freienwalde | country: DE | company_type: rehab_clinic | first_name: Birgit | last_name: Staerke | full_name: Birgit Staerke | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+12. person_id: 3448 | company_id: 211 | company_name: Fachkliniken Hohenurach in Bad Urach | city: Bad Urach | country: Germany | company_type: clinic_location | first_name: Alisa | last_name: Kübler | full_name: Alisa Kübler | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+13. person_id: 3447 | company_id: 211 | company_name: Fachkliniken Hohenurach in Bad Urach | city: Bad Urach | country: Germany | company_type: clinic_location | first_name: Gerd | last_name: Bächle | full_name: Gerd Bächle | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3449 | company_id: 1341 | company_name: Fachkliniken Waldeck in Schwaan | company_website: https://neurokliniken-waldeck.de | city: Schwaan | country: DE | company_type: clinic_location | first_name: Christina | last_name: Lemke | full_name: Christina Lemke | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+15. person_id: 3450 | company_id: 108 | company_name: Fachkliniken Wangen | city: Wangen im Allgäu | country: Germany | company_type: clinic_location | first_name: Florian | last_name: Ihler | full_name: Florian Ihler | role: Leitung Pflege- Therapiemanagement Erwachsene | role_bucket: pflege_director | priority: 1
+16. person_id: 3451 | company_id: 108 | company_name: Fachkliniken Wangen | city: Wangen im Allgäu | country: Germany | company_type: clinic_location | first_name: Maximilian | last_name: Späth | full_name: Maximilian Späth | role: Leitung Pflege- Therapiemanagement Kinder | role_bucket: pflege_director | priority: 1
+17. person_id: 3452 | company_id: 1182 | company_name: Fachklinikum Mainschleife in Volkach | company_website: https://fachklinikum-mainschleife.de | city: Volkach | country: DE | company_type: clinic_location | first_name: Peter | last_name: Groha | full_name: Peter Groha | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 3453 | company_id: 1952 | company_name: Fachkrankenhaus Bethanien Hochweitzschen in Döbeln | company_website: http://agaplesion-mittelsachsen.de | city: Döbeln | country: DE | company_type: clinic_location | first_name: Petra | last_name: Hundrieser | full_name: Petra Hundrieser | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+19. person_id: 3454 | company_id: 1973 | company_name: Fachkrankenhaus Hubertusburg - Tagesklinik Torgau | company_website: http://fkh-hubertusburg.de | city: Torgau | country: DE | company_type: clinic_location | first_name: Sabine | last_name: Wolf | full_name: Sabine Wolf | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 3455 | company_id: 1970 | company_name: Fachkrankenhaus Hubertusburg - Tageskliniken Riesa | company_website: http://fkh-hubertusburg.de | city: Riesa | country: DE | company_type: clinic_location | first_name: Sabine | last_name: Wolf | full_name: Sabine Wolf | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_017
+- Return only the requested result.
+- Use public information only.
