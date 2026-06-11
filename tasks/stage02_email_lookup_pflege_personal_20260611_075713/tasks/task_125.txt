@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_125
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_125
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 5977 | company_id: 610 | company_name: Sankt Lucia Hospital Harsewinkel | city: Harsewinkel | country: Germany | company_type: clinic_location | first_name: Franz | last_name: Diekmann | full_name: Franz Diekmann | role: Personalleiter KHO | role_bucket: personalleitung | priority: 2
+2. person_id: 5978 | company_id: 2080 | company_name: Sankt Rochus Kliniken in Bad Schönborn | company_website: https://sankt-rochus-kliniken.de | city: Bad Schönborn | country: DE | company_type: rehab_clinic | first_name: Kerstin | last_name: Gessert | full_name: Kerstin Gessert | role: Gesamtleitung Personalmanagement cts Rehaverbund | role_bucket: personalleitung | priority: 2
+3. person_id: 5979 | company_id: 289 | company_name: Sankt Vinzenz Hospital Rheda-Wiedenbrück | city: Rheda-Wiedenbrück | country: Germany | company_type: clinic_location | first_name: Franz | last_name: Diekmann | full_name: Franz Diekmann | role: Personalleiter KHO | role_bucket: personalleitung | priority: 2
+4. person_id: 5980 | company_id: 572 | company_name: Sauerlandklinik Hachen in Sundern (Sauerland) | city: Sundern | country: Germany | company_type: clinic_location | first_name: Jana | last_name: Rührup | full_name: Jana Rührup | role: Leitung Personalmanagement / Prokuristin | role_bucket: personalleitung | priority: 2
+5. person_id: 5981 | company_id: 1224 | company_name: Schlossklinik Rottenburg | company_website: http://lakumed.de | city: Rottenburg an der Laaber | country: DE | company_type: clinic_location | first_name: Rebecca | last_name: Bleeck | full_name: Rebecca Bleeck | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+6. person_id: 5982 | company_id: 753 | company_name: Schlosspark-Klinik in Berlin | company_website: http://parkkliniken-charlottenburg.de | city: Berlin | country: DE | company_type: clinic_location | first_name: Wilfried | last_name: Wagner | full_name: Wilfried Wagner | role: Direktor Personal, IT und Medizintechnik | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/wilfried-wagner-584304a3
+7. person_id: 5983 | company_id: 90 | company_name: Schwarzwald-Baar Klinikum Standort Donaueschingen | city: Donaueschingen | country: Germany | company_type: clinic_location | first_name: Kathrin | last_name: Krebs | full_name: Kathrin Krebs | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+8. person_id: 5985 | company_id: 10 | company_name: Schwarzwald-Baar Klinikum Villingen-Schwenningen | city: Villingen-Schwenningen | country: Germany | company_type: clinic_location | first_name: Kathrin | last_name: Krebs | full_name: Kathrin Krebs | role: Personaldirektor | role_bucket: personalleitung | priority: 2
+9. person_id: 5987 | company_id: 2174 | company_name: Schön Klinik Bad Bramstedt | company_website: https://schoen-klinik.de/bad-bramstedt | city: Bad Bramstedt | country: DE | company_type: rehab_clinic | first_name: Claudia | last_name: Godfrey | full_name: Claudia Godfrey | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+10. person_id: 5988 | company_id: 2006 | company_name: Schön Klinik Hamburg Eilbek | company_website: https://schoen-klinik.de/hamburg-eilbek | city: Hamburg | country: DE | company_type: clinic_location | first_name: Jennifer | last_name: Behrens | full_name: Jennifer Behrens | role: Personalleiterin | role_bucket: personalleitung | priority: 2
+11. person_id: 5989 | company_id: 1044 | company_name: Schön Klinik München Harlaching | company_website: http://schoen-klinik.de | city: München | country: DE | company_type: clinic_location | first_name: Reiner | last_name: Kastizen | full_name: Reiner Kastizen | role: Personalleiter | role_bucket: personalleitung | priority: 2
+12. person_id: 5990 | company_id: 1012 | company_name: Schön Klinik München Schwabing | company_website: http://schoen-klinik.de | city: München | country: DE | company_type: clinic_location | first_name: Hildrun | last_name: Kleiner | full_name: Hildrun Kleiner | role: Personalleitung | role_bucket: personalleitung | priority: 2
+13. person_id: 5991 | company_id: 1187 | company_name: Schön Klinik Roseneck SE & Co. KG, Tagesklinik München | company_website: https://schoen-klinik.de/tagesklinik-muenchen | city: München | country: DE | company_type: clinic_location | first_name: Patrycja | last_name: Forster | full_name: Mag. Patrycja Forster | role: Personalleiterin | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/patrycja-forster-438b7526
+14. person_id: 5992 | company_id: 1067 | company_name: Schön Klinik Roseneck Standort Rosenheim | company_website: https://schoen-klinik.de/roseneck | city: Rosenheim | country: DE | company_type: clinic_location | first_name: Patrycja | last_name: Forster | full_name: Mag. Patrycja Forster | role: Personalleiterin | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/patrycja-forster-438b7526
+15. person_id: 5993 | company_id: 959 | company_name: Schön Klinik Roseneck in Prien am Chiemsee | company_website: https://schoen-klinik.de/roseneck | city: Prien am Chiemsee | country: DE | company_type: clinic_location | first_name: Patrycja | last_name: Forster | full_name: Mag. Patrycja Forster | role: Personalleiterin | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/patrycja-forster-438b7526
+16. person_id: 5994 | company_id: 2168 | company_name: Schüchtermann-Klinik in Bad Rothenfelde | company_website: https://schuechtermann-klinik.de | city: Bad Rothenfelde | country: DE | company_type: rehab_clinic | first_name: Harald | last_name: Wolf | full_name: Harald Wolf | role: Leitung Personalmanagement | role_bucket: personalleitung | priority: 2
+17. person_id: 5997 | company_id: 2179 | company_name: Segeberger Kliniken | company_website: https://segebergerkliniken.de | city: Bad Segeberg | country: DE | company_type: rehab_clinic | first_name: Florian | last_name: Schubert | full_name: Dr. Florian Schubert | role: Bereichsleiter Personal | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/dr-florian-schubert-2a1b2a156
+18. person_id: 5996 | company_id: 2179 | company_name: Segeberger Kliniken | company_website: https://segebergerkliniken.de | city: Bad Segeberg | country: DE | company_type: rehab_clinic | first_name: Kirsten | last_name: Tödt | full_name: Kirsten Tödt | role: Leiterin Personal und Recht | role_bucket: personalleitung | priority: 2
+19. person_id: 5998 | company_id: 1476 | company_name: Spezialklinik Jugenheim in Seeheim-Jugenheim | company_website: http://kreiskliniken-darmstadt-dieburg.de | city: Seeheim-Jugenheim | country: DE | company_type: clinic_location | first_name: Yvonne | last_name: Kaiser | full_name: Yvonne Kaiser | role: Personalleitung | role_bucket: personalleitung | priority: 2
+20. person_id: 5999 | company_id: 450 | company_name: Sportklinik Hellersen in Lüdenscheid | city: Lüdenscheid | country: Germany | company_type: clinic_location | first_name: Leonie | last_name: Schaulandt | full_name: Leonie Schaulandt | role: Leitung Personal | role_bucket: personalleitung | priority: 2 | linkedin_profile_url_existing: https://de.linkedin.com/in/leonie-schaulandt-052963181
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_125
+- Return only the requested result.
+- Use public information only.
