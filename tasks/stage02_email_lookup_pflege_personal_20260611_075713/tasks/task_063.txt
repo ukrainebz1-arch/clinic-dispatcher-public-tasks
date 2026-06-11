@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_063
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_063
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 4465 | company_id: 1507 | company_name: St. Elisabeth-Krankenhaus Volkmarsen | company_website: http://elisabeth-krankenhaus-volkmarsen.de | city: Volkmarsen | country: DE | company_type: clinic_location | first_name: Peter | last_name: Wieddekind | full_name: Peter Wieddekind | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+2. person_id: 4466 | company_id: 1424 | company_name: St. Elisabethen-Krankenhaus in Frankfurt am Main | company_website: http://elisabethen-krankenhaus-frankfurt.de | city: Frankfurt am Main | country: DE | company_type: clinic_location | first_name: Ramo | last_name: Mustafi | full_name: Ramo Mustafi | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+3. person_id: 4468 | company_id: 1656 | company_name: St. Franziskus-Hospital in Lohne (Oldenburg) | company_website: https://franziskushospital-lohne.de | city: Lohne | country: DE | company_type: clinic_location | first_name: Kerstin | last_name: Seelhorst | full_name: Kerstin Seelhorst | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+4. person_id: 4467 | company_id: 1656 | company_name: St. Franziskus-Hospital in Lohne (Oldenburg) | company_website: https://franziskushospital-lohne.de | city: Lohne | country: DE | company_type: clinic_location | first_name: Ulrich | last_name: Runnebom | full_name: Ulrich Runnebom | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+5. person_id: 4469 | company_id: 747 | company_name: St. Hedwig-Krankenhaus Berlin | company_website: http://alexianer-berlin-hedwigkliniken.de/st_hedwig_krankenhaus/home | city: Berlin | country: DE | company_type: clinic_location | first_name: Ina | last_name: Jarchov-Jadi | full_name: Ina Jarchov-Jadi | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+6. person_id: 1032 | company_id: 609 | company_name: St. Hubertus-Stift in Bedburg, Erft | city: Bedburg | country: Germany | company_type: clinic_location | first_name: Touria | last_name: Ratbi | full_name: Touria Ratbi | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/touria-ratbi-60bbb7141
+7. person_id: 4471 | company_id: 1197 | company_name: St. Johannes Klinik in Auerbach in der Oberpfalz | company_website: http://kh-as.de | city: Auerbach in der Oberpfalz | country: DE | company_type: clinic_location | first_name: Carina | last_name: Ellerhoff | full_name: Carina Ellerhoff | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 4473 | company_id: 1931 | company_name: St. Johannes Krankenhaus in Kamenz | company_website: https://johannes-kamenz.de | city: Kamenz | country: DE | company_type: clinic_location | first_name: Grit | last_name: Pippig | full_name: Grit Pippig | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+9. person_id: 4474 | company_id: 464 | company_name: St. Johannes Krankenhaus in Troisdorf | city: Troisdorf | country: Germany | company_type: clinic_location | first_name: Mitja | last_name: Miesen | full_name: Mitja Miesen | role: Pflegedienstleiter | role_bucket: pflege_director | priority: 1
+10. person_id: 4475 | company_id: 1651 | company_name: St. Johannes-Hospital Varel | company_website: http://krankenhaus-varel.de | city: Varel | country: DE | company_type: clinic_location | first_name: Korinna | last_name: Maus | full_name: Korinna Maus | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+11. person_id: 4477 | company_id: 1524 | company_name: St. Josef Krankenhaus Königstein | company_website: https://hochtaunus-kliniken.de/medizinische-fachabteilungen/koenigstein | city: Königstein im Taunus | country: DE | company_type: clinic_location | first_name: Kathrin | last_name: Häfner | full_name: Kathrin Häfner | role: Pflegedienstleitung Königstein | role_bucket: pflege_director | priority: 1
+12. person_id: 4476 | company_id: 1524 | company_name: St. Josef Krankenhaus Königstein | company_website: https://hochtaunus-kliniken.de/medizinische-fachabteilungen/koenigstein | city: Königstein im Taunus | country: DE | company_type: clinic_location | first_name: Kathrin | last_name: Seefeldt | full_name: Kathrin Seefeldt | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 620 | company_id: 365 | company_name: St. Josef Krankenhaus Moers | city: Moers | country: Germany | company_type: clinic_location | first_name: Michaela | last_name: Rech | full_name: Michaela Rech | role: Pflegedienstleitung Somatik | role_bucket: pflege_director | priority: 1 | linkedin_profile_url_existing: https://de.linkedin.com/in/michaela-rech-948b49163
+14. person_id: 4478 | company_id: 617 | company_name: St. Josef-Hospital in Gelsenkirchen | city: Gelsenkirchen | country: Germany | company_type: clinic_location | first_name: Sabine | last_name: Erberich | full_name: Sabine Erberich | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+15. person_id: 4479 | company_id: 1825 | company_name: St. Josef-Krankenhaus Hermeskeil | company_website: http://krankenhaus-hermeskeil.de | city: Hermeskeil | country: DE | company_type: clinic_location | first_name: Bianca | last_name: Nonweiler | full_name: Bianca Nonweiler | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+16. person_id: 4480 | company_id: 1499 | company_name: St. Josef-Krankenhaus Viernheim | company_website: https://st.josef-kh.de | city: Viernheim | country: DE | company_type: clinic_location | first_name: Simone | last_name: März | full_name: Simone März | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+17. person_id: 4482 | company_id: 1413 | company_name: St. Josefs Krankenhaus Balserische Stiftung in Gießen | company_website: http://jokba.de | city: Gießen | country: DE | company_type: clinic_location | first_name: Marco | last_name: Meißner | full_name: Marco Meißner | role: Personalleiter und Pflegedirektor | role_bucket: pflege_director | priority: 1
+18. person_id: 4481 | company_id: 1413 | company_name: St. Josefs Krankenhaus Balserische Stiftung in Gießen | company_website: http://jokba.de | city: Gießen | country: DE | company_type: clinic_location | first_name: Simone | last_name: Maikranz | full_name: Simone Maikranz | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+19. person_id: 4484 | company_id: 1623 | company_name: St. Josefs-Hospital Cloppenburg | company_website: https://josefshospital-cloppenburg.de | city: Cloppenburg | country: DE | company_type: clinic_location | first_name: Bettina | last_name: Kaminski | full_name: Bettina Kaminski | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+20. person_id: 4483 | company_id: 1623 | company_name: St. Josefs-Hospital Cloppenburg | company_website: https://josefshospital-cloppenburg.de | city: Cloppenburg | country: DE | company_type: clinic_location | first_name: Wilfried | last_name: Schlotmann | full_name: Wilfried Schlotmann | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_063
+- Return only the requested result.
+- Use public information only.
