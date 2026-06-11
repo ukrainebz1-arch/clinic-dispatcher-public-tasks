@@ -1,0 +1,116 @@
+CRITICAL OUTPUT FORMAT OVERRIDE
+
+Your answer MUST start exactly with these two lines:
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_034
+
+Then output exactly one CSV header line:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+Then output CSV rows, one row per input person.
+Preserve person_id and company_id exactly.
+Do NOT guess emails.
+Do NOT generate email patterns.
+Do NOT put all rows into one long line.
+Do NOT use markdown.
+Do NOT add explanations.
+Do NOT omit RUN_ID.
+Do NOT omit TASK_ID.
+
+
+
+RUN_ID: stage02_email_lookup_pflege_personal_20260611_075713
+TASK_ID: task_034
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are researching public professional contact data for German healthcare clinics.
+
+Goal:
+For each input person, find a public, verifiable professional email address or official contact route.
+
+Priority:
+1. Exact named professional email for this person at the clinic/company domain.
+2. Exact named email from an official clinic/group page, official PDF, imprint, press release, job ad, or verified public profile.
+3. If no exact named email is found, find an official generic route relevant to the person:
+   - Pflege / Pflegedirektion / Pflegedienstleitung route for Pflege leadership
+   - Personal / HR / Karriere route for Personalleitung
+4. If neither exact email nor official generic route is found, return NOT_FOUND.
+
+Hard rules:
+Do NOT guess emails.
+Do NOT generate pattern hypotheses.
+Do NOT return private emails.
+Do NOT return unrelated emails.
+Do NOT return generic info@ if a more specific Pflege/Personal/Karriere route exists.
+Do NOT mark generic email as exact person email.
+Do NOT use markdown.
+Do NOT add explanations outside CSV.
+
+Allowed sources:
+- official clinic/company website
+- official group website
+- official PDF/quality report/job ad/imprint
+- reliable public professional directory if it directly links name + role + email
+
+Output exactly CSV with this header:
+person_id,company_id,company_name,company_website,city,country,full_name,role,role_bucket,email,email_status,email_source_url,generic_email,generic_email_status,generic_source_url,linkedin_profile_url,confidence,notes
+
+email_status values:
+- PUBLIC_EXACT_OFFICIAL
+- PUBLIC_EXACT_DIRECTORY
+- NOT_FOUND
+
+generic_email_status values:
+- GENERIC_OFFICIAL
+- NOT_FOUND
+
+confidence:
+- high = official source verifies email/contact route
+- medium = reliable public directory or indirect but plausible official route
+- low = not found or uncertain
+
+If exact email is not found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+
+If generic email is not found:
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+
+If nothing is found:
+email=NOT_FOUND
+email_status=NOT_FOUND
+generic_email=NOT_FOUND
+generic_email_status=NOT_FOUND
+confidence=low
+notes=No public exact or official generic email found.
+
+Always preserve person_id and company_id from input.
+
+CURRENT CHUNK INPUT:
+1. person_id: 3793 | company_id: 1384 | company_name: Klinikum Bad Hersfeld | company_website: https://klinikum-bad-hersfeld.de | city: Bad Hersfeld | country: DE | company_type: clinic_location | first_name: Nelli | last_name: Isinger | full_name: Nelli Isinger | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+2. person_id: 3794 | company_id: 908 | company_name: Klinikum Bamberg (Bruderwald) | company_website: http://sozialstiftung-bamberg.de | city: Bamberg | country: DE | company_type: clinic_location | first_name: Ilona | last_name: Baumann | full_name: Ilona Baumann | role: Direktorin Pflege- und Patientenmanagement | role_bucket: pflege_director | priority: 1
+3. person_id: 3795 | company_id: 909 | company_name: Klinikum Bamberg (Michelsberg) | company_website: http://sozialstiftung-bamberg.de | city: Bamberg | country: DE | company_type: clinic_location | first_name: Ilona | last_name: Baumann | full_name: Ilona Baumann | role: Direktorin Pflege- und Patientenmanagement | role_bucket: pflege_director | priority: 1
+4. person_id: 3796 | company_id: 921 | company_name: Klinikum Bayreuth | company_website: http://klinikum-bayreuth.de | city: Bayreuth | country: DE | company_type: clinic_location | first_name: Franziska | last_name: Maidorn | full_name: Franziska Maidorn | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+5. person_id: 3797 | company_id: 361 | company_name: Klinikum Bonn/Rhein-Sieg | city: Bonn | country: Germany | company_type: clinic_location | first_name: Mark | last_name: Bierther | full_name: Mark Bierther | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+6. person_id: 3799 | company_id: 802 | company_name: Klinikum Bremen-Mitte | company_website: https://gesundheitnord.de/kbm.html | city: Bremen | country: DE | company_type: clinic_location | first_name: Bettina | last_name: Rettig | full_name: Bettina Rettig | role: Standortleitung Pflege – und Funktionsdienst | role_bucket: pflege_director | priority: 1
+7. person_id: 3800 | company_id: 805 | company_name: Klinikum Bremen-Nord | company_website: http://gesundheitnord.de/krankenhaeuserundzentren/kbn/kontakt.html | city: Bremen | country: DE | company_type: clinic_location | first_name: Anne | last_name: Stradtmann | full_name: Anne Stradtmann | role: Pflegedirektorin / Krankenhausdirektorin | role_bucket: pflege_director | priority: 1
+8. person_id: 3801 | company_id: 803 | company_name: Klinikum Bremen-Ost | company_website: http://klinikum-bremen-ost.de | city: Bremen | country: DE | company_type: clinic_location | first_name: Lena | last_name: Nienaber | full_name: Lena Nienaber | role: Pflegerische Standortleitung; Klinikpflegeleitung | role_bucket: pflege_director | priority: 1
+9. person_id: 3802 | company_id: 2034 | company_name: Klinikum Chemnitz | company_website: http://klinikumchemnitz.de | city: Chemnitz | country: DE | company_type: clinic_location | first_name: Nicole | last_name: Keilberg | full_name: Nicole Keilberg | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+10. person_id: 3803 | company_id: 1860 | company_name: Klinikum Chemnitz (Standort Flemmingstraße) | company_website: http://klinikumchemnitz.de | city: Chemnitz | country: DE | company_type: clinic_location | first_name: Karina | last_name: Peters | full_name: Karina Peters | role: Pflegedienstleitung Flemmingstraße | role_bucket: pflege_director | priority: 1
+11. person_id: 3805 | company_id: 943 | company_name: Klinikum Coburg | company_website: http://regiomed-kliniken.de/startseite-klinikum-coburg.aspx | city: Coburg | country: DE | company_type: clinic_location | first_name: Sabrina | last_name: Breternitz | full_name: Sabrina Breternitz | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+12. person_id: 3809 | company_id: 929 | company_name: Klinikum Dritter Orden München-Nymphenburg | company_website: http://dritter-orden.de | city: Operationen betreut | country: DE | company_type: clinic_location | first_name: Martina | last_name: Amerhauser | full_name: Martina Amerhauser | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+13. person_id: 3811 | company_id: 1914 | company_name: Klinikum Döbeln | company_website: http://klinikum-doebeln.de | city: Döbeln | country: DE | company_type: clinic_location | first_name: Stefanie | last_name: Grüneberger | full_name: Stefanie Grüneberger | role: Pflegedienstleitung | role_bucket: pflege_director | priority: 1
+14. person_id: 3812 | company_id: 1587 | company_name: Klinikum Emden - Hans-Susemihl-Krankenhaus in Emden, Ostfriesland | company_website: https://anevita.de/kliniken/klinik-emden | city: Emden | country: DE | company_type: clinic_location | first_name: Oliver | last_name: Bungenstock | full_name: Oliver Bungenstock | role: Pflegedirektor (Pflegedienst und Pflegeentwicklung) | role_bucket: pflege_director | priority: 1
+15. person_id: 3813 | company_id: 1587 | company_name: Klinikum Emden - Hans-Susemihl-Krankenhaus in Emden, Ostfriesland | company_website: https://anevita.de/kliniken/klinik-emden | city: Emden | country: DE | company_type: clinic_location | first_name: Sonja | last_name: Abbas | full_name: Sonja Abbas | role: Pflegedirektorin (Funktionsdienst und Akutversorgung) | role_bucket: pflege_director | priority: 1
+16. person_id: 3814 | company_id: 812 | company_name: Klinikum Ernst von Bergmann Potsdam | company_website: http://klinikumevb.de | city: Potsdam | country: DE | company_type: clinic_location | first_name: Kathleen | last_name: Gernandt | full_name: Kathleen Gernandt | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+17. person_id: 3816 | company_id: 853 | company_name: Klinikum Ernst von Bergmann, Klinik für Psychiatrie und Psychotherapie, am Standort In der Aue in Potsdam | company_website: http://klinikumevb.de | city: Potsdam | country: DE | company_type: clinic_location | first_name: Kathleen | last_name: Gernandt | full_name: Kathleen Gernandt | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+18. person_id: 3819 | company_id: 982 | company_name: Klinikum Fichtelgebirge (Haus Marktredwitz) | company_website: http://klinikum-fichtelgebirge.de | city: Marktredwitz | country: DE | company_type: clinic_location | first_name: Christine | last_name: Waterloo | full_name: Christine Waterloo | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+19. person_id: 3818 | company_id: 982 | company_name: Klinikum Fichtelgebirge (Haus Marktredwitz) | company_website: http://klinikum-fichtelgebirge.de | city: Marktredwitz | country: DE | company_type: clinic_location | first_name: Manuel | last_name: Schaumberger | full_name: Manuel Schaumberger | role: Pflegedirektor | role_bucket: pflege_director | priority: 1
+20. person_id: 3821 | company_id: 1082 | company_name: Klinikum Fichtelgebirge (Haus Selb) | company_website: http://klinikum-fichtelgebirge.de | city: Selb | country: DE | company_type: clinic_location | first_name: Christine | last_name: Waterloo | full_name: Christine Waterloo | role: Pflegedirektorin | role_bucket: pflege_director | priority: 1
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_034
+- Return only the requested result.
+- Use public information only.
