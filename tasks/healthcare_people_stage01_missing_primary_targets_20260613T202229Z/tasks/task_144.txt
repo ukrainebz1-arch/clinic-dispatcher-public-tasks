@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_144
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 2224 | company_name: MediClin Klinik Reichshof | website: https://klinik-reichshof.de | source_url: https://klinikradar.de/rehakliniken/mediclin-klinik-reichshof | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1497 | company_name: MediClin Kliniken Bad Wildungen | website: http://mediclin-badwildungen.de | source_url: https://klinikradar.de/kliniken/mediclin-kliniken-bad-wildungen | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 2196 | company_name: MEDICLIN Kliniken Bad Wildungen | website: https://mediclin-badwildungen.de | source_url: https://klinikradar.de/rehakliniken/mediclin-kliniken-bad-wildungen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1702 | company_name: MediClin Klinikum Soltau | website: http://mediclin.de | source_url: https://klinikradar.de/kliniken/mediclin-klinikum-soltau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 2057 | company_name: MediClin Kraichgau-Klinik in Bad Rappenau | website: https://kraichgau-klinik.de | source_url: https://klinikradar.de/rehakliniken/mediclin-kraichgau-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1321 | company_name: MediClin Krankenhaus Plau am See | website: http://krankenhaus-plau.de | source_url: https://klinikradar.de/kliniken/mediclin-krankenhaus-plau-am-see | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1367 | company_name: MediClin Müritz-Klinikum (Neubrandenburg) | website: http://mueritz-klinikum.de | source_url: https://klinikradar.de/kliniken/mediclin-mueritz-klinikum-neubrandenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1369 | company_name: MediClin Müritz-Klinikum (Parchim) | website: http://mueritz-klinikum.de | source_url: https://klinikradar.de/kliniken/mediclin-mueritz-klinikum-parchim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1349 | company_name: MediClin Müritz-Klinikum (Röbel/Müritz) | website: https://mueritz-klinikum.de | source_url: https://klinikradar.de/kliniken/mediclin-mueritz-klinikum-roebel-mueritz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1325 | company_name: MediClin Müritz-Klinikum in Schloen | website: http://mueritz-klinikum.de | source_url: https://klinikradar.de/kliniken/mediclin-mueritz-klinikum | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_144
+- Return only the requested result.
+- Use public information only.
