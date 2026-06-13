@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_011
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1262 | company_name: Asklepios Klinik Barmbek in Hamburg | website: http://asklepios.com/barmbek | source_url: https://klinikradar.de/kliniken/asklepios-klinik-barmbek | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 855 | company_name: Asklepios Klinik Birkenwerder | website: https://asklepios.com/birkenwerder | source_url: https://klinikradar.de/kliniken/asklepios-klinik-birkenwerder | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1072 | company_name: Asklepios Klinik im Städtedreieck in Burglengenfeld | website: http://asklepios.com/burglengenfeld | source_url: https://klinikradar.de/kliniken/asklepios-klinik-im-staedtedreieck | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1392 | company_name: Asklepios Klinik Langen | website: https://asklepios.com/langen | source_url: https://klinikradar.de/kliniken/asklepios-klinik-langen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1416 | company_name: Asklepios Klinik Lich in Lich, Hessen | website: http://asklepios.com/lich | source_url: https://klinikradar.de/kliniken/asklepios-klinik-lich | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1088 | company_name: Asklepios Klinik Lindau | website: http://asklepios.com/lindau | source_url: https://klinikradar.de/kliniken/asklepios-klinik-lindau | missing_reason: company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1263 | company_name: Asklepios Klinik Nord - Heidberg in Hamburg | website: https://asklepios.com/nord | source_url: https://klinikradar.de/kliniken/asklepios-klinik-nord-heidberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1266 | company_name: Asklepios Klinik Nord - Ochsenzoll in Hamburg | website: https://asklepios.com/hamburg/nord | source_url: https://klinikradar.de/kliniken/asklepios-klinik-nord-ochsenzoll | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1289 | company_name: Asklepios Klinik Nord - Tagesklinik Alstertor in Hamburg | website: https://asklepios.com/hamburg/nord | source_url: https://klinikradar.de/kliniken/asklepios-klinik-nord-tagesklinik-alstertor | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1287 | company_name: Asklepios Klinik Nord - Tagesklinik Horn in Hamburg | website: https://asklepios.com/hamburg/nord | source_url: https://klinikradar.de/kliniken/asklepios-klinik-nord-tagesklinik-horn | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_011
+- Return only the requested result.
+- Use public information only.
