@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_004
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 480 | company_name: Alexianer Aachen | source_url: https://klinikradar.de/kliniken/alexianer-aachen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 788 | company_name: Alexianer Hedwigkliniken, Tagesklinik für Psychosomatik und Psychotherapie in Berlin | website: http://alexianer-berlin-hedwigkliniken.de | source_url: https://klinikradar.de/kliniken/alexianer-hedwigkliniken-tagesklinik-fuer-psychosomatik-und-psychotherapie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 536 | company_name: Alexianer Johannisstift Münster | source_url: https://klinikradar.de/kliniken/alexianer-johannisstift-muenster | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 726 | company_name: Alexianer Krankenhaus Köln | source_url: https://klinikradar.de/kliniken/alexianer-krankenhaus-koeln | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 590 | company_name: Alexianer Krankenhaus Münster | source_url: https://klinikradar.de/kliniken/alexianer-krankenhaus-muenster | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 652 | company_name: Alexianer Krankenhaus Rodenkirchen in Köln | source_url: https://klinikradar.de/kliniken/alexianer-krankenhaus-rodenkirchen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 296 | company_name: Alexianer Krefeld Krankenhaus Maria-Hilf | source_url: https://klinikradar.de/kliniken/alexianer-krefeld-krankenhaus-maria-hilf | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 830 | company_name: Alexianer St. Josefs-Krankenhaus Potsdam-Sanssouci | website: https://alexianer-potsdam.de/unternehmen/wir-ueber-uns/unternehmensleitung | source_url: https://klinikradar.de/kliniken/alexianer-st-josefs-krankenhaus-potsdam-sanssouci | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 754 | company_name: Alexianer St. Joseph-Krankenhaus Berlin-Weißensee | website: http://alexianer.de | source_url: https://klinikradar.de/kliniken/alexianer-st-joseph-krankenhaus-berlin-weissensee | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 691 | company_name: Alexianer-Klinik Meerbusch | source_url: https://klinikradar.de/kliniken/alexianer-klinik-meerbusch | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_004
+- Return only the requested result.
+- Use public information only.
