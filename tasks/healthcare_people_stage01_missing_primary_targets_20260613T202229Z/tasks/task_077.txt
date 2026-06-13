@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_077
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1406 | company_name: Ketteler Krankenhaus in Offenbach am Main | website: https://ketteler-krankenhaus.org | source_url: https://klinikradar.de/kliniken/ketteler-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1690 | company_name: Kinderhospital Osnabrück | website: https://kinderhospital.de | source_url: https://klinikradar.de/kliniken/kinderhospital-osnabrueck | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 2007 | company_name: Kinderklinik Passau | website: https://kinderklinik-passau.de | source_url: https://klinikradar.de/kliniken/kinderklinik-passau | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 169 | company_name: Kinderklinik Schömberg | source_url: https://klinikradar.de/kliniken/kinderklinik-schoemberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 498 | company_name: Kinderkrankenhaus Amsterdamer Straße in Köln | source_url: https://klinikradar.de/kliniken/kinderkrankenhaus-amsterdamer-strasse | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1070 | company_name: Kinderkrankenhaus St. Marien in Landshut | website: http://kinderkrankenhaus-landshut.de | source_url: https://klinikradar.de/kliniken/kinderkrankenhaus-st-marien | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 182 | company_name: Kinderzentrum Maulbronn - Klinik für Kinderneurologie und Sozialpädiatrie | source_url: https://klinikradar.de/kliniken/kinderzentrum-maulbronn-klinik-fuer-kinderneurologie-und-sozialpaediatrie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 2158 | company_name: Kirchberg Klinik in Bad Lauterberg im Harz | website: https://gollee.de/de/kirchberg-klinik | source_url: https://klinikradar.de/rehakliniken/kirchberg-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1718 | company_name: Kirchberg-Klinik Bad Lauterberg | website: http://kirchbergklinik.de | source_url: https://klinikradar.de/kliniken/kirchberg-klinik-bad-lauterberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1045 | company_name: Kirinus PsoriSol Klinik in Hersbruck | website: https://kirinus.de/psorisol-klinik | source_url: https://klinikradar.de/kliniken/kirinus-psorisol-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_077
+- Return only the requested result.
+- Use public information only.
