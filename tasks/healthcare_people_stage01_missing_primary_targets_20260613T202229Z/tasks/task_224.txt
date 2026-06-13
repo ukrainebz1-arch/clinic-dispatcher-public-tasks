@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_224
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 171 | company_name: Werner-Schwidder-Klinik in Bad Krozingen | source_url: https://klinikradar.de/kliniken/werner-schwidder-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 2062 | company_name: Werner-Schwidder-Klink in Bad Krozingen | website: https://schwarzwaldkliniken.de/kliniken/werner-schwidder-klinik-2 | source_url: https://klinikradar.de/rehakliniken/werner-schwidder-klink | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1998 | company_name: Wertachklinik Bobingen | website: http://wertachkliniken.de | source_url: https://klinikradar.de/kliniken/wertachklinik-bobingen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1061 | company_name: Wertachklinik Schwabmünchen | website: http://wertachkliniken.de | source_url: https://klinikradar.de/kliniken/wertachklinik-schwabmuenchen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 2219 | company_name: Weserland-Klinik Bad Hopfenberg in Petershagen (Weser) | website: https://bad-hopfenberg.de | source_url: https://klinikradar.de/rehakliniken/weserland-klinik-bad-hopfenberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 2227 | company_name: Weserland-Klinik Bad Seebruch in Vlotho | website: https://vogtland-klinik.de | source_url: https://klinikradar.de/rehakliniken/weserland-klinik-bad-seebruch | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 83 | company_name: Westallgäu-Klinikum in Wangen im Allgäu | source_url: https://klinikradar.de/kliniken/westallgaeu-klinikum | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 787 | company_name: Westklinik Dahlem in Berlin | website: http://westklinik-dahlem.de | source_url: https://klinikradar.de/kliniken/westklinik-dahlem | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1327 | company_name: Westmecklenburg Klinikum Helene von Bülow (Hagenow) | website: https://wmk-hvb.de | source_url: https://klinikradar.de/kliniken/westmecklenburg-klinikum-helene-von-buelow-hagenow | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1330 | company_name: Westmecklenburg Klinikum Helene von Bülow (Ludwigslust) | website: http://wmk-hvb.de | source_url: https://klinikradar.de/kliniken/westmecklenburg-klinikum-helene-von-buelow-ludwigslust | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_224
+- Return only the requested result.
+- Use public information only.
