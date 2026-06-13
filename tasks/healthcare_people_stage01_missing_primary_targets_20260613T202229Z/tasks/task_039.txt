@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_039
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1676 | company_name: Einbecker BürgerSpital | website: http://einbecker-buergerspital.de | source_url: https://klinikradar.de/kliniken/einbecker-buergerspital | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1620 | company_name: Elbe Klinikum Buxtehude | website: http://elbekliniken.de | source_url: https://klinikradar.de/kliniken/elbe-klinikum-buxtehude | missing_reason: company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1568 | company_name: Elbe Klinikum Stade in Stade, Niederelbe | website: http://elbekliniken.de | source_url: https://klinikradar.de/kliniken/elbe-klinikum-stade | missing_reason: company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1684 | company_name: Elbe-Jeetzel-Klinik Dannenberg | website: http://elbe-jeetzel-klinik.de | source_url: https://klinikradar.de/kliniken/elbe-jeetzel-klinik-dannenberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1945 | company_name: Elbland Rehabilitationsklinik Großenhain in Großenhain, Sachsen | website: http://elbland-reha.de | source_url: https://klinikradar.de/kliniken/elbland-rehabilitationsklinik-grossenhain | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1865 | company_name: Elblandklinikum Meißen in Meißen, Sachsen | website: http://elblandkliniken.de | source_url: https://klinikradar.de/kliniken/elblandklinikum-meissen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1866 | company_name: Elblandklinikum Radebeul | website: http://elblandkliniken.de | source_url: https://klinikradar.de/kliniken/elblandklinikum-radebeul | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1879 | company_name: Elblandklinikum Riesa | website: http://elblandkliniken.de | source_url: https://klinikradar.de/kliniken/elblandklinikum-riesa | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 470 | company_name: Elisabeth Krankenhaus Recklinghausen | source_url: https://klinikradar.de/kliniken/elisabeth-krankenhaus-recklinghausen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 508 | company_name: Elisabeth-Klinik in Olsberg | source_url: https://klinikradar.de/kliniken/elisabeth-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_039
+- Return only the requested result.
+- Use public information only.
