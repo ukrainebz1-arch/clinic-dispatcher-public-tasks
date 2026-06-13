@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_016
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1206 | company_name: Atos Starmed Klinik in München | website: http://starmedklinik.de | source_url: https://klinikradar.de/kliniken/atos-starmed-klinik | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1624 | company_name: Auf Der Bult Kinder- und Jugendkrankenhaus in Hannover | website: https://auf-der-bult.de | source_url: https://klinikradar.de/kliniken/auf-der-bult-kinder-und-jugendkrankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 790 | company_name: Augenklinik Berlin Marzahn | source_url: https://klinikradar.de/kliniken/augenklinik-berlin-marzahn | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 662 | company_name: Augenklinik Dardenne in Bonn | source_url: https://klinikradar.de/kliniken/augenklinik-dardenne | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1726 | company_name: Augenklinik Dr. Georg in Bad Rothenfelde | website: http://augenzentrum-bad-rothenfelde.de | source_url: https://klinikradar.de/kliniken/augenklinik-dr-georg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1732 | company_name: Augenklinik Dr. Hoffmann in Braunschweig | website: http://augenklinik-dr-hoffmann.de | source_url: https://klinikradar.de/kliniken/augenklinik-dr-hoffmann | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1165 | company_name: Augenklinik Herzog Carl Theodor in München | website: http://augenklinik-muenchen.de | source_url: https://klinikradar.de/kliniken/augenklinik-herzog-carl-theodor | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 798 | company_name: Augenklinik im Ring-Center in Berlin | website: http://augenklinik-ringcenter.de | source_url: https://klinikradar.de/kliniken/augenklinik-im-ring-center | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1240 | company_name: Augenklinik Schweinfurt-Gerolzhofen | website: https://augenklinik-schweinfurt-gerolzhofen.de | source_url: https://klinikradar.de/kliniken/augenklinik-schweinfurt-gerolzhofen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1753 | company_name: Augenklinik Stadthagen | website: https://augenklinik.org | source_url: https://klinikradar.de/kliniken/augenklinik-stadthagen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_016
+- Return only the requested result.
+- Use public information only.
