@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_172
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 37 | company_name: Sana Klinikum Biberach | source_url: https://klinikradar.de/kliniken/sana-klinikum-biberach | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1852 | company_name: Sana Klinikum Borna | website: https://kliniken-leipziger-land.de/home.html | source_url: https://klinikradar.de/kliniken/sana-klinikum-borna | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1588 | company_name: Sana Klinikum Hameln-Pyrmont | website: http://sana-hm.de | source_url: https://klinikradar.de/kliniken/sana-klinikum-hameln-pyrmont | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 948 | company_name: Sana Klinikum Hof | website: https://sana.de/hof | source_url: https://klinikradar.de/kliniken/sana-klinikum-hof | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 737 | company_name: Sana Klinikum Lichtenberg in Berlin | website: https://sana.de/berlin | source_url: https://klinikradar.de/kliniken/sana-klinikum-lichtenberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1378 | company_name: Sana Klinikum Offenbach | website: https://sana.de/offenbach | source_url: https://klinikradar.de/kliniken/sana-klinikum-offenbach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 850 | company_name: Sana Krankenhaus Gottesfriede Woltersdorf | website: https://sana.de/woltersdorf | source_url: https://klinikradar.de/kliniken/sana-krankenhaus-gottesfriede-woltersdorf | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 555 | company_name: Sana Krankenhaus Radevormwald | source_url: https://klinikradar.de/kliniken/sana-krankenhaus-radevormwald | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 867 | company_name: Sana Krankenhaus Templin | website: https://sana.de/templin | source_url: https://klinikradar.de/kliniken/sana-krankenhaus-templin | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 877 | company_name: Sana Tagesklinik Fürstenwalde | website: https://sana.de/woltersdorf/medizin-pflege/sana-tagesklinik-fuerstenwalde | source_url: https://klinikradar.de/kliniken/sana-tagesklinik-fuerstenwalde | missing_reason: company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_172
+- Return only the requested result.
+- Use public information only.
