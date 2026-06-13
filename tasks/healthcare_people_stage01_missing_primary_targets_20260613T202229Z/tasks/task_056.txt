@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_056
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1660 | company_name: Heidekreis Klinikum Krankenhaus Soltau | website: http://heidekreis-klinikum.de | source_url: https://klinikradar.de/kliniken/heidekreis-klinikum-krankenhaus-soltau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1457 | company_name: Heilig Geist Hospital Bensheim | website: http://hgh-bensheim.de | source_url: https://klinikradar.de/kliniken/heilig-geist-hospital-bensheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 429 | company_name: Heilig Geist-Krankenhaus in Köln | source_url: https://klinikradar.de/kliniken/heilig-geist-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1827 | company_name: Heilig-Geist-Hospital Bingen | website: http://heilig-geist-hospital.de | source_url: https://klinikradar.de/kliniken/heilig-geist-hospital-bingen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 784 | company_name: Heiligenfeld Klinik Berlin | website: http://berlin.heiligenfeld.de | source_url: https://klinikradar.de/kliniken/heiligenfeld-klinik-berlin | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1115 | company_name: Heiligenfeld Klinik Uffenheim | website: http://uffenheim.heiligenfeld.de | source_url: https://klinikradar.de/kliniken/heiligenfeld-klinik-uffenheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 2002 | company_name: Heiligenfeld Klinik Waldmünchen | website: http://waldmuenchen.heiligenfeld.de | source_url: https://klinikradar.de/kliniken/heiligenfeld-klinik-waldmuenchen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1141 | company_name: Heiligenfeld Kliniken Bad Wörishofen | website: http://badwoerishofen.heiligenfeld.de | source_url: https://klinikradar.de/kliniken/heiligenfeld-kliniken-bad-woerishofen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 650 | company_name: Heilpädagogisch-Psychotherapeutisches Zentrum in Wülfrath | source_url: https://klinikradar.de/kliniken/heilpaedagogisch-psychotherapeutisches-zentrum | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1313 | company_name: Heinrich Sengelmann Tageskliniken Uhlenhorst in Hamburg | website: https://heinrich-sengelmann-kliniken.de | source_url: https://klinikradar.de/kliniken/heinrich-sengelmann-tageskliniken-uhlenhorst | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_056
+- Return only the requested result.
+- Use public information only.
