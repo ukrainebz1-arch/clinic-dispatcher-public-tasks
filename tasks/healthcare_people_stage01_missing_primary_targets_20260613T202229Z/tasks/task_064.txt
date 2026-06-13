@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_064
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 297 | company_name: Helios St. Johannes Klinik in Duisburg | source_url: https://klinikradar.de/kliniken/helios-st-johannes-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 516 | company_name: Helios St. Josefshospital Uerdingen in Krefeld | source_url: https://klinikradar.de/kliniken/helios-st-josefshospital-uerdingen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1612 | company_name: Helios St. Marienberg Klinik Helmstedt | website: https://helios-gesundheit.de/kliniken/helmstedt | source_url: https://klinikradar.de/kliniken/helios-st-marienberg-klinik-helmstedt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1345 | company_name: Helios Tagesklinik für Psychiatrie und Psychotherapie in der Innenstadt von Stralsund | website: http://helios-gesundheit.de/stralsund | source_url: https://klinikradar.de/kliniken/helios-tagesklinik-fuer-psychiatrie-und-psychotherapie-in-der-innenstadt-von-stralsund | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1357 | company_name: Helios Tagesklinik und Institutsambulanz für Psychiatrie und Psychotherapie Grimmen | website: http://helios-gesundheit.de/stralsund | source_url: https://klinikradar.de/kliniken/helios-tagesklinik-und-institutsambulanz-fuer-psychiatrie-und-psychotherapie-grimmen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 651 | company_name: Helios Universitätsklinikum Wuppertal Schmerzklinik Bergisch Land | source_url: https://klinikradar.de/kliniken/helios-universitaetsklinikum-wuppertal-schmerzklinik-bergisch-land | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 274 | company_name: Helios Universitätsklinikum Wuppertal, Campus Barmen | source_url: https://klinikradar.de/kliniken/helios-universitaetsklinikum-wuppertal-campus-barmen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 549 | company_name: Helios Universitätsklinikum Wuppertal, Campus Elberfeld | source_url: https://klinikradar.de/kliniken/helios-universitaetsklinikum-wuppertal-campus-elberfeld | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1845 | company_name: Helios Vogtland-Klinikum Plauen | website: https://helios-gesundheit.de/standorte-angebote/kliniken/plauen | source_url: https://klinikradar.de/kliniken/helios-vogtland-klinikum-plauen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1957 | company_name: Helios Weißeritztal Kliniken, Außenstelle Klinikum Pirna/ Klinik für Kinder- und Jugendmedizin in Freital | website: http://helios-gesundheit.de/weisseritztal | source_url: https://klinikradar.de/kliniken/helios-weisseritztal-kliniken-aussenstelle-klinikum-pirna-klinik-fuer-kinder-und-jugendmedizin | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_064
+- Return only the requested result.
+- Use public information only.
