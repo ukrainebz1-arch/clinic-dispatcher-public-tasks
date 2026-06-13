@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_096
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 335 | company_name: Klinikum Dortmund Nord | source_url: https://klinikradar.de/kliniken/klinikum-dortmund-nord | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 929 | company_name: Klinikum Dritter Orden München-Nymphenburg | website: http://dritter-orden.de | source_url: https://klinikradar.de/kliniken/klinikum-dritter-orden-muenchen-nymphenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1914 | company_name: Klinikum Döbeln | website: http://klinikum-doebeln.de | source_url: https://klinikradar.de/kliniken/klinikum-doebeln | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1587 | company_name: Klinikum Emden - Hans-Susemihl-Krankenhaus in Emden, Ostfriesland | website: https://anevita.de/kliniken/klinik-emden | source_url: https://klinikradar.de/kliniken/klinikum-emden-hans-susemihl-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 812 | company_name: Klinikum Ernst von Bergmann Potsdam | website: http://klinikumevb.de | source_url: https://klinikradar.de/kliniken/klinikum-ernst-von-bergmann-potsdam | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 853 | company_name: Klinikum Ernst von Bergmann, Klinik für Psychiatrie und Psychotherapie, am Standort In der Aue in Potsdam | website: http://klinikumevb.de | source_url: https://klinikradar.de/kliniken/klinikum-ernst-von-bergmann-klinik-fuer-psychiatrie-und-psychotherapie-am-standort-in-der-aue | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 15 | company_name: Klinikum Esslingen | source_url: https://klinikradar.de/kliniken/klinikum-esslingen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 982 | company_name: Klinikum Fichtelgebirge (Haus Marktredwitz) | website: http://klinikum-fichtelgebirge.de | source_url: https://klinikradar.de/kliniken/klinikum-fichtelgebirge-haus-marktredwitz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1082 | company_name: Klinikum Fichtelgebirge (Haus Selb) | website: http://klinikum-fichtelgebirge.de | source_url: https://klinikradar.de/kliniken/klinikum-fichtelgebirge-haus-selb | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 996 | company_name: Klinikum Forchheim in Forchheim, Oberfranken | website: http://klinikumforchheim.de | source_url: https://klinikradar.de/kliniken/klinikum-forchheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_096
+- Return only the requested result.
+- Use public information only.
