@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_218
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 2017 | company_name: Vitos Klinikum Heppenheim (Bensheim) | website: http://vitos-vitos-suedhessen.de | source_url: https://klinikradar.de/kliniken/vitos-klinikum-heppenheim-bensheim | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1542 | company_name: Vitos Klinikum Heppenheim Standort Lampertheim in Lampertheim, Hessen | website: http://vitos-suedhessen.de | source_url: https://klinikradar.de/kliniken/vitos-klinikum-heppenheim-standort-lampertheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1404 | company_name: Vitos Klinikum Herborn | website: https://vitos.de/gesellschaften/vitos-herborn | source_url: https://klinikradar.de/kliniken/vitos-klinikum-herborn | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1471 | company_name: Vitos Klinikum Hochtaunus (Standord Bad Homburg) | website: http://vitos-hochtaunus.de | source_url: https://klinikradar.de/kliniken/vitos-klinikum-hochtaunus-standord-bad-homburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1434 | company_name: Vitos Klinikum Rheingau in Eltville | website: http://vitos-rheingau.de | source_url: https://klinikradar.de/kliniken/vitos-klinikum-rheingau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1403 | company_name: Vitos Klinikum Riedstadt | website: http://vitos-suedhessen.de | source_url: https://klinikradar.de/kliniken/vitos-klinikum-riedstadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1546 | company_name: Vitos Klinikum Riedstadt (Gross-Gerau) in Groß-Gerau | website: http://vitos-suedhessen.de | source_url: https://klinikradar.de/kliniken/vitos-klinikum-riedstadt-gross-gerau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1455 | company_name: Vitos Klinikum Weil-Lahn (Standort Weilmünster) | website: https://vitos.de/gesellschaften/vitos-weil-lahn | source_url: https://klinikradar.de/kliniken/vitos-klinikum-weil-lahn-standort-weilmuenster | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1447 | company_name: Vitos Orthopädische Klinik Kassel | website: http://vitos-okk.de | source_url: https://klinikradar.de/kliniken/vitos-orthopaedische-klinik-kassel | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 2013 | company_name: Vitos Philippshospital Riedstadt (Rüsselsheim) | website: http://vitos-suedhessen.de | source_url: https://klinikradar.de/kliniken/vitos-philippshospital-riedstadt-ruesselsheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_218
+- Return only the requested result.
+- Use public information only.
