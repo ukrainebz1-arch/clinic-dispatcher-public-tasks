@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_165
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 2108 | company_name: Rehaklinik Glotterbad in Glottertal | website: https://rehaklinik-glotterbad.de | source_url: https://klinikradar.de/rehakliniken/rehaklinik-glotterbad | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 2047 | company_name: Rehaklinik Heidelberg-Königstuhl | website: https://rehaklinik-koenigstuhl.de/startseite | source_url: https://klinikradar.de/rehakliniken/rehaklinik-heidelberg-koenigstuhl | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 2050 | company_name: Rehaklinik Höhenblick der RehaZentren Baden-Württemberg in Baden-Baden | website: https://rehaklinik-hoehenblick.de | source_url: https://klinikradar.de/rehakliniken/rehaklinik-hoehenblick-der-rehazentren-baden-wuerttemberg | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 2053 | company_name: Rehaklinik Ob der Tauber in Bad Mergentheim | website: https://rehaklinik-odt.de/startseite | source_url: https://klinikradar.de/rehakliniken/rehaklinik-ob-der-tauber | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 2054 | company_name: Rehaklinik Sonnhalde der RehaZentren Baden-Württemberg in Donaueschingen | website: https://rehaklinik-sonnhalde.de | source_url: https://klinikradar.de/rehakliniken/rehaklinik-sonnhalde-der-rehazentren-baden-wuerttemberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 2183 | company_name: Rehaklinik Usedom, Ostseebad Heringsdorf | website: https://rehaklinik-usedom.de | source_url: https://klinikradar.de/rehakliniken/rehaklinik-usedom-ostseebad-heringsdorf | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 2068 | company_name: Rehaklinik Überruh in Isny im Allgäu | website: https://rehaklinik-ueberruh.de/startseite | source_url: https://klinikradar.de/rehakliniken/rehaklinik-ueberruh | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 660 | company_name: RehaNova Köln | source_url: https://klinikradar.de/kliniken/rehanova-koeln | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 2166 | company_name: Rehazentrum Bad Eilsen | website: https://rz-bad-eilsen.de | source_url: https://klinikradar.de/rehakliniken/rehazentrum-bad-eilsen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 2155 | company_name: Rehazentrum Oberharz in Clausthal-Zellerfeld | website: https://klinikamschwarzenbacherteich.de | source_url: https://klinikradar.de/rehakliniken/rehazentrum-oberharz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_165
+- Return only the requested result.
+- Use public information only.
