@@ -1,0 +1,60 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260613T202229Z
+TASK_ID: task_090
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1188 | company_name: Klinik Sonthofen | website: https://klinikverbund-allgaeu.de | source_url: https://klinikradar.de/kliniken/klinik-sonthofen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1132 | company_name: Klinik St. Irmingard in Prien am Chiemsee | website: http://st-irmingard.de | source_url: https://klinikradar.de/kliniken/klinik-st-irmingard | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 2107 | company_name: Klinik St. Irmingard in Prien am Chiemsee | website: https://st-irmingard.de | source_url: https://klinikradar.de/rehakliniken/klinik-st-irmingard | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1106 | company_name: Klinik St. Josef Buchloe | website: https://kliniken-oal-kf.de/kliniken/klinik-st-josef | source_url: https://klinikradar.de/kliniken/klinik-st-josef-buchloe | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1664 | company_name: Klinik Sulingen | website: https://kliniken-lkd.de | source_url: https://klinikradar.de/kliniken/klinik-sulingen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 117 | company_name: Klinik Tettnang | source_url: https://klinikradar.de/kliniken/klinik-tettnang | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1485 | company_name: Klinik und Rehabilitationszentrum Lippoldsberg in Wahlsburg | website: http://klinik-lippoldsberg.de | source_url: https://klinikradar.de/kliniken/klinik-und-rehabilitationszentrum-lippoldsberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1890 | company_name: Klinik Viktoriastift in Bad Kreuznach | website: https://landeskrankenhaus.de/klinik-viktoriastift | source_url: https://klinikradar.de/kliniken/klinik-viktoriastift | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 988 | company_name: Klinik Vincentinum in Augsburg | website: http://klinik-vincentinum.de | source_url: https://klinikradar.de/kliniken/klinik-vincentinum | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1152 | company_name: Klinik Wartenberg | website: http://klinik-wartenberg.de | source_url: https://klinikradar.de/kliniken/klinik-wartenberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_090
+- Return only the requested result.
+- Use public information only.
