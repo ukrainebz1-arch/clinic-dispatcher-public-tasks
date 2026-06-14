@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T130519Z
+TASK_ID: task_085
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1 | company_name: Universitätsklinikum Freiburg | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-freiburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 167 | company_name: Universitätsklinikum Freiburg: Klinik für Dermatologie und Venerologie | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-freiburg-klinik-fuer-dermatologie-und-venerologie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1373 | company_name: Universitätsklinikum Gießen und Marburg (Gießen) | website: http://ukgm.de | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-giessen-und-marburg-giessen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1259 | company_name: Universitätsklinikum Hamburg-Eppendorf | website: http://uke.de | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-hamburg-eppendorf | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 5 | company_name: Universitätsklinikum Heidelberg | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-heidelberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 100 | company_name: Universitätsklinikum Heidelberg: Zentrum für Orthopädie, Unfallchirurgie und Paraplegiologie | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-heidelberg-zentrum-fuer-orthopaedie-unfallchirurgie-und-paraplegiologie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 86 | company_name: Universitätsklinikum Heidelberg: Zentrum für Psychosoziale Medizin | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-heidelberg-zentrum-fuer-psychosoziale-medizin | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 265 | company_name: Universitätsklinikum Köln | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-koeln | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 2031 | company_name: Universitätsklinikum Leipzig | website: http://uniklinik-leipzig.de | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-leipzig | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 2 | company_name: Universitätsklinikum Mannheim | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-mannheim | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1376 | company_name: Universitätsklinikum Marburg | website: http://ukgm.de | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-marburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 267 | company_name: Universitätsklinikum Münster | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-muenster | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 916 | company_name: Universitätsklinikum Regensburg | website: http://ukr.de | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-regensburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 815 | company_name: Universitätsklinikum Ruppin-Brandenburg in Neuruppin | website: http://ukrb.de | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-ruppin-brandenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 13 | company_name: Universitätsklinikum Ulm | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-ulm | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 32 | company_name: Universitätsklinikum Ulm - Klinik für Kinder-​ und Jugendmedizin | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-ulm-klinik-fuer-kinder-und-jugendmedizin | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 257 | company_name: Universitätsklinikum Ulm - Strahlentherapie am Krankenhaus Ehingen | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-ulm-strahlentherapie-am-krankenhaus-ehingen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 906 | company_name: Universitätsklinikum Würzburg | website: https://ukw.de | source_url: https://klinikradar.de/kliniken/universitaetsklinikum-wuerzburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1767 | company_name: Universitätsmedizin der Johannes Gutenberg-Universität Mainz | website: http://unimedizin-mainz.de | source_url: https://klinikradar.de/kliniken/universitaetsmedizin-der-johannes-gutenberg-universitaet-mainz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1302 | company_name: Universitätsmedizin Greifswald | website: http://medizin.uni-greifswald.de | source_url: https://klinikradar.de/kliniken/universitaetsmedizin-greifswald | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1368 | company_name: Universitätsmedizin Greifswald - Tagesklinik Psychiatrie | website: http://medizin.uni-greifswald.de | source_url: https://klinikradar.de/kliniken/universitaetsmedizin-greifswald-tagesklinik-psychiatrie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1560 | company_name: Universitätsmedizin Göttingen | website: http://med.umg.eu | source_url: https://klinikradar.de/kliniken/universitaetsmedizin-goettingen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1538 | company_name: Universitätsmedizin Mainz (Herzchirurgie) am St. Josefs-Hospital Wiesbaden | website: http://unimedizin-mainz.de | source_url: https://klinikradar.de/kliniken/universitaetsmedizin-mainz-herzchirurgie-am-st-josefs-hospital-wiesbaden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1304 | company_name: Universitätsmedizin Rostock | website: http://med.uni-rostock.de | source_url: https://klinikradar.de/kliniken/universitaetsmedizin-rostock | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1366 | company_name: Universitätsmedizin Rostock - Tagesklinik Psychosomatische Medizin und Psychotherapie | website: http://med.uni-rostock.de | source_url: https://klinikradar.de/kliniken/universitaetsmedizin-rostock-tagesklinik-psychosomatische-medizin-und-psychotherapie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_085
+- Return only the requested result.
+- Use public information only.
