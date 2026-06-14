@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T104741Z
+TASK_ID: task_082
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 721 | company_name: Tagesklinik Kinder- und Jugendpsychiatrie Gummersbach | source_url: https://klinikradar.de/kliniken/tagesklinik-kinder-und-jugendpsychiatrie-gummersbach | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 896 | company_name: Tagesklinik Königs Wusterhausen | website: http://asklepios.com/luebben | source_url: https://klinikradar.de/kliniken/tagesklinik-koenigs-wusterhausen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1708 | company_name: Tagesklinik Königstraße des KRH Psychiatrie Langenhagen in Hannover | website: https://psychiatrie-langenhagen.krh.de | source_url: https://klinikradar.de/kliniken/tagesklinik-koenigstrasse-des-krh-psychiatrie-langenhagen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 234 | company_name: Tagesklinik Künzelsau | source_url: https://klinikradar.de/kliniken/tagesklinik-kuenzelsau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 670 | company_name: Tagesklinik Lage in Lage, Lippe | source_url: https://klinikradar.de/kliniken/tagesklinik-lage | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 800 | company_name: Tagesklinik Lankwitz in Berlin | source_url: https://klinikradar.de/kliniken/tagesklinik-lankwitz | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 248 | company_name: Tagesklinik Lauchringen | source_url: https://klinikradar.de/kliniken/tagesklinik-lauchringen | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1716 | company_name: Tagesklinik Lehrte | website: https://klinikum.wahrendorff.de | source_url: https://klinikradar.de/kliniken/tagesklinik-lehrte | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1712 | company_name: Tagesklinik Linden in Hannover | website: https://klinikum.wahrendorff.de | source_url: https://klinikradar.de/kliniken/tagesklinik-linden | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 240 | company_name: Tagesklinik Ludwigsburg | source_url: https://klinikradar.de/kliniken/tagesklinik-ludwigsburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 697 | company_name: Tagesklinik Luzia in Dormagen | source_url: https://klinikradar.de/kliniken/tagesklinik-luzia | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 639 | company_name: Tagesklinik Netphen | source_url: https://klinikradar.de/kliniken/tagesklinik-netphen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 1733 | company_name: Tagesklinik Peine | website: http://awo-psychiatriezentrum.de | source_url: https://klinikradar.de/kliniken/tagesklinik-peine | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 717 | company_name: Tagesklinik Psychiatrie Lippstadt | source_url: https://klinikradar.de/kliniken/tagesklinik-psychiatrie-lippstadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 723 | company_name: Tagesklinik Psychiatrie Soest | source_url: https://klinikradar.de/kliniken/tagesklinik-psychiatrie-soest | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 706 | company_name: Tagesklinik Rheda-Wiedenbrück | source_url: https://klinikradar.de/kliniken/tagesklinik-rheda-wiedenbrueck | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 900 | company_name: Tagesklinik Rüdersdorf | website: http://klinikumffo.de | source_url: https://klinikradar.de/kliniken/tagesklinik-ruedersdorf | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 202 | company_name: Tagesklinik Schwäbisch Hall | source_url: https://klinikradar.de/kliniken/tagesklinik-schwaebisch-hall | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 892 | company_name: Tagesklinik Seelow | website: http://klinikumffo.de | source_url: https://klinikradar.de/kliniken/tagesklinik-seelow | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1738 | company_name: Tagesklinik Seesen in Seesen, Harz | website: http://asklepios.com/goettingen | source_url: https://klinikradar.de/kliniken/tagesklinik-seesen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1522 | company_name: Tagesklinik Seligenstadt - Froschhausen | website: https://asklepios.com/psychiatrie-langen | source_url: https://klinikradar.de/kliniken/tagesklinik-seligenstadt-froschhausen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 228 | company_name: Tagesklinik Singen | source_url: https://klinikradar.de/kliniken/tagesklinik-singen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 700 | company_name: Tagesklinik Soest | source_url: https://klinikradar.de/kliniken/tagesklinik-soest | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 901 | company_name: Tagesklinik Spremberg | website: http://krankenhaus-spremberg.de | source_url: https://klinikradar.de/kliniken/tagesklinik-spremberg | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 694 | company_name: Tagesklinik St. Anna in Neuss | source_url: https://klinikradar.de/kliniken/tagesklinik-st-anna | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_082
+- Return only the requested result.
+- Use public information only.
