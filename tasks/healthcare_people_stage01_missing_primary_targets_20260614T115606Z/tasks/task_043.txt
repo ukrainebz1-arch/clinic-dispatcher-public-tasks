@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T115606Z
+TASK_ID: task_043
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1461 | company_name: Klinikum Werra Meißner (Witzenhausen) | website: http://klinikum-werra-meissner.de | source_url: https://klinikradar.de/kliniken/klinikum-werra-meissner-witzenhausen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 873 | company_name: Klinikum Westbrandenburg (Brandenburg) | website: http://klinikumwb.de | source_url: https://klinikradar.de/kliniken/klinikum-westbrandenburg-brandenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 869 | company_name: Klinikum Westbrandenburg (Potsdam) | website: http://klinikumwb.de | source_url: https://klinikradar.de/kliniken/klinikum-westbrandenburg-potsdam | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1382 | company_name: Klinikum Wetzlar | website: http://lahn-dill-kliniken.de | source_url: https://klinikradar.de/kliniken/klinikum-wetzlar | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1563 | company_name: Klinikum Wilhelmshaven | website: http://klinikum-whv.de | source_url: https://klinikradar.de/kliniken/klinikum-wilhelmshaven | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1572 | company_name: Klinikum Wolfsburg | website: https://klinikum.wolfsburg.de/start | source_url: https://klinikradar.de/kliniken/klinikum-wolfsburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1770 | company_name: Klinikum Worms | website: http://klinikum-worms.de | source_url: https://klinikradar.de/kliniken/klinikum-worms | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 925 | company_name: Klinikum Würzburg Mitte | website: http://kwm-klinikum.de | source_url: https://klinikradar.de/kliniken/klinikum-wuerzburg-mitte | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 2270 | company_name: Klinikzentrum Bad Sulza | website: https://toskanaworld.net/klinikzentrum-bad-sulza-de | source_url: https://klinikradar.de/rehakliniken/klinikzentrum-bad-sulza | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 2144 | company_name: KMG Elbtalkliniken Bad Wilsnack | website: https://kmg-kliniken.de/rehakliniken/kmg-elbtalklinik-bad-wilsnack | source_url: https://klinikradar.de/rehakliniken/kmg-elbtalkliniken-bad-wilsnack | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1343 | company_name: KMG Klinik Boizenburg | website: http://kmg-kliniken.de | source_url: https://klinikradar.de/kliniken/kmg-klinik-boizenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1311 | company_name: KMG Klinikum Güstrow | website: http://kmg-kliniken.de | source_url: https://klinikradar.de/kliniken/kmg-klinikum-guestrow | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 829 | company_name: KMG Klinikum Luckenwalde | website: https://kmg-kliniken.de | source_url: https://klinikradar.de/kliniken/kmg-klinikum-luckenwalde | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 847 | company_name: KMG Klinikum Nordbrandenburg - Standort Kyritz | website: https://kmg-kliniken.de/akutkliniken/kmg-klinikum-nordbrandenburg/standort-kyritz | source_url: https://klinikradar.de/kliniken/kmg-klinikum-nordbrandenburg-standort-kyritz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 854 | company_name: KMG Klinikum Nordbrandenburg - Standort Pritzwalk | website: https://kmg-kliniken.de/akutkliniken/kmg-klinikum-nordbrandenburg/standort-pritzwalk | source_url: https://klinikradar.de/kliniken/kmg-klinikum-nordbrandenburg-standort-pritzwalk | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 851 | company_name: KMG Klinikum Nordbrandenburg - Standort Wittstock in Wittstock/Dosse | website: https://kmg-kliniken.de/akutkliniken/kmg-klinikum-nordbrandenburg/standort-wittstock | source_url: https://klinikradar.de/kliniken/kmg-klinikum-nordbrandenburg-standort-wittstock | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 373 | company_name: Knappschaft Kliniken Bottrop | source_url: https://klinikradar.de/kliniken/knappschaft-kliniken-bottrop | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 388 | company_name: Knappschaft Kliniken Gelsenkirchen-Buer | source_url: https://klinikradar.de/kliniken/knappschaft-kliniken-gelsenkirchen-buer | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 316 | company_name: Knappschaft Kliniken Recklinghausen | source_url: https://klinikradar.de/kliniken/knappschaft-kliniken-recklinghausen | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 2228 | company_name: Knappschafts-Klinik Bad Driburg | website: https://kbs.de/DE/Kliniken/RehaKliniken/KlinikauswahlNachStandort/BadDriburg/baddriburg_node.html | source_url: https://klinikradar.de/rehakliniken/knappschafts-klinik-bad-driburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 330 | company_name: Knappschaftskrankenhaus Dortmund | source_url: https://klinikradar.de/kliniken/knappschaftskrankenhaus-dortmund | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 430 | company_name: Knappschaftskrankenhaus Lütgendortmund in Dortmund | source_url: https://klinikradar.de/kliniken/knappschaftskrankenhaus-luetgendortmund | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 963 | company_name: Krankenhaus Agatharied in Hausham | website: http://khagatharied.de | source_url: https://klinikradar.de/kliniken/krankenhaus-agatharied | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1102 | company_name: Krankenhaus Aichach | website: http://klipa.de | source_url: https://klinikradar.de/kliniken/krankenhaus-aichach | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1119 | company_name: Krankenhaus Altdorf | website: https://kh-nuernberger-land.de | source_url: https://klinikradar.de/kliniken/krankenhaus-altdorf | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_043
+- Return only the requested result.
+- Use public information only.
