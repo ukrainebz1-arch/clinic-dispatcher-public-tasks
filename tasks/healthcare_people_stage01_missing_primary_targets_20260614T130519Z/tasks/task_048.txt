@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T130519Z
+TASK_ID: task_048
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1003 | company_name: Krankenhaus Vilsbiburg | website: http://lakumed.de | source_url: https://klinikradar.de/kliniken/krankenhaus-vilsbiburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1996 | company_name: Krankenhaus Vilshofen | website: http://ge-passau.de | source_url: https://klinikradar.de/kliniken/krankenhaus-vilshofen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 766 | company_name: Krankenhaus Waldfriede in Berlin | website: http://krankenhaus-waldfriede.de | source_url: https://klinikradar.de/kliniken/krankenhaus-waldfriede | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1630 | company_name: Krankenhaus Walsrode | website: http://heidekreis-klinikum.de | source_url: https://klinikradar.de/kliniken/krankenhaus-walsrode | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1123 | company_name: Krankenhaus Wegscheid | website: http://ge-passau.de | source_url: https://klinikradar.de/kliniken/krankenhaus-wegscheid | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1019 | company_name: Krankenhaus Weilheim-Schongau | website: https://meinkrankenhaus2030.de | source_url: https://klinikradar.de/kliniken/krankenhaus-weilheim-schongau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 515 | company_name: Krankenhaus Wermelskirchen | source_url: https://klinikradar.de/kliniken/krankenhaus-wermelskirchen | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1622 | company_name: Krankenhaus Winsen | website: http://krankenhaus-winsen.de | source_url: https://klinikradar.de/kliniken/krankenhaus-winsen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1652 | company_name: Krankenhaus Wittmund | website: https://kh-wtm.de | source_url: https://klinikradar.de/kliniken/krankenhaus-wittmund | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1928 | company_name: Krankenhaus Wurzen | website: http://kh-muldental.de | source_url: https://klinikradar.de/kliniken/krankenhaus-wurzen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1807 | company_name: Krankenhaus Zum Guten Hirten in Ludwigshafen am Rhein | website: http://guterhirte-ludwigshafen.de | source_url: https://klinikradar.de/kliniken/krankenhaus-zum-guten-hirten | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 976 | company_name: Kreisklinik Bad Reichenhall | website: http://kliniken-suedostbayern.de/de/leistungsspektrum/kreisklinik-bad-reichenhall.htm | source_url: https://klinikradar.de/kliniken/kreisklinik-bad-reichenhall | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 968 | company_name: Kreisklinik Ebersberg in Ebersberg, Oberbayern | website: https://klinik-ebe.de | source_url: https://klinikradar.de/kliniken/kreisklinik-ebersberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1450 | company_name: Kreisklinik Groß-Gerau | website: http://kreisklinik-gg.de | source_url: https://klinikradar.de/kliniken/kreisklinik-gross-gerau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1394 | company_name: Kreisklinik Groß-Umstadt | website: http://kreiskliniken-dadi.de | source_url: https://klinikradar.de/kliniken/kreisklinik-gross-umstadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1469 | company_name: Kreisklinik Hofgeismar | website: http://kreisklinikenkassel.de | source_url: https://klinikradar.de/kliniken/kreisklinik-hofgeismar | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 1031 | company_name: Kreisklinik Krumbach | website: https://kliniken-gz-kru.de | source_url: https://klinikradar.de/kliniken/kreisklinik-krumbach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1058 | company_name: Kreisklinik Mindelheim | website: https://klinikverbund-allgaeu.de | source_url: https://klinikradar.de/kliniken/kreisklinik-mindelheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1076 | company_name: Kreisklinik Ottobeuren | website: https://klinikverbund-allgaeu.de | source_url: https://klinikradar.de/kliniken/kreisklinik-ottobeuren | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 2040 | company_name: Kreisklinik Roth in Roth, Mittelfranken | website: https://kreisklinik-roth.de | source_url: https://klinikradar.de/kliniken/kreisklinik-roth | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1000 | company_name: Kreisklinik St. Elisabeth in Dillingen an der Donau | website: http://khdw.de | source_url: https://klinikradar.de/kliniken/kreisklinik-st-elisabeth | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1994 | company_name: Kreisklinik Trostberg | website: http://kliniken-suedostbayern.de/de/leistungsspektrum/kreisklinik-trostberg.htm | source_url: https://klinikradar.de/kliniken/kreisklinik-trostberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1080 | company_name: Kreisklinik Wertingen | website: https://khdw.de | source_url: https://klinikradar.de/kliniken/kreisklinik-wertingen | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1487 | company_name: Kreisklinik Wolfhagen | website: https://kreisklinikenkassel.de | source_url: https://klinikradar.de/kliniken/kreisklinik-wolfhagen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1034 | company_name: Kreisklinik Wolfratshausen | website: https://kreisklinik-wolfratshausen.de | source_url: https://klinikradar.de/kliniken/kreisklinik-wolfratshausen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_048
+- Return only the requested result.
+- Use public information only.
