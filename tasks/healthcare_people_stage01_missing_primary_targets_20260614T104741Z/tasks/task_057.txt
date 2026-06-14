@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T104741Z
+TASK_ID: task_057
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1833 | company_name: Median Klinik Sonnenwende in Bad Dürkheim | website: https://median-kliniken.de/de/median-klinik-sonnenwende-bad-duerkheim | source_url: https://klinikradar.de/kliniken/median-klinik-sonnenwende | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 130 | company_name: Median Klinik St. Georg Bad Dürrheim | source_url: https://klinikradar.de/kliniken/median-klinik-st-georg-bad-duerrheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 2187 | company_name: Median Reha-Zentrum Wiesbaden Sonnenberg | website: https://median-kliniken.de/de/median-reha-zentrum-wiesbaden-sonnenberg | source_url: https://klinikradar.de/rehakliniken/median-reha-zentrum-wiesbaden-sonnenberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 2255 | company_name: MEDIAN Rehazentrum Bad Bertrich | website: https://median-kliniken.de/de/median-reha-zentrum-bad-bertrich | source_url: https://klinikradar.de/rehakliniken/median-rehazentrum-bad-bertrich | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 2241 | company_name: MEDIAN Saale Klinik Bad Kösen I | source_url: https://klinikradar.de/rehakliniken/median-saale-klinik-bad-koesen-1 | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1891 | company_name: Median Tagesklinik Grünstadt | website: https://median-kliniken.de/de/median-tagesklinik-gruenstadt | source_url: https://klinikradar.de/kliniken/median-tagesklinik-gruenstadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1885 | company_name: Median Tagesklinik Neustadt | website: https://median-kliniken.de/de/median-tagesklinik-neustadt-an-der-weinstrasse | source_url: https://klinikradar.de/kliniken/median-tagesklinik-neustadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1697 | company_name: MEDIAN Zentrum für Verhaltensmedizin Bad Pyrmont | website: https://median-kliniken.de/de/median-zentrum-fuer-verhaltensmedizin-bad-pyrmont-fachkrankenhaus | source_url: https://klinikradar.de/kliniken/median-zentrum-fuer-verhaltensmedizin-bad-pyrmont | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 2180 | company_name: MEDIAN-Klinik Bad Sülze | website: https://median-kliniken.de/de/median-klinik-bad-suelze | source_url: https://klinikradar.de/rehakliniken/median-klinik-bad-suelze | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 838 | company_name: Median-Klinik Grünheide | website: http://median-kliniken.de/de/standorte/median-klinik-gruenheide/klinikprofil | source_url: https://klinikradar.de/kliniken/median-klinik-gruenheide | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1242 | company_name: Medic-Center Klinik in Fürth | website: https://medic-center-nuernberg.de | source_url: https://klinikradar.de/kliniken/medic-center-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1502 | company_name: Medical Park Bad Camberg | website: https://kliniken.medicalpark.de/bad-camberg | source_url: https://klinikradar.de/kliniken/medical-park-bad-camberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 1205 | company_name: Medical Park Bad Rodach | website: http://medicalpark.de | source_url: https://klinikradar.de/kliniken/medical-park-bad-rodach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 2137 | company_name: Medical Park Berlin Humboldtmühle | website: https://medicalpark.de/humboldtmuehle | source_url: https://klinikradar.de/rehakliniken/medical-park-berlin-humboldtmuehle | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1026 | company_name: Medical Park Chiemseeblick | website: https://medicalpark.de/de/Kliniken_und_Zentren/Chiemseeblick__Bernau-Felden.html | source_url: https://klinikradar.de/kliniken/medical-park-chiemseeblick | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 2116 | company_name: Medical Park Loipl in Bischofswiesen | website: https://medicalpark.de/de/Kliniken_und_Zentren/Loipl__Bischofswiesen.html | source_url: https://klinikradar.de/rehakliniken/medical-park-loipl | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 2125 | company_name: Medical Park St. Hubertus Bad Wiessee | website: https://medicalpark.de/de/Kliniken_und_Zentren/St__Hubertus__Bad_Wiessee.html | source_url: https://klinikradar.de/rehakliniken/medical-park-st-hubertus-bad-wiessee | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1239 | company_name: MediCare Flughafen München Medizinisches Zentrum (AirportClinic M) in Freising | website: https://munich-airport-clinic.com | source_url: https://klinikradar.de/kliniken/medicare-flughafen-muenchen-medizinisches-zentrum-airportclinic-m | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1704 | company_name: MediClin Deister Weser Kliniken - Klinik für Akutpsychosomatik und Psychotherapie | website: http://deister-weser-kliniken.de | source_url: https://klinikradar.de/kliniken/mediclin-deister-weser-kliniken-klinik-fuer-akutpsychosomatik-und-psychotherapie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 2186 | company_name: MEDICLIN Dünenwald Klinik in Trassenheide | website: https://duenenwaldklinik.de | source_url: https://klinikradar.de/rehakliniken/mediclin-duenenwald-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 2203 | company_name: MediClin Fachklinik Rhein/Ruhr in Essen | website: https://fachklinik-rheinruhr.de | source_url: https://klinikradar.de/rehakliniken/mediclin-fachklinik-rhein-ruhr | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1668 | company_name: MediClin Hedon Klinik in Lingen (Ems) | website: http://mediclin.de | source_url: https://klinikradar.de/kliniken/mediclin-hedon-klinik | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 2149 | company_name: MEDICLIN Hedon Klinik in Lingen (Ems) | website: https://mediclin-hedon-klinik.de | source_url: https://klinikradar.de/rehakliniken/mediclin-hedon-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 156 | company_name: MediClin Herzzentrum Lahr/Baden | source_url: https://klinikradar.de/kliniken/mediclin-herzzentrum-lahr-baden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1956 | company_name: MediClin Klinik am Brunnenberg in Bad Elster | website: http://klinik-am-brunnenberg.de | source_url: https://klinikradar.de/kliniken/mediclin-klinik-am-brunnenberg | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_057
+- Return only the requested result.
+- Use public information only.
