@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T130519Z
+TASK_ID: task_040
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1647 | company_name: Klinikum Hann. Münden | website: http://khmue.de | source_url: https://klinikradar.de/kliniken/klinikum-hann-muenden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 21 | company_name: Klinikum Heidenheim | source_url: https://klinikradar.de/kliniken/klinikum-heidenheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 276 | company_name: Klinikum Herford | source_url: https://klinikradar.de/kliniken/klinikum-herford | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 62 | company_name: Klinikum Hochrhein in Waldshut-Tiengen | source_url: https://klinikradar.de/kliniken/klinikum-hochrhein | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 349 | company_name: Klinikum Ibbenbüren | source_url: https://klinikradar.de/kliniken/klinikum-ibbenbueren | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1772 | company_name: Klinikum Idar-Oberstein | website: https://shg-kliniken.de/idar-oberstein | source_url: https://klinikradar.de/kliniken/klinikum-idar-oberstein | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 912 | company_name: Klinikum Ingolstadt | website: https://klinikum-ingolstadt.de | source_url: https://klinikradar.de/kliniken/klinikum-ingolstadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1318 | company_name: Klinikum Karlsburg | website: http://klinikum-karlsburg.de | source_url: https://klinikradar.de/kliniken/klinikum-karlsburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1374 | company_name: Klinikum Kassel | website: https://gesundheit-nordhessen.de/klinikum-kassel | source_url: https://klinikradar.de/kliniken/klinikum-kassel | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 950 | company_name: Klinikum Kaufbeuren | website: https://kliniken-oal-kf.de/kliniken/klinikum-kaufbeuren | source_url: https://klinikradar.de/kliniken/klinikum-kaufbeuren | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 940 | company_name: Klinikum Kempten | website: https://klinikverbund-allgaeu.de | source_url: https://klinikradar.de/kliniken/klinikum-kempten | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 48 | company_name: Klinikum Konstanz | source_url: https://klinikradar.de/kliniken/klinikum-konstanz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 941 | company_name: Klinikum Kulmbach | website: https://klinikum-kulmbach.de | source_url: https://klinikradar.de/kliniken/klinikum-kulmbach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 975 | company_name: Klinikum Landkreis Erding | website: http://klinikum-erding.de | source_url: https://klinikradar.de/kliniken/klinikum-landkreis-erding | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1172 | company_name: Klinikum Landkreis Erding (Dorfen) in Dorfen, Stadt | website: https://klinikum-erding.de | source_url: https://klinikradar.de/kliniken/klinikum-landkreis-erding-dorfen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1989 | company_name: Klinikum Landsberg am Lech | website: http://klinikum-landsberg.de | source_url: https://klinikradar.de/kliniken/klinikum-landsberg-am-lech | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 944 | company_name: Klinikum Landshut | website: http://klinikum-landshut.de | source_url: https://klinikradar.de/kliniken/klinikum-landshut | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1586 | company_name: Klinikum Leer | website: https://klinikum-leer.de | source_url: https://klinikradar.de/kliniken/klinikum-leer | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 278 | company_name: Klinikum Leverkusen | source_url: https://klinikradar.de/kliniken/klinikum-leverkusen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 806 | company_name: Klinikum Links der Weser in Bremen | website: https://gesundheitnord.de/ldw.html | source_url: https://klinikradar.de/kliniken/klinikum-links-der-weser | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 601 | company_name: Klinikum Lippe (Bad Salzuflen) | source_url: https://klinikradar.de/kliniken/klinikum-lippe-bad-salzuflen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 284 | company_name: Klinikum Lippe (Detmold) | source_url: https://klinikradar.de/kliniken/klinikum-lippe-detmold | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 333 | company_name: Klinikum Lippe (Lemgo) | source_url: https://klinikradar.de/kliniken/klinikum-lippe-lemgo | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 708 | company_name: Klinikum Lippe Tagesklinik Herford-Schweicheln in Hiddenhausen | source_url: https://klinikradar.de/kliniken/klinikum-lippe-tagesklinik-herford-schweicheln | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 678 | company_name: Klinikum Lippe Tagesklinik Minden | source_url: https://klinikradar.de/kliniken/klinikum-lippe-tagesklinik-minden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_040
+- Return only the requested result.
+- Use public information only.
