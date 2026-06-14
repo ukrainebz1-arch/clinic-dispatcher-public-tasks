@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T104741Z
+TASK_ID: task_068
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1052 | company_name: RoMed Klinik Bad Aibling | website: https://romed-kliniken.de/de/bad-aibling/die-klinik-im-ueberblick.htm | source_url: https://klinikradar.de/kliniken/romed-klinik-bad-aibling | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1054 | company_name: RoMed Klinik Prien am Chiemsee | website: http://romed-kliniken.de | source_url: https://klinikradar.de/kliniken/romed-klinik-prien-am-chiemsee | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1999 | company_name: RoMed Klinik Wasserburg | website: https://romed-kliniken.de/de/wasserburg/die-klinik-im-ueberblick.htm | source_url: https://klinikradar.de/kliniken/romed-klinik-wasserburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 933 | company_name: RoMed Klinikum Rosenheim | website: http://romed-kliniken.de | source_url: https://klinikradar.de/kliniken/romed-klinikum-rosenheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 159 | company_name: Rommel-Klinik in Bad Wildbad | source_url: https://klinikradar.de/kliniken/rommel-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 2081 | company_name: Rosengarten Klinik Heiligenfeld in Bad Kissingen | website: https://heiligenfeld.de/kliniken/rosengarten-klinik-heiligenfeld | source_url: https://klinikradar.de/rehakliniken/rosengarten-klinik-heiligenfeld | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 820 | company_name: Rotes Kreuz Krankenhaus Bremen | website: http://roteskreuzkrankenhaus.de | source_url: https://klinikradar.de/kliniken/rotes-kreuz-krankenhaus-bremen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1098 | company_name: Rotkreuzklinik Würzburg | website: https://rotkreuzklinik-wuerzburg.de | source_url: https://klinikradar.de/kliniken/rotkreuzklinik-wuerzburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 946 | company_name: Rotkreuzklinikum München | website: https://rotkreuzklinikum-muenchen.de | source_url: https://klinikradar.de/kliniken/rotkreuzklinikum-muenchen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 935 | company_name: Rottal-Inn Kliniken Eggenfelden | website: https://rottalinnkliniken.de | source_url: https://klinikradar.de/kliniken/rottal-inn-kliniken-eggenfelden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 937 | company_name: Rottal-Inn Kliniken Pfarrkirchen in Pfarrkirchen, Niederbayern | website: https://rottalinnkliniken.de | source_url: https://klinikradar.de/kliniken/rottal-inn-kliniken-pfarrkirchen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1881 | company_name: Rudolf Virchow Klinikum Glauchau | website: http://klinikum-glauchau.de | source_url: https://klinikradar.de/kliniken/rudolf-virchow-klinikum-glauchau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 472 | company_name: Ruhrlandklinik in Essen | source_url: https://klinikradar.de/kliniken/ruhrlandklinik | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1853 | company_name: RZ Rheumazentrum Rheinland-Pfalz in Bad Kreuznach | website: https://rheumazentrum-rlp.de | source_url: https://klinikradar.de/kliniken/rz-rheumazentrum-rheinland-pfalz | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 2247 | company_name: Sachsenklinik Bad Lausick | website: https://michelskliniken.de/kliniken/sachsenklinik-bad-lausick | source_url: https://klinikradar.de/rehakliniken/sachsenklinik-bad-lausick | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 2058 | company_name: Salinenklinik Bad Rappenau | website: https://kurbadrappenau.de/kliniken/salinenklinik | source_url: https://klinikradar.de/rehakliniken/salinenklinik-bad-rappenau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 2194 | company_name: Salus Klinik Friedrichsdorf in Friedrichsdorf, Taunus | website: https://salus-kliniken.de/friedrichsdorf | source_url: https://klinikradar.de/rehakliniken/salus-klinik-friedrichsdorf | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 2212 | company_name: Salus Klinik Hürth in Hürth, Rheinland | website: https://salus-kliniken.de/huerth | source_url: https://klinikradar.de/rehakliniken/salus-klinik-huerth | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 2141 | company_name: salus klinik Lindow | website: https://salus-kliniken.de/lindow | source_url: https://klinikradar.de/rehakliniken/salus-klinik-lindow | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1169 | company_name: Salzachklinik Fridolfing | website: http://salzachklinik-fridolfing.de | source_url: https://klinikradar.de/kliniken/salzachklinik-fridolfing | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 2198 | company_name: Salztal Klinik in Bad Soden-Salmünster | website: https://salztalklinik.de | source_url: https://klinikradar.de/rehakliniken/salztal-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 594 | company_name: Sana Dreifaltigkeits-Krankenhaus Köln | source_url: https://klinikradar.de/kliniken/sana-dreifaltigkeits-krankenhaus-koeln | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 591 | company_name: Sana Fabricius-Klinik Remscheid | source_url: https://klinikradar.de/kliniken/sana-fabricius-klinik-remscheid | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1312 | company_name: Sana Hanse-Klinikum Wismar | website: http://sana.de | source_url: https://klinikradar.de/kliniken/sana-hanse-klinikum-wismar | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1360 | company_name: Sana Hanse-Klinikum Wismar- Tagesklinik Grevesmühlen | website: http://sana.de | source_url: https://klinikradar.de/kliniken/sana-hanse-klinikum-wismar-tagesklinik-grevesmuehlen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_068
+- Return only the requested result.
+- Use public information only.
