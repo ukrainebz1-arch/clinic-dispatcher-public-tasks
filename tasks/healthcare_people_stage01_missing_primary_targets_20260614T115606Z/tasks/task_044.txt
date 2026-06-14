@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T115606Z
+TASK_ID: task_044
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1335 | company_name: Krankenhaus am Crivitzer See | website: https://krankenhaus-am-crivitzer-see.de | source_url: https://klinikradar.de/kliniken/krankenhaus-am-crivitzer-see | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 861 | company_name: Krankenhaus Angermünde | website: https://glg-gesundheit.de | source_url: https://klinikradar.de/kliniken/krankenhaus-angermuende | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1459 | company_name: Krankenhaus Bad Arolsen | website: https://gesundheit-nordhessen.de/krankenhaus-bad-arolsen | source_url: https://klinikradar.de/kliniken/krankenhaus-bad-arolsen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 2010 | company_name: Krankenhaus Bad Doberan | website: https://sana.de/bad-doberan | source_url: https://klinikradar.de/kliniken/krankenhaus-bad-doberan | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1163 | company_name: Krankenhaus Bad Kötzting | website: https://diekliniken.de | source_url: https://klinikradar.de/kliniken/krankenhaus-bad-koetzting | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 463 | company_name: Krankenhaus Bad Oeynhausen | source_url: https://klinikradar.de/kliniken/krankenhaus-bad-oeynhausen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1393 | company_name: Krankenhaus Bad Soden | website: http://varisano.de/kliniken-mtk | source_url: https://klinikradar.de/kliniken/krankenhaus-bad-soden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 970 | company_name: Krankenhaus Barmherzige Brüder München | website: http://barmherzige-muenchen.de | source_url: https://klinikradar.de/kliniken/krankenhaus-barmherzige-brueder-muenchen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 913 | company_name: Krankenhaus Barmherzige Brüder Regensburg | website: http://barmherzige-regensburg.de | source_url: https://klinikradar.de/kliniken/krankenhaus-barmherzige-brueder-regensburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1856 | company_name: Krankenhaus Bautzen | website: http://oberlausitz-kliniken.de | source_url: https://klinikradar.de/kliniken/krankenhaus-bautzen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 310 | company_name: Krankenhaus Bethanien für die Grafschaft Moers | source_url: https://klinikradar.de/kliniken/krankenhaus-bethanien-fuer-die-grafschaft-moers | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1950 | company_name: Krankenhaus Bethanien Plauen | website: http://bethanien-plauen.de | source_url: https://klinikradar.de/kliniken/krankenhaus-bethanien-plauen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 760 | company_name: Krankenhaus Bethel Berlin | website: https://bethelnet.de | source_url: https://klinikradar.de/kliniken/krankenhaus-bethel-berlin | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 40 | company_name: Krankenhaus Bietigheim in Bietigheim-Bissingen | source_url: https://klinikradar.de/kliniken/krankenhaus-bietigheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1935 | company_name: Krankenhaus Bischofswerda | website: http://oberlausitz-kliniken.de | source_url: https://klinikradar.de/kliniken/krankenhaus-bischofswerda | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1602 | company_name: Krankenhaus Buchholz | website: http://krankenhaus-buchholz.de | source_url: https://klinikradar.de/kliniken/krankenhaus-buchholz | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 997 | company_name: Krankenhaus Cham | website: https://diekliniken.de | source_url: https://klinikradar.de/kliniken/krankenhaus-cham | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 422 | company_name: Krankenhaus der Augustinerinnen in Köln | source_url: https://klinikradar.de/kliniken/krankenhaus-der-augustinerinnen | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1771 | company_name: Krankenhaus der Barmherzigen Brüder Trier | website: http://bk-trier.de | source_url: https://klinikradar.de/kliniken/krankenhaus-der-barmherzigen-brueder-trier | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1826 | company_name: Krankenhaus der Elisabeth Stiftung in Birkenfeld, Nahe | website: https://e-s-b.org/krankenhaus | source_url: https://klinikradar.de/kliniken/krankenhaus-der-elisabeth-stiftung | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 331 | company_name: Krankenhaus Düren | source_url: https://klinikradar.de/kliniken/krankenhaus-dueren | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1451 | company_name: Krankenhaus Eichhof Lauterbach | website: http://eichhof-online.de | source_url: https://klinikradar.de/kliniken/krankenhaus-eichhof-lauterbach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 582 | company_name: Krankenhaus Elbroich in Düsseldorf | source_url: https://klinikradar.de/kliniken/krankenhaus-elbroich | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 856 | company_name: Krankenhaus Elsterwerda | website: http://elbe-elster-klinikum.de | source_url: https://klinikradar.de/kliniken/krankenhaus-elsterwerda | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1939 | company_name: Krankenhaus Emmaus Niesky | website: http://krankenhaus-niesky.de | source_url: https://klinikradar.de/kliniken/krankenhaus-emmaus-niesky | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_044
+- Return only the requested result.
+- Use public information only.
