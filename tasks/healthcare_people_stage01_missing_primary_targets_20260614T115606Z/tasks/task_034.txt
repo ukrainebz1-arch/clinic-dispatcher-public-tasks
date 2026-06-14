@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T115606Z
+TASK_ID: task_034
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1729 | company_name: Klinik Fallingbostel | website: http://klinikfallingbostel.com | source_url: https://klinikradar.de/kliniken/klinik-fallingbostel | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 2159 | company_name: Klinik Fallingbostel | website: https://klinik-fallingbostel.de | source_url: https://klinikradar.de/rehakliniken/klinik-fallingbostel | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 2004 | company_name: Klinik Fränkische Schweiz (Ebermannstadt) | website: https://klinik-fraenkische-schweiz.de | source_url: https://klinikradar.de/kliniken/klinik-fraenkische-schweiz-ebermannstadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1869 | company_name: Klinik für GefässChirurgie und GefässMedizin im Kreis Ahrweiler in Bad Neuenahr-Ahrweiler | website: http://gefaesszentrum-dr-bauer.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-gefaesschirurgie-und-gefaessmedizin-im-kreis-ahrweiler | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1500 | company_name: Klinik für Kinder- und Jugendpsychiatrie Psychosomatik und Psychotherapie in Marburg | website: https://ukgm.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-kinder-und-jugendpsychiatrie-psychosomatik-und-psychotherapie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 611 | company_name: Klinik für Kinder- und Jugendpsychiatrie und Psychotherapie in Köln | source_url: https://klinikradar.de/kliniken/klinik-fuer-kinder-und-jugendpsychiatrie-und-psychotherapie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1694 | company_name: Klinik für Kinder- und Jugendpsychiatrie Wichernstift in Ganderkesee | website: http://wichernstift.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-kinder-und-jugendpsychiatrie-wichernstift | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 548 | company_name: Klinik für Manuelle Therapie in Hamm | source_url: https://klinikradar.de/kliniken/klinik-fuer-manuelle-therapie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 782 | company_name: Klinik für MIC in Berlin | website: http://mic-berlin.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-mic | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 710 | company_name: Klinik für Nuklearmedizin am Bethesda Krankenhaus Duisburg | source_url: https://klinikradar.de/kliniken/klinik-fuer-nuklearmedizin-am-bethesda-krankenhaus-duisburg | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1489 | company_name: Klinik für Psychiatrie und Psychotherapie Friedberg | website: https://gesundheitszentrum-wetterau.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-psychiatrie-und-psychotherapie-friedberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1069 | company_name: Klinik für Psychiatrie und Psychotherapie Fürth | website: http://bezirkskliniken-mfr.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-psychiatrie-und-psychotherapie-fuerth | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 628 | company_name: Klinik für Psychosomatik und Psychotherapie Emsdetten in Münster | source_url: https://klinikradar.de/kliniken/klinik-fuer-psychosomatik-und-psychotherapie-emsdetten | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 218 | company_name: Klinik für Psychosomatische Medizin in Heilbronn | source_url: https://klinikradar.de/kliniken/klinik-fuer-psychosomatische-medizin | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1720 | company_name: Klinik für Psychosomatische Medizin und Psychotherapie in Westerstede | website: https://karl-jaspers-klinik.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-psychosomatische-medizin-und-psychotherapie | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 200 | company_name: Klinik für Psychosomatische Medizin und Psychotherapie Leonberg | source_url: https://klinikradar.de/kliniken/klinik-fuer-psychosomatische-medizin-und-psychotherapie-leonberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 1244 | company_name: Klinik für Schlafstörungen in Bad Reichenhall | website: http://schlaflabor-bayern.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-schlafstoerungen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1071 | company_name: Klinik Füssen | website: https://kliniken-oal-kf.de/kliniken/klinik-fuessen | source_url: https://klinikradar.de/kliniken/klinik-fuessen | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 993 | company_name: Klinik Günzburg | website: http://kliniken-gz-kru.de | source_url: https://klinikradar.de/kliniken/klinik-guenzburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1984 | company_name: Klinik Hallerwiese - Cnopfsche Kinderklinik in Nürnberg | website: https://klinik-hallerwiese.de/de/klinik-hallerwiese-cnopfsche-kinderklinik.html | source_url: https://klinikradar.de/kliniken/klinik-hallerwiese-cnopfsche-kinderklinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1237 | company_name: Klinik Hallerwiese-Cnopfsche Kinderklinik, Dependance Ansbach | website: https://klinik-hallerwiese.de/de/cnopfsche-kinderklinik/kinderstationen/wald.html | source_url: https://klinikradar.de/kliniken/klinik-hallerwiese-cnopfsche-kinderklinik-dependance-ansbach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 191 | company_name: Klinik Haus Vogt in Titisee-Neustadt | source_url: https://klinikradar.de/kliniken/klinik-haus-vogt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 801 | company_name: Klinik Helle Mitte in Berlin | website: http://klinik-helle-mitte.de | source_url: https://klinikradar.de/kliniken/klinik-helle-mitte | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 819 | company_name: Klinik Hennigsdorf | website: http://oberhavel-kliniken.de | source_url: https://klinikradar.de/kliniken/klinik-hennigsdorf | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 2072 | company_name: Klinik Herzoghöhe in Bayreuth | website: https://klinik-herzoghoehe.de | source_url: https://klinikradar.de/rehakliniken/klinik-herzoghoehe | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_034
+- Return only the requested result.
+- Use public information only.
