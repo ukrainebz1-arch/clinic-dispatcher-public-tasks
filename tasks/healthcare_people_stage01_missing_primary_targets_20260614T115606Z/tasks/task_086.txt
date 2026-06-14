@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T115606Z
+TASK_ID: task_086
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1317 | company_name: Universitätsmedizin Rostock - Zentrum für Nervenheilkunde | website: http://med.uni-rostock.de | source_url: https://klinikradar.de/kliniken/universitaetsmedizin-rostock-zentrum-fuer-nervenheilkunde | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1342 | company_name: Universitätsmedizin Rostock - Zentrum für Radiologie - Klinik und Poliklinik für Strahlentherapie | website: http://med.uni-rostock.de | source_url: https://klinikradar.de/kliniken/universitaetsmedizin-rostock-zentrum-fuer-radiologie-klinik-und-poliklinik-fuer-strahlentherapie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 237 | company_name: Urologische Klinik am Lerchenberg in Heilbronn | source_url: https://klinikradar.de/kliniken/urologische-klinik-am-lerchenberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1128 | company_name: Urologische Klinik München - Planegg | website: http://ukmp.de | source_url: https://klinikradar.de/kliniken/urologische-klinik-muenchen-planegg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 636 | company_name: Valeara Bochum - Klinik für Kinder- und Jugendpsychiatrie | source_url: https://klinikradar.de/kliniken/valeara-bochum-klinik-fuer-kinder-und-jugendpsychiatrie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 663 | company_name: VALEARA Bottrop | source_url: https://klinikradar.de/kliniken/valeara-bottrop | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1876 | company_name: Venen-Clinic in Bad Neuenahr-Ahrweiler | website: http://venen-clinic.de | source_url: https://klinikradar.de/kliniken/venen-clinic | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1751 | company_name: Venenzentrum Braunschweig - Kastanienallee | website: https://venenzentrum-braunschweig.de | source_url: https://klinikradar.de/kliniken/venenzentrum-braunschweig-kastanienallee | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1736 | company_name: Venenzentrum Braunschweig - Zuckerbergweg | website: http://venenzentrum-braunschweig.de | source_url: https://klinikradar.de/kliniken/venenzentrum-braunschweig-zuckerbergweg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1138 | company_name: Veramed-Klinik am Wendelstein in Brannenburg | website: http://veramed.de | source_url: https://klinikradar.de/kliniken/veramed-klinik-am-wendelstein | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1968 | company_name: Verbund Gemeindenahe Psychiatrie (Standort Eitingonstr. 12) in Leipzig | website: https://sanktgeorg.de/home.html | source_url: https://klinikradar.de/kliniken/verbund-gemeindenahe-psychiatrie-standort-eitingonstr-12 | missing_reason: company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 459 | company_name: Vestische Kinder- und Jugendklinik Datteln | source_url: https://klinikradar.de/kliniken/vestische-kinder-und-jugendklinik-datteln | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 2209 | company_name: VIALIFE Schwertbad Aachen | website: https://schwertbad-aachen.via.life | source_url: https://klinikradar.de/rehakliniken/vialife-schwertbad-aachen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 563 | company_name: ViaNobis in Gangelt | source_url: https://klinikradar.de/kliniken/vianobis | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1790 | company_name: Vinzentius-Krankenhaus Landau | website: http://vinzentius.de | source_url: https://klinikradar.de/kliniken/vinzentius-krankenhaus-landau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 2114 | company_name: Vinzenz Klinik in Pfronten | website: https://vinzenz-klinik.de/rehaklinik | source_url: https://klinikradar.de/rehakliniken/vinzenz-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 467 | company_name: Vinzenz Pallotti Hospital in Bergisch Gladbach | source_url: https://klinikradar.de/kliniken/vinzenz-pallotti-hospital | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 31 | company_name: Vinzenz von Paul Hospital in Rottweil | source_url: https://klinikradar.de/kliniken/vinzenz-von-paul-hospital | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1596 | company_name: Vinzenzkrankenhaus Hannover | website: http://vinzenzkrankenhaus.de | source_url: https://klinikradar.de/kliniken/vinzenzkrankenhaus-hannover | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1171 | company_name: Vital Klinik Alzenau | website: http://vital-klinik.de | source_url: https://klinikradar.de/kliniken/vital-klinik-alzenau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 778 | company_name: Vitanas Klinik & Tagesklinik für Geriatrie in Berlin | website: https://vitanas.de/einrichtungen/klinisches-centrum/berlin/klinik-tagesklinik-fuer-geriatrie-maerkisches-viertel | source_url: https://klinikradar.de/kliniken/vitanas-klinik-tagesklinik-fuer-geriatrie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1535 | company_name: Vitos Behandlung Zuhause, Wiesbaden | website: http://vitos-rheingau.de | source_url: https://klinikradar.de/kliniken/vitos-behandlung-zuhause-wiesbaden | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1531 | company_name: Vitos Kinder- und Jugendklinik für psychische Gesundheit Eltville in Idstein | website: http://vitos-rheingau.de | source_url: https://klinikradar.de/kliniken/vitos-kinder-und-jugendklinik-fuer-psychische-gesundheit-eltville | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1514 | company_name: Vitos Kinder- und Jugendklinik für psychische Gesundheit Hanau | website: https://vitos.de/gesellschaften/vitos-herborn/einrichtungen/vitos-kinder-und-jugendklinik-fuer-psychische-gesundheit-hanau | source_url: https://klinikradar.de/kliniken/vitos-kinder-und-jugendklinik-fuer-psychische-gesundheit-hanau | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1501 | company_name: Vitos Kinder- und Jugendklinik für psychische Gesundheit Kassel | website: https://vitos.de/gesellschaften/vitos-kurhessen | source_url: https://klinikradar.de/kliniken/vitos-kinder-und-jugendklinik-fuer-psychische-gesundheit-kassel | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_086
+- Return only the requested result.
+- Use public information only.
