@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T130519Z
+TASK_ID: task_061
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 848 | company_name: Oberlinklinik in Potsdam | website: http://oberlin-klinik.de | source_url: https://klinikradar.de/kliniken/oberlinklinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 857 | company_name: Oder-Spree Krankenhaus in Beeskow | website: http://os-kh.de | source_url: https://klinikradar.de/kliniken/oder-spree-krankenhaus | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 79 | company_name: Ortenau Klinikum Achern-Oberkirch (Achern) | source_url: https://klinikradar.de/kliniken/ortenau-klinikum-achern-oberkirch-achern | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 123 | company_name: Ortenau Klinikum Kehl | source_url: https://klinikradar.de/kliniken/ortenau-klinikum-kehl | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 36 | company_name: Ortenau Klinikum Lahr | source_url: https://klinikradar.de/kliniken/ortenau-klinikum-lahr | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 18 | company_name: Ortenau Klinikum Offenburg-Kehl Standort Offenburg | source_url: https://klinikradar.de/kliniken/ortenau-klinikum-offenburg-kehl-standort-offenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 155 | company_name: Ortenau Klinikum Wolfach | source_url: https://klinikradar.de/kliniken/ortenau-klinikum-wolfach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1095 | company_name: Orthopädische Fachklinik Schwarzach | website: http://klinik-schwarzach.de | source_url: https://klinikradar.de/kliniken/orthopaedische-fachklinik-schwarzach | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1033 | company_name: Orthopädische Fachkliniken der Hessing Stiftung in Augsburg | website: https://hessing-kliniken.de | source_url: https://klinikradar.de/kliniken/orthopaedische-fachkliniken-der-hessing-stiftung | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1443 | company_name: Orthopädische Klinik Hessisch Lichtenau | website: http://klinik-lichtenau.de | source_url: https://klinikradar.de/kliniken/orthopaedische-klinik-hessisch-lichtenau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1010 | company_name: Orthopädische Klinik König-Ludwig-Haus in Würzburg | website: https://klinik-koenig-ludwig-haus.de | source_url: https://klinikradar.de/kliniken/orthopaedische-klinik-koenig-ludwig-haus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 93 | company_name: Orthopädische Klinik Markgröningen | source_url: https://klinikradar.de/kliniken/orthopaedische-klinik-markgroeningen | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 587 | company_name: Orthopädische Klinik Volmarstein - Standort 1 | source_url: https://klinikradar.de/kliniken/orthopaedische-klinik-volmarstein-standort-1 | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 2266 | company_name: Orthopädische Rehaklinik Eisenberg | website: https://reha-eisenberg.de | source_url: https://klinikradar.de/rehakliniken/orthopaedische-rehaklinik-eisenberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1104 | company_name: Orthopädisches Krankenhaus Schloss Werneck | website: https://orthopaedie-werneck.de | source_url: https://klinikradar.de/kliniken/orthopaedisches-krankenhaus-schloss-werneck | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 2199 | company_name: Orthopädisches Rehazentrum Hessisch Lichtenau | website: https://rehazentrum-lichtenau.de | source_url: https://klinikradar.de/rehakliniken/orthopaedisches-rehazentrum-hessisch-lichtenau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 1940 | company_name: Orthopädisches Zentrum Martin-Ulbrich-Haus Rothenburg | website: http://klinik-rothenburg.de | source_url: https://klinikradar.de/kliniken/orthopaedisches-zentrum-martin-ulbrich-haus-rothenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 45 | company_name: Ostalb-Klinikum Aalen | source_url: https://klinikradar.de/kliniken/ostalb-klinikum-aalen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1645 | company_name: OsteMed Klinik Bremervörde | website: http://ostemed.de | source_url: https://klinikradar.de/kliniken/ostemed-klinik-bremervoerde | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 2182 | company_name: Osteseeklinik Prerow | website: https://ostseeklinik-prerow.de | source_url: https://klinikradar.de/rehakliniken/osteseeklinik-prerow | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 2264 | company_name: Ostseeklinik Schönberg-Holm | website: https://ostseeklinik.com | source_url: https://klinikradar.de/rehakliniken/ostseeklinik-schoenberg-holm | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1463 | company_name: Otto-Fricke-Krankenhaus in Bad Schwalbach | website: http://otto-fricke-krankenhaus.de | source_url: https://klinikradar.de/kliniken/otto-fricke-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1517 | company_name: Otto-Fricke-Krankenhaus Paulinenberg am St. Josefs-Hospital Rüdesheim | website: http://otto-fricke-krankenhaus.de | source_url: https://klinikradar.de/kliniken/otto-fricke-krankenhaus-paulinenberg-am-st-josefs-hospital-ruedesheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1529 | company_name: Otto-Fricke-Krankenhaus Paulinenberg in Wiesbaden | website: http://otto-fricke-krankenhaus.de | source_url: https://klinikradar.de/kliniken/otto-fricke-krankenhaus-paulinenberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1094 | company_name: Panorama Fachklinik Scheidegg | source_url: https://klinikradar.de/kliniken/panorama-fachklinik-scheidegg | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_061
+- Return only the requested result.
+- Use public information only.
