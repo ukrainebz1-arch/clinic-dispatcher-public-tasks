@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T130519Z
+TASK_ID: task_055
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 435 | company_name: Marien-Hospital Marl | source_url: https://klinikradar.de/kliniken/marien-hospital-marl | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 321 | company_name: Marien-Hospital Wattenscheid in Bochum | source_url: https://klinikradar.de/kliniken/marien-hospital-wattenscheid | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 415 | company_name: Marien-Krankenhaus in Bergisch Gladbach | source_url: https://klinikradar.de/kliniken/marien-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 523 | company_name: Marienborn Fachklinik für Psychiatrie und Psychotherapie in Zülpich | source_url: https://klinikradar.de/kliniken/marienborn-fachklinik-fuer-psychiatrie-und-psychotherapie | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 521 | company_name: Marienborn Tagesklinik für Psychiatrie und Psychotherapie in Hürth, Rheinland | source_url: https://klinikradar.de/kliniken/marienborn-tagesklinik-fuer-psychiatrie-und-psychotherapie | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1794 | company_name: Marienhaus Klinikum Eifel (Bitburg) | website: http://marienhaus-klinikum-eifel.de | source_url: https://klinikradar.de/kliniken/marienhaus-klinikum-eifel-bitburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1813 | company_name: Marienhaus Klinikum Eifel (St. Elisabeth Gerolstein) | website: http://marienhaus-klinikum-eifel.de | source_url: https://klinikradar.de/kliniken/marienhaus-klinikum-eifel-st-elisabeth-gerolstein | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1780 | company_name: Marienhaus Klinikum Hetzelstift in Neustadt an der Weinstraße | website: http://hetzelstift.de | source_url: https://klinikradar.de/kliniken/marienhaus-klinikum-hetzelstift | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1775 | company_name: Marienhaus Klinikum Mainz | website: http://marienhaus-klinikum-mainz.de | source_url: https://klinikradar.de/kliniken/marienhaus-klinikum-mainz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 2021 | company_name: Marienhaus Klinikum Neunkirchen | website: https://marienhaus-neunkirchen.de | source_url: https://klinikradar.de/kliniken/marienhaus-klinikum-neunkirchen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1761 | company_name: Marienhaus Klinikum Saarlouis-Dillingen (Saarlouis) | website: http://marienhaus-klinikum-saar.de | source_url: https://klinikradar.de/kliniken/marienhaus-klinikum-saarlouis-dillingen-saarlouis | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1820 | company_name: Marienhaus Klinikum St. Antonius Waldbreitbach | website: http://marienhaus-klinikum.de | source_url: https://klinikradar.de/kliniken/marienhaus-klinikum-st-antonius-waldbreitbach | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 1776 | company_name: Marienhaus Klinikum St. Elisabeth Neuwied | website: http://marienhaus-klinikum.de | source_url: https://klinikradar.de/kliniken/marienhaus-klinikum-st-elisabeth-neuwied | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1759 | company_name: Marienhaus Klinikum St. Wendel-Ottweiler - Standort Wendel | website: https://marienhaus-st-wendel-ottweiler.de/startseite | source_url: https://klinikradar.de/kliniken/marienhaus-klinikum-st-wendel-ottweiler-standort-wendel | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 412 | company_name: Marienhospital Aachen | source_url: https://klinikradar.de/kliniken/marienhospital-aachen | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 414 | company_name: Marienhospital Bottrop | source_url: https://klinikradar.de/kliniken/marienhospital-bottrop | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 298 | company_name: Marienhospital Gelsenkirchen | source_url: https://klinikradar.de/kliniken/marienhospital-gelsenkirchen | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 492 | company_name: Marienhospital Kevelaer | source_url: https://klinikradar.de/kliniken/marienhospital-kevelaer | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 528 | company_name: Marienhospital Oelde in Oelde, Westfalen | source_url: https://klinikradar.de/kliniken/marienhospital-oelde | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1675 | company_name: Marienhospital Osnabrück - Standort Natruper Holz | website: https://niels-stensen-kliniken.de/niels-stensen-kliniken.html | source_url: https://klinikradar.de/kliniken/marienhospital-osnabrueck-standort-natruper-holz | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 11 | company_name: Marienhospital Stuttgart | source_url: https://klinikradar.de/kliniken/marienhospital-stuttgart | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1821 | company_name: Marienkrankenhaus Cochem | website: http://marienkrankenhaus-cochem.de | source_url: https://klinikradar.de/kliniken/marienkrankenhaus-cochem | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1431 | company_name: Marienkrankenhaus Kassel | website: http://marienkrankenhaus-kassel.de | source_url: https://klinikradar.de/kliniken/marienkrankenhaus-kassel | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 366 | company_name: Marienkrankenhaus Schwerte | source_url: https://klinikradar.de/kliniken/marienkrankenhaus-schwerte | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 426 | company_name: Marienkrankenhaus Soest | source_url: https://klinikradar.de/kliniken/marienkrankenhaus-soest | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_055
+- Return only the requested result.
+- Use public information only.
