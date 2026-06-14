@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T104741Z
+TASK_ID: task_059
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 165 | company_name: MediClin Seidelklinik in Bad Bellingen (Baden) | source_url: https://klinikradar.de/kliniken/mediclin-seidelklinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 2103 | company_name: MEDICLIN Staufenburg Klinik in Durbach | website: https://staufenburg-klinik.de | source_url: https://klinikradar.de/rehakliniken/mediclin-staufenburg-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1933 | company_name: MediClin Waldkrankenhaus Bad Düben | website: http://waldkrankenhaus-bad-dueben.de | source_url: https://klinikradar.de/kliniken/mediclin-waldkrankenhaus-bad-dueben | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 30 | company_name: Medius Klinik Kirchheim | source_url: https://klinikradar.de/kliniken/medius-klinik-kirchheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 52 | company_name: Medius Klinik Nürtingen | source_url: https://klinikradar.de/kliniken/medius-klinik-nuertingen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 65 | company_name: Medius Klinik Ostfildern-Ruit | source_url: https://klinikradar.de/kliniken/medius-klinik-ostfildern-ruit | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1559 | company_name: Medizinische Hochschule Hannover | website: http://mhh.de | source_url: https://klinikradar.de/kliniken/medizinische-hochschule-hannover | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1789 | company_name: Medizinisches Zentrum Lahnhöhe am Mittelrhein in Lahnstein | website: https://lahnhoehe.de | source_url: https://klinikradar.de/kliniken/medizinisches-zentrum-lahnhoehe-am-mittelrhein | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 2052 | company_name: Mettnau Werner-Messmer-Klinik in Radolfzell am Bodensee | website: https://mettnau.com/werner-messmer-klinik | source_url: https://klinikradar.de/rehakliniken/mettnau-werner-messmer-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 2118 | company_name: Mittelbayrisches Rehabilitationszentrum - Klinikum Luitpold Bad Kötzting | website: https://reha-badkoetzting.de | source_url: https://klinikradar.de/rehakliniken/mittelbayrisches-rehabilitationszentrum-klinikum-luitpold-bad-koetzting | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 2248 | company_name: Mittelrhein-Klinik Bad Salzig in Boppard, Rhein | website: https://mittelrhein-klinik.de | source_url: https://klinikradar.de/rehakliniken/mittelrhein-klinik-bad-salzig | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 2268 | company_name: Moritz Klinik in Bad Klosterlausnitz | website: https://moritz-klinik.de | source_url: https://klinikradar.de/rehakliniken/moritz-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 1838 | company_name: Mosel-Eifel-Klinik in Bad Bertrich | website: https://mosel-eifel-klinik.de | source_url: https://klinikradar.de/kliniken/mosel-eifel-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 2258 | company_name: Mühlenbergklinik Holsteinische Schweiz in Malente | website: http://muehlenbergklinik-holsteinische-schweiz.de | source_url: https://klinikradar.de/rehakliniken/muehlenbergklinik-holsteinische-schweiz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 914 | company_name: München Klinik Bogenhausen | website: https://muenchen-klinik.de | source_url: https://klinikradar.de/kliniken/muenchen-klinik-bogenhausen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 924 | company_name: München Klinik Harlaching | website: https://muenchen-klinik.de/krankenhaus/harlaching | source_url: https://klinikradar.de/kliniken/muenchen-klinik-harlaching | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 938 | company_name: München Klinik Neuperlach | website: https://muenchen-klinik.de/krankenhaus/neuperlach | source_url: https://klinikradar.de/kliniken/muenchen-klinik-neuperlach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 928 | company_name: München Klinik Schwabing | website: https://muenchen-klinik.de | source_url: https://klinikradar.de/kliniken/muenchen-klinik-schwabing | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1997 | company_name: München Klinik Thalkirchner Straße | website: https://muenchen-klinik.de/krankenhaus/thalkirchner-strasse | source_url: https://klinikradar.de/kliniken/muenchen-klinik-thalkirchner-strasse | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 843 | company_name: Naemi-Wilke-Stift in Guben | website: http://naemi-wilke-stift.de | source_url: https://klinikradar.de/kliniken/naemi-wilke-stift | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1793 | company_name: Nardini Klinikum St. Elisabeth Zweibrücken | website: http://nardiniklinikum.de | source_url: https://klinikradar.de/kliniken/nardini-klinikum-st-elisabeth-zweibruecken | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1800 | company_name: Nardini Klinikum St. Johannis in Landstuhl | website: http://nardiniklinikum.de | source_url: https://klinikradar.de/kliniken/nardini-klinikum-st-johannis | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 99 | company_name: Neckar-Odenwald-Kliniken (Standort Buchen) | source_url: https://klinikradar.de/kliniken/neckar-odenwald-kliniken-standort-buchen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 102 | company_name: Neckar-Odenwald-Kliniken (Standort Mosbach) | source_url: https://klinikradar.de/kliniken/neckar-odenwald-kliniken-standort-mosbach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1296 | company_name: Neonatologische Intensivstation (MK) in Hamburg | website: http://kkh-wilhelmstift.de | source_url: https://klinikradar.de/kliniken/neonatologische-intensivstation-mk | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_059
+- Return only the requested result.
+- Use public information only.
