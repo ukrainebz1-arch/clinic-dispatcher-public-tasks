@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T130519Z
+TASK_ID: task_075
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 495 | company_name: St. Johannisstift Ev. Krankenhaus Paderborn | source_url: https://klinikradar.de/kliniken/st-johannisstift-ev-krankenhaus-paderborn | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 456 | company_name: St. Josef Hospital Bad Driburg | source_url: https://klinikradar.de/kliniken/st-josef-hospital-bad-driburg | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 398 | company_name: St. Josef Hospital in Troisdorf | source_url: https://klinikradar.de/kliniken/st-josef-hospital-huerth | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 535 | company_name: St. Josef Krankenhaus Essen-Werden | source_url: https://klinikradar.de/kliniken/st-josef-krankenhaus-essen-werden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1524 | company_name: St. Josef Krankenhaus Königstein | website: https://hochtaunus-kliniken.de/medizinische-fachabteilungen/koenigstein | source_url: https://klinikradar.de/kliniken/st-josef-krankenhaus-koenigstein | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 365 | company_name: St. Josef Krankenhaus Moers | source_url: https://klinikradar.de/kliniken/st-josef-krankenhaus-moers | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 286 | company_name: St. Josef-Hospital in Bochum | source_url: https://klinikradar.de/kliniken/st-josef-hospital-herne | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 617 | company_name: St. Josef-Hospital in Gelsenkirchen | source_url: https://klinikradar.de/kliniken/st-josef-hospital | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1825 | company_name: St. Josef-Krankenhaus Hermeskeil | website: http://krankenhaus-hermeskeil.de | source_url: https://klinikradar.de/kliniken/st-josef-krankenhaus-hermeskeil | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 421 | company_name: St. Josef-Krankenhaus Kupferdreh in Essen | source_url: https://klinikradar.de/kliniken/st-josef-krankenhaus-kupferdreh | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1499 | company_name: St. Josef-Krankenhaus Viernheim | website: https://st.josef-kh.de | source_url: https://klinikradar.de/kliniken/st-josef-krankenhaus-viernheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 380 | company_name: St. Josef-Stift Sendenhorst | source_url: https://klinikradar.de/kliniken/st-josef-stift-sendenhorst | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 427 | company_name: St. Josefs Hospital Dortmund-Hörde | source_url: https://klinikradar.de/kliniken/st-josefs-hospital-dortmund-hoerde | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1413 | company_name: St. Josefs Krankenhaus Balserische Stiftung in Gießen | website: http://jokba.de | source_url: https://klinikradar.de/kliniken/st-josefs-krankenhaus-balserische-stiftung | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1623 | company_name: St. Josefs-Hospital Cloppenburg | website: https://josefshospital-cloppenburg.de | source_url: https://klinikradar.de/kliniken/st-josefs-hospital-cloppenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 369 | company_name: St. Josefs-Hospital in Hagen | source_url: https://klinikradar.de/kliniken/st-josefs-hospital | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 509 | company_name: St. Josefs-Hospital Lennestadt | source_url: https://klinikradar.de/kliniken/st-josefs-hospital-lennestadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1472 | company_name: St. Josefs-Hospital Rheingau | website: https://joho-rheingau.de | source_url: https://klinikradar.de/kliniken/st-josefs-hospital-rheingau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1385 | company_name: St. Josefs-Hospital Wiesbaden | website: http://joho.de | source_url: https://klinikradar.de/kliniken/st-josefs-hospital-wiesbaden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 488 | company_name: St. Josefs-Krankenhaus in Salzkotten | source_url: https://klinikradar.de/kliniken/st-josefs-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 72 | company_name: St. Josefskrankenhaus Heidelberg | source_url: https://klinikradar.de/kliniken/st-josefskrankenhaus-heidelberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 64 | company_name: St. Josefskrankenhaus in Freiburg im Breisgau | source_url: https://klinikradar.de/kliniken/st-josefskrankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 743 | company_name: St. Joseph Krankenhaus Berlin-Tempelhof | website: https://sjk.de | source_url: https://klinikradar.de/kliniken/st-joseph-krankenhaus-berlin-tempelhof | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1818 | company_name: St. Joseph Krankenhaus Prüm | website: http://krankenhaus-pruem.de | source_url: https://klinikradar.de/kliniken/st-joseph-krankenhaus-pruem | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 168 | company_name: St. Lukas-Klinik in Meckenbeuren | source_url: https://klinikradar.de/kliniken/st-lukas-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_075
+- Return only the requested result.
+- Use public information only.
