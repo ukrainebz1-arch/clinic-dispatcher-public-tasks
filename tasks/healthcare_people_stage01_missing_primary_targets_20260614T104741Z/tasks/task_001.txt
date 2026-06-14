@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T104741Z
+TASK_ID: task_001
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1174 | company_name: 310KLINIK in Nürnberg | website: http://310klinik.com | source_url: https://klinikradar.de/kliniken/310klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 826 | company_name: Achenbach Krankenhaus Königs Wusterhausen | website: https://klinikum-ds.de | source_url: https://klinikradar.de/kliniken/achenbach-krankenhaus-koenigs-wusterhausen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 175 | company_name: Acura Fachklinik in Albstadt | source_url: https://klinikradar.de/kliniken/acura-fachklinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 110 | company_name: Acura Kliniken Baden-Baden | source_url: https://klinikradar.de/kliniken/acura-kliniken-baden-baden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 2278 | company_name: ACURA Rhönklinik Gersfeld | website: https://rhoen-klinik.de | source_url: https://klinikradar.de/rehakliniken/acura-rhoenklinik-gersfeld | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1046 | company_name: Adula Klinik in Oberstdorf | website: http://dr-reisach-kliniken.de | source_url: https://klinikradar.de/kliniken/adula-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 315 | company_name: Agaplesion Allgemeines Krankenhaus Hagen | source_url: https://klinikradar.de/kliniken/agaplesion-allgemeines-krankenhaus-hagen | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 137 | company_name: Agaplesion Bethanien Krankenhaus Heidelberg | source_url: https://klinikradar.de/kliniken/agaplesion-bethanien-krankenhaus-heidelberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1432 | company_name: Agaplesion Bethanien Krankenhaus in Frankfurt am Main | website: http://bethanien-krankenhaus.de | source_url: https://klinikradar.de/kliniken/agaplesion-bethanien-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 146 | company_name: Agaplesion Bethesda Klinik Ulm | source_url: https://klinikradar.de/kliniken/agaplesion-bethesda-klinik-ulm | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 377 | company_name: Agaplesion Bethesda Krankenhaus Wuppertal | source_url: https://klinikradar.de/kliniken/agaplesion-bethesda-krankenhaus-wuppertal | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1402 | company_name: Agaplesion Diakonie Kliniken Kassel | website: https://diako-kassel.de | source_url: https://klinikradar.de/kliniken/agaplesion-diakonie-kliniken-kassel | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 1282 | company_name: Agaplesion Diakonieklinikum Hamburg | website: http://d-k-h.de | source_url: https://klinikradar.de/kliniken/agaplesion-diakonieklinikum-hamburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1565 | company_name: Agaplesion Diakonieklinikum Rotenburg | website: http://diako-online.de | source_url: https://klinikradar.de/kliniken/agaplesion-diakonieklinikum-rotenburg | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1709 | company_name: Agaplesion Diakonieklinikum Rotenburg - Klinik für Kinder- und Jugendpsychiatrie, -psychotherapie und -psychosomatik | website: http://diako-online.de | source_url: https://klinikradar.de/kliniken/agaplesion-diakonieklinikum-rotenburg-klinik-fuer-kinder-und-jugendpsychiatrie-psychotherapie-und-psychosomatik | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1389 | company_name: Agaplesion Elisabethenstift Evangelisches Krankenhaus in Darmstadt | website: http://agaplesion-elisabethenstift.de | source_url: https://klinikradar.de/kliniken/agaplesion-elisabethenstift-evangelisches-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 1626 | company_name: AGAPLESION Ev. Bathildiskrankenhaus in Bad Pyrmont | website: http://bathildis.de | source_url: https://klinikradar.de/kliniken/agaplesion-ev-bathildiskrankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1581 | company_name: Agaplesion Ev. Klinikum Schaumburg in Obernkirchen | website: https://ev-klinikum-schaumburg.de | source_url: https://klinikradar.de/kliniken/agaplesion-ev-klinikum-schaumburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1410 | company_name: Agaplesion Evangelisches Krankenhaus Mittelhessen Gießen | website: http://ekm-gi.de | source_url: https://klinikradar.de/kliniken/agaplesion-evangelisches-krankenhaus-mittelhessen-giessen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1682 | company_name: Agaplesion Krankenhaus Neu Bethlehem in Göttingen | website: http://neubethlehem.de | source_url: https://klinikradar.de/kliniken/agaplesion-krankenhaus-neu-bethlehem | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1383 | company_name: Agaplesion Markus Krankenhaus in Frankfurt am Main | website: http://markus-krankenhaus.de | source_url: https://klinikradar.de/kliniken/agaplesion-markus-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1878 | company_name: Ahrtal-Klinik in Sinzig | website: http://ahrtal-klinik.de | source_url: https://klinikradar.de/kliniken/ahrtal-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1332 | company_name: AKG Klinik Parchim | website: https://asklepios.com/parchim | source_url: https://klinikradar.de/kliniken/akg-klinik-parchim | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1280 | company_name: AKK Altonaer Kinderkrankenhaus in Hamburg | website: https://kinderkrankenhaus.net | source_url: https://klinikradar.de/kliniken/akk-altonaer-kinderkrankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 128 | company_name: Alb-Donau Klinikum (Blaubeuren) | source_url: https://klinikradar.de/kliniken/alb-donau-klinikum-blaubeuren | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_001
+- Return only the requested result.
+- Use public information only.
