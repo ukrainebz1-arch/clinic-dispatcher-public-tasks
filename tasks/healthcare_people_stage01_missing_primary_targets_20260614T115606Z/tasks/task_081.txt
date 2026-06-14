@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260614T115606Z
+TASK_ID: task_081
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- Start every response with RUN_ID and TASK_ID exactly as provided in the task.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+PER-COMPANY TARGETING:
+- For each input company, read missing_reason first.
+- Search only for the exact role gaps listed in missing_reason for that company.
+- If missing_reason lists only Management primary, search only Management primary for that company.
+- If missing_reason lists multiple gaps, search all listed gaps.
+- Do not search HR/Pflege/Management roles that are not listed as missing for that company.
+
+CURRENT CHUNK INPUT:
+1. company_id: 858 | company_name: Tagesklinik für Psychiatrie und Psychotherapie für Erwachsene (Schwedt/Oder) | website: https://glg-gesundheit.de | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-fuer-erwachsene-schwedt-oder | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 860 | company_name: Tagesklinik für Psychiatrie und Psychotherapie für Erwachsene (Templin) | website: https://glg-gesundheit.de | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-fuer-erwachsene-templin | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 859 | company_name: Tagesklinik für Psychiatrie und Psychotherapie für Erwachsene Prenzlau | website: https://glg-gesundheit.de | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-fuer-erwachsene-prenzlau | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 654 | company_name: Tagesklinik für Psychiatrie und Psychotherapie Herford | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-herford | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 216 | company_name: Tagesklinik für Psychiatrie und Psychotherapie Landkreis Tuttlingen in Spaichingen | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-landkreis-tuttlingen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1875 | company_name: Tagesklinik für Psychiatrie und Psychotherapie Mainz | website: https://gps-rps.de | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-mainz | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 217 | company_name: Tagesklinik für Psychiatrie und Psychotherapie Schwarzwald-Baar-Kreis in Villingen-Schwenningen | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-schwarzwald-baar-kreis | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 215 | company_name: Tagesklinik für Psychiatrie und Psychotherapie Zollernalbkreis in Balingen | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-und-psychotherapie-zollernalbkreis | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 727 | company_name: Tagesklinik für Psychiatrie, Psychotherapie und Gerontopsychiatrie des St. Rochus-Hospitals Telgte in Ahlen, Westfalen | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-psychotherapie-und-gerontopsychiatrie-des-st-rochus-hospitals-telgte | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1979 | company_name: Tagesklinik für Psychiatrie, Psychotherapie und Psychosomatik (Bad Freienwalde) | website: https://glg-gesundheit.de | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-psychotherapie-und-psychosomatik-bad-freienwalde | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1975 | company_name: Tagesklinik für Psychiatrie, Psychotherapie und Psychosomatik (Bernstein) in Bernau bei Berlin | website: https://glg-gesundheit.de | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-psychotherapie-und-psychosomatik-bernstein | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 893 | company_name: Tagesklinik für Psychiatrie, Psychotherapie und Psychosomatik Falkensee | website: http://havelland-kliniken.de | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-psychotherapie-und-psychosomatik-falkensee | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 1252 | company_name: Tagesklinik für Psychiatrie, Psychotherapie und Psychosomatik in Coburg | website: https://gebo-med.de | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-psychotherapie-und-psychosomatik-in-coburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1256 | company_name: Tagesklinik für Psychiatrie, Psychotherapie und Psychosomatik in Kronach in Kronach, Oberfranken | website: https://gebo-med.de | source_url: https://klinikradar.de/kliniken/tagesklinik-fuer-psychiatrie-psychotherapie-und-psychosomatik-in-kronach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 876 | company_name: Tagesklinik Fürstenwalde | website: https://psychiatrie.immanuel.de/einrichtung/versorgungsbereiche/tagesklinik-fuerstenwalde | source_url: https://klinikradar.de/kliniken/tagesklinik-fuerstenwalde | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1734 | company_name: Tagesklinik Gifhorn | website: http://awo-psychiatriezentrum.de | source_url: https://klinikradar.de/kliniken/tagesklinik-gifhorn | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 1350 | company_name: Tagesklinik Greifswald | website: http://odebrecht-stiftung.de | source_url: https://klinikradar.de/kliniken/tagesklinik-greifswald | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 902 | company_name: Tagesklinik Guben | website: http://krankenhaus-spremberg.de | source_url: https://klinikradar.de/kliniken/tagesklinik-guben | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 705 | company_name: Tagesklinik Gütersloh | source_url: https://klinikradar.de/kliniken/tagesklinik-guetersloh | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 673 | company_name: Tagesklinik Haltern | source_url: https://klinikradar.de/kliniken/tagesklinik-haltern | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 183 | company_name: Tagesklinik Heilbronn | source_url: https://klinikradar.de/kliniken/tagesklinik-heilbronn | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1737 | company_name: Tagesklinik Helmstedt | website: http://awo-psychiatriezentrum.de | source_url: https://klinikradar.de/kliniken/tagesklinik-helmstedt | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 789 | company_name: Tagesklinik Hohenschönhausen in Berlin | website: https://keh-berlin.de | source_url: https://klinikradar.de/kliniken/tagesklinik-hohenschoenhausen | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 682 | company_name: Tagesklinik im Clemens-Wallrath-Haus in Münster | source_url: https://klinikradar.de/kliniken/tagesklinik-im-clemens-wallrath-haus | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 214 | company_name: Tagesklinik im Schlössle in Nürtingen | source_url: https://klinikradar.de/kliniken/tagesklinik-im-schloessle | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Start your answer with: TASK_ID: task_081
+- Return only the requested result.
+- Use public information only.
