@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T175904Z
+TASK_ID: task_020
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1207 | company_name: Fachklinik Stadtsteinach | website: https://klinikum-kulmbach.de | source_url: https://klinikradar.de/kliniken/fachklinik-stadtsteinach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 2145 | company_name: Fachklinik und Moorbad Bad Freienwalde | website: https://reha-freienwalde.de | source_url: https://klinikradar.de/rehakliniken/fachklinik-und-moorbad-bad-freienwalde | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 2151 | company_name: Fachklinik Weserland in Bad Pyrmont | website: https://fachklinik-weserland.de | source_url: https://klinikradar.de/rehakliniken/fachklinik-weserland | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 211 | company_name: Fachkliniken Hohenurach in Bad Urach | source_url: https://klinikradar.de/kliniken/fachkliniken-hohenurach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1341 | company_name: Fachkliniken Waldeck in Schwaan | website: https://neurokliniken-waldeck.de | source_url: https://klinikradar.de/kliniken/fachkliniken-waldeck | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 108 | company_name: Fachkliniken Wangen | source_url: https://klinikradar.de/kliniken/fachkliniken-wangen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 2242 | company_name: Fachklinikum Brandis | website: https://fachklinikum-brandis.de | source_url: https://klinikradar.de/rehakliniken/fachklinikum-brandis | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1182 | company_name: Fachklinikum Mainschleife in Volkach | website: https://fachklinikum-mainschleife.de | source_url: https://klinikradar.de/kliniken/fachklinikum-mainschleife | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1952 | company_name: Fachkrankenhaus Bethanien Hochweitzschen in Döbeln | website: http://agaplesion-mittelsachsen.de | source_url: https://klinikradar.de/kliniken/fachkrankenhaus-bethanien-hochweitzschen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1946 | company_name: Fachkrankenhaus für Geriatrie Radeburg | website: http://fachkliniken-radeburg.de | source_url: https://klinikradar.de/kliniken/fachkrankenhaus-fuer-geriatrie-radeburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 845 | company_name: Fachkrankenhaus für Neurologische Frührehabilitation Kliniken Beelitz | website: http://fruehreha-beelitz.de/kbgf.html | source_url: https://klinikradar.de/kliniken/fachkrankenhaus-fuer-neurologische-fruehrehabilitation-kliniken-beelitz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1932 | company_name: Fachkrankenhaus für Psychiatrie und Psychotherapie Bethanien Hochweitzschen in Großweitzschen | website: http://agaplesion-mitteldeutschland.de | source_url: https://klinikradar.de/kliniken/fachkrankenhaus-fuer-psychiatrie-und-psychotherapie-bethanien-hochweitzschen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 1973 | company_name: Fachkrankenhaus Hubertusburg - Tagesklinik Torgau | website: http://fkh-hubertusburg.de | source_url: https://klinikradar.de/kliniken/fachkrankenhaus-hubertusburg-tagesklinik-torgau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1970 | company_name: Fachkrankenhaus Hubertusburg - Tageskliniken Riesa | website: http://fkh-hubertusburg.de | source_url: https://klinikradar.de/kliniken/fachkrankenhaus-hubertusburg-tageskliniken-riesa | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1919 | company_name: Fachkrankenhaus Hubertusburg in Wermsdorf | website: http://fkh-hubertusburg.de | source_url: https://klinikradar.de/kliniken/fachkrankenhaus-hubertusburg | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 497 | company_name: Fachkrankenhaus Kloster Grafschaft in Schmallenberg | source_url: https://klinikradar.de/kliniken/fachkrankenhaus-kloster-grafschaft | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 1925 | company_name: Fachkrankenhaus Kreischa | website: https://klinik-bavaria.de | source_url: https://klinikradar.de/kliniken/fachkrankenhaus-kreischa | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1724 | company_name: Falkenried Caduceus Klinik in Bad Bevensen | source_url: https://klinikradar.de/kliniken/falkenried-caduceus-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1977 | company_name: Familientagesklinik "Koralle" mit familientherapeutischer Ambulanz (Bernau) | website: https://glg-gesundheit.de | source_url: https://klinikradar.de/kliniken/familientagesklinik-koralle-mit-familientherapeutischer-ambulanz-bernau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 2099 | company_name: Federseeklinik Bad Buchau | website: https://federseeklinik.de | source_url: https://klinikradar.de/rehakliniken/federseeklinik-bad-buchau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1862 | company_name: Felsenland Klinik Dahn | website: http://felsenlandklinik.com | source_url: https://klinikradar.de/kliniken/felsenland-klinik-dahn | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 2019 | company_name: Fliedner Krankenhaus Neunkirchen | website: https://kreuznacherdiakonie.de/krankenhaeuser/fliedner-krankenhaus-neunkirchen | source_url: https://klinikradar.de/kliniken/fliedner-krankenhaus-neunkirchen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 532 | company_name: Fliedner Krankenhaus Ratingen - Klinik für Psychiatrie und Psychotherapie, Gerontopsychiatrie und Suchtmedizin | source_url: https://klinikradar.de/kliniken/fliedner-krankenhaus-ratingen-klinik-fuer-psychiatrie-und-psychotherapie-gerontopsychiatrie-und-suchtmedizin | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 301 | company_name: Florence-Nightingale-Krankenhaus in Düsseldorf | source_url: https://klinikradar.de/kliniken/florence-nightingale-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1990 | company_name: Frankenalb-Klinik Engelthal in Engelthal, Mittelfranken | website: https://bezirkskliniken-mfr.de/standorte-und-kliniken/engelthal | source_url: https://klinikradar.de/kliniken/frankenalb-klinik-engelthal | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_020 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T175904Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260615T175904Z and task_id=task_020 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
