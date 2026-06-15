@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T192555Z
+TASK_ID: task_030
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 501 | company_name: Karl-Hansen-Klinik in Bad Lippspringe | source_url: https://klinikradar.de/kliniken/karl-hansen-klinik | missing_reason: company has no HR primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1574 | company_name: Karl-Jaspers-Klinik in Bad Zwischenahn | website: https://karl-jaspers-klinik.de | source_url: https://klinikradar.de/kliniken/karl-jaspers-klinik | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 51 | company_name: Karl-Olga-Krankenhaus in Stuttgart | source_url: https://klinikradar.de/kliniken/karl-olga-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 312 | company_name: Karolinen-Hospital Hüsten in Arnsberg | source_url: https://klinikradar.de/kliniken/karolinen-hospital-huesten | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1267 | company_name: Kath. Marienkrankenhaus in Hamburg | website: http://marienkrankenhaus.org | source_url: https://klinikradar.de/kliniken/kath-marienkrankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1276 | company_name: Katholisches Kinderkrankenhaus Wilhelmstift in Hamburg | website: http://kkh-wilhelmstift.de | source_url: https://klinikradar.de/kliniken/katholisches-kinderkrankenhaus-wilhelmstift | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1778 | company_name: Katholisches Klinikum Koblenz·Montabaur | website: https://kk-km.de | source_url: https://klinikradar.de/kliniken/katholisches-klinikum-koblenzmontabaur | missing_reason: company has no HR primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 446 | company_name: Katholisches Krankenhaus Dortmund-West | source_url: https://klinikradar.de/kliniken/katholisches-krankenhaus-dortmund-west | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1218 | company_name: kbo-Heckscher-Klinikum (Haar) | website: https://kbo-heckscher-klinikum.de | source_url: https://klinikradar.de/kliniken/kbo-heckscher-klinikum-haar | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1245 | company_name: kbo-Heckscher-Klinikum (Ingolstadt) | website: https://kbo-heckscher-klinikum.de | source_url: https://klinikradar.de/kliniken/kbo-heckscher-klinikum-ingolstadt | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1254 | company_name: kbo-Heckscher-Klinikum (Landsberg am Lech) | website: https://kbo-heckscher-klinikum.de | source_url: https://klinikradar.de/kliniken/kbo-heckscher-klinikum-landsberg-am-lech | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1195 | company_name: kbo-Heckscher-Klinikum (Rosenheim) | website: https://kbo-heckscher-klinikum.de | source_url: https://klinikradar.de/kliniken/kbo-heckscher-klinikum-rosenheim | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 1173 | company_name: kbo-Heckscher-Klinikum (Rottmannshöhe) in Berg (Starnberger See) | website: https://kbo-heckscher-klinikum.de | source_url: https://klinikradar.de/kliniken/kbo-heckscher-klinikum-rottmannshoehe | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1221 | company_name: kbo-Heckscher-Klinikum (Wasserburg) | website: https://kbo-heckscher-klinikum.de | source_url: https://klinikradar.de/kliniken/kbo-heckscher-klinikum-wasserburg | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1122 | company_name: kbo-Heckscher-Klinikum in München | website: https://kbo-heckscher-klinikum.de | source_url: https://klinikradar.de/kliniken/kbo-heckscher-klinikum | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1257 | company_name: kbo-Inn-Salzach-Klinikum Altötting | website: http://kbo-isk.de | source_url: https://klinikradar.de/kliniken/kbo-inn-salzach-klinikum-altoetting | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 1258 | company_name: kbo-Inn-Salzach-Klinikum Ebersberg in Ebersberg, Oberbayern | website: http://kbo-isk.de | source_url: https://klinikradar.de/kliniken/kbo-inn-salzach-klinikum-ebersberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1126 | company_name: kbo-Inn-Salzach-Klinikum Freilassing | website: http://kbo-isk.de | source_url: https://klinikradar.de/kliniken/kbo-inn-salzach-klinikum-freilassing | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1248 | company_name: kbo-Inn-Salzach-Klinikum Rosenheim | website: http://kbo-isk.de | source_url: https://klinikradar.de/kliniken/kbo-inn-salzach-klinikum-rosenheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 939 | company_name: kbo-Inn-Salzach-Klinikum Wasserburg | website: http://kbo-isk.de | source_url: https://klinikradar.de/kliniken/kbo-inn-salzach-klinikum-wasserburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1185 | company_name: kbo-Isar-Amper-Klinikum Atriumhaus in München | website: http://kbo-iak.de | source_url: https://klinikradar.de/kliniken/kbo-isar-amper-klinikum-atriumhaus | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1217 | company_name: kbo-Isar-Amper-Klinikum Dachau in Ottobrunn | website: http://kbo-iak.de | source_url: https://klinikradar.de/kliniken/kbo-isar-amper-klinikum-dachau | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1084 | company_name: kbo-Isar-Amper-Klinikum Fürstenfeldbruck | website: https://kbo-iak.de | source_url: https://klinikradar.de/kliniken/kbo-isar-amper-klinikum-fuerstenfeldbruck | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 918 | company_name: kbo-Isar-Amper-Klinikum Haar | website: https://kbo-iak.de | source_url: https://klinikradar.de/kliniken/kbo-isar-amper-klinikum-haar | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1037 | company_name: kbo-Isar-Amper-Klinikum München-Nord | website: https://kbo-iak.de | source_url: https://klinikradar.de/kliniken/kbo-isar-amper-klinikum-muenchen-nord | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_030 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T192555Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260615T192555Z and task_id=task_030 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
