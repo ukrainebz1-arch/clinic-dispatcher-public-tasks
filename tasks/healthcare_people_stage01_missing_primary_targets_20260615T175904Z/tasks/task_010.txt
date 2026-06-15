@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T175904Z
+TASK_ID: task_010
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 752 | company_name: Bundeswehrkrankenhaus Berlin | website: http://berlin.bwkrankenhaus.de | source_url: https://klinikradar.de/kliniken/bundeswehrkrankenhaus-berlin | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1275 | company_name: Bundeswehrkrankenhaus Hamburg | website: https://bwkrankenhaus.de/de/bundeswehrkrankenhaus-hamburg | source_url: https://klinikradar.de/kliniken/bundeswehrkrankenhaus-hamburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 49 | company_name: Bundeswehrkrankenhaus Ulm | source_url: https://klinikradar.de/kliniken/bundeswehrkrankenhaus-ulm | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1659 | company_name: Bundeswehrkrankenhaus Westerstede | website: https://bwkrankenhaus.de/de/bundeswehrkrankenhaus-westerstede | source_url: https://klinikradar.de/kliniken/bundeswehrkrankenhaus-westerstede | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 2237 | company_name: Burgenlandklinik in Naumburg (Saale) | website: https://burgenlandklinik.de | source_url: https://klinikradar.de/rehakliniken/burgenlandklinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1513 | company_name: Burghof-Klinik Bad Nauheim | website: http://burghof-klinik.com | source_url: https://klinikradar.de/kliniken/burghof-klinik-bad-nauheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1693 | company_name: Burghof-Klinik Haus 1 in Rinteln | website: http://burghof-klinik.de | source_url: https://klinikradar.de/kliniken/burghof-klinik-haus-1 | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1721 | company_name: Burghof-Klinik Haus 2 in Aerzen | website: http://burghof-klinik.de | source_url: https://klinikradar.de/kliniken/burghof-klinik-haus-2 | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1695 | company_name: Burghof-Klinik Haus 3 u . 4 in Rinteln | website: http://burghof-klinik.de | source_url: https://klinikradar.de/kliniken/burghof-klinik-haus-3-u-4 | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1740 | company_name: Burghof-Klinik Tagesklinik Stadthagen | website: http://burghof-klinik.de | source_url: https://klinikradar.de/kliniken/burghof-klinik-tagesklinik-stadthagen | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 2161 | company_name: Bückeberg Klinik in Bad Eilsen | website: https://bueckeberg-klinik.de | source_url: https://klinikradar.de/rehakliniken/bueckeberg-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1399 | company_name: Bürgerhospital und Clementine Kinderhospital Standort: Bürgerhospital Frankfurt | website: https://buergerhospital-ffm.de | source_url: https://klinikradar.de/kliniken/buergerhospital-und-clementine-kinderhospital-standort-buergerhospital-frankfurt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 681 | company_name: CardioCliniC Köln | source_url: https://klinikradar.de/kliniken/cardioclinic-koeln | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 762 | company_name: Caritas-Klinik Dominikus in Berlin | website: https://caritas-gesundheit.de/kliniken/caritas-klinik-dominikus | source_url: https://klinikradar.de/kliniken/caritas-klinik-dominikus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 761 | company_name: Caritas-Klinik Maria Heimsuchung Berlin-Pankow | website: http://caritas-klinik-pankow.de | source_url: https://klinikradar.de/kliniken/caritas-klinik-maria-heimsuchung-berlin-pankow | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 772 | company_name: Caritas-Klinik St. Anna Berlin-Charlottenburg | website: https://caritas-gesundheit.de/kliniken/caritas-klinik-st-anna | source_url: https://klinikradar.de/kliniken/caritas-klinik-st-anna-berlin-charlottenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 844 | company_name: Caritas-Klinik St. Marien in Brandenburg an der Havel | website: https://caritas-klinik-marien.de | source_url: https://klinikradar.de/kliniken/caritas-klinik-st-marien | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 35 | company_name: Caritas-Krankenhaus Bad Mergentheim | source_url: https://klinikradar.de/kliniken/caritas-krankenhaus-bad-mergentheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 2020 | company_name: Caritas-Krankenhaus Lebach | website: https://caritas-krankenhaus-lebach.de | source_url: https://klinikradar.de/kliniken/caritas-krankenhaus-lebach | missing_reason: company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 972 | company_name: Caritas-Krankenhaus St. Josef in Regensburg | website: https://csj.de | source_url: https://klinikradar.de/kliniken/caritas-krankenhaus-st-josef | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1005 | company_name: Caritas-Krankenhaus St. Lukas in Kelheim | website: https://csl-kelheim.de | source_url: https://klinikradar.de/kliniken/caritas-krankenhaus-st-lukas | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 2026 | company_name: CaritasKlinikum Saarbrücken (St. Josef) | website: http://caritasklinikum.de | source_url: https://klinikradar.de/kliniken/caritasklinikum-saarbruecken-st-josef | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1755 | company_name: CaritasKlinikum Saarbrücken (St. Theresia) | website: http://caritasklinikum.de | source_url: https://klinikradar.de/kliniken/caritasklinikum-saarbruecken-st-theresia | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 813 | company_name: Carl-Thiem-Klinikum Cottbus | website: http://mul-ct.de | source_url: https://klinikradar.de/kliniken/carl-thiem-klinikum-cottbus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 2225 | company_name: Caspar Heinrich Klinik in Bad Driburg | website: https://caspar-heinrich-klinik.de | source_url: https://klinikradar.de/rehakliniken/caspar-heinrich-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_010 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T175904Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260615T175904Z and task_id=task_010 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
