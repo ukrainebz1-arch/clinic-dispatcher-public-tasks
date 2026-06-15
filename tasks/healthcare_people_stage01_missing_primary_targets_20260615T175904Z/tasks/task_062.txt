@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T175904Z
+TASK_ID: task_062
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1529 | company_name: Otto-Fricke-Krankenhaus Paulinenberg in Wiesbaden | website: http://otto-fricke-krankenhaus.de | source_url: https://klinikradar.de/kliniken/otto-fricke-krankenhaus-paulinenberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1094 | company_name: Panorama Fachklinik Scheidegg | source_url: https://klinikradar.de/kliniken/panorama-fachklinik-scheidegg | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 213 | company_name: Panoramaklinik Esslingen | source_url: https://klinikradar.de/kliniken/panoramaklinik-esslingen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1145 | company_name: Paracelsus Klinik München | website: https://paracelsus-kliniken.de/akut/muenchen | source_url: https://klinikradar.de/kliniken/paracelsus-klinik-muenchen | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 162 | company_name: Paracelsus Krankenhaus in Bad Liebenzell | source_url: https://klinikradar.de/kliniken/paracelsus-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1460 | company_name: Paracelsus-Elena-Klinik Kassel | website: https://paracelsus-kliniken.de/kassel | source_url: https://klinikradar.de/kliniken/paracelsus-elena-klinik-kassel | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1899 | company_name: Paracelsus-Klinik Adorf/Schöneck - Standort Adorf in Adorf, Vogtland | website: http://paracelsus-kliniken.de/adorf | source_url: https://klinikradar.de/kliniken/paracelsus-klinik-adorf-schoeneck-standort-adorf | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1900 | company_name: Paracelsus-Klinik Adorf/Schöneck - Standort Schöneck | website: http://paracelsus-kliniken.de/schoeneck | source_url: https://klinikradar.de/kliniken/paracelsus-klinik-adorf-schoeneck-standort-schoeneck | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1669 | company_name: Paracelsus-Klinik am Silbersee in Langenhagen | website: https://paracelsus-kliniken.de/langenhagen.html | source_url: https://klinikradar.de/kliniken/paracelsus-klinik-am-silbersee | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 809 | company_name: Paracelsus-Klinik Bremen | website: https://paracelsus-kliniken.de/akut/bremen | source_url: https://klinikradar.de/kliniken/paracelsus-klinik-bremen | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 605 | company_name: Paracelsus-Klinik Golzheim in Düsseldorf | source_url: https://klinikradar.de/kliniken/paracelsus-klinik-golzheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 432 | company_name: Paracelsus-Klinik Marl | source_url: https://klinikradar.de/kliniken/paracelsus-klinik-marl | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 2154 | company_name: Paracelsus-Wittekindklinik in Bad Essen | website: https://paracelsus-kliniken.de/reha/wittekindklinik-bad-essen | source_url: https://klinikradar.de/rehakliniken/paracelsus-wittekindklinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 2226 | company_name: Park Klinik Bad Hermannsborn | website: https://kbh.de | source_url: https://klinikradar.de/rehakliniken/park-klinik-bad-hermannsborn | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 2190 | company_name: Park-Klinik Bad Nauheim | website: https://parkklinik-bad-nauheim.de | source_url: https://klinikradar.de/rehakliniken/park-klinik-bad-nauheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 751 | company_name: Park-Klinik Weißensee in Berlin | website: https://parkkliniken-weissensee.de | source_url: https://klinikradar.de/kliniken/park-klinik-weissensee | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 170 | company_name: Parkinson Klinik Ortenau in Wolfach | source_url: https://klinikradar.de/kliniken/parkinson-klinik-ortenau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1440 | company_name: Parkland-Klinik Bad Wildungen | website: http://parkland-klinik.de | source_url: https://klinikradar.de/kliniken/parkland-klinik-bad-wildungen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 2200 | company_name: Parkland-Klinik in Bad Wildungen | website: https://parkland-klinik.de | source_url: https://klinikradar.de/rehakliniken/parkland-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1204 | company_name: Passauer Wolf Bad Griesbach - Klinik für Neurologie | website: https://passauerwolf.de | source_url: https://klinikradar.de/kliniken/passauer-wolf-bad-griesbach-klinik-fuer-neurologie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1201 | company_name: Passauer Wolf Bad Gögging - Klinik für Neurologie in Neustadt an der Donau | website: https://passauerwolf.de | source_url: https://klinikradar.de/kliniken/passauer-wolf-bad-goegging-klinik-fuer-neurologie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 2102 | company_name: Passauer Wolf Bad Gögging in Neustadt an der Donau | website: https://passauerwolf.de/standorte/bad-goegging | source_url: https://klinikradar.de/rehakliniken/passauer-wolf-bad-goegging | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 2113 | company_name: Passauer Wolf Nittenau | website: https://passauerwolf.de/standorte/nittenau | source_url: https://klinikradar.de/rehakliniken/passauer-wolf-nittenau | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1714 | company_name: Paulinenkrankenhaus Bad Bentheim | website: https://mathias-medizin.de/leistungen-einrichtungen/einrichtungen/paulinenkrankenhaus-bad-bentheim | source_url: https://klinikradar.de/kliniken/paulinenkrankenhaus-bad-bentheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 771 | company_name: Paulinenkrankenhaus Berlin | website: https://sana.de/paulinenkrankenhaus | source_url: https://klinikradar.de/kliniken/paulinenkrankenhaus-berlin | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_062 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T175904Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260615T175904Z and task_id=task_062 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
