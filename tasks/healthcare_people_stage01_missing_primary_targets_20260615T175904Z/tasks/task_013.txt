@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T175904Z
+TASK_ID: task_013
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1922 | company_name: Diakonie Kliniken Zschadraß - Fachkrankenhaus für Psychiatrie, Psychotherapie und Neurologie in Colditz | website: http://diakoniezschadrass.de | source_url: https://klinikradar.de/kliniken/diakonie-kliniken-zschadrass-fachkrankenhaus-fuer-psychiatrie-psychotherapie-und-neurologie | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1959 | company_name: Diakonie Kliniken Zschadraß - Fachkrankenhaus für Psychiatrie, Psychotherapie und Neurologie: Tagesklinik Borna | website: http://diakoniezschadrass.de | source_url: https://klinikradar.de/kliniken/diakonie-kliniken-zschadrass-fachkrankenhaus-fuer-psychiatrie-psychotherapie-und-neurologie-tagesklinik-borna | missing_reason: company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1960 | company_name: Diakonie Kliniken Zschadraß - Fachkrankenhaus für Psychiatrie, Psychotherapie und Neurologie: Tagesklinik Grimma | website: http://diakoniezschadrass.de | source_url: https://klinikradar.de/kliniken/diakonie-kliniken-zschadrass-fachkrankenhaus-fuer-psychiatrie-psychotherapie-und-neurologie-tagesklinik-grimma | missing_reason: company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1962 | company_name: Diakonie Kliniken Zschadraß - Fachkrankenhaus für Psychiatrie, Psychotherapie und Neurologie: Tagesklinik Rochlitz | website: http://diakoniezschadrass.de | source_url: https://klinikradar.de/kliniken/diakonie-kliniken-zschadrass-fachkrankenhaus-fuer-psychiatrie-psychotherapie-und-neurologie-tagesklinik-rochlitz | missing_reason: company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 317 | company_name: Diakonie Klinikum Jung-Stilling in Siegen | source_url: https://klinikradar.de/kliniken/diakonie-klinikum-jung-stilling | missing_reason: company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 537 | company_name: Diakonie Klinikum Krankenhaus Bethesda in Freudenberg, Westfalen | source_url: https://klinikradar.de/kliniken/diakonie-klinikum-krankenhaus-bethesda | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1762 | company_name: Diakonie Klinikum Neunkirchen | website: http://kreuznacherdiakonie.de/Krankenhaeuser/Diakonie-Klinikum-Neunkirchen | source_url: https://klinikradar.de/kliniken/diakonie-klinikum-neunkirchen | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1846 | company_name: Diakonie Krankenhaus Kirn in Kirn, Nahe | website: https://kreuznacherdiakonie.de/krankenhaeuser/diakonie-krankenhaus-kirn | source_url: https://klinikradar.de/kliniken/diakonie-krankenhaus-kirn | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1784 | company_name: Diakonie Krankenhaus Kreuznacher Diakonie | website: https://kreuznacherdiakonie.de/krankenhaeuser/diakonie-krankenhaus-bad-kreuznach | source_url: https://klinikradar.de/kliniken/diakonie-krankenhaus-kreuznacher-diakonie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 134 | company_name: Diakonie-Klinik Mosbach | source_url: https://klinikradar.de/kliniken/diakonie-klinik-mosbach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 135 | company_name: Diakonie-Klinik Mosbach, Standort Tauberbischofsheim | source_url: https://klinikradar.de/kliniken/diakonie-klinik-mosbach-standort-tauberbischofsheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 29 | company_name: Diakonie-Klinikum Schwäbisch Hall | source_url: https://klinikradar.de/kliniken/diakonie-klinikum-schwaebisch-hall | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 4 | company_name: Diakonie-Klinikum Stuttgart | source_url: https://klinikradar.de/kliniken/diakonie-klinikum-stuttgart | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1428 | company_name: Diakonie-Krankenhaus Wehrda in Marburg | website: https://dkh-wehrda.de | source_url: https://klinikradar.de/kliniken/diakonie-krankenhaus-wehrda | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1779 | company_name: Diakonissen-Stiftungs-Krankenhaus Speyer | website: http://diakonissen.de/krankenhaeuser/diakonissen-stiftungs-krankenhaus-speyer/home.html | source_url: https://klinikradar.de/kliniken/diakonissen-stiftungs-krankenhaus-speyer | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1908 | company_name: Diakonissenkrankenhaus Dresden | website: http://diakonissenkrankenhaus-dresden.de | source_url: https://klinikradar.de/kliniken/diakonissenkrankenhaus-dresden | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 70 | company_name: Diakonissenkrankenhaus Karlsruhe | source_url: https://klinikradar.de/kliniken/diakonissenkrankenhaus-karlsruhe | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1646 | company_name: DIAKOVERE Annastift in Hannover | website: https://diakovere.de/unternehmen-mehr/krankenhaeuser/annastift | source_url: https://klinikradar.de/kliniken/diakovere-annastift | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1578 | company_name: DIAKOVERE Friederikenstift Humboldtstraße in Hannover | website: http://diakovere.de/friederikenstift | source_url: https://klinikradar.de/kliniken/diakovere-friederikenstift-humboldtstrasse | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1601 | company_name: DIAKOVERE Henriettenstift in Hannover | website: http://diakovere.de/henriettenstift | source_url: https://klinikradar.de/kliniken/diakovere-henriettenstift | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1639 | company_name: DIAKOVERE Henriettenstift Standort Kirchrode in Hannover | website: http://diakovere.de/henriettenstift | source_url: https://klinikradar.de/kliniken/diakovere-henriettenstift-standort-kirchrode | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1725 | company_name: DianaKlinik in Bad Bevensen | website: http://diana-klinik.de | source_url: https://klinikradar.de/kliniken/dianaklinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 2160 | company_name: DianaKlinik in Bad Bevensen | website: https://diana-klinik.de | source_url: https://klinikradar.de/rehakliniken/dianaklinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 88 | company_name: Die Filderklinik in Filderstadt | source_url: https://klinikradar.de/kliniken/die-filderklinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1056 | company_name: Die Stadtklinik im Diako in Augsburg | website: https://stadtklinik-diako.de | source_url: https://klinikradar.de/kliniken/die-stadtklinik-im-diako | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_013 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T175904Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260615T175904Z and task_id=task_013 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
