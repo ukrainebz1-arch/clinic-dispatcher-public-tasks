@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T192555Z
+TASK_ID: task_025
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1300 | company_name: Helios Kliniken Schwerin | website: https://helios-gesundheit.de/kliniken/schwerin | source_url: https://klinikradar.de/kliniken/helios-kliniken-schwerin | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1314 | company_name: Helios Kliniken Schwerin (Psychiatrie) | website: https://helios-gesundheit.de/kliniken/schwerin | source_url: https://klinikradar.de/kliniken/helios-kliniken-schwerin-psychiatrie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1353 | company_name: Helios Kliniken Schwerin - Tagesklinik allgemeine Psychiatrie Ludwigslust | website: https://helios-gesundheit.de/kliniken/schwerin | source_url: https://klinikradar.de/kliniken/helios-kliniken-schwerin-tagesklinik-allgemeine-psychiatrie-ludwigslust | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1363 | company_name: Helios Kliniken Schwerin - Tagesklinik für Kinder - und Jugendpsychiatrie Ludwigslust | website: https://helios-gesundheit.de/kliniken/schwerin | source_url: https://klinikradar.de/kliniken/helios-kliniken-schwerin-tagesklinik-fuer-kinder-und-jugendpsychiatrie-ludwigslust | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1361 | company_name: Helios Kliniken Schwerin - Tagesklinik für Kinder- und Jugendpsychiatrie in Wismar | website: https://helios-gesundheit.de/kliniken/schwerin | source_url: https://klinikradar.de/kliniken/helios-kliniken-schwerin-tagesklinik-fuer-kinder-und-jugendpsychiatrie | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1362 | company_name: Helios Kliniken Schwerin - Tagesklinik für Psychiatrie Sternberg | website: https://helios-gesundheit.de/kliniken/schwerin | source_url: https://klinikradar.de/kliniken/helios-kliniken-schwerin-tagesklinik-fuer-psychiatrie-sternberg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1847 | company_name: Helios Klinikum Aue in Aue, Sachsen | website: http://helios-kliniken.de/klinik/aue | source_url: https://klinikradar.de/kliniken/helios-klinikum-aue | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 816 | company_name: Helios Klinikum Bad Saarow | website: http://helios-gesundheit.de/kliniken/bad-saarow | source_url: https://klinikradar.de/kliniken/helios-klinikum-bad-saarow | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 731 | company_name: Helios Klinikum Berlin-Buch | website: https://helios-gesundheit.de/kliniken/berlin-buch | source_url: https://klinikradar.de/kliniken/helios-klinikum-berlin-buch | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 744 | company_name: Helios Klinikum Emil von Behring in Berlin | website: https://helios-gesundheit.de/kliniken/berlin-klinikum-emil-von-behring | source_url: https://klinikradar.de/kliniken/helios-klinikum-emil-von-behring | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1597 | company_name: Helios Klinikum Gifhorn | website: https://helios-gesundheit.de/standorte-angebote/kliniken/gifhorn | source_url: https://klinikradar.de/kliniken/helios-klinikum-gifhorn | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1566 | company_name: Helios Klinikum Hildesheim | website: https://helios-gesundheit.de/kliniken/hildesheim | source_url: https://klinikradar.de/kliniken/helios-klinikum-hildesheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 271 | company_name: Helios Klinikum Krefeld | source_url: https://klinikradar.de/kliniken/helios-klinikum-krefeld | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 956 | company_name: Helios Klinikum München West | website: http://helios-gesundheit.de/muenchen-west | source_url: https://klinikradar.de/kliniken/helios-klinikum-muenchen-west | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 26 | company_name: Helios Klinikum Pforzheim | source_url: https://klinikradar.de/kliniken/helios-klinikum-pforzheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1859 | company_name: Helios Klinikum Pirna | website: http://helios-gesundheit.de/pirna | source_url: https://klinikradar.de/kliniken/helios-klinikum-pirna | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 1603 | company_name: Helios Klinikum Salzgitter | website: https://helios-gesundheit.de/kliniken/salzgitter | source_url: https://klinikradar.de/kliniken/helios-klinikum-salzgitter | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 372 | company_name: Helios Klinikum Schwelm | source_url: https://klinikradar.de/kliniken/helios-klinikum-schwelm | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 378 | company_name: Helios Klinikum Siegburg | source_url: https://klinikradar.de/kliniken/helios-klinikum-siegburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1610 | company_name: Helios Klinikum Uelzen | source_url: https://klinikradar.de/kliniken/helios-klinikum-uelzen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 556 | company_name: Helios Klinikum Warburg | source_url: https://klinikradar.de/kliniken/helios-klinikum-warburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1278 | company_name: Helios Mariahilf Klinik Hamburg | website: http://helios-kliniken.de/klinik/hamburg-mariahilf-klinik.html | source_url: https://klinikradar.de/kliniken/helios-mariahilf-klinik-hamburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 367 | company_name: Helios Marien Klinik in Duisburg | source_url: https://klinikradar.de/kliniken/helios-marien-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1161 | company_name: Helios OrthoClinic Hammelburg | website: https://helios-gesundheit.de/kliniken/hammelburg-orthoclinic | source_url: https://klinikradar.de/kliniken/helios-orthoclinic-hammelburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1841 | company_name: Helios Park-Klinikum Leipzig | website: https://helios-gesundheit.de/kliniken/leipzig-park-klinikum | source_url: https://klinikradar.de/kliniken/helios-park-klinikum-leipzig | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_025 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T192555Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260615T192555Z and task_id=task_025 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
