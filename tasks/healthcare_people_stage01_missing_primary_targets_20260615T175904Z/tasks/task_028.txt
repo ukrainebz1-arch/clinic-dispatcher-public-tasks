@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T175904Z
+TASK_ID: task_028
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 621 | company_name: Hospital zum Heiligen Geist in Frankfurt am Main | source_url: https://klinikradar.de/kliniken/hospital-zum-heiligen-geist | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1423 | company_name: Hospital zum Heiligen Geist in Frankfurt am Main | website: http://hospital-zum-heiligen-geist.de | source_url: https://klinikradar.de/kliniken/hospital-zum-heiligen-geist-frankfurt-am-main | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1439 | company_name: Hospital zum Heiligen Geist in Fritzlar | website: http://hospital-fritzlar.de | source_url: https://klinikradar.de/kliniken/hospital-zum-heiligen-geist-ggmbh | missing_reason: company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 460 | company_name: Hospital zum Heiligen Geist Kempen in Kempen, Niederrhein | source_url: https://klinikradar.de/kliniken/hospital-zum-heiligen-geist-kempen | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 1857 | company_name: Hufeland-Klinik in Bad Ems | website: https://hufeland-klinik.com | source_url: https://klinikradar.de/kliniken/hufeland-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1658 | company_name: Hümmling Hospital Sögel | website: http://hümmling-hospital-sögel.de | source_url: https://klinikradar.de/kliniken/huemmling-hospital-soegel | missing_reason: company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 520 | company_name: Hüttenhospital Dortmund | source_url: https://klinikradar.de/kliniken/huettenhospital-dortmund | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 998 | company_name: Ilmtalklinik Pfaffenhofen | website: http://ilmtalklinik.de | source_url: https://klinikradar.de/kliniken/ilmtalklinik-pfaffenhofen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1972 | company_name: Immanuel Klinik Rüdersdorf | website: https://ruedersdorf.immanuel.de | source_url: https://klinikradar.de/kliniken/immanuel-klinik-ruedersdorf | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 822 | company_name: Immanuel Klinikum Bernau Herzzentrum Brandenburg | website: https://bernau.immanuel.de | source_url: https://klinikradar.de/kliniken/immanuel-klinikum-bernau-herzzentrum-brandenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 776 | company_name: Immanuel Krankenhaus Berlin (Buch) | website: https://berlin.immanuel.de | source_url: https://klinikradar.de/kliniken/immanuel-krankenhaus-berlin-buch | missing_reason: company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 767 | company_name: Immanuel Krankenhaus Berlin (Wannsee) | website: https://berlin.immanuel.de | source_url: https://klinikradar.de/kliniken/immanuel-krankenhaus-berlin-wannsee | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 955 | company_name: InnKlinikum Altötting | website: https://innklinikum.de | source_url: https://klinikradar.de/kliniken/innklinikum-altoetting | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1988 | company_name: InnKlinikum Mühldorf | website: https://innklinikum.de | source_url: https://klinikradar.de/kliniken/innklinikum-muehldorf | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1752 | company_name: Inselkrankenhaus Borkum | website: https://inselkrankenhaus-borkum.de/kliniken/fuer-ihre-gesundheit | source_url: https://klinikradar.de/kliniken/inselkrankenhaus-borkum | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1309 | company_name: Institutsambulanz und Tagesklinik Osdorf in Hamburg | website: http://asklepios.com/harburg | source_url: https://klinikradar.de/kliniken/institutsambulanz-und-tagesklinik-osdorf | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 244 | company_name: InTakT Tagesklinik für Kinder- und Jugendpsychiatrie und Psychotherapie Pforzheim | source_url: https://klinikradar.de/kliniken/intakt-tagesklinik-fuer-kinder-und-jugendpsychiatrie-und-psychotherapie-pforzheim | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1186 | company_name: Internistische Klinik Dr. Steger in Nürnberg | website: http://klinik-steger.de | source_url: https://klinikradar.de/kliniken/internistische-klinik-dr-steger | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1086 | company_name: Internistisches Klinikum München Süd | website: https://ikms.de | source_url: https://klinikradar.de/kliniken/internistisches-klinikum-muenchen-sued | missing_reason: company has no HR primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1008 | company_name: Isar Kliniken in München | website: http://isarklinikum.de | source_url: https://klinikradar.de/kliniken/isar-kliniken | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1285 | company_name: Israelitisches Krankenhaus in Hamburg | website: http://ik-h.de | source_url: https://klinikradar.de/kliniken/israelitisches-krankenhaus-in-hamburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 346 | company_name: Johanna-Etienne-Krankenhaus in Neuss | source_url: https://klinikradar.de/kliniken/johanna-etienne-krankenhaus | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 275 | company_name: Johannes Wesling Klinikum Minden | source_url: https://klinikradar.de/kliniken/johannes-wesling-klinikum-minden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 2221 | company_name: Johannesbad Fachklinik Hochsauerland in Schmallenberg | website: https://johannesbad-medizin.com/bad-fredeburg-psychosomatik | source_url: https://klinikradar.de/rehakliniken/johannesbad-fachklinik-hochsauerland | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 2205 | company_name: Johannesbad Medizin Adaptation Dortmund | website: https://johannesbad-medizin.com/adaption-dortmund | source_url: https://klinikradar.de/rehakliniken/johannesbad-medizin-adaptation-dortmund | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_028 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260615T175904Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260615T175904Z and task_id=task_028 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
