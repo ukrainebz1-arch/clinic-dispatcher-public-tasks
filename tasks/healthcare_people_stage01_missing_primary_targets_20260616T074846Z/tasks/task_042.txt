@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260616T074846Z
+TASK_ID: task_042
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1235 | company_name: Klinikum Starnberg - Außenstelle Wolfratshausen | website: https://klinikum-starnberg.de | source_url: https://klinikradar.de/kliniken/klinikum-starnberg-aussenstelle-wolfratshausen | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 120 | company_name: Klinikum Stuttgart - Behandlungszentrum Mitte | source_url: https://klinikradar.de/kliniken/klinikum-stuttgart-behandlungszentrum-mitte | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 6 | company_name: Klinikum Stuttgart - Katharinenhospital | source_url: https://klinikradar.de/kliniken/klinikum-stuttgart-katharinenhospital | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 197 | company_name: Klinikum Stuttgart - Kinder- und Jugendpsychiatrie (Hasenbergstr.) | source_url: https://klinikradar.de/kliniken/klinikum-stuttgart-kinder-und-jugendpsychiatrie-hasenbergstr | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 14 | company_name: Klinikum Stuttgart - Krankenhaus Bad Cannstatt | source_url: https://klinikradar.de/kliniken/klinikum-stuttgart-krankenhaus-bad-cannstatt | missing_reason: company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 44 | company_name: Klinikum Stuttgart - Olgahospital / Frauenklinik | source_url: https://klinikradar.de/kliniken/klinikum-stuttgart-olgahospital-frauenklinik | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1307 | company_name: Klinikum Südstadt Rostock | website: http://kliniksued-rostock.de | source_url: https://klinikradar.de/kliniken/klinikum-suedstadt-rostock | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 936 | company_name: Klinikum Traunstein | website: http://kliniken-suedostbayern.de/de/leistungsspektrum/klinikum-traunstein.htm | source_url: https://klinikradar.de/kliniken/klinikum-traunstein | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1598 | company_name: Klinikum Wahrendorff in Sehnde | website: https://klinikum.wahrendorff.de | source_url: https://klinikradar.de/kliniken/klinikum-wahrendorff | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 927 | company_name: Klinikum Weiden | website: http://kliniken-nordoberpfalz.de | source_url: https://klinikradar.de/kliniken/klinikum-weiden | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1401 | company_name: Klinikum Werra Meißner (Eschwege) | website: http://klinikum-werra-meissner.de | source_url: https://klinikradar.de/kliniken/klinikum-werra-meissner-eschwege | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1461 | company_name: Klinikum Werra Meißner (Witzenhausen) | website: http://klinikum-werra-meissner.de | source_url: https://klinikradar.de/kliniken/klinikum-werra-meissner-witzenhausen | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 873 | company_name: Klinikum Westbrandenburg (Brandenburg) | website: http://klinikumwb.de | source_url: https://klinikradar.de/kliniken/klinikum-westbrandenburg-brandenburg | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 869 | company_name: Klinikum Westbrandenburg (Potsdam) | website: http://klinikumwb.de | source_url: https://klinikradar.de/kliniken/klinikum-westbrandenburg-potsdam | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1382 | company_name: Klinikum Wetzlar | website: http://lahn-dill-kliniken.de | source_url: https://klinikradar.de/kliniken/klinikum-wetzlar | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1563 | company_name: Klinikum Wilhelmshaven | website: http://klinikum-whv.de | source_url: https://klinikradar.de/kliniken/klinikum-wilhelmshaven | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 1572 | company_name: Klinikum Wolfsburg | website: https://klinikum.wolfsburg.de/start | source_url: https://klinikradar.de/kliniken/klinikum-wolfsburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1770 | company_name: Klinikum Worms | website: http://klinikum-worms.de | source_url: https://klinikradar.de/kliniken/klinikum-worms | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 925 | company_name: Klinikum Würzburg Mitte | website: http://kwm-klinikum.de | source_url: https://klinikradar.de/kliniken/klinikum-wuerzburg-mitte | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 2270 | company_name: Klinikzentrum Bad Sulza | website: https://toskanaworld.net/klinikzentrum-bad-sulza-de | source_url: https://klinikradar.de/rehakliniken/klinikzentrum-bad-sulza | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 2144 | company_name: KMG Elbtalkliniken Bad Wilsnack | website: https://kmg-kliniken.de/rehakliniken/kmg-elbtalklinik-bad-wilsnack | source_url: https://klinikradar.de/rehakliniken/kmg-elbtalkliniken-bad-wilsnack | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1343 | company_name: KMG Klinik Boizenburg | website: http://kmg-kliniken.de | source_url: https://klinikradar.de/kliniken/kmg-klinik-boizenburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1311 | company_name: KMG Klinikum Güstrow | website: http://kmg-kliniken.de | source_url: https://klinikradar.de/kliniken/kmg-klinikum-guestrow | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 829 | company_name: KMG Klinikum Luckenwalde | website: https://kmg-kliniken.de | source_url: https://klinikradar.de/kliniken/kmg-klinikum-luckenwalde | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 847 | company_name: KMG Klinikum Nordbrandenburg - Standort Kyritz | website: https://kmg-kliniken.de/akutkliniken/kmg-klinikum-nordbrandenburg/standort-kyritz | source_url: https://klinikradar.de/kliniken/kmg-klinikum-nordbrandenburg-standort-kyritz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_042 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260616T074846Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260616T074846Z and task_id=task_042 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
