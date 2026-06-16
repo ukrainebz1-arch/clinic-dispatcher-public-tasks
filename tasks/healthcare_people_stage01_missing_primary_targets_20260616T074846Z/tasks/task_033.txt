@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260616T074846Z
+TASK_ID: task_033
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1671 | company_name: Klinik Diepholz | website: https://kliniken-lkd.de | source_url: https://klinikradar.de/kliniken/klinik-diepholz | missing_reason: company has no HR primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1078 | company_name: Klinik Donaustauf | website: https://csm-donaustauf.de | source_url: https://klinikradar.de/kliniken/klinik-donaustauf | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 2189 | company_name: Klinik Dr. Baumstark in Bad Homburg | website: https://klinik-dr-baumstark.de | source_url: https://klinikradar.de/rehakliniken/klinik-dr-baumstark | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 208 | company_name: Klinik Dr. Becker in Bad Krozingen | source_url: https://klinikradar.de/kliniken/klinik-dr-becker | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 2048 | company_name: Klinik Dr. Franz Dengler in Baden-Baden | website: https://dengler.de/de | source_url: https://klinikradar.de/rehakliniken/klinik-dr-franz-dengler | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1286 | company_name: Klinik Dr. Guth in Hamburg | website: https://klinikdrguth.de | source_url: https://klinikradar.de/kliniken/klinik-dr-guth | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 1710 | company_name: Klinik Dr. Hancken in Stade, Niederelbe | website: http://hancken.de | source_url: https://klinikradar.de/kliniken/klinik-dr-hancken | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 692 | company_name: Klinik Dr. Hartog in Bielefeld | source_url: https://klinikradar.de/kliniken/klinik-dr-hartog | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 1184 | company_name: Klinik Dr. Maul Ingolstadt | website: http://klinik-dr-maul.de | source_url: https://klinikradar.de/kliniken/klinik-dr-maul-ingolstadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1719 | company_name: Klinik Dr. Muschinsky in Bad Lauterberg im Harz | website: http://muschinsky.de | source_url: https://klinikradar.de/kliniken/klinik-dr-muschinsky | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1064 | company_name: Klinik Dr. Robert Schindlbeck in Herrsching am Ammersee | website: http://klinikum-herrsching.de | source_url: https://klinikradar.de/kliniken/klinik-dr-robert-schindlbeck | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 210 | company_name: Klinik Dr. Schwarz in Ulm | source_url: https://klinikradar.de/kliniken/klinik-dr-schwarz | missing_reason: company has no HR primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 1516 | company_name: Klinik Dr. Steib in Königstein im Taunus | website: https://klinik-steib.de | source_url: https://klinikradar.de/kliniken/klinik-dr-steib | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 441 | company_name: Klinik Duisburg-Homberg | source_url: https://klinikradar.de/kliniken/klinik-duisburg-homberg | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 2210 | company_name: Klinik Eichholz in Lippstadt | website: https://klinik-eichholz.de | source_url: https://klinikradar.de/rehakliniken/klinik-eichholz | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1042 | company_name: Klinik Eichstätt in Eichstätt, Bayern | website: http://kna-online.de | source_url: https://klinikradar.de/kliniken/klinik-eichstaett | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 836 | company_name: Klinik Ernst von Bergmann Bad Belzig | website: http://evb-gesundheit.de/klinikevb | source_url: https://klinikradar.de/kliniken/klinik-ernst-von-bergmann-bad-belzig | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1729 | company_name: Klinik Fallingbostel | website: http://klinikfallingbostel.com | source_url: https://klinikradar.de/kliniken/klinik-fallingbostel | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 2159 | company_name: Klinik Fallingbostel | website: https://klinik-fallingbostel.de | source_url: https://klinikradar.de/rehakliniken/klinik-fallingbostel | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 2004 | company_name: Klinik Fränkische Schweiz (Ebermannstadt) | website: https://klinik-fraenkische-schweiz.de | source_url: https://klinikradar.de/kliniken/klinik-fraenkische-schweiz-ebermannstadt | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1869 | company_name: Klinik für GefässChirurgie und GefässMedizin im Kreis Ahrweiler in Bad Neuenahr-Ahrweiler | website: http://gefaesszentrum-dr-bauer.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-gefaesschirurgie-und-gefaessmedizin-im-kreis-ahrweiler | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1500 | company_name: Klinik für Kinder- und Jugendpsychiatrie Psychosomatik und Psychotherapie in Marburg | website: https://ukgm.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-kinder-und-jugendpsychiatrie-psychosomatik-und-psychotherapie | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 611 | company_name: Klinik für Kinder- und Jugendpsychiatrie und Psychotherapie in Köln | source_url: https://klinikradar.de/kliniken/klinik-fuer-kinder-und-jugendpsychiatrie-und-psychotherapie | missing_reason: company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1694 | company_name: Klinik für Kinder- und Jugendpsychiatrie Wichernstift in Ganderkesee | website: http://wichernstift.de | source_url: https://klinikradar.de/kliniken/klinik-fuer-kinder-und-jugendpsychiatrie-wichernstift | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 548 | company_name: Klinik für Manuelle Therapie in Hamm | source_url: https://klinikradar.de/kliniken/klinik-fuer-manuelle-therapie | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_033 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260616T074846Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260616T074846Z and task_id=task_033 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
