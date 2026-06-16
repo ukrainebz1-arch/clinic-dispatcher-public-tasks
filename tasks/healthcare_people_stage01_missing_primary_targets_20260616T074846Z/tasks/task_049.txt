@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260616T074846Z
+TASK_ID: task_049
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1129 | company_name: Kreiskrankenhaus Höchstadt | website: http://kreiskrankenhaus-hoechstadt.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-hoechstadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 59 | company_name: Kreiskrankenhaus Lörrach | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-loerrach | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1663 | company_name: Kreiskrankenhaus Osterholz in Osterholz-Scharmbeck | website: https://kreiskrankenhaus-osterholz.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-osterholz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 864 | company_name: Kreiskrankenhaus Prenzlau | website: https://glg-gesundheit.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-prenzlau | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 890 | company_name: Kreiskrankenhaus Prignitz - Standort Wittenberge | website: http://krankenhaus-prignitz.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-prignitz-standort-wittenberge | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1981 | company_name: Kreiskrankenhaus Prignitz in Perleberg | website: http://krankenhaus-prignitz.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-prignitz | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 125 | company_name: Kreiskrankenhaus Rheinfelden | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-rheinfelden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1442 | company_name: Kreiskrankenhaus Rotenburg | website: http://kkh-rotenburg.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-rotenburg | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 141 | company_name: Kreiskrankenhaus Schopfheim | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-schopfheim | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1453 | company_name: Kreiskrankenhaus Schotten in Schotten, Hessen | website: https://gesundheitszentrum-wetterau.de/176 | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-schotten | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 1041 | company_name: Kreiskrankenhaus Schrobenhausen | website: http://kkh-sob.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-schrobenhausen | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1804 | company_name: Kreiskrankenhaus St. Franziskus Saarburg | website: https://kh-saarburg.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-st-franziskus-saarburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 2018 | company_name: Kreiskrankenhaus St. Ingbert | website: http://kreiskrankenhaus.saarland | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-st-ingbert | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1906 | company_name: Kreiskrankenhaus Torgau "Johann Kentmann" | website: http://kkh-torgau.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-torgau-johann-kentmann | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 405 | company_name: Kreiskrankenhaus Waldbröl | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-waldbroel | missing_reason: company has no HR primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 1438 | company_name: Kreiskrankenhaus Weilburg | website: https://krankenhaus-weilburg.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-weilburg | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 1918 | company_name: Kreiskrankenhaus Weißwasser | website: http://kreiskrankenhaus-weisswasser.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-weisswasser | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1328 | company_name: Kreiskrankenhaus Wolgast | website: http://kreiskrankenhaus-wolgast.de | source_url: https://klinikradar.de/kliniken/kreiskrankenhaus-wolgast | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1711 | company_name: KRH Geriatrie Langenhagen | website: https://geriatrie-langenhagen.krh.de | source_url: https://klinikradar.de/kliniken/krh-geriatrie-langenhagen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1629 | company_name: KRH Klinikum Agnes Karll Laatzen | website: https://laatzen.krh.de | source_url: https://klinikradar.de/kliniken/krh-klinikum-agnes-karll-laatzen | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1631 | company_name: KRH Klinikum Großburgwedel in Burgwedel | website: https://grossburgwedel.krh.de | source_url: https://klinikradar.de/kliniken/krh-klinikum-grossburgwedel | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 1648 | company_name: KRH Klinikum Lehrte | website: https://lehrte.krh.de | source_url: https://klinikradar.de/kliniken/krh-klinikum-lehrte | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1615 | company_name: KRH Klinikum Neustadt am Rübenberge | website: https://neustadt.krh.de | source_url: https://klinikradar.de/kliniken/krh-klinikum-neustadt-am-ruebenberge | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1585 | company_name: KRH Klinikum Nordstadt in Hannover | website: https://nordstadt.krh.de | source_url: https://klinikradar.de/kliniken/krh-klinikum-nordstadt | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 1595 | company_name: KRH Klinikum Robert Koch Gehrden | website: http://gehrden.krh.de | source_url: https://klinikradar.de/kliniken/krh-klinikum-robert-koch-gehrden | missing_reason: company has no HR primary person; company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_049 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260616T074846Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260616T074846Z and task_id=task_049 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
