@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260617T215902Z
+TASK_ID: task_006
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 1425 | company_name: Berufsgenossenschaftliche Unfallklinik Frankfurt am Main | website: https://bg-kliniken.de/unfallklinik-frankfurt | source_url: https://klinikradar.de/kliniken/berufsgenossenschaftliche-unfallklinik-frankfurt-am-main | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 952 | company_name: Berufsgenossenschaftliche Unfallklinik Murnau | website: https://bgu-murnau.de | source_url: https://klinikradar.de/kliniken/berufsgenossenschaftliche-unfallklinik-murnau | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 1273 | company_name: Bethesda Krankenhaus Bergedorf in Hamburg | website: http://klinik-bergedorf.de | source_url: https://klinikradar.de/kliniken/bethesda-krankenhaus-bergedorf | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 345 | company_name: Bethesda Krankenhaus in Duisburg | source_url: https://klinikradar.de/kliniken/bethesda-krankenhaus | missing_reason: company has no HR primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 447 | company_name: Bethlehem Gesundheitszentrum Stolberg | source_url: https://klinikradar.de/kliniken/bethlehem-gesundheitszentrum-stolberg | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1049 | company_name: Bezirksklinik Rehau in Rehau, Oberfranken | website: https://gebo-med.de | source_url: https://klinikradar.de/kliniken/bezirksklinik-rehau | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 930 | company_name: Bezirksklinikum Mainkofen in Deggendorf | website: http://mainkofen.de | source_url: https://klinikradar.de/kliniken/bezirksklinikum-mainkofen | missing_reason: company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 1987 | company_name: Bezirksklinikum Obermain in Ebensfeld | website: https://gebo-med.de | source_url: https://klinikradar.de/kliniken/bezirksklinikum-obermain | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 931 | company_name: Bezirksklinikum Regensburg | website: http://medbo.de | source_url: https://klinikradar.de/kliniken/bezirksklinikum-regensburg | missing_reason: company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 965 | company_name: Bezirkskrankenhaus Augsburg | website: http://bkh-augsburg.de | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-augsburg | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 967 | company_name: Bezirkskrankenhaus Bayreuth | website: https://gebo-med.de | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-bayreuth | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1178 | company_name: Bezirkskrankenhaus Donauwörth | website: http://bkh-donauwoerth.de | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-donauwoerth | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 954 | company_name: Bezirkskrankenhaus Günzburg | website: http://bkh-guenzburg.de | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-guenzburg | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1995 | company_name: Bezirkskrankenhaus Kaufbeuren | website: https://bezirkskliniken-schwaben.de/kliniken/bezirkskrankenhaus-kaufbeuren | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-kaufbeuren | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 1068 | company_name: Bezirkskrankenhaus Kempten | website: http://bkh-kempten.de | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-kempten | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 987 | company_name: Bezirkskrankenhaus Landshut | website: http://bkh-landshut.de | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-landshut | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 974 | company_name: Bezirkskrankenhaus Lohr | website: https://bezirkskrankenhaus-lohr.de | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-lohr | missing_reason: company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 1156 | company_name: Bezirkskrankenhaus Memmingen | website: http://bezirkskrankenhaus-memmingen.de | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-memmingen | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 1110 | company_name: Bezirkskrankenhaus Passau | website: http://bkh-passau.de | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-passau | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 1018 | company_name: Bezirkskrankenhaus Wöllershof in Störnstein | website: https://medbo.de/kliniken-einrichtungen/psychiatrie-psychotherapie/klinik-fuer-psychiatrie-psychosomatik-psychotherapie-woellershof | source_url: https://klinikradar.de/kliniken/bezirkskrankenhaus-woellershof | missing_reason: company has no Pflege primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 1766 | company_name: BG Klinik Ludwigshafen | website: https://bg-kliniken.de/klinik-ludwigshafen | source_url: https://klinikradar.de/kliniken/bg-klinik-ludwigshafen | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 68 | company_name: BG Klinik Tübingen | source_url: https://klinikradar.de/kliniken/bg-klinik-tuebingen | missing_reason: company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 1270 | company_name: BG Klinikum Hamburg | website: http://bg-klinikum-hamburg.de | source_url: https://klinikradar.de/kliniken/bg-klinikum-hamburg | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 741 | company_name: BG Klinikum Unfallkrankenhaus Berlin | website: http://ukb.de | source_url: https://klinikradar.de/kliniken/bg-klinikum-unfallkrankenhaus-berlin | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 230 | company_name: BlausteinKLINIK | source_url: https://klinikradar.de/kliniken/blausteinklinik | missing_reason: company has no HR primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_006 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260617T215902Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260617T215902Z and task_id=task_006 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
