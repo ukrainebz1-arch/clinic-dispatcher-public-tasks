@@ -1,0 +1,82 @@
+RUN_ID: healthcare_people_stage01_missing_primary_targets_20260618T150158Z
+TASK_ID: task_007
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_primary_targets
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason first and search only for the exact role gaps listed there.
+- If missing_reason lists multiple gaps for the same company, return candidates only for those listed gaps.
+- Do not return people for roles already present in SalesBrain or roles not requested by missing_reason.
+
+TARGET ROLE RULES:
+Find target primary people for each company where publicly available:
+- HR leadership primary: Personalleitung, HR Leitung, Recruiting Leitung, Talent Acquisition leadership.
+- Pflege leadership primary: Pflegedirektion, Pflegedienstleitung, Leitung Pflege.
+- Management primary: Geschäftsführung, Klinikleitung, Direktion, CEO/COO/CFO-level clinic management.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 2178 | company_name: Dr. Ebel Fachkliniken - Moorbad Bad Doberan | website: https://ebel-kliniken.com/klinik-moorbad-bad-doberan | source_url: https://klinikradar.de/rehakliniken/dr-ebel-fachkliniken-moorbad-bad-doberan | missing_reason: company has no HR primary person; company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+2. company_id: 1515 | company_name: Dr. Frühauf Klinik in Offenbach am Main | website: https://klinik-dr-fruehauf.de | source_url: https://klinikradar.de/kliniken/dr-fruehauf-klinik | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+3. company_id: 2005 | company_name: Dr. Lubos Kliniken Bogenhausen in München | website: http://lubos-kliniken.de | source_url: https://klinikradar.de/kliniken/dr-lubos-kliniken-bogenhausen | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+4. company_id: 1168 | company_name: Dr. Lubos Kliniken Pasing in München | website: http://lubos-klinken.de | source_url: https://klinikradar.de/kliniken/dr-lubos-kliniken-pasing | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+5. company_id: 184 | company_name: Dr. Römer Kliniken in Calw | source_url: https://klinikradar.de/kliniken/dr-roemer-kliniken | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+6. company_id: 1816 | company_name: DRK Kamillus Klinik in Asbach, Westerwald | website: https://drk-kamillus-klinik.de | source_url: https://klinikradar.de/kliniken/drk-kamillus-klinik | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+7. company_id: 2025 | company_name: DRK Klinik Mettlach | website: https://drk-kliniken-saar.de/sr/mettlach | source_url: https://klinikradar.de/kliniken/drk-klinik-mettlach | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+8. company_id: 740 | company_name: DRK Kliniken Berlin Köpenick | website: http://drk-kliniken-berlin.de/koepenick | source_url: https://klinikradar.de/kliniken/drk-kliniken-berlin-koepenick | missing_reason: company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+9. company_id: 759 | company_name: DRK Kliniken Berlin Mitte | website: https://drk-kliniken-berlin.de/mitte | source_url: https://klinikradar.de/kliniken/drk-kliniken-berlin-mitte | missing_reason: company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+10. company_id: 1888 | company_name: DRK Tagesklinik Worms | website: http://drk-tk-worms.de | source_url: https://klinikradar.de/kliniken/drk-tagesklinik-worms | missing_reason: company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+11. company_id: 2008 | company_name: DRK-Krankenhaus Grevesmühlen | website: http://drk-kh-gvm.de | source_url: https://klinikradar.de/kliniken/drk-krankenhaus-grevesmuehlen | missing_reason: company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+12. company_id: 1346 | company_name: DRK-Krankenhaus Grimmen in Süderholz | website: https://krankenhaus-grimmen.de | source_url: https://klinikradar.de/kliniken/drk-krankenhaus-grimmen | missing_reason: company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+13. company_id: 1329 | company_name: DRK-Krankenhaus Mecklenburg-Strelitz in Neustrelitz | website: http://drkmst.de | source_url: https://klinikradar.de/kliniken/drk-krankenhaus-mecklenburg-strelitz | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+14. company_id: 1336 | company_name: DRK-Krankenhaus Teterow | website: http://drk-kh-teterow.de | source_url: https://klinikradar.de/kliniken/drk-krankenhaus-teterow | missing_reason: company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+15. company_id: 799 | company_name: Drogentherapie-Zentrum Berlin | website: http://drogentherapie-zentrum.de | source_url: https://klinikradar.de/kliniken/drogentherapie-zentrum-berlin | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+16. company_id: 2098 | company_name: DRV Reha-Zentrum Bad Aibling, Klinik Wendelstein | website: https://wendelstein.deutsche-rentenversicherung-reha-zentren.de/subsites/Wendelstein/de/Navigation/00_Home/Startseite_node.html | source_url: https://klinikradar.de/rehakliniken/drv-reha-zentrum-bad-aibling-klinik-wendelstein | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+17. company_id: 2249 | company_name: Dt. Klinik für Integrative Medizin in Bad Elster | website: https://dekimed.de | source_url: https://klinikradar.de/rehakliniken/dt-klinik-fuer-integrative-medizin | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+18. company_id: 253 | company_name: EchTAZ in Reutlingen | source_url: https://klinikradar.de/kliniken/echtaz | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+19. company_id: 2256 | company_name: Edelsteinklinik in Bruchweiler | website: https://edelsteinklinik.de/RLPKES | source_url: https://klinikradar.de/rehakliniken/edelsteinklinik | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+20. company_id: 574 | company_name: Eifelklinik St. Brigida in Simmerath | source_url: https://klinikradar.de/kliniken/eifelklinik-st-brigida | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+21. company_id: 508 | company_name: Elisabeth-Klinik in Olsberg | source_url: https://klinikradar.de/kliniken/elisabeth-klinik | missing_reason: company has no HR primary person; company has no Pflege primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+22. company_id: 306 | company_name: Elisabeth-Krankenhaus Essen | source_url: https://klinikradar.de/kliniken/elisabeth-krankenhaus-essen | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+23. company_id: 2172 | company_name: Endo Rehazentrum Hamburg | website: https://helios-gesundheit.de/reha/endo-reha-physiotherapie-krankengymnastik | source_url: https://klinikradar.de/rehakliniken/endo-rehazentrum-hamburg | missing_reason: company has no Pflege primary person; company has no Medical Direction primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+24. company_id: 1306 | company_name: Epilepsie Monitoring Neuropädiatrie Alsterdorf in Hamburg | website: http://kkh-wilhelmstift.de | source_url: https://klinikradar.de/kliniken/epilepsie-monitoring-neuropaediatrie-alsterdorf | missing_reason: company has no HR primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+25. company_id: 871 | company_name: Epilepsieklinik Tabor in Bernau bei Berlin | website: https://epi-tabor.de | source_url: https://klinikradar.de/kliniken/epilepsieklinik-tabor | missing_reason: company has no Management primary person | target: missing-primary-targets | task_type: stage01_missing_primary_targets
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_007 RUN_ID: healthcare_people_stage01_missing_primary_targets_20260618T150158Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_primary_targets_20260618T150158Z and task_id=task_007 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
