@@ -1,0 +1,86 @@
+RUN_ID: snov_person_role_lookup_20260619T195710Z
+TASK_ID: task_002
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare role-resolution worker for SalesBrain.
+
+CONTEXT:
+- SalesBrain already has clinic companies in its database.
+- Each input unit is a PERSONAL email address found in Snov.io but NOT yet stored in SalesBrain.
+- Your job is NOT to find a new email. The email is already known and fixed.
+- Your job IS to determine this person's current role/title at the matched clinic using public sources.
+
+INPUT UNIT FIELDS:
+- unit_id, email, full_name, company_id, company_name, company_website, city, bundesland, snov_position_hint, snov_lists, lookup_goal
+
+RULES:
+- Use public information only (official clinic website, team/imprint pages, LinkedIn, press releases, public directories).
+- Preserve input email exactly. Do not substitute a different email.
+- Preserve company_id and company_name from input when present.
+- Determine the best current German job title in role_title.
+- Classify into SalesBrain taxonomy:
+  - role_category: pflege_leadership | hr_leadership | management | medical_direction | other
+  - role_level: primary | deputy | secondary | contact_person | unknown
+  - role_context: hr_primary | hr_deputy | management_primary | management_deputy | pflege_primary | pflege_deputy | medical_primary | medical_deputy | unclassified
+- Prefer official clinic/company sources over generic directories.
+- If snov_position_hint is present, treat it as a weak hint only; verify independently.
+- Do not invent employers. If the person cannot be linked to the input clinic, still output a row with role_context=unclassified and explain in evidence_text.
+- Do not output departments, mailboxes, or generic inboxes as people.
+- If the person is clearly not HR / management / Pflege / medical leadership, use role_category=other and role_context=unclassified.
+
+ROLE PRIORITY INTERPRETATION (German clinics):
+- Pflegedirektor/in, Pflegedienstleitung, PDL -> pflege_leadership / pflege_primary or pflege_deputy
+- Personalleitung, Personalleiter/in, Leitung Personal, HR Director -> hr_leadership / hr_primary or hr_deputy
+- Geschäftsführer/in, Klinikleitung, Betriebsleitung, Vorstand -> management / management_primary or management_deputy
+- Ärztlicher Direktor, Chefarzt -> medical_direction / medical_primary or medical_deputy
+- Stellvertretung / stv. / deputy in title -> deputy level when category is clear
+
+OUTPUT HEADER (also enforced by task wrapper):
+email,full_name,company_id,company_name,role_title,role_category,role_level,role_context,evidence_url,evidence_text,confidence,run_id,task_id
+
+CURRENT CHUNK INPUT:
+1. unit_id: snov_role_0031 ; email: christoph.brakemeier@mri.tum.de ; full_name: Christoph Brakemeier ; company_id: 911 ; company_name: Klinikum rechts der Isar der Technischen Universität München ; company_website: http://mri.tum.de ; city: München ; bundesland: Bayern ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+2. unit_id: snov_role_0032 ; email: christoph.schmitz@marienkrankenhaus.org ; full_name: Christoph Schmitz ; company_id: 1267 ; company_name: Kath. Marienkrankenhaus in Hamburg ; company_website: http://marienkrankenhaus.org ; city: Hamburg ; bundesland: Hamburg ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+3. unit_id: snov_role_0033 ; email: claudia.haupt@unimedizin-ffm.de ; full_name: Claudia Haupt ; company_id: 1372 ; company_name: Universitätsklinikum Frankfurt ; company_website: http://unimedizin-ffm.de ; city: Frankfurt am Main ; bundesland: Hessen ; snov_lists: New 2026; Directors 2026 Main; Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+4. unit_id: snov_role_0034 ; email: claudia.jung@unimedizin-ffm.de ; full_name: Claudia Jung ; company_id: 1372 ; company_name: Universitätsklinikum Frankfurt ; company_website: http://unimedizin-ffm.de ; city: Frankfurt am Main ; bundesland: Hessen ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+5. unit_id: snov_role_0035 ; email: corinna.schreier@varisano.de ; full_name: Corinna Schreier ; company_id: 1379 ; company_name: Klinikum Frankfurt Höchst ; company_website: https://varisano.de/klinikum-frankfurt-hoechst ; city: Frankfurt am Main ; bundesland: Hessen ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+6. unit_id: snov_role_0036 ; email: d.krueger@asklepios.com ; full_name: D. Krueger ; company_id: 823 ; company_name: Asklepios Fachklinikum Lübben ; company_website: http://asklepios.com/luebben ; city: Lübben ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+7. unit_id: snov_role_0037 ; email: daniela.schmitt@uk-erlangen.de ; full_name: Daniela Schmitt ; company_id: 905 ; company_name: Universitätsklinikum Erlangen ; company_website: http://uk-erlangen.de ; city: Mediastinoskopie ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+8. unit_id: snov_role_0038 ; email: debus@kreisklinik-roth.de ; full_name: Dieter Debus ; company_id: 2040 ; company_name: Kreisklinik Roth in Roth, Mittelfranken ; company_website: https://kreisklinik-roth.de ; city: Roth ; bundesland: Bayern ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+9. unit_id: snov_role_0039 ; email: diana.becker@alexianer.de ; full_name: Diana Becker ; company_id: 754 ; company_name: Alexianer St. Joseph-Krankenhaus Berlin-Weißensee ; company_website: http://alexianer.de ; city: Berlin ; bundesland: Mecklenburg-Vorpommern ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+10. unit_id: snov_role_0040 ; email: direktorium.laatzen@krh.de ; full_name: Direktorium.laatzen (Krh) ; company_id: 1582 ; company_name: KRH Psychiatrie Wunstorf ; company_website: https://krh.de ; city: Wunstorf ; bundesland: Niedersachsen ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+11. unit_id: snov_role_0041 ; email: direktorium.nordstadt@krh.de ; full_name: Direktorium.nordstadt (Krh) ; company_id: 1582 ; company_name: KRH Psychiatrie Wunstorf ; company_website: https://krh.de ; city: Wunstorf ; bundesland: Niedersachsen ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+12. unit_id: snov_role_0042 ; email: direktorium.siloah@krh.de ; full_name: Direktorium.siloah (Krh) ; company_id: 1582 ; company_name: KRH Psychiatrie Wunstorf ; company_website: https://krh.de ; city: Wunstorf ; bundesland: Niedersachsen ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+13. unit_id: snov_role_0043 ; email: e.marunica@asklepios.com ; full_name: Emilija Marunica ; company_id: 823 ; company_name: Asklepios Fachklinikum Lübben ; company_website: http://asklepios.com/luebben ; city: Lübben ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+14. unit_id: snov_role_0044 ; email: e.nowak@uke.de ; full_name: E. Nowak ; company_id: 1259 ; company_name: Universitätsklinikum Hamburg-Eppendorf ; company_website: http://uke.de ; city: Hamburg ; bundesland: Hamburg ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+15. unit_id: snov_role_0045 ; email: emil.frey@klinikum-ingolstadt.de ; full_name: Emil Frey ; company_id: 912 ; company_name: Klinikum Ingolstadt ; company_website: https://klinikum-ingolstadt.de ; city: nach brustwandnaher Stanzbiopsie zum Ausschluss eines Pneumothorax erfolgen ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+16. unit_id: snov_role_0046 ; email: eva-maria.kurowski@sana.de ; full_name: Eva-maria.kurowski (Sana) ; company_id: 737 ; company_name: Sana Klinikum Lichtenberg in Berlin ; company_website: https://sana.de/berlin ; city: Berlin ; bundesland: Mecklenburg-Vorpommern ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+17. unit_id: snov_role_0047 ; email: f.haberecht@asklepios.com ; full_name: F. Haberecht ; company_id: 823 ; company_name: Asklepios Fachklinikum Lübben ; company_website: http://asklepios.com/luebben ; city: Lübben ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+18. unit_id: snov_role_0048 ; email: federica.akkaya@fachklinik-allgaeu.de ; full_name: Federica Akkaya ; company_id: 1226 ; company_name: Fachklinik Allgäu in Pfronten ; company_website: https://fachklinik-allgaeu.de ; city: Pfronten ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+19. unit_id: snov_role_0049 ; email: felicitas.klein@medbo.de ; full_name: Felicitas Klein ; company_id: 931 ; company_name: Bezirksklinikum Regensburg ; company_website: http://medbo.de ; city: Regensburg ; bundesland: Bayern ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+20. unit_id: snov_role_0050 ; email: fkandler@arberlandkliniken.de ; full_name: Franz Kandler ; company_id: 1025 ; company_name: Arberlandklinik Zwiesel ; company_website: https://arberlandkliniken.de ; city: Zwiesel ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+21. unit_id: snov_role_0051 ; email: g.kellner@mainkofen.de ; full_name: Gerhard Kellner ; company_id: 930 ; company_name: Bezirksklinikum Mainkofen in Deggendorf ; company_website: http://mainkofen.de ; city: Deggendorf ; bundesland: Bayern ; snov_lists: New Bavaria 2026 ; lookup_goal: resolve_role_for_known_personal_email
+22. unit_id: snov_role_0052 ; email: g.sumic@klinikum-fuenfseenland.de ; full_name: Goran Sumic ; company_id: 1051 ; company_name: Klinikum Fünfseenland Gauting ; company_website: https://klinikum-fuenfseenland.de ; city: Gauting ; bundesland: Bayern ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+23. unit_id: snov_role_0053 ; email: ge.berisha@asklepios.com ; full_name: Gentian Berisha ; company_id: 823 ; company_name: Asklepios Fachklinikum Lübben ; company_website: http://asklepios.com/luebben ; city: Lübben ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+24. unit_id: snov_role_0054 ; email: hamid.mofid@sana.de ; full_name: Hamid Mofid ; company_id: 737 ; company_name: Sana Klinikum Lichtenberg in Berlin ; company_website: https://sana.de/berlin ; city: Berlin ; bundesland: Mecklenburg-Vorpommern ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+25. unit_id: snov_role_0055 ; email: helen.endemann@sankt-katharinen-ffm.de ; full_name: Helen Endemann ; company_id: 1422 ; company_name: Sankt Katharinen-Krankenhaus in Frankfurt am Main ; company_website: http://sankt-katharinen-ffm.de ; city: Frankfurt am Main ; bundesland: Hessen ; snov_lists: New 2026; Directors 2026 Main; Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+26. unit_id: snov_role_0056 ; email: hendrikchristian.seger-landau@unimedizin-ffm.de ; full_name: Hendrikchristian.seger-landau (Unimedizin-ffm) ; company_id: 1372 ; company_name: Universitätsklinikum Frankfurt ; company_website: http://unimedizin-ffm.de ; city: Frankfurt am Main ; bundesland: Hessen ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+27. unit_id: snov_role_0057 ; email: herr.mel@asklepios.com ; full_name: Herr Mel ; company_id: 823 ; company_name: Asklepios Fachklinikum Lübben ; company_website: http://asklepios.com/luebben ; city: Lübben ; snov_lists: New 2026; Directors 2026 Main; Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+28. unit_id: snov_role_0058 ; email: iris.eger@wertachkliniken.de ; full_name: Iris Eger ; company_id: 1061 ; company_name: Wertachklinik Schwabmünchen ; company_website: http://wertachkliniken.de ; city: Schwabmünchen ; snov_lists: Bavaria FULL 2026 ; lookup_goal: resolve_role_for_known_personal_email
+29. unit_id: snov_role_0059 ; email: jan.nimz@krh.de ; full_name: Nimz Jan; Jan Henrik ; company_id: 1582 ; company_name: KRH Psychiatrie Wunstorf ; company_website: https://krh.de ; city: Wunstorf ; bundesland: Niedersachsen ; snov_lists: New 2026; Directors 2026 Main; Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+30. unit_id: snov_role_0060 ; email: janmarc.bayer@marienkrankenhaus.org ; full_name: Janmarc Bayer ; company_id: 1267 ; company_name: Kath. Marienkrankenhaus in Hamburg ; company_website: http://marienkrankenhaus.org ; city: Hamburg ; bundesland: Hamburg ; snov_lists: Mail 2026 Full ; lookup_goal: resolve_role_for_known_personal_email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_002
+- Line 2 exactly: RUN_ID: snov_person_role_lookup_20260619T195710Z
+- Line 3 exactly: email,full_name,company_id,company_name,role_title,role_category,role_level,role_context,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 4 and following: one CSV record per physical line, using exactly the Line 3 columns.
+- Output one row for every unit in CURRENT CHUNK INPUT (same email). Never skip a unit.
+- role_category must be one of: pflege_leadership, hr_leadership, management, medical_direction, other
+- role_level must be one of: primary, deputy, secondary, contact_person, unknown
+- role_context must be one of: hr_primary, hr_deputy, management_primary, management_deputy, pflege_primary, pflege_deputy, medical_primary, medical_deputy, unclassified
+- If role cannot be determined, set role_title empty, role_context=unclassified, confidence=low, and explain in evidence_text.
+- Every CSV data row must include run_id=snov_person_role_lookup_20260619T195710Z and task_id=task_002 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
