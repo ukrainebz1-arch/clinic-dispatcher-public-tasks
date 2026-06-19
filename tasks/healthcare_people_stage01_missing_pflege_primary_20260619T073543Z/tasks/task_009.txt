@@ -1,0 +1,61 @@
+RUN_ID: healthcare_people_stage01_missing_pflege_primary_20260619T073543Z
+TASK_ID: task_009
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare people-discovery worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage01_missing_pflege_primary
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment/research worker.
+- Use public information only.
+- Do not invent people.
+- Return strict structured candidate rows.
+- The deterministic writer is the only component allowed to write to SalesBrain.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required first line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Preserve the input company identity.
+- Include source URLs and short evidence text.
+- Prefer official clinic/company pages, team pages, imprint/contact pages, press releases, or other public sources.
+- Do not output departments as people.
+- Do not output generic contact routes as people.
+- For each company, read missing_reason, search_for, and known_people first.
+- Search only for the exact role gap in missing_reason / search_for.
+- Do not return anyone listed in known_people.
+- Do not return people for other roles even if you see them on the website.
+
+TARGET ROLE RULES:
+Find Pflege leadership primary people only.
+Use role_category=pflege_leadership and role_level=primary.
+
+SUGGESTED CSV FIELDS:
+company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+
+ROLE CATEGORY VALUES:
+pflege_leadership,hr_leadership,management,medical_direction,other
+
+ROLE LEVEL VALUES:
+primary,deputy,secondary,contact_person,unknown
+
+IMPORTANT:
+- For this executor, prefer primary/deputy according to the task type.
+- secondary/contact_person/unknown may be mentioned in notes but should not be used to close primary/deputy gaps.
+
+CURRENT CHUNK INPUT:
+1. company_id: 787 | company_name: Westklinik Dahlem in Berlin | website: http://westklinik-dahlem.de | source_url: https://klinikradar.de/kliniken/westklinik-dahlem | missing_reason: company has no Pflege primary person | search_for: pflege_leadership primary only | known_people: Dr. Dirk Frauenschuh (medical_direction/primary); Marcel Newerla (other/secondary) | target: missing-pflege-primary | task_type: stage01_missing_pflege_primary
+2. company_id: 2188 | company_name: Wicker Klinik/Wirbelsäulenklinik in Bad Homburg | website: https://wicker.de/kliniken/wicker-klinik-wirbelsaeulenklinik | source_url: https://klinikradar.de/rehakliniken/wicker-klinik-wirbelsaeulenklinik | missing_reason: company has no Pflege primary person | search_for: pflege_leadership primary only | known_people: Dr. med. Ute Degelmann (medical_direction/primary); Kristina Post (other/secondary); Marco Peñas (other/secondary); Ute Njoo (medical_direction/primary) | target: missing-pflege-primary | task_type: stage01_missing_pflege_primary
+3. company_id: 1160 | company_name: Zentrum für Psychiatrie Cham | website: https://medbo.de/kliniken-einrichtungen/psychiatrie-psychotherapie/zentrum-cham | source_url: https://klinikradar.de/kliniken/zentrum-fuer-psychiatrie-cham | missing_reason: company has no Pflege primary person | search_for: pflege_leadership primary only | known_people: Dr. Julia Prasser (medical_direction/primary); Dr. med. C. Rexroth (medical_direction/primary); Dr. med. Dr. jur. H. Hausner (management/primary); Dr. med. Julia Prasser (medical_direction/primary); Felicitas Klein (other/secondary); Horst Meisinger (hr_leadership/primary); Sonja Ullmann (pflege_leadership/secondary) | target: missing-pflege-primary | task_type: stage01_missing_pflege_primary
+4. company_id: 192 | company_name: ZfP Südwürttemberg Bad Schussenried Satellit Ulm | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-bad-schussenried-satellit-ulm | missing_reason: company has no Pflege primary person | search_for: pflege_leadership primary only | known_people: Dr. Alexander Baier (other/secondary); Dr. Hubertus Friederich (medical_direction/primary); Dr. Paul Lahode (management/primary); Eva Majovski (hr_leadership/primary); Karin Wochner (management/primary); Martin Eggler (other/secondary); Ralf Assfalg (pflege_leadership/secondary) | target: missing-pflege-primary | task_type: stage01_missing_pflege_primary
+5. company_id: 185 | company_name: ZfP Südwürttemberg Satellit Ehingen | source_url: https://klinikradar.de/kliniken/zfp-suedwuerttemberg-satellit-ehingen | missing_reason: company has no Pflege primary person | search_for: pflege_leadership primary only | known_people: Dr. Hilde Heinemann (medical_direction/primary); Dr. Julia Raddatz (other/secondary); Eva Majovski (hr_leadership/primary); Karin Wochner (management/primary); Martin Eggler (pflege_leadership/secondary) | target: missing-pflege-primary | task_type: stage01_missing_pflege_primary
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_009 RUN_ID: healthcare_people_stage01_missing_pflege_primary_20260619T073543Z
+- Line 2 exactly: company_id,company_name,full_name,role,role_category,role_level,role_context_text,evidence_url,evidence_text,confidence,run_id,task_id
+- Line 3 and following: one CSV record per physical line, using exactly the Line 2 columns.
+- Every CSV data row must include run_id=healthcare_people_stage01_missing_pflege_primary_20260619T073543Z and task_id=task_009 in the final two columns.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Do not collapse the CSV into one physical line; keep the identity line, header line, and each data row on separate physical lines.
+- Use public information only.
