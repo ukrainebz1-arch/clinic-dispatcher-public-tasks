@@ -1,0 +1,71 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260619T182238Z
+TASK_ID: task_022
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — strict public personal email lookup (first pass).
+Search official clinic pages, team/staff pages, imprint, and other public sources for a person-specific work email for each named person.
+Return only strong person-specific emails in the result field. Do not return generic mailboxes (info@, kontakt@, karriere@, hr@, pflege@, zentrale@).
+If no person-specific email exists publicly, still output a CSV row for that person with empty result and status=not_found (or excluded_generic_mailbox if only generic mailboxes were found).
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 4342 ; company_id: 1054 ; company_name: RoMed Klinik Prien am Chiemsee ; full_name: Sebastian Hirmer ; role: Pflegedienstleitung Prien am Chiemsee ; role_title: Pflegedienstleitung Prien am Chiemsee ; role_category: pflege_leadership ; role_level: primary ; website: http://romed-kliniken.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 5937 ; company_id: 1098 ; company_name: Rotkreuzklinik Würzburg ; full_name: Anne Kathrin Liepsky ; role: Leitung Personalabteilung ; role_title: Leitung Personalabteilung ; role_category: hr_leadership ; role_level: primary ; website: https://rotkreuzklinik-wuerzburg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 5938 ; company_id: 946 ; company_name: Rotkreuzklinikum München ; full_name: Kai Hoffmann ; role: Leitung Personal ; role_title: Leitung Personal ; role_category: hr_leadership ; role_level: primary ; website: https://rotkreuzklinikum-muenchen.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 12552 ; company_id: 2058 ; company_name: Salinenklinik Bad Rappenau ; full_name: Antje Heymann ; role: Pflegedienstleiterin ; role_title: Pflegedienstleiterin ; role_category: pflege_leadership ; role_level: primary ; website: https://kurbadrappenau.de/kliniken/salinenklinik ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 5950 ; company_id: 2058 ; company_name: Salinenklinik Bad Rappenau ; full_name: Luisa Mann ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://kurbadrappenau.de/kliniken/salinenklinik ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 12450 ; company_id: 2194 ; company_name: Salus Klinik Friedrichsdorf in Friedrichsdorf, Taunus ; full_name: Sanver Yalciner ; role: PDL ; role_title: PDL ; role_category: pflege_leadership ; role_level: primary ; website: https://salus-kliniken.de/friedrichsdorf ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 7562 ; company_id: 2212 ; company_name: Salus Klinik Hürth in Hürth, Rheinland ; full_name: Lilly Scherer ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://salus-kliniken.de/huerth ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 4866 ; company_id: 2141 ; company_name: salus klinik Lindow ; full_name: Dagmar Schöneck ; role: PDL ; role_title: PDL ; role_category: pflege_leadership ; role_level: primary ; website: https://salus-kliniken.de/lindow ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 4370 ; company_id: 2198 ; company_name: Salztal Klinik in Bad Soden-Salmünster ; full_name: Michaela Reuhl ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://salztalklinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 5961 ; company_id: 828 ; company_name: Sana Kliniken Sommerfeld in Kremmen ; full_name: Ulrike Wrase ; role: Personalleiterin ; role_title: Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: https://sana.de/sommerfeld ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 5964 ; company_id: 737 ; company_name: Sana Klinikum Lichtenberg in Berlin ; full_name: Ulrike Wrase ; role: Regional-Personalleiterin ; role_title: Regional-Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: https://sana.de/berlin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 5976 ; company_id: 1422 ; company_name: Sankt Katharinen-Krankenhaus in Frankfurt am Main ; full_name: Dr. Helen Endemann ; role: Leitung Personalwesen ; role_title: Leitung Personalwesen ; role_category: hr_leadership ; role_level: primary ; website: http://sankt-katharinen-ffm.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 5982 ; company_id: 753 ; company_name: Schlosspark-Klinik in Berlin ; full_name: Wilfried Wagner ; role: Direktor Personal, IT und Medizintechnik ; role_title: Direktor Personal, IT und Medizintechnik ; role_category: hr_leadership ; role_level: primary ; website: http://parkkliniken-charlottenburg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 5987 ; company_id: 2174 ; company_name: Schön Klinik Bad Bramstedt ; full_name: Claudia Godfrey ; role: Personalleiterin ; role_title: Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: https://schoen-klinik.de/bad-bramstedt ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 5988 ; company_id: 2006 ; company_name: Schön Klinik Hamburg Eilbek ; full_name: Jennifer Behrens ; role: Personalleiterin ; role_title: Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: https://schoen-klinik.de/hamburg-eilbek ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 5989 ; company_id: 1044 ; company_name: Schön Klinik München Harlaching ; full_name: Reiner Kastizen ; role: Personalleiter ; role_title: Personalleiter ; role_category: hr_leadership ; role_level: primary ; website: http://schoen-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 5993 ; company_id: 959 ; company_name: Schön Klinik Roseneck in Prien am Chiemsee ; full_name: Mag. Patrycja Forster ; role: Personalleiterin ; role_title: Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: https://schoen-klinik.de/roseneck ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 5991 ; company_id: 1187 ; company_name: Schön Klinik Roseneck SE & Co. KG, Tagesklinik München ; full_name: Mag. Patrycja Forster ; role: Personalleiterin ; role_title: Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: https://schoen-klinik.de/tagesklinik-muenchen ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 5992 ; company_id: 1067 ; company_name: Schön Klinik Roseneck Standort Rosenheim ; full_name: Mag. Patrycja Forster ; role: Personalleiterin ; role_title: Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: https://schoen-klinik.de/roseneck ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 8641 ; company_id: 2179 ; company_name: Segeberger Kliniken ; full_name: Daniela Krause ; role: Pflegedienstleitung Allgemeine Klinik, Neurologisches Zentrum ; role_title: Pflegedienstleitung Allgemeine Klinik, Neurologisches Zentrum ; role_category: pflege_leadership ; role_level: primary ; website: https://segebergerkliniken.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 8642 ; company_id: 2179 ; company_name: Segeberger Kliniken ; full_name: Susan Neumann ; role: Pflegedienstleitung Herz- und Gefäßzentrum Bad Segeberg und Norderstedt, Klinik für Psychosomatische Medizin und Psychotherapie ; role_title: Pflegedienstleitung Herz- und Gefäßzentrum Bad Segeberg und Norderstedt, Klinik für Psychosomatische Medizin und Psychotherapie ; role_category: pflege_leadership ; role_level: primary ; website: https://segebergerkliniken.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 11793 ; company_id: 1760 ; company_name: SH Klinikum Merzig ; full_name: Julia Christina Müller ; role: Stellvertretende Leitung Personalmanagement ; role_title: Stellvertretende Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://mzg.shg-kliniken.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 11794 ; company_id: 1757 ; company_name: SHG-Kliniken Sonnenberg in Saarbrücken ; full_name: Julia Christina Müller ; role: Stellvertretende Leitung Personalmanagement ; role_title: Stellvertretende Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://sb.shg-kliniken.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 11795 ; company_id: 2027 ; company_name: SHG-Kliniken Sonnenberg, KJP Tagesklinik St. Wendel ; full_name: Julia Christina Müller ; role: Stellvertretende Leitung Personalmanagement ; role_title: Stellvertretende Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://sb.shg-kliniken.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 11796 ; company_id: 2029 ; company_name: SHG-Kliniken Sonnenberg, Tageskliniken Rastpfuhl in Saarbrücken ; full_name: Julia Christina Müller ; role: Stellvertretende Leitung Personalmanagement ; role_title: Stellvertretende Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://sb.shg-kliniken.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_022
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260619T182238Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
