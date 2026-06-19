@@ -1,0 +1,71 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260619T182238Z
+TASK_ID: task_020
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — strict public personal email lookup (first pass).
+Search official clinic pages, team/staff pages, imprint, and other public sources for a person-specific work email for each named person.
+Return only strong person-specific emails in the result field. Do not return generic mailboxes (info@, kontakt@, karriere@, hr@, pflege@, zentrale@).
+If no person-specific email exists publicly, still output a CSV row for that person with empty result and status=not_found (or excluded_generic_mailbox if only generic mailboxes were found).
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 4271 ; company_id: 1835 ; company_name: Privatklinik Bad Gleisweiler ; full_name: Christian Lentz ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: http://privatklinik-bad-gleisweiler.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 4273 ; company_id: 1234 ; company_name: Prosomno Klinik für Schlafmedizin in München ; full_name: Anita Biking ; role: Leitung Pflegedienst ; role_title: Leitung Pflegedienst ; role_category: pflege_leadership ; role_level: primary ; website: http://prosomno.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 532 ; company_id: 322 ; company_name: Prosper-Hospital in Recklinghausen ; full_name: Jörg Kuchenreuther ; role: Personalleiter und Prokurist ; role_title: Personalleiter und Prokurist ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 11953 ; company_id: 322 ; company_name: Prosper-Hospital in Recklinghausen ; full_name: Melanie Hantel ; role: Stellvertretende Personalleitung ; role_title: Stellvertretende Personalleitung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 9600 ; company_id: 1575 ; company_name: Psychiatrische Klinik Lüneburg ; full_name: Markus Burzlaff ; role: Personalleiter ; role_title: Personalleiter ; role_category: hr_leadership ; role_level: primary ; website: http://pk.lueneburg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 5864 ; company_id: 1953 ; company_name: Psychiatrische Tagesklinik Freiberg in Döbeln ; full_name: Jacqueline Klömich ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: http://agaplesion-mitteldeutzschland.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 4286 ; company_id: 1297 ; company_name: Psychiatrische Tagesklinik Hamburg-Mitte (Janssen-Haus) ; full_name: Isabel Gasch ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 5877 ; company_id: 1222 ; company_name: Psychiatrische Tagesklinik mit Institutsambulanz Neustadt/Aisch ; full_name: Roland Sturm ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://bezirkskliniken-mfr.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 5878 ; company_id: 1208 ; company_name: Psychiatrische Tagesklinik mit Institutsambulanz Roth in Roth, Mittelfranken ; full_name: Roland Sturm ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://bezirkskliniken-mfr.de/unsere-standorte-und-kliniken/roth.html ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 5879 ; company_id: 1219 ; company_name: Psychiatrische Tagesklinik mit Institutsambulanz Weißenburg ; full_name: Roland Sturm ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://bezirkskliniken-mfr.de/unsere-standorte-und-kliniken/weissenburg.html ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 5873 ; company_id: 1310 ; company_name: Psychiatrische Tagesklinik Wilhelmsburg in Hamburg ; full_name: Cornelia Adamski ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: http://asklepios.com/harburg ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 335 ; company_id: 20 ; company_name: Psychiatrisches Zentrum Nordbaden in Wiesloch ; full_name: Andreas Emmerich ; role: Pflegedirektor ; role_title: Pflegedirektor ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 1064 ; company_id: 634 ; company_name: Psychosomatische Klinik Bergisch Gladbach ; full_name: Raphael Lüdenbach ; role: Pflegedirektor ; role_title: Pflegedirektor ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 5885 ; company_id: 1556 ; company_name: Psychosomatische Klinik Ginsterhof in Rosengarten ; full_name: Susanne von Rönnen ; role: Leitung Personalabteilung ; role_title: Leitung Personalabteilung ; role_category: hr_leadership ; role_level: primary ; website: https://ginsterhof.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 5895 ; company_id: 126 ; company_name: Rechbergklinik Bretten ; full_name: Michael Jung ; role: Leitung Personal & Arbeit ; role_title: Leitung Personal & Arbeit ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 8643 ; company_id: 2078 ; company_name: Reha-Klinik Sigmund Weil-Klinik in Bad Schönborn ; full_name: Markus Hasenest ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://sigmund-weil-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 4320 ; company_id: 2065 ; company_name: Reha-Klinikum Bad Säckingen ; full_name: Cornelia Döring ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://rkbs.de/startseite.html ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 5898 ; company_id: 2065 ; company_name: Reha-Klinikum Bad Säckingen ; full_name: Natalie Goran ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: https://rkbs.de/startseite.html ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 4322 ; company_id: 2148 ; company_name: Reha-Zentrum am Meer in Bad Zwischenahn ; full_name: Elke Schlottmann ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://rehazentrum-am-meer.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 5902 ; company_id: 2148 ; company_name: Reha-Zentrum am Meer in Bad Zwischenahn ; full_name: Ulrike Rösener-Schielke ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: https://rehazentrum-am-meer.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 5901 ; company_id: 1228 ; company_name: Reha-Zentrum Nittenau ; full_name: Oliver Weithmann ; role: Leitung Personalabteilung ; role_title: Leitung Personalabteilung ; role_category: hr_leadership ; role_level: primary ; website: https://passauerwolf.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 4321 ; company_id: 1228 ; company_name: Reha-Zentrum Nittenau ; full_name: Tatjana Braun ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://passauerwolf.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 9397 ; company_id: 2061 ; company_name: Rehabilitationsklinik Saulgau ; full_name: Christine Schmettkordt ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://rehabilitationsklinik-saulgau.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 5908 ; company_id: 2146 ; company_name: Rehabilitationszentrum Oldenburg ; full_name: Bianca Herzner ; role: Personalleiterin ; role_title: Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: https://rehazentrum-oldenburg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 5909 ; company_id: 2073 ; company_name: Rehabiltationsklinik Bad Wurzach ; full_name: Judith Blaschka ; role: Personalleiterin der RehaZentren Baden-Württemberg ; role_title: Personalleiterin der RehaZentren Baden-Württemberg ; role_category: hr_leadership ; role_level: primary ; website: https://rehabilitationsklinik-bad-wurzach.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_020
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260619T182238Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
