@@ -1,0 +1,109 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260620T150659Z
+TASK_ID: task_015
+PROMPT_VERSION: v2
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+PROMPT_VERSION: v2_intensive_research_20260620
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — STRICT PUBLIC PERSONAL WORK EMAIL (first pass, highest quality bar).
+
+THIS IS A DEEP-RESEARCH TASK — NOT A QUICK SCAN.
+You are hunting the one thing we need: a person-specific work email for each named leader
+(HR / Pflege / management primary). Take the time you need. Use web search and every tool
+available. Shallow homepage-only lookups are unacceptable for this stage.
+
+YOUR WIN CONDITION (per person):
+- Put a real person-specific work email in result ONLY when public evidence ties that exact
+  address to that exact named person (staff page, imprint with name+email, quality report,
+  press release, official PDF, directory listing, etc.).
+- status=found_person_specific_email
+- Examples of wins: vorname.nachname@klinik.de, clearly named on an official team page.
+
+WHEN YOU DID REAL WORK BUT FOUND NO PERSONAL EMAIL:
+- Leave result empty.
+- status=not_found — you searched multiple credible sources and no person-specific email exists.
+- status=excluded_generic_mailbox — you found only shared/role mailboxes (info@, kontakt@,
+  karriere@, bewerbung@, geschaeftsfuehrung@, pflegedirektion@, sekretariat@, zentrale@,
+  poststelle@, jobs@, personal@). That is useful intel but NOT a personal email — do not
+  put generic addresses in result.
+
+RESEARCH INTENSITY — DO THIS FOR EVERY PERSON (especially hard clinic leaders):
+1) Start from the clinic website in the input; then branch out aggressively with web search.
+2) Search the person's full name + clinic + role + "email" / "Kontakt" / "E-Mail".
+3) Open and read: team/organigram pages, imprint, contact pages, Pflege-/Personal-leitung pages.
+4) Hunt PDFs: Qualitätsberichte, Jahresberichte, Klinikportraits, Verzeichnisse (DKV, Qimed, G-BA).
+5) Check press/news, conference speaker lists, job postings that name the person with contact.
+6) Use LinkedIn or Xing only as a clue for role/employer — then find the email on an official source.
+7) Try spelling variants (Dr., Prof., maiden names, umlauts) if first pass is empty.
+8) If the first query only returns the clinic homepage, KEEP GOING — that is not finished research.
+
+QUALITY MINDSET:
+- 25 people in this chunk = 25 separate investigations. Do not rush or batch-skim.
+- An empty honest not_found after deep search is valuable.
+- A generic mailbox in result is a failed lookup for this stage — we need the person's own address.
+- Cite the strongest source URL. Evidence should say WHY the email belongs to this person.
+
+We would rather have 3 excellent person-specific finds than 20 lazy generic mailboxes.
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 245 ; company_id: 66 ; company_name: GRN-Klinik Schwetzingen ; full_name: Judith Masuch ; role: Geschäftsführerin ; role_title: Geschäftsführerin ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 142 ; company_id: 199 ; company_name: Hans Carossa Klinik Stühlingen ; full_name: Marco Habbaba ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 8674 ; company_id: 1162 ; company_name: Hassberg-Kliniken Haus Ebern ; full_name: Sarah Hartmann ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://hassberg-kliniken.de/startseite.html ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 56 ; company_id: 33 ; company_name: Hegau-Bodensee-Klinikum Singen ; full_name: Markus Schreiber ; role: Personalleitung Hegau-Bodensee-Klinikum/Hegau-Jugendwerk Gailingen ; role_title: Personalleitung Hegau-Bodensee-Klinikum/Hegau-Jugendwerk Gailingen ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 12421 ; company_id: 1660 ; company_name: Heidekreis Klinikum Krankenhaus Soltau ; full_name: Sven Ortlepp ; role: Personalleiter ; role_title: Personalleiter ; role_category: hr_leadership ; role_level: primary ; website: http://heidekreis-klinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 5161 ; company_id: 1457 ; company_name: Heilig Geist Hospital Bensheim ; full_name: Xenia Martin ; role: Leitung Personal ; role_title: Leitung Personal ; role_category: hr_leadership ; role_level: primary ; website: http://hgh-bensheim.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 2527 ; company_id: 1827 ; company_name: Heilig-Geist-Hospital Bingen ; full_name: Michael Gutendorf ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://heilig-geist-hospital.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 12528 ; company_id: 784 ; company_name: Heiligenfeld Klinik Berlin ; full_name: Kirstin Hartfiel ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://berlin.heiligenfeld.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 12529 ; company_id: 1115 ; company_name: Heiligenfeld Klinik Uffenheim ; full_name: Kirstin Hartfiel ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://uffenheim.heiligenfeld.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 12530 ; company_id: 2002 ; company_name: Heiligenfeld Klinik Waldmünchen ; full_name: Kirstin Hartfiel ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://waldmuenchen.heiligenfeld.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 12531 ; company_id: 1141 ; company_name: Heiligenfeld Kliniken Bad Wörishofen ; full_name: Kirstin Hartfiel ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://badwoerishofen.heiligenfeld.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 2534 ; company_id: 1965 ; company_name: Heinrich-Braun-Klinikum (Glauchau) ; full_name: Dipl.-Kfm. Rüdiger Glaß ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://heinrich-braun-klinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 2535 ; company_id: 1943 ; company_name: Heinrich-Braun-Klinikum (Kirchberg) in Kirchberg, Sachsen ; full_name: Dipl.-Kfm. Rüdiger Glaß ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://heinrich-braun-klinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 2536 ; company_id: 1837 ; company_name: Heinrich-Braun-Klinikum (Zwickau) ; full_name: Dipl.-Kfm. Rüdiger Glaß ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://heinrich-braun-klinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 10705 ; company_id: 2036 ; company_name: Heinrich-Braun-Klinikum Zwickau - Standort Werdauer Straße ; full_name: Dipl.-Kfm. Rüdiger Glaß ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://heinrich-braun-klinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 12423 ; company_id: 1323 ; company_name: Helios Klinik Leezen ; full_name: Sophie Ehlers ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/leezen ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 5182 ; company_id: 1915 ; company_name: Helios Klinik Leisnig ; full_name: Heidi Jung ; role: Personalleiterin ; role_title: Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/leisnig ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 5185 ; company_id: 1241 ; company_name: Helios Klinik Miltenberg ; full_name: Inga Kaul ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/reha/miltenberg ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 3543 ; company_id: 115 ; company_name: Helios Klinik Müllheim ; full_name: Natalie Waldherr ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 8621 ; company_id: 112 ; company_name: Helios Klinik Titisee-Neustadt ; full_name: Natalie Waldherr ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 5192 ; company_id: 547 ; company_name: Helios Klinik Wipperfürth ; full_name: Michael Dehne ; role: Standortverantwortlicher Personalleiter / Helios Klinik Wipperfürth ; role_title: Standortverantwortlicher Personalleiter / Helios Klinik Wipperfürth ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 5198 ; company_id: 1300 ; company_name: Helios Kliniken Schwerin ; full_name: Sophie Ehlers ; role: Personalleitung / Helios Kliniken Schwerin ; role_title: Personalleitung / Helios Kliniken Schwerin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/schwerin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 5199 ; company_id: 1314 ; company_name: Helios Kliniken Schwerin (Psychiatrie) ; full_name: Sophie Ehlers ; role: Personalleitung / Helios Kliniken Schwerin ; role_title: Personalleitung / Helios Kliniken Schwerin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/schwerin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 5200 ; company_id: 1353 ; company_name: Helios Kliniken Schwerin - Tagesklinik allgemeine Psychiatrie Ludwigslust ; full_name: Sophie Ehlers ; role: Personalleitung / Helios Kliniken Schwerin ; role_title: Personalleitung / Helios Kliniken Schwerin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/schwerin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 5201 ; company_id: 1363 ; company_name: Helios Kliniken Schwerin - Tagesklinik für Kinder - und Jugendpsychiatrie Ludwigslust ; full_name: Sophie Ehlers ; role: Personalleitung / Helios Kliniken Schwerin ; role_title: Personalleitung / Helios Kliniken Schwerin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/schwerin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_015
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260620T150659Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- For stage 02A personal email: result must be empty unless you have a person-specific work email; use excluded_generic_mailbox when only shared mailboxes exist.
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
