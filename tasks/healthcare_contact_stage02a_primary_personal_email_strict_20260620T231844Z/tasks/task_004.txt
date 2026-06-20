@@ -1,0 +1,109 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260620T231844Z
+TASK_ID: task_004
+PROMPT_VERSION: v2
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+PROMPT_VERSION: v2_intensive_research_20260620
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — STRICT PUBLIC PERSONAL WORK EMAIL (first pass, highest quality bar).
+
+THIS IS A DEEP-RESEARCH TASK — NOT A QUICK SCAN.
+You are hunting the one thing we need: a person-specific work email for each named leader
+(HR / Pflege / management primary). Take the time you need. Use web search and every tool
+available. Shallow homepage-only lookups are unacceptable for this stage.
+
+YOUR WIN CONDITION (per person):
+- Put a real person-specific work email in result ONLY when public evidence ties that exact
+  address to that exact named person (staff page, imprint with name+email, quality report,
+  press release, official PDF, directory listing, etc.).
+- status=found_person_specific_email
+- Examples of wins: vorname.nachname@klinik.de, clearly named on an official team page.
+
+WHEN YOU DID REAL WORK BUT FOUND NO PERSONAL EMAIL:
+- Leave result empty.
+- status=not_found — you searched multiple credible sources and no person-specific email exists.
+- status=excluded_generic_mailbox — you found only shared/role mailboxes (info@, kontakt@,
+  karriere@, bewerbung@, geschaeftsfuehrung@, pflegedirektion@, sekretariat@, zentrale@,
+  poststelle@, jobs@, personal@). That is useful intel but NOT a personal email — do not
+  put generic addresses in result.
+
+RESEARCH INTENSITY — DO THIS FOR EVERY PERSON (especially hard clinic leaders):
+1) Start from the clinic website in the input; then branch out aggressively with web search.
+2) Search the person's full name + clinic + role + "email" / "Kontakt" / "E-Mail".
+3) Open and read: team/organigram pages, imprint, contact pages, Pflege-/Personal-leitung pages.
+4) Hunt PDFs: Qualitätsberichte, Jahresberichte, Klinikportraits, Verzeichnisse (DKV, Qimed, G-BA).
+5) Check press/news, conference speaker lists, job postings that name the person with contact.
+6) Use LinkedIn or Xing only as a clue for role/employer — then find the email on an official source.
+7) Try spelling variants (Dr., Prof., maiden names, umlauts) if first pass is empty.
+8) If the first query only returns the clinic homepage, KEEP GOING — that is not finished research.
+
+QUALITY MINDSET:
+- 25 people in this chunk = 25 separate investigations. Do not rush or batch-skim.
+- An empty honest not_found after deep search is valuable.
+- A generic mailbox in result is a failed lookup for this stage — we need the person's own address.
+- Cite the strongest source URL. Evidence should say WHY the email belongs to this person.
+
+We would rather have 3 excellent person-specific finds than 20 lazy generic mailboxes.
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 12151 ; company_id: 483 ; company_name: Asklepios Klinik Sankt Augustin ; full_name: Kirsten Bort-Mandt ; role: Personalleiterin ; role_title: Personalleiterin ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 12620 ; company_id: 1420 ; company_name: Asklepios Klinik Seligenstadt ; full_name: Patrick Harperath ; role: stellv. Regionaler Personalleiter Rhein-Main ; role_title: stellv. Regionaler Personalleiter Rhein-Main ; role_category: hr_leadership ; role_level: primary ; website: http://asklepios.com/seligenstadt ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 12559 ; company_id: 1260 ; company_name: Asklepios Klinikum Harburg in Hamburg ; full_name: Marja Pinnow ; role: Stellvertretende Personalleiterin ; role_title: Stellvertretende Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: http://asklepios.com/harburg ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 7479 ; company_id: 1982 ; company_name: Asklepios Klinikum Uckermark in Schwedt / Oder ; full_name: Claudia Grunwald ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: http://asklepios.com/schwedt ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 4942 ; company_id: 986 ; company_name: Asklepios Lungenklinik Gauting ; full_name: Susanne Burger ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: http://asklepios.com/gauting ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 12523 ; company_id: 1458 ; company_name: Asklepios Neurologische Klinik Bad Salzhausen in Nidda ; full_name: Matthias Meyer ; role: Leiter Konzernbereich Personal ; role_title: Leiter Konzernbereich Personal ; role_category: hr_leadership ; role_level: primary ; website: http://asklepios.com/bad-salzhausen ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 12621 ; company_id: 1491 ; company_name: Asklepios Neurologische Klinik Falkenstein in Königstein im Taunus ; full_name: Patrick Harperath ; role: stellv. Regionaler Personalleiter Rhein-Main ; role_title: stellv. Regionaler Personalleiter Rhein-Main ; role_category: hr_leadership ; role_level: primary ; website: http://asklepios.com/falkenstein ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 12622 ; company_id: 1409 ; company_name: Asklepios Paulinen Klinik Wiesbaden ; full_name: Patrick Harperath ; role: stellv. Regionaler Personalleiter Rhein-Main ; role_title: stellv. Regionaler Personalleiter Rhein-Main ; role_category: hr_leadership ; role_level: primary ; website: http://asklepios.com/wiesbaden ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 12623 ; company_id: 1462 ; company_name: Asklepios Schlossberg Klinik in Bad König ; full_name: Patrick Harperath ; role: stellv. Regionaler Personalleiter Rhein-Main ; role_title: stellv. Regionaler Personalleiter Rhein-Main ; role_category: hr_leadership ; role_level: primary ; website: http://asklepios.com/bad-koenig ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 4949 ; company_id: 1828 ; company_name: Asklepios Südpfalzklinik Germersheim ; full_name: Marianne Heurich ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: http://asklepios.com/germersheim ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 2429 ; company_id: 1466 ; company_name: Atos Orthopädische Klinik Braunfels ; full_name: Robert Brandner ; role: Kaufmännische Leitung ; role_title: Kaufmännische Leitung ; role_category: management ; role_level: primary ; website: https://atos.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 7346 ; company_id: 1206 ; company_name: Atos Starmed Klinik in München ; full_name: Eldin Jasarevic ; role: Stationsleitung / Pflegedienstleitung ; role_title: Stationsleitung / Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: http://starmedklinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 2430 ; company_id: 1206 ; company_name: Atos Starmed Klinik in München ; full_name: Florian Kinast ; role: Kaufmännische Leitung ; role_title: Kaufmännische Leitung ; role_category: management ; role_level: primary ; website: http://starmedklinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 12214 ; company_id: 662 ; company_name: Augenklinik Dardenne in Bonn ; full_name: Bärbel Veenhuis ; role: Stationsleitung unter Pflegedienstleitung ; role_title: Stationsleitung unter Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 12215 ; company_id: 1732 ; company_name: Augenklinik Dr. Hoffmann in Braunschweig ; full_name: Ilayda Yapakci ; role: Stationsleitung unter Pflegedienstleitung ; role_title: Stationsleitung unter Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: http://augenklinik-dr-hoffmann.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 2434 ; company_id: 1732 ; company_name: Augenklinik Dr. Hoffmann in Braunschweig ; full_name: Stephan Kaune ; role: Geschäftsführung ; role_title: Geschäftsführung ; role_category: management ; role_level: primary ; website: http://augenklinik-dr-hoffmann.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 4967 ; company_id: 1732 ; company_name: Augenklinik Dr. Hoffmann in Braunschweig ; full_name: Tanja Tucholla ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: http://augenklinik-dr-hoffmann.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 2435 ; company_id: 1165 ; company_name: Augenklinik Herzog Carl Theodor in München ; full_name: Dr. Kristian Horn ; role: Vorstand ; role_title: Vorstand ; role_category: management ; role_level: primary ; website: http://augenklinik-muenchen.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 2436 ; company_id: 798 ; company_name: Augenklinik im Ring-Center in Berlin ; full_name: Dr. Stephanie Pahlitzsch ; role: Geschäftsführerin / Ärztliche Leiterin ; role_title: Geschäftsführerin / Ärztliche Leiterin ; role_category: management ; role_level: primary ; website: http://augenklinik-ringcenter.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 10950 ; company_id: 1753 ; company_name: Augenklinik Stadthagen ; full_name: Andreas Wagner ; role: Verwaltungsleitung ; role_title: Verwaltungsleitung ; role_category: management ; role_level: primary ; website: https://augenklinik.org ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 2438 ; company_id: 1753 ; company_name: Augenklinik Stadthagen ; full_name: Dr. Michael Knoche ; role: Geschäftsführer / Ärztlicher Leiter ; role_title: Geschäftsführer / Ärztlicher Leiter ; role_category: management ; role_level: primary ; website: https://augenklinik.org ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 12429 ; company_id: 1753 ; company_name: Augenklinik Stadthagen ; full_name: Lara Tünnermann ; role: Personalmanagement ; role_title: Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: https://augenklinik.org ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 3162 ; company_id: 1753 ; company_name: Augenklinik Stadthagen ; full_name: Rositta Marhenke ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://augenklinik.org ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 12156 ; company_id: 503 ; company_name: Augusta-Krankenhaus in Düsseldorf ; full_name: Alessa Voigt ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 12470 ; company_id: 593 ; company_name: Auguste-Viktoria-Klinik in Bad Oeynhausen ; full_name: Carla Schrempf ; role: Stellvertretende Abteilungsleitung Personal ; role_title: Stellvertretende Abteilungsleitung Personal ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_004
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260620T231844Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- For stage 02A personal email: result must be empty unless you have a person-specific work email; use excluded_generic_mailbox when only shared mailboxes exist.
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
