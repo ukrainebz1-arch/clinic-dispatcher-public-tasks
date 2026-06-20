@@ -1,0 +1,109 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260620T135739Z
+TASK_ID: task_007
+PROMPT_VERSION: v2
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+PROMPT_VERSION: v2_intensive_research_20260620
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — STRICT PUBLIC PERSONAL WORK EMAIL (first pass, highest quality bar).
+
+THIS IS A DEEP-RESEARCH TASK — NOT A QUICK SCAN.
+You are hunting the one thing we need: a person-specific work email for each named leader
+(HR / Pflege / management primary). Take the time you need. Use web search and every tool
+available. Shallow homepage-only lookups are unacceptable for this stage.
+
+YOUR WIN CONDITION (per person):
+- Put a real person-specific work email in result ONLY when public evidence ties that exact
+  address to that exact named person (staff page, imprint with name+email, quality report,
+  press release, official PDF, directory listing, etc.).
+- status=found_person_specific_email
+- Examples of wins: vorname.nachname@klinik.de, clearly named on an official team page.
+
+WHEN YOU DID REAL WORK BUT FOUND NO PERSONAL EMAIL:
+- Leave result empty.
+- status=not_found — you searched multiple credible sources and no person-specific email exists.
+- status=excluded_generic_mailbox — you found only shared/role mailboxes (info@, kontakt@,
+  karriere@, bewerbung@, geschaeftsfuehrung@, pflegedirektion@, sekretariat@, zentrale@,
+  poststelle@, jobs@, personal@). That is useful intel but NOT a personal email — do not
+  put generic addresses in result.
+
+RESEARCH INTENSITY — DO THIS FOR EVERY PERSON (especially hard clinic leaders):
+1) Start from the clinic website in the input; then branch out aggressively with web search.
+2) Search the person's full name + clinic + role + "email" / "Kontakt" / "E-Mail".
+3) Open and read: team/organigram pages, imprint, contact pages, Pflege-/Personal-leitung pages.
+4) Hunt PDFs: Qualitätsberichte, Jahresberichte, Klinikportraits, Verzeichnisse (DKV, Qimed, G-BA).
+5) Check press/news, conference speaker lists, job postings that name the person with contact.
+6) Use LinkedIn or Xing only as a clue for role/employer — then find the email on an official source.
+7) Try spelling variants (Dr., Prof., maiden names, umlauts) if first pass is empty.
+8) If the first query only returns the clinic homepage, KEEP GOING — that is not finished research.
+
+QUALITY MINDSET:
+- 25 people in this chunk = 25 separate investigations. Do not rush or batch-skim.
+- An empty honest not_found after deep search is valuable.
+- A generic mailbox in result is a failed lookup for this stage — we need the person's own address.
+- Cite the strongest source URL. Evidence should say WHY the email belongs to this person.
+
+We would rather have 3 excellent person-specific finds than 20 lazy generic mailboxes.
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 3234 ; company_id: 1693 ; company_name: Burghof-Klinik Haus 1 in Rinteln ; full_name: Lena Linge ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: http://burghof-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 3236 ; company_id: 1721 ; company_name: Burghof-Klinik Haus 2 in Aerzen ; full_name: Lena Linge ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: http://burghof-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 3238 ; company_id: 1695 ; company_name: Burghof-Klinik Haus 3 u . 4 in Rinteln ; full_name: Lena Linge ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: http://burghof-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 3240 ; company_id: 1740 ; company_name: Burghof-Klinik Tagesklinik Stadthagen ; full_name: Lena Linge ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: http://burghof-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 3242 ; company_id: 2161 ; company_name: Bückeberg Klinik in Bad Eilsen ; full_name: Claudia Schütte ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://bueckeberg-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 1507 ; company_id: 2161 ; company_name: Bückeberg Klinik in Bad Eilsen ; full_name: Ralf Schönwald ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: https://bueckeberg-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 3245 ; company_id: 1399 ; company_name: Bürgerhospital und Clementine Kinderhospital Standort: Bürgerhospital Frankfurt ; full_name: Andreas Greco ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://buergerhospital-ffm.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 12462 ; company_id: 762 ; company_name: Caritas-Klinik Dominikus in Berlin ; full_name: Katrin Hübener ; role: Stellvertretende Personalleitung ; role_title: Stellvertretende Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://caritas-gesundheit.de/kliniken/caritas-klinik-dominikus ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 12463 ; company_id: 761 ; company_name: Caritas-Klinik Maria Heimsuchung Berlin-Pankow ; full_name: Katrin Hübener ; role: Stellvertretende Personalleitung ; role_title: Stellvertretende Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: http://caritas-klinik-pankow.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 12464 ; company_id: 772 ; company_name: Caritas-Klinik St. Anna Berlin-Charlottenburg ; full_name: Katrin Hübener ; role: Stellvertretende Personalleitung ; role_title: Stellvertretende Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://caritas-gesundheit.de/kliniken/caritas-klinik-st-anna ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 12465 ; company_id: 844 ; company_name: Caritas-Klinik St. Marien in Brandenburg an der Havel ; full_name: Katrin Hübener ; role: Stellvertretende Personalleitung ; role_title: Stellvertretende Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://caritas-klinik-marien.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 1513 ; company_id: 2020 ; company_name: Caritas-Krankenhaus Lebach ; full_name: Dr. Mario Liehr ; role: Interims-Kaufmännischer Direktor ; role_title: Interims-Kaufmännischer Direktor ; role_category: management ; role_level: primary ; website: https://caritas-krankenhaus-lebach.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 8702 ; company_id: 2020 ; company_name: Caritas-Krankenhaus Lebach ; full_name: Sabine Hartmann ; role: Personalleitung ZPA ; role_title: Personalleitung ZPA ; role_category: hr_leadership ; role_level: primary ; website: https://caritas-krankenhaus-lebach.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 3254 ; company_id: 972 ; company_name: Caritas-Krankenhaus St. Josef in Regensburg ; full_name: Alexandra Stich ; role: Direktorin für Pflege- und Patientenmanagement ; role_title: Direktorin für Pflege- und Patientenmanagement ; role_category: pflege_leadership ; role_level: primary ; website: https://csj.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 1516 ; company_id: 2026 ; company_name: CaritasKlinikum Saarbrücken (St. Josef) ; full_name: Alexander Funk ; role: Geschäftsführung ; role_title: Geschäftsführung ; role_category: management ; role_level: primary ; website: http://caritasklinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 5015 ; company_id: 2271 ; company_name: Celenus Algos Fachklinik in Bad Klosterlausnitz ; full_name: Albert Schuster ; role: Head of HR ; role_title: Head of HR ; role_category: hr_leadership ; role_level: primary ; website: https://celenus-kliniken.de/algos ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 3265 ; company_id: 2271 ; company_name: Celenus Algos Fachklinik in Bad Klosterlausnitz ; full_name: Antje Hönig ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://celenus-kliniken.de/algos ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 7678 ; company_id: 2271 ; company_name: Celenus Algos Fachklinik in Bad Klosterlausnitz ; full_name: Katharina Wahl ; role: Fachbereichsleitung Personal- und Entgeltabrechnung ; role_title: Fachbereichsleitung Personal- und Entgeltabrechnung ; role_category: hr_leadership ; role_level: primary ; website: https://celenus-kliniken.de/algos ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 5016 ; company_id: 2082 ; company_name: Celenus Gotthard-Schettler-Klinik in Bad Schönborn ; full_name: Albert Schuster ; role: Head of HR ; role_title: Head of HR ; role_category: hr_leadership ; role_level: primary ; website: https://gotthard-schettler-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 7679 ; company_id: 2082 ; company_name: Celenus Gotthard-Schettler-Klinik in Bad Schönborn ; full_name: Katharina Wahl ; role: Fachbereichsleitung Personal- und Entgeltabrechnung ; role_title: Fachbereichsleitung Personal- und Entgeltabrechnung ; role_category: hr_leadership ; role_level: primary ; website: https://gotthard-schettler-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 3266 ; company_id: 2082 ; company_name: Celenus Gotthard-Schettler-Klinik in Bad Schönborn ; full_name: Markus Hasenest ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://gotthard-schettler-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 7680 ; company_id: 2253 ; company_name: Celenus Parkklinik Bad Bergzabern ; full_name: Katharina Wahl ; role: Fachbereichsleitung Personal- und Entgeltabrechnung ; role_title: Fachbereichsleitung Personal- und Entgeltabrechnung ; role_category: hr_leadership ; role_level: primary ; website: https://parkklinik-bad-bergzabern.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 3268 ; company_id: 2253 ; company_name: Celenus Parkklinik Bad Bergzabern ; full_name: Sybille Berndt ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://parkklinik-bad-bergzabern.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 8169 ; company_id: 423 ; company_name: Cellitinnen-Krankenhaus St. Franziskus in Köln ; full_name: Benjamin Richter ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 617 ; company_id: 363 ; company_name: Cellitinnen-Krankenhaus St. Marien in Köln ; full_name: Jan Patrick Glöckner ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_007
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260620T135739Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- For stage 02A personal email: result must be empty unless you have a person-specific work email; use excluded_generic_mailbox when only shared mailboxes exist.
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
