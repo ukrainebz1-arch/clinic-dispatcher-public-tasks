@@ -1,0 +1,71 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260620T023759Z
+TASK_ID: task_011
+PROMPT_VERSION: v1
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — strict public personal email lookup (first pass).
+Search official clinic pages, team/staff pages, imprint, and other public sources for a person-specific work email for each named person.
+Return only strong person-specific emails in the result field. Do not return generic mailboxes (info@, kontakt@, karriere@, hr@, pflege@, zentrale@).
+If no person-specific email exists publicly, still output a CSV row for that person with empty result and status=not_found (or excluded_generic_mailbox if only generic mailboxes were found).
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 12528 ; company_id: 784 ; company_name: Heiligenfeld Klinik Berlin ; full_name: Kirstin Hartfiel ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://berlin.heiligenfeld.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 12529 ; company_id: 1115 ; company_name: Heiligenfeld Klinik Uffenheim ; full_name: Kirstin Hartfiel ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://uffenheim.heiligenfeld.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 12530 ; company_id: 2002 ; company_name: Heiligenfeld Klinik Waldmünchen ; full_name: Kirstin Hartfiel ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://waldmuenchen.heiligenfeld.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 12531 ; company_id: 1141 ; company_name: Heiligenfeld Kliniken Bad Wörishofen ; full_name: Kirstin Hartfiel ; role: Leitung Personalmanagement ; role_title: Leitung Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://badwoerishofen.heiligenfeld.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 12423 ; company_id: 1323 ; company_name: Helios Klinik Leezen ; full_name: Sophie Ehlers ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/leezen ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 5182 ; company_id: 1915 ; company_name: Helios Klinik Leisnig ; full_name: Heidi Jung ; role: Personalleiterin ; role_title: Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/leisnig ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 5185 ; company_id: 1241 ; company_name: Helios Klinik Miltenberg ; full_name: Inga Kaul ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/reha/miltenberg ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 3543 ; company_id: 115 ; company_name: Helios Klinik Müllheim ; full_name: Natalie Waldherr ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 8621 ; company_id: 112 ; company_name: Helios Klinik Titisee-Neustadt ; full_name: Natalie Waldherr ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 5192 ; company_id: 547 ; company_name: Helios Klinik Wipperfürth ; full_name: Michael Dehne ; role: Standortverantwortlicher Personalleiter / Helios Klinik Wipperfürth ; role_title: Standortverantwortlicher Personalleiter / Helios Klinik Wipperfürth ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 5198 ; company_id: 1300 ; company_name: Helios Kliniken Schwerin ; full_name: Sophie Ehlers ; role: Personalleitung / Helios Kliniken Schwerin ; role_title: Personalleitung / Helios Kliniken Schwerin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/schwerin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 5199 ; company_id: 1314 ; company_name: Helios Kliniken Schwerin (Psychiatrie) ; full_name: Sophie Ehlers ; role: Personalleitung / Helios Kliniken Schwerin ; role_title: Personalleitung / Helios Kliniken Schwerin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/schwerin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 5200 ; company_id: 1353 ; company_name: Helios Kliniken Schwerin - Tagesklinik allgemeine Psychiatrie Ludwigslust ; full_name: Sophie Ehlers ; role: Personalleitung / Helios Kliniken Schwerin ; role_title: Personalleitung / Helios Kliniken Schwerin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/schwerin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 5201 ; company_id: 1363 ; company_name: Helios Kliniken Schwerin - Tagesklinik für Kinder - und Jugendpsychiatrie Ludwigslust ; full_name: Sophie Ehlers ; role: Personalleitung / Helios Kliniken Schwerin ; role_title: Personalleitung / Helios Kliniken Schwerin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/schwerin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 5202 ; company_id: 1361 ; company_name: Helios Kliniken Schwerin - Tagesklinik für Kinder- und Jugendpsychiatrie in Wismar ; full_name: Sophie Ehlers ; role: Personalleitung / Helios Kliniken Schwerin ; role_title: Personalleitung / Helios Kliniken Schwerin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/schwerin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 5203 ; company_id: 1362 ; company_name: Helios Kliniken Schwerin - Tagesklinik für Psychiatrie Sternberg ; full_name: Sophie Ehlers ; role: Personalleitung / Helios Kliniken Schwerin ; role_title: Personalleitung / Helios Kliniken Schwerin ; role_category: hr_leadership ; role_level: primary ; website: https://helios-gesundheit.de/kliniken/schwerin ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 10820 ; company_id: 816 ; company_name: Helios Klinikum Bad Saarow ; full_name: Daniela Schulze ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: http://helios-gesundheit.de/kliniken/bad-saarow ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 5217 ; company_id: 1610 ; company_name: Helios Klinikum Uelzen ; full_name: Stefan Rosenberg ; role: Personalleiter ; role_title: Personalleiter ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 12426 ; company_id: 651 ; company_name: Helios Universitätsklinikum Wuppertal Schmerzklinik Bergisch Land ; full_name: Sandra Schütz ; role: Standortverantwortliche Personalleiterin ; role_title: Standortverantwortliche Personalleiterin ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 12413 ; company_id: 274 ; company_name: Helios Universitätsklinikum Wuppertal, Campus Barmen ; full_name: Sandra Schütz ; role: Standortverantwortliche Personalleiterin ; role_title: Standortverantwortliche Personalleiterin ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 12414 ; company_id: 549 ; company_name: Helios Universitätsklinikum Wuppertal, Campus Elberfeld ; full_name: Sandra Schütz ; role: Standortverantwortliche Personalleiterin ; role_title: Standortverantwortliche Personalleiterin ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 12416 ; company_id: 348 ; company_name: Hermann-Josef-Krankenhaus in Erkelenz ; full_name: Swen Kaupa ; role: Gruppenleitung Personalabteilung ; role_title: Gruppenleitung Personalabteilung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 3580 ; company_id: 1805 ; company_name: Herz-Jesu-Krankenhaus Dernbach ; full_name: Jörg Philipps ; role: Pflegedirektion ; role_title: Pflegedirektion ; role_category: pflege_leadership ; role_level: primary ; website: http://krankenhaus-dernbach.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 7626 ; company_id: 2085 ; company_name: HESCURO Klinik REGINA Bad Kissingen ; full_name: Darina Kaufmann ; role: Konzernleitung Personal ; role_title: Konzernleitung Personal ; role_category: hr_leadership ; role_level: primary ; website: https://hescuro.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 8683 ; company_id: 2070 ; company_name: Hessing Klinik für Orthopädische Rehabilitation in Augsburg ; full_name: Denise Eschke ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://hessing-kliniken.de/rehabilitation/orthopaedische-rehabilitation ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_011
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260620T023759Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
