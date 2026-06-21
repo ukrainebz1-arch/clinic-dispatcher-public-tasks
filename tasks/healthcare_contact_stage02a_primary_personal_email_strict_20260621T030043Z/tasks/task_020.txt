@@ -1,0 +1,109 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260621T030043Z
+TASK_ID: task_020
+PROMPT_VERSION: v2
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+PROMPT_VERSION: v2_intensive_research_20260620
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — STRICT PUBLIC PERSONAL WORK EMAIL (first pass, highest quality bar).
+
+THIS IS A DEEP-RESEARCH TASK — NOT A QUICK SCAN.
+You are hunting the one thing we need: a person-specific work email for each named leader
+(HR / Pflege / management primary). Take the time you need. Use web search and every tool
+available. Shallow homepage-only lookups are unacceptable for this stage.
+
+YOUR WIN CONDITION (per person):
+- Put a real person-specific work email in result ONLY when public evidence ties that exact
+  address to that exact named person (staff page, imprint with name+email, quality report,
+  press release, official PDF, directory listing, etc.).
+- status=found_person_specific_email
+- Examples of wins: vorname.nachname@klinik.de, clearly named on an official team page.
+
+WHEN YOU DID REAL WORK BUT FOUND NO PERSONAL EMAIL:
+- Leave result empty.
+- status=not_found — you searched multiple credible sources and no person-specific email exists.
+- status=excluded_generic_mailbox — you found only shared/role mailboxes (info@, kontakt@,
+  karriere@, bewerbung@, geschaeftsfuehrung@, pflegedirektion@, sekretariat@, zentrale@,
+  poststelle@, jobs@, personal@). That is useful intel but NOT a personal email — do not
+  put generic addresses in result.
+
+RESEARCH INTENSITY — DO THIS FOR EVERY PERSON (especially hard clinic leaders):
+1) Start from the clinic website in the input; then branch out aggressively with web search.
+2) Search the person's full name + clinic + role + "email" / "Kontakt" / "E-Mail".
+3) Open and read: team/organigram pages, imprint, contact pages, Pflege-/Personal-leitung pages.
+4) Hunt PDFs: Qualitätsberichte, Jahresberichte, Klinikportraits, Verzeichnisse (DKV, Qimed, G-BA).
+5) Check press/news, conference speaker lists, job postings that name the person with contact.
+6) Use LinkedIn or Xing only as a clue for role/employer — then find the email on an official source.
+7) Try spelling variants (Dr., Prof., maiden names, umlauts) if first pass is empty.
+8) If the first query only returns the clinic homepage, KEEP GOING — that is not finished research.
+
+QUALITY MINDSET:
+- 25 people in this chunk = 25 separate investigations. Do not rush or batch-skim.
+- An empty honest not_found after deep search is valuable.
+- A generic mailbox in result is a failed lookup for this stage — we need the person's own address.
+- Cite the strongest source URL. Evidence should say WHY the email belongs to this person.
+
+We would rather have 3 excellent person-specific finds than 20 lazy generic mailboxes.
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 3767 ; company_id: 548 ; company_name: Klinik für Manuelle Therapie in Hamm ; full_name: Irene Herauf ; role: Gesamt-Pflegedienstleitung ; role_title: Gesamt-Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 1631 ; company_id: 548 ; company_name: Klinik für Manuelle Therapie in Hamm ; full_name: Karl Ehrmann ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 11685 ; company_id: 548 ; company_name: Klinik für Manuelle Therapie in Hamm ; full_name: Ute Lodde ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 1633 ; company_id: 782 ; company_name: Klinik für MIC in Berlin ; full_name: Michael Schmidt MBA ; role: Geschäftsführung ; role_title: Geschäftsführung ; role_category: management ; role_level: primary ; website: http://mic-berlin.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 1636 ; company_id: 1489 ; company_name: Klinik für Psychiatrie und Psychotherapie Friedberg ; full_name: Ünzile Öksüzömer ; role: Pflegerische Abteilungsleitung / Klinikleitung ; role_title: Pflegerische Abteilungsleitung / Klinikleitung ; role_category: management ; role_level: primary ; website: https://gesundheitszentrum-wetterau.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 5375 ; company_id: 1069 ; company_name: Klinik für Psychiatrie und Psychotherapie Fürth ; full_name: Roland Sturm ; role: Personalleiter und Leiter Personalmanagement ; role_title: Personalleiter und Leiter Personalmanagement ; role_category: hr_leadership ; role_level: primary ; website: http://bezirkskliniken-mfr.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 5340 ; company_id: 993 ; company_name: Klinik Günzburg ; full_name: Sabrina Berger ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: http://kliniken-gz-kru.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 12603 ; company_id: 1984 ; company_name: Klinik Hallerwiese - Cnopfsche Kinderklinik in Nürnberg ; full_name: Antje Bonacker ; role: Abteilungsleiterin Personalservice ; role_title: Abteilungsleiterin Personalservice ; role_category: hr_leadership ; role_level: primary ; website: https://klinik-hallerwiese.de/de/klinik-hallerwiese-cnopfsche-kinderklinik.html ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 12604 ; company_id: 1237 ; company_name: Klinik Hallerwiese-Cnopfsche Kinderklinik, Dependance Ansbach ; full_name: Antje Bonacker ; role: Abteilungsleiterin Personalservice ; role_title: Abteilungsleiterin Personalservice ; role_category: hr_leadership ; role_level: primary ; website: https://klinik-hallerwiese.de/de/cnopfsche-kinderklinik/kinderstationen/wald.html ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 8410 ; company_id: 819 ; company_name: Klinik Hennigsdorf ; full_name: Lysanne Schwanitz ; role: Kaufmännische Leitung ; role_title: Kaufmännische Leitung ; role_category: management ; role_level: primary ; website: http://oberhavel-kliniken.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 1657 ; company_id: 2072 ; company_name: Klinik Herzoghöhe in Bayreuth ; full_name: Beate Siller ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://klinik-herzoghoehe.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 7422 ; company_id: 969 ; company_name: Klinik Hohe Warte in Bayreuth ; full_name: Corinna Greller ; role: Pflegedienstleitung Klinik Hohe Warte ; role_title: Pflegedienstleitung Klinik Hohe Warte ; role_category: pflege_leadership ; role_level: primary ; website: http://klinikum-bayreuth.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 5344 ; company_id: 969 ; company_name: Klinik Hohe Warte in Bayreuth ; full_name: Martin Neuhaus ; role: Personalleiter ; role_title: Personalleiter ; role_category: hr_leadership ; role_level: primary ; website: http://klinikum-bayreuth.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 1675 ; company_id: 172 ; company_name: Klinik in der Zarten in Hinterzarten ; full_name: Dipl. Ing. agr. Nicoline von Brasch ; role: Geschäftsführung ; role_title: Geschäftsführung ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 3775 ; company_id: 172 ; company_name: Klinik in der Zarten in Hinterzarten ; full_name: Regine Striegel ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 1676 ; company_id: 1134 ; company_name: Klinik Josephinum in München ; full_name: Dipl.-Kfm. Tilmann Götzner ; role: Vorstand ; role_title: Vorstand ; role_category: management ; role_level: primary ; website: http://josephinum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 3716 ; company_id: 1134 ; company_name: Klinik Josephinum in München ; full_name: Simone Thiel ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: http://josephinum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 3719 ; company_id: 2217 ; company_name: Klinik Königsfeld in Ennepetal ; full_name: Claudia Schmitt ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://koenigsfeld.deutsche-rentenversicherung-reha-zentren.de/subsites/Koenigsfeld/de/Navigation/00_Home/Startseite_node.html ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 1681 ; company_id: 2217 ; company_name: Klinik Königsfeld in Ennepetal ; full_name: Kirby Kristin Loh ; role: Verwaltungsdirektorin ; role_title: Verwaltungsdirektorin ; role_category: management ; role_level: primary ; website: https://koenigsfeld.deutsche-rentenversicherung-reha-zentren.de/subsites/Koenigsfeld/de/Navigation/00_Home/Startseite_node.html ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 3722 ; company_id: 1808 ; company_name: Klinik Landau ; full_name: Annette Hofmann ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: https://klinikum-ld-suew.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 1430 ; company_id: 1808 ; company_name: Klinik Landau ; full_name: Dr. Guido Gehendges ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: https://klinikum-ld-suew.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 12330 ; company_id: 2236 ; company_name: Klinik Lindenplatz in Bad Sassendorf ; full_name: Adrian Hardes ; role: Zentrale Pflegedienstleitung ; role_title: Zentrale Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://klinik-lindenplatz.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 3727 ; company_id: 1048 ; company_name: Klinik Mallersdorf in Mallersdorf-Pfaffenberg ; full_name: Christian Bräu ; role: Pflegedienstleitung / PDL ; role_title: Pflegedienstleitung / PDL ; role_category: pflege_leadership ; role_level: primary ; website: http://klinik-mallersdorf.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 1434 ; company_id: 1048 ; company_name: Klinik Mallersdorf in Mallersdorf-Pfaffenberg ; full_name: Christian Schwarz ; role: Vorstand ; role_title: Vorstand ; role_category: management ; role_level: primary ; website: http://klinik-mallersdorf.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 5351 ; company_id: 1142 ; company_name: Klinik Menterschwaige in München ; full_name: Cornelia Treffler ; role: Leitung Personal ; role_title: Leitung Personal ; role_category: hr_leadership ; role_level: primary ; website: https://klinik-menterschwaige.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_020
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260621T030043Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- For stage 02A personal email: result must be empty unless you have a person-specific work email; use excluded_generic_mailbox when only shared mailboxes exist.
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
