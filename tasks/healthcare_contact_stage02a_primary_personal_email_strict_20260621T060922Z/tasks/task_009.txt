@@ -1,0 +1,109 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260621T060922Z
+TASK_ID: task_009
+PROMPT_VERSION: v2
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+PROMPT_VERSION: v2_intensive_research_20260620
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — STRICT PUBLIC PERSONAL WORK EMAIL (first pass, highest quality bar).
+
+THIS IS A DEEP-RESEARCH TASK — NOT A QUICK SCAN.
+You are hunting the one thing we need: a person-specific work email for each named leader
+(HR / Pflege / management primary). Take the time you need. Use web search and every tool
+available. Shallow homepage-only lookups are unacceptable for this stage.
+
+YOUR WIN CONDITION (per person):
+- Put a real person-specific work email in result ONLY when public evidence ties that exact
+  address to that exact named person (staff page, imprint with name+email, quality report,
+  press release, official PDF, directory listing, etc.).
+- status=found_person_specific_email
+- Examples of wins: vorname.nachname@klinik.de, clearly named on an official team page.
+
+WHEN YOU DID REAL WORK BUT FOUND NO PERSONAL EMAIL:
+- Leave result empty.
+- status=not_found — you searched multiple credible sources and no person-specific email exists.
+- status=excluded_generic_mailbox — you found only shared/role mailboxes (info@, kontakt@,
+  karriere@, bewerbung@, geschaeftsfuehrung@, pflegedirektion@, sekretariat@, zentrale@,
+  poststelle@, jobs@, personal@). That is useful intel but NOT a personal email — do not
+  put generic addresses in result.
+
+RESEARCH INTENSITY — DO THIS FOR EVERY PERSON (especially hard clinic leaders):
+1) Start from the clinic website in the input; then branch out aggressively with web search.
+2) Search the person's full name + clinic + role + "email" / "Kontakt" / "E-Mail".
+3) Open and read: team/organigram pages, imprint, contact pages, Pflege-/Personal-leitung pages.
+4) Hunt PDFs: Qualitätsberichte, Jahresberichte, Klinikportraits, Verzeichnisse (DKV, Qimed, G-BA).
+5) Check press/news, conference speaker lists, job postings that name the person with contact.
+6) Use LinkedIn or Xing only as a clue for role/employer — then find the email on an official source.
+7) Try spelling variants (Dr., Prof., maiden names, umlauts) if first pass is empty.
+8) If the first query only returns the clinic homepage, KEEP GOING — that is not finished research.
+
+QUALITY MINDSET:
+- 25 people in this chunk = 25 separate investigations. Do not rush or batch-skim.
+- An empty honest not_found after deep search is valuable.
+- A generic mailbox in result is a failed lookup for this stage — we need the person's own address.
+- Cite the strongest source URL. Evidence should say WHY the email belongs to this person.
+
+We would rather have 3 excellent person-specific finds than 20 lazy generic mailboxes.
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 2219 ; company_id: 2249 ; company_name: Dt. Klinik für Integrative Medizin in Bad Elster ; full_name: Jean-Christophe Zell ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: https://dekimed.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 3369 ; company_id: 2249 ; company_name: Dt. Klinik für Integrative Medizin in Bad Elster ; full_name: Kathrin Schupke ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://dekimed.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 11218 ; company_id: 2249 ; company_name: Dt. Klinik für Integrative Medizin in Bad Elster ; full_name: Sr. Kathrin Schupke ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://dekimed.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 12607 ; company_id: 253 ; company_name: EchTAZ in Reutlingen ; full_name: Marina Hummel ; role: Leitung Personal ; role_title: Leitung Personal ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 2221 ; company_id: 489 ; company_name: Eduardus-Krankenhaus in Köln ; full_name: Frank Dünnwald ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 7643 ; company_id: 489 ; company_name: Eduardus-Krankenhaus in Köln ; full_name: Nadine Wasser ; role: Teamleitung Personalabteilung ; role_title: Teamleitung Personalabteilung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 8688 ; company_id: 1676 ; company_name: Einbecker BürgerSpital ; full_name: Bianca Sott ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: http://einbecker-buergerspital.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 12197 ; company_id: 1684 ; company_name: Elbe-Jeetzel-Klinik Dannenberg ; full_name: André Eydt ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://elbe-jeetzel-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 12198 ; company_id: 1684 ; company_name: Elbe-Jeetzel-Klinik Dannenberg ; full_name: Sigurd Gawinski ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://elbe-jeetzel-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 7180 ; company_id: 1945 ; company_name: Elbland Rehabilitationsklinik Großenhain in Großenhain, Sachsen ; full_name: Henrik Fischer ; role: Verwaltungsdirektor ; role_title: Verwaltungsdirektor ; role_category: management ; role_level: primary ; website: http://elbland-reha.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 8141 ; company_id: 1945 ; company_name: Elbland Rehabilitationsklinik Großenhain in Großenhain, Sachsen ; full_name: Susan Grau ; role: Komm. Pflegedirektorin ; role_title: Komm. Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: http://elbland-reha.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 3379 ; company_id: 1945 ; company_name: Elbland Rehabilitationsklinik Großenhain in Großenhain, Sachsen ; full_name: Torsten Flade ; role: Pflegedirektor ; role_title: Pflegedirektor ; role_category: pflege_leadership ; role_level: primary ; website: http://elbland-reha.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 7182 ; company_id: 1865 ; company_name: Elblandklinikum Meißen in Meißen, Sachsen ; full_name: Claudia Hochmuth ; role: komm. Verwaltungsdirektorin ; role_title: komm. Verwaltungsdirektorin ; role_category: management ; role_level: primary ; website: http://elblandkliniken.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 12507 ; company_id: 306 ; company_name: Elisabeth-Krankenhaus Essen ; full_name: Dr. jur. Kemal Erarslan ; role: Abteilungsleiter Personal- und Sozialwesen ; role_title: Abteilungsleiter Personal- und Sozialwesen ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 828 ; company_id: 475 ; company_name: Elisabeth-Krankenhaus in Gelsenkirchen ; full_name: Eva Wilhelm ; role: Krankenhausgeschäftsführerin ; role_title: Krankenhausgeschäftsführerin ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 2230 ; company_id: 1435 ; company_name: Elisabeth-Krankenhaus Kassel ; full_name: Michael Schmidt ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: https://elisabeth-krankenhaus-kassel.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 12162 ; company_id: 1306 ; company_name: Epilepsie Monitoring Neuropädiatrie Alsterdorf in Hamburg ; full_name: Dr. med. Christine Fuchs ; role: Geschäftsführung ; role_title: Geschäftsführung ; role_category: management ; role_level: primary ; website: http://kkh-wilhelmstift.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 3390 ; company_id: 1909 ; company_name: Erzgebirgsklinikum - Haus Stollberg ; full_name: Carina Ellerhoff ; role: Leitende Pflegedirektorin ; role_title: Leitende Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: https://erzgebirgsklinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 8692 ; company_id: 1909 ; company_name: Erzgebirgsklinikum - Haus Stollberg ; full_name: Thorsten Börner ; role: Personalstelle / Personalleitung ; role_title: Personalstelle / Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://erzgebirgsklinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 3392 ; company_id: 1858 ; company_name: Erzgebirgsklinikum Haus Annaberg in Annaberg-Buchholz ; full_name: Carina Ellerhoff ; role: Leitende Pflegedirektorin ; role_title: Leitende Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: http://erzgebirgsklinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 3394 ; company_id: 1942 ; company_name: Erzgebirgsklinikum Haus Olbernhau ; full_name: Carina Ellerhoff ; role: Leitende Pflegedirektorin ; role_title: Leitende Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: https://erzgebirgsklinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 3396 ; company_id: 1883 ; company_name: Erzgebirgsklinikum Haus Zschopau ; full_name: Carina Ellerhoff ; role: Leitende Pflegedirektorin ; role_title: Leitende Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: https://erzgebirgsklinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 2603 ; company_id: 1589 ; company_name: Euregio-Klinik Albert-Schweitzer-Straße in Nordhorn ; full_name: Michael Kamp ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://euregio-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 2604 ; company_id: 1692 ; company_name: Euregio-Klinik Hannoverstraße in Nordhorn ; full_name: Michael Kamp ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://euregio-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 12164 ; company_id: 1902 ; company_name: Ev. Diakonissenkrankenhaus Leipzig ; full_name: Jacqueline Klömich ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: http://diako-leipzig.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_009
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260621T060922Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- For stage 02A personal email: result must be empty unless you have a person-specific work email; use excluded_generic_mailbox when only shared mailboxes exist.
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
