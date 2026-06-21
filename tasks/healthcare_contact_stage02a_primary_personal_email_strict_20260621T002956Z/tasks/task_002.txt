@@ -1,0 +1,109 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260621T002956Z
+TASK_ID: task_002
+PROMPT_VERSION: v2
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+PROMPT_VERSION: v2_intensive_research_20260620
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — STRICT PUBLIC PERSONAL WORK EMAIL (first pass, highest quality bar).
+
+THIS IS A DEEP-RESEARCH TASK — NOT A QUICK SCAN.
+You are hunting the one thing we need: a person-specific work email for each named leader
+(HR / Pflege / management primary). Take the time you need. Use web search and every tool
+available. Shallow homepage-only lookups are unacceptable for this stage.
+
+YOUR WIN CONDITION (per person):
+- Put a real person-specific work email in result ONLY when public evidence ties that exact
+  address to that exact named person (staff page, imprint with name+email, quality report,
+  press release, official PDF, directory listing, etc.).
+- status=found_person_specific_email
+- Examples of wins: vorname.nachname@klinik.de, clearly named on an official team page.
+
+WHEN YOU DID REAL WORK BUT FOUND NO PERSONAL EMAIL:
+- Leave result empty.
+- status=not_found — you searched multiple credible sources and no person-specific email exists.
+- status=excluded_generic_mailbox — you found only shared/role mailboxes (info@, kontakt@,
+  karriere@, bewerbung@, geschaeftsfuehrung@, pflegedirektion@, sekretariat@, zentrale@,
+  poststelle@, jobs@, personal@). That is useful intel but NOT a personal email — do not
+  put generic addresses in result.
+
+RESEARCH INTENSITY — DO THIS FOR EVERY PERSON (especially hard clinic leaders):
+1) Start from the clinic website in the input; then branch out aggressively with web search.
+2) Search the person's full name + clinic + role + "email" / "Kontakt" / "E-Mail".
+3) Open and read: team/organigram pages, imprint, contact pages, Pflege-/Personal-leitung pages.
+4) Hunt PDFs: Qualitätsberichte, Jahresberichte, Klinikportraits, Verzeichnisse (DKV, Qimed, G-BA).
+5) Check press/news, conference speaker lists, job postings that name the person with contact.
+6) Use LinkedIn or Xing only as a clue for role/employer — then find the email on an official source.
+7) Try spelling variants (Dr., Prof., maiden names, umlauts) if first pass is empty.
+8) If the first query only returns the clinic homepage, KEEP GOING — that is not finished research.
+
+QUALITY MINDSET:
+- 25 people in this chunk = 25 separate investigations. Do not rush or batch-skim.
+- An empty honest not_found after deep search is valuable.
+- A generic mailbox in result is a failed lookup for this stage — we need the person's own address.
+- Cite the strongest source URL. Evidence should say WHY the email belongs to this person.
+
+We would rather have 3 excellent person-specific finds than 20 lazy generic mailboxes.
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 12037 ; company_id: 1878 ; company_name: Ahrtal-Klinik in Sinzig ; full_name: Ursula Franz ; role: Personalwesen ; role_title: Personalwesen ; role_category: hr_leadership ; role_level: primary ; website: http://ahrtal-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 12080 ; company_id: 128 ; company_name: Alb-Donau Klinikum (Blaubeuren) ; full_name: Corinna Riedle ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 12081 ; company_id: 106 ; company_name: Alb-Donau Klinikum (Ehingen) ; full_name: Corinna Riedle ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 12082 ; company_id: 149 ; company_name: Alb-Donau Klinikum (Langenau) ; full_name: Corinna Riedle ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 11244 ; company_id: 1261 ; company_name: Albertinen-Krankenhaus in Hamburg ; full_name: Dr. Thorsten Minuth ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://albertinen-krankenhaus.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 4909 ; company_id: 143 ; company_name: Albklinik Münsingen ; full_name: Anja Fujan ; role: Leitung Personal und Recht ; role_title: Leitung Personal und Recht ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 4912 ; company_id: 536 ; company_name: Alexianer Johannisstift Münster ; full_name: Jörg Jestädt ; role: Leitung Personalabteilung ; role_title: Leitung Personalabteilung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 912 ; company_id: 536 ; company_name: Alexianer Johannisstift Münster ; full_name: Tobias Wünnemann ; role: Pflegedirektor Alexianer Münster GmbH ; role_title: Pflegedirektor Alexianer Münster GmbH ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 4914 ; company_id: 590 ; company_name: Alexianer Krankenhaus Münster ; full_name: Jörg Jestädt ; role: Leitung Personalabteilung ; role_title: Leitung Personalabteilung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 1004 ; company_id: 590 ; company_name: Alexianer Krankenhaus Münster ; full_name: Tobias Wünnemann ; role: Pflegedirektor ; role_title: Pflegedirektor ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 487 ; company_id: 296 ; company_name: Alexianer Krefeld Krankenhaus Maria-Hilf ; full_name: Nicole Hilbert-Kluczkowski ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 488 ; company_id: 296 ; company_name: Alexianer Krefeld Krankenhaus Maria-Hilf ; full_name: Selcan Cerioglu ; role: Referentin der Pflegedirektion ; role_title: Referentin der Pflegedirektion ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 12083 ; company_id: 754 ; company_name: Alexianer St. Joseph-Krankenhaus Berlin-Weißensee ; full_name: Birgit Heide-Weber ; role: Leitung Team A Personalbetreuung und -abrechnung ; role_title: Leitung Team A Personalbetreuung und -abrechnung ; role_category: hr_leadership ; role_level: primary ; website: http://alexianer.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 1133 ; company_id: 691 ; company_name: Alexianer-Klinik Meerbusch ; full_name: Nicole Hilbert-Kluczkowski ; role: Krankenpflegedirektorin ; role_title: Krankenpflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 4925 ; company_id: 1564 ; company_name: Allgemeines Krankenhaus Celle ; full_name: Reinhard Otte ; role: Personalleiter, Handlungsbevollmächtigter des Vorstands ; role_title: Personalleiter, Handlungsbevollmächtigter des Vorstands ; role_category: hr_leadership ; role_level: primary ; website: http://akh-celle.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 4926 ; company_id: 1243 ; company_name: Alpenklinik Santa Maria in Bad Hindelang ; full_name: Alexandra Böck ; role: Vorstand Personal KJF Augsburg ; role_title: Vorstand Personal KJF Augsburg ; role_category: management ; role_level: primary ; website: https://santa-maria.de/de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 11278 ; company_id: 1730 ; company_name: AMEOS Klinik Hildesheim Tagesklinik ; full_name: Katja Schlebusch ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 12395 ; company_id: 1147 ; company_name: AMEOS Klinikum Inntal ; full_name: Veronika Zue ; role: Pflegestandortleitung ; role_title: Pflegestandortleitung ; role_category: pflege_leadership ; role_level: primary ; website: http://ameos.eu ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 12276 ; company_id: 177 ; company_name: Ameos Klinikum Kaiserstuhl ; full_name: Ingo Bröcker ; role: Krankenhausdirektor ; role_title: Krankenhausdirektor ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 12396 ; company_id: 1621 ; company_name: AMEOS Klinikum Seepark Geestland in Langen bei Bremerhaven ; full_name: Heiko Frerichs ; role: Pflegerische Standortleitung ; role_title: Pflegerische Standortleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://ameos.eu/standorte/ameos-west/geestland/ameos-klinikum-seepark-geestland ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 12574 ; company_id: 397 ; company_name: AMEOS Klinikum St. Clemens Oberhausen ; full_name: Melissa Wolf ; role: stellvertretende Personalleitung ; role_title: stellvertretende Personalleitung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 12575 ; company_id: 434 ; company_name: AMEOS Klinikum St. Josef Oberhausen ; full_name: Melissa Wolf ; role: stellvertretende Personalleitung ; role_title: stellvertretende Personalleitung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 12576 ; company_id: 575 ; company_name: AMEOS Klinikum St. Marien Oberhausen ; full_name: Melissa Wolf ; role: stellvertretende Personalleitung ; role_title: stellvertretende Personalleitung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 7412 ; company_id: 2000 ; company_name: ANregiomed Klinik Dinkelsbühl ; full_name: Dr. med. Gerhard M. Sontheimer ; role: Vorstand ANregiomed ; role_title: Vorstand ANregiomed ; role_category: management ; role_level: primary ; website: https://anregiomed.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 7416 ; company_id: 1028 ; company_name: ANregiomed Klinik Rothenburg ; full_name: Dr. med. Gerhard M. Sontheimer ; role: Vorstand ANregiomed ; role_title: Vorstand ANregiomed ; role_category: management ; role_level: primary ; website: https://anregiomed.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_002
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260621T002956Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- For stage 02A personal email: result must be empty unless you have a person-specific work email; use excluded_generic_mailbox when only shared mailboxes exist.
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
