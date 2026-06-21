@@ -1,0 +1,109 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260621T043057Z
+TASK_ID: task_022
+PROMPT_VERSION: v2
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+PROMPT_VERSION: v2_intensive_research_20260620
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — STRICT PUBLIC PERSONAL WORK EMAIL (first pass, highest quality bar).
+
+THIS IS A DEEP-RESEARCH TASK — NOT A QUICK SCAN.
+You are hunting the one thing we need: a person-specific work email for each named leader
+(HR / Pflege / management primary). Take the time you need. Use web search and every tool
+available. Shallow homepage-only lookups are unacceptable for this stage.
+
+YOUR WIN CONDITION (per person):
+- Put a real person-specific work email in result ONLY when public evidence ties that exact
+  address to that exact named person (staff page, imprint with name+email, quality report,
+  press release, official PDF, directory listing, etc.).
+- status=found_person_specific_email
+- Examples of wins: vorname.nachname@klinik.de, clearly named on an official team page.
+
+WHEN YOU DID REAL WORK BUT FOUND NO PERSONAL EMAIL:
+- Leave result empty.
+- status=not_found — you searched multiple credible sources and no person-specific email exists.
+- status=excluded_generic_mailbox — you found only shared/role mailboxes (info@, kontakt@,
+  karriere@, bewerbung@, geschaeftsfuehrung@, pflegedirektion@, sekretariat@, zentrale@,
+  poststelle@, jobs@, personal@). That is useful intel but NOT a personal email — do not
+  put generic addresses in result.
+
+RESEARCH INTENSITY — DO THIS FOR EVERY PERSON (especially hard clinic leaders):
+1) Start from the clinic website in the input; then branch out aggressively with web search.
+2) Search the person's full name + clinic + role + "email" / "Kontakt" / "E-Mail".
+3) Open and read: team/organigram pages, imprint, contact pages, Pflege-/Personal-leitung pages.
+4) Hunt PDFs: Qualitätsberichte, Jahresberichte, Klinikportraits, Verzeichnisse (DKV, Qimed, G-BA).
+5) Check press/news, conference speaker lists, job postings that name the person with contact.
+6) Use LinkedIn or Xing only as a clue for role/employer — then find the email on an official source.
+7) Try spelling variants (Dr., Prof., maiden names, umlauts) if first pass is empty.
+8) If the first query only returns the clinic homepage, KEEP GOING — that is not finished research.
+
+QUALITY MINDSET:
+- 25 people in this chunk = 25 separate investigations. Do not rush or batch-skim.
+- An empty honest not_found after deep search is valuable.
+- A generic mailbox in result is a failed lookup for this stage — we need the person's own address.
+- Cite the strongest source URL. Evidence should say WHY the email belongs to this person.
+
+We would rather have 3 excellent person-specific finds than 20 lazy generic mailboxes.
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 6807 ; company_id: 909 ; company_name: Klinikum Bamberg (Michelsberg) ; full_name: Rainer Kaiser ; role: Pflegedienstleitung Klinikum am Michelsberg ; role_title: Pflegedienstleitung Klinikum am Michelsberg ; role_category: pflege_leadership ; role_level: primary ; website: http://sozialstiftung-bamberg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 5414 ; company_id: 909 ; company_name: Klinikum Bamberg (Michelsberg) ; full_name: Sascha Dorsch ; role: Personalleiter und Kommunikationschef ; role_title: Personalleiter und Kommunikationschef ; role_category: hr_leadership ; role_level: primary ; website: http://sozialstiftung-bamberg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 10331 ; company_id: 361 ; company_name: Klinikum Bonn/Rhein-Sieg ; full_name: Ana Cardoso ; role: Kaufmännische Standortleitung ; role_title: Kaufmännische Standortleitung ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 3802 ; company_id: 2034 ; company_name: Klinikum Chemnitz ; full_name: Nicole Keilberg ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: http://klinikumchemnitz.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 2267 ; company_id: 1377 ; company_name: Klinikum Darmstadt - Standort Grafenstraße ; full_name: Sven Axt ; role: Kaufmännischer Geschäftsführer Sprecher ; role_title: Kaufmännischer Geschäftsführer Sprecher ; role_category: management ; role_level: primary ; website: https://klinikum-darmstadt.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 2268 ; company_id: 1526 ; company_name: Klinikum Darmstadt Standort Martinspfad ; full_name: Sven Axt ; role: Kaufmännischer Geschäftsführer Sprecher ; role_title: Kaufmännischer Geschäftsführer Sprecher ; role_category: management ; role_level: primary ; website: https://klinikum-darmstadt.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 10505 ; company_id: 272 ; company_name: Klinikum Dortmund Mitte ; full_name: Michael Kötzing ; role: Geschäftsführer und Arbeitsdirektor ; role_title: Geschäftsführer und Arbeitsdirektor ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 7605 ; company_id: 335 ; company_name: Klinikum Dortmund Nord ; full_name: Michael Kötzing ; role: Geschäftsführer und Arbeitsdirektor ; role_title: Geschäftsführer und Arbeitsdirektor ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 2270 ; company_id: 929 ; company_name: Klinikum Dritter Orden München-Nymphenburg ; full_name: Dr. Irena Schwarzer ; role: Geschäftsführerin ; role_title: Geschäftsführerin ; role_category: management ; role_level: primary ; website: http://dritter-orden.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 5432 ; company_id: 1379 ; company_name: Klinikum Frankfurt Höchst ; full_name: Simona Ionescu ; role: Leitung Personalabteilung ; role_title: Leitung Personalabteilung ; role_category: hr_leadership ; role_level: primary ; website: https://varisano.de/klinikum-frankfurt-hoechst ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 5433 ; company_id: 961 ; company_name: Klinikum Freising ; full_name: Doreen Schubert ; role: Leitung Personal & Organisation ; role_title: Leitung Personal & Organisation ; role_category: hr_leadership ; role_level: primary ; website: https://klinikum-freising.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 2131 ; company_id: 961 ; company_name: Klinikum Freising ; full_name: Maren Höntzsch ; role: Geschäftsführerin ; role_title: Geschäftsführerin ; role_category: management ; role_level: primary ; website: https://klinikum-freising.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 3834 ; company_id: 958 ; company_name: Klinikum Fürstenfeldbruck ; full_name: Elke Boch ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: http://klinikum-ffb.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 3836 ; company_id: 917 ; company_name: Klinikum Fürth ; full_name: Ute Jahnel ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: https://klinikum-fuerth.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 3838 ; company_id: 962 ; company_name: Klinikum Garmisch-Partenkirchen ; full_name: Gisela Gehring ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: http://klinikum-gap.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 3840 ; company_id: 1125 ; company_name: Klinikum Garmisch-Partenkirchen (Außenstelle Murnau) ; full_name: Gisela Gehring ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: http://klinikum-gap.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 10077 ; company_id: 350 ; company_name: Klinikum Gütersloh ; full_name: Björn Kaiser ; role: Personalleiter ; role_title: Personalleiter ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 2141 ; company_id: 1381 ; company_name: Klinikum Hanau ; full_name: Stefan Gröger ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: http://klinikum-hanau.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 31 ; company_id: 21 ; company_name: Klinikum Heidenheim ; full_name: Dr. Dennis Göbel ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 5449 ; company_id: 276 ; company_name: Klinikum Herford ; full_name: JUDr. Sandra Groß ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 75 ; company_id: 48 ; company_name: Klinikum Konstanz ; full_name: Sabine Gaag ; role: Personalleitung Klinikum Konstanz ; role_title: Personalleitung Klinikum Konstanz ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 5460 ; company_id: 944 ; company_name: Klinikum Landshut ; full_name: Thorsten Kretschmer ; role: Leitung Personal- und Prozessmanagement Klinik Landshut-Mitte ; role_title: Leitung Personal- und Prozessmanagement Klinik Landshut-Mitte ; role_category: hr_leadership ; role_level: primary ; website: http://klinikum-landshut.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 2155 ; company_id: 1586 ; company_name: Klinikum Leer ; full_name: Daniela Kamp ; role: Geschäftsführerin ; role_title: Geschäftsführerin ; role_category: management ; role_level: primary ; website: https://klinikum-leer.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 5461 ; company_id: 1586 ; company_name: Klinikum Leer ; full_name: Franziska Macher ; role: Personalleitung ; role_title: Personalleitung ; role_category: hr_leadership ; role_level: primary ; website: https://klinikum-leer.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 3857 ; company_id: 1586 ; company_name: Klinikum Leer ; full_name: Heike Kliegelhöfer ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; website: https://klinikum-leer.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_022
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260621T043057Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- For stage 02A personal email: result must be empty unless you have a person-specific work email; use excluded_generic_mailbox when only shared mailboxes exist.
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
