@@ -1,0 +1,109 @@
+RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260621T030043Z
+TASK_ID: task_029
+PROMPT_VERSION: v2
+
+GLOBAL TASK:
+You are a healthcare contact enrichment worker for SalesBrain.
+
+PROMPT_VERSION: v2_intensive_research_20260620
+
+RUN CONTEXT:
+- Task type: stage02a_primary_personal_email_strict
+- Base task type: stage02a_personal_email_strict
+- Workspace: clinics_recruiting_de
+- SalesBrain is the source of truth.
+- Tasker is only an external enrichment worker.
+- Use public information only.
+- Do not invent contacts.
+- Preserve the input person identity.
+- Return compact structured evidence.
+
+OUTPUT RULES:
+- The task wrapper defines the exact required TASK_ID line, RUN_ID line, CSV header line, and CSV row format. Follow that wrapper exactly.
+- Process every person listed in CURRENT CHUNK INPUT for this task chunk.
+- For every input person, output one CSV row with company_name and full_name even when no contact is found (status=not_found).
+- Prefer official clinic/company pages, imprint/contact pages, staff pages, professional profiles, or other public sources.
+- Include source URLs in source_url and short evidence in evidence/notes.
+
+TASK-SPECIFIC GOAL:
+STAGE 02A — STRICT PUBLIC PERSONAL WORK EMAIL (first pass, highest quality bar).
+
+THIS IS A DEEP-RESEARCH TASK — NOT A QUICK SCAN.
+You are hunting the one thing we need: a person-specific work email for each named leader
+(HR / Pflege / management primary). Take the time you need. Use web search and every tool
+available. Shallow homepage-only lookups are unacceptable for this stage.
+
+YOUR WIN CONDITION (per person):
+- Put a real person-specific work email in result ONLY when public evidence ties that exact
+  address to that exact named person (staff page, imprint with name+email, quality report,
+  press release, official PDF, directory listing, etc.).
+- status=found_person_specific_email
+- Examples of wins: vorname.nachname@klinik.de, clearly named on an official team page.
+
+WHEN YOU DID REAL WORK BUT FOUND NO PERSONAL EMAIL:
+- Leave result empty.
+- status=not_found — you searched multiple credible sources and no person-specific email exists.
+- status=excluded_generic_mailbox — you found only shared/role mailboxes (info@, kontakt@,
+  karriere@, bewerbung@, geschaeftsfuehrung@, pflegedirektion@, sekretariat@, zentrale@,
+  poststelle@, jobs@, personal@). That is useful intel but NOT a personal email — do not
+  put generic addresses in result.
+
+RESEARCH INTENSITY — DO THIS FOR EVERY PERSON (especially hard clinic leaders):
+1) Start from the clinic website in the input; then branch out aggressively with web search.
+2) Search the person's full name + clinic + role + "email" / "Kontakt" / "E-Mail".
+3) Open and read: team/organigram pages, imprint, contact pages, Pflege-/Personal-leitung pages.
+4) Hunt PDFs: Qualitätsberichte, Jahresberichte, Klinikportraits, Verzeichnisse (DKV, Qimed, G-BA).
+5) Check press/news, conference speaker lists, job postings that name the person with contact.
+6) Use LinkedIn or Xing only as a clue for role/employer — then find the email on an official source.
+7) Try spelling variants (Dr., Prof., maiden names, umlauts) if first pass is empty.
+8) If the first query only returns the clinic homepage, KEEP GOING — that is not finished research.
+
+QUALITY MINDSET:
+- 25 people in this chunk = 25 separate investigations. Do not rush or batch-skim.
+- An empty honest not_found after deep search is valuable.
+- A generic mailbox in result is a failed lookup for this stage — we need the person's own address.
+- Cite the strongest source URL. Evidence should say WHY the email belongs to this person.
+
+We would rather have 3 excellent person-specific finds than 20 lazy generic mailboxes.
+
+SUGGESTED CSV FIELDS:
+company_name,full_name,result,status,source_url,evidence,notes
+
+CURRENT CHUNK INPUT:
+1. person_id: 5690 ; company_id: 1053 ; company_name: Main-Klinik Ochsenfurt in Ochsenfurt, Unterfranken ; full_name: Juliane Selsam ; role: KU-Personalleiterin ; role_title: KU-Personalleiterin ; role_category: hr_leadership ; role_level: primary ; website: http://main-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+2. person_id: 4119 ; company_id: 1059 ; company_name: Marianne-Strauß-Klinik in Berg (Starnberger See) ; full_name: Thomas Böttcher ; role: Pflegedirektor ; role_title: Pflegedirektor ; role_category: pflege_leadership ; role_level: primary ; website: http://ms-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+3. person_id: 5693 ; company_id: 543 ; company_name: Mariannen-Hospital in Werl ; full_name: Georg Eickhoff ; role: Personalleiter des Katholischen Hospitalverbundes Hellweg ; role_title: Personalleiter des Katholischen Hospitalverbundes Hellweg ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+4. person_id: 1761 ; company_id: 1614 ; company_name: Marien Hospital Papenburg Aschendorf ; full_name: Veronika von Manowski ; role: Geschäftsführerin ; role_title: Geschäftsführerin ; role_category: management ; role_level: primary ; website: http://marien-hospital-papenburg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+5. person_id: 9758 ; company_id: 1613 ; company_name: Marien Hospital Papenburg Aschendorf - Kinder- & Jugendpsychiatrie ; full_name: Veronika von Manowski ; role: Geschäftsführerin ; role_title: Geschäftsführerin ; role_category: management ; role_level: primary ; website: http://marien-hospital-papenburg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+6. person_id: 1763 ; company_id: 1609 ; company_name: Marien Hospital Papenburg Aschendorf - Standort Papenburg ; full_name: Veronika von Manowski ; role: Geschäftsführerin ; role_title: Geschäftsführerin ; role_category: management ; role_level: primary ; website: http://marien-hospital-papenburg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+7. person_id: 6999 ; company_id: 336 ; company_name: Marien-Hospital Euskirchen ; full_name: Dr. med. Maren Thäter ; role: Geschäftsführung ; role_title: Geschäftsführung ; role_category: management ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+8. person_id: 4135 ; company_id: 2021 ; company_name: Marienhaus Klinikum Neunkirchen ; full_name: Angela Oberringer ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: https://marienhaus-neunkirchen.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+9. person_id: 5715 ; company_id: 1820 ; company_name: Marienhaus Klinikum St. Antonius Waldbreitbach ; full_name: Valérie Bultel ; role: Personalleitung Marienhaus-Gruppe ; role_title: Personalleitung Marienhaus-Gruppe ; role_category: hr_leadership ; role_level: primary ; website: http://marienhaus-klinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+10. person_id: 5717 ; company_id: 1776 ; company_name: Marienhaus Klinikum St. Elisabeth Neuwied ; full_name: Valérie Bultel ; role: Personalleitung Marienhaus-Gruppe ; role_title: Personalleitung Marienhaus-Gruppe ; role_category: hr_leadership ; role_level: primary ; website: http://marienhaus-klinikum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+11. person_id: 5719 ; company_id: 1759 ; company_name: Marienhaus Klinikum St. Wendel-Ottweiler - Standort Wendel ; full_name: Valérie Bultel ; role: Personalleitung Marienhaus-Gruppe ; role_title: Personalleitung Marienhaus-Gruppe ; role_category: hr_leadership ; role_level: primary ; website: https://marienhaus-st-wendel-ottweiler.de/startseite ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+12. person_id: 722 ; company_id: 414 ; company_name: Marienhospital Bottrop ; full_name: Christina Ostermann ; role: Standortübergreifende Pflegedirektorin ; role_title: Standortübergreifende Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+13. person_id: 490 ; company_id: 298 ; company_name: Marienhospital Gelsenkirchen ; full_name: Maike Rost ; role: Pflegedirektorin ; role_title: Pflegedirektorin ; role_category: pflege_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+14. person_id: 5727 ; company_id: 426 ; company_name: Marienkrankenhaus Soest ; full_name: Georg Eickhoff ; role: Personalleiter des Katholischen Hospitalverbundes Hellweg ; role_title: Personalleiter des Katholischen Hospitalverbundes Hellweg ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+15. person_id: 9533 ; company_id: 1212 ; company_name: Marion von Tessin Memory Tagesklinik in München ; full_name: Alexander Lerch ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: https://mvt-zentrum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+16. person_id: 9534 ; company_id: 1212 ; company_name: Marion von Tessin Memory Tagesklinik in München ; full_name: Volker Ernst ; role: Geschäftsführer ; role_title: Geschäftsführer ; role_category: management ; role_level: primary ; website: https://mvt-zentrum.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+17. person_id: 9536 ; company_id: 827 ; company_name: Martin Gropius Krankenhaus in Eberswalde ; full_name: Sylvia Markl ; role: Verwaltungsdirektorin ; role_title: Verwaltungsdirektorin ; role_category: management ; role_level: primary ; website: https://glg-gesundheit.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+18. person_id: 1784 ; company_id: 838 ; company_name: Median-Klinik Grünheide ; full_name: Sebastian Bergholz ; role: Regionalgeschäftsführer Ost ; role_title: Regionalgeschäftsführer Ost ; role_category: management ; role_level: primary ; website: http://median-kliniken.de/de/standorte/median-klinik-gruenheide/klinikprofil ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+19. person_id: 2940 ; company_id: 1242 ; company_name: Medic-Center Klinik in Fürth ; full_name: Norbert Schöll ; role: Ärztlicher Leiter und Inhaber; Ärztlicher Geschäftsführer MCN Medic-Center Nürnberg GmbH ; role_title: Ärztlicher Leiter und Inhaber; Ärztlicher Geschäftsführer MCN Medic-Center Nürnberg GmbH ; role_category: management ; role_level: primary ; website: https://medic-center-nuernberg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+20. person_id: 5732 ; company_id: 1704 ; company_name: MediClin Deister Weser Kliniken - Klinik für Akutpsychosomatik und Psychotherapie ; full_name: Gunther Bieser ; role: Personalleiter bei MEDICLIN ; role_title: Personalleiter bei MEDICLIN ; role_category: hr_leadership ; role_level: primary ; website: http://deister-weser-kliniken.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+21. person_id: 2949 ; company_id: 2186 ; company_name: MEDICLIN Dünenwald Klinik in Trassenheide ; full_name: Dipl.-Kauffrau Katharina Weckwerth ; role: Geschäftsführerin ; role_title: Geschäftsführerin ; role_category: management ; role_level: primary ; website: https://duenenwaldklinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+22. person_id: 5734 ; company_id: 2203 ; company_name: MediClin Fachklinik Rhein/Ruhr in Essen ; full_name: Gunther Bieser ; role: Personalleiter bei MEDICLIN ; role_title: Personalleiter bei MEDICLIN ; role_category: hr_leadership ; role_level: primary ; website: https://fachklinik-rheinruhr.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+23. person_id: 5736 ; company_id: 2149 ; company_name: MEDICLIN Hedon Klinik in Lingen (Ems) ; full_name: Gunther Bieser ; role: Personalleiter bei MEDICLIN ; role_title: Personalleiter bei MEDICLIN ; role_category: hr_leadership ; role_level: primary ; website: https://mediclin-hedon-klinik.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+24. person_id: 5738 ; company_id: 156 ; company_name: MediClin Herzzentrum Lahr/Baden ; full_name: Gunther Bieser ; role: Personalleiter bei MEDICLIN ; role_title: Personalleiter bei MEDICLIN ; role_category: hr_leadership ; role_level: primary ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+25. person_id: 6582 ; company_id: 1956 ; company_name: MediClin Klinik am Brunnenberg in Bad Elster ; full_name: Anja Fiedel ; role: Pflegedienstleitung ; role_title: Pflegedienstleitung ; role_category: pflege_leadership ; role_level: primary ; website: http://klinik-am-brunnenberg.de ; target: stage02a_primary_personal_email_strict ; target_lane: primary ; missing_channel: email
+
+REQUIRED OUTPUT:
+- Line 1 exactly: TASK_ID: task_029
+- Line 2 exactly: RUN_ID: healthcare_contact_stage02a_primary_personal_email_strict_20260621T030043Z
+- Line 3 exactly: company_name,full_name,result,status,source_url,evidence,notes
+- Line 4 and following: one CSV row per person from CURRENT CHUNK INPUT that you processed.
+- Every data row must include company_name and full_name from the input person.
+- Put the email/URL/phone/LinkedIn result in result, and mark status explicitly (for example found_person_specific_email, not_found, excluded_generic_mailbox, hypothesis).
+- For stage 02A personal email: result must be empty unless you have a person-specific work email; use excluded_generic_mailbox when only shared mailboxes exist.
+- If no person-specific result exists, still output a row with empty result and status=not_found.
+- No prose, no markdown, no code fences, no bullet points, no progress notes.
+- Use public information only.
