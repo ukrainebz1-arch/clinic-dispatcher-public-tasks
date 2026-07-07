@@ -2,7 +2,7 @@
 
 > **Purpose:** Connect a **Custom GPT** inside normal ChatGPT to the clinic-dispatcher collaboration bridge via **GPT Actions (HTTPS REST)** — NOT MCP, NOT OpenAI Secure MCP Tunnel, NOT OpenAI model API on the VPS.
 >
-> **Report version:** 2026-07-07T18:27:00Z
+> **Report version:** 2026-07-07T21:10:00Z
 
 ---
 
@@ -20,7 +20,7 @@
 | **Old public MCP Bearer URL** | **DISABLED** — `/chatgpt-bridge/` returns 404 |
 | **Persistent Cursor session** | `ce4726fa-060f-4a24-a8bd-7d123894b29c` |
 | **Read workspace** | `/opt/clinic-dispatcher` |
-| **Write worktree** | `/opt/clinic-dispatcher-bridge-poc` (branch `cursor/chatgpt-bridge-poc-90c5`) |
+| **Write worktree** | `/opt/clinic-dispatcher-bridge-poc` (branch `cursor/chatgpt-bridge-poc-90c5`, verified live 2026-07-07T21:10Z) |
 | **Two-round REST continuity test** | **PASS** (2026-07-07T18:27Z) |
 
 ---
