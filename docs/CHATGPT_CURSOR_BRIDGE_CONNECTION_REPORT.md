@@ -1,223 +1,223 @@
-# ChatGPT ↔ Cursor Bridge — Secure MCP Tunnel Connection Report
+# ChatGPT ↔ Cursor Bridge — GPT Actions Connection Report
 
-> **Purpose:** Connect ChatGPT to the clinic-dispatcher collaboration bridge via **OpenAI Secure MCP Tunnel** (NOT public Bearer-token MCP).
+> **Purpose:** Connect a **Custom GPT** inside normal ChatGPT to the clinic-dispatcher collaboration bridge via **GPT Actions (HTTPS REST)** — NOT MCP, NOT OpenAI Secure MCP Tunnel, NOT OpenAI model API on the VPS.
 >
-> **Report version:** 2026-07-07T18:01:00Z (Secure MCP Tunnel transport — supersedes all Bearer-token public endpoint instructions)
+> **Report version:** 2026-07-07T18:27:00Z
 
 ---
 
-## LIVE STATUS (read this first)
+## LIVE STATUS
 
-| Field | Current value on VPS |
-|-------|----------------------|
-| **Secure MCP Tunnel active?** | **NO** — waiting for human to create tunnel + Runtime API key in OpenAI Platform |
-| **Tunnel ID (non-secret identifier)** | **NOT SET** — will appear as `tunnel_...` after you create a tunnel in Platform |
-| **Local MCP endpoint (tunnel-client → bridge)** | `http://127.0.0.1:8805/mcp` |
-| **Local bridge health** | `http://127.0.0.1:8805/healthz` → `{"ok":true,"service":"chatgpt-bridge"}` |
-| **Tunnel-client service** | `clinic-openai-mcp-tunnel.service` — **installed, disabled, inactive** |
-| **Tunnel-client binary** | `/usr/local/bin/tunnel-client` v0.0.10 |
-| **Tunnel health UI (after tunnel starts)** | `http://127.0.0.1:8806/ui` |
+| Field | Current value |
+|-------|----------------|
+| **Connection method** | **GPT Actions REST API** (Custom GPT → HTTPS → VPS bridge → persistent Cursor session) |
+| **Secure MCP Tunnel** | **STOPPED / not used** — do not configure OpenAI tunnel credentials |
+| **OpenAI model API on VPS** | **NOT used** — ChatGPT runs the model; VPS only executes tools |
+| **API base URL** | `https://jobs.bewerbung-pflege.work/chatgpt-action` |
+| **OpenAPI schema URL (public, no secret)** | `https://jobs.bewerbung-pflege.work/chatgpt-action/openapi.yaml` |
+| **Authentication** | Bearer API key (configured privately in Custom GPT editor) |
 | **Bridge service** | `clinic-chatgpt-bridge.service` — **active** |
-| **Old public Bearer MCP URL enabled?** | **NO** — `https://jobs.bewerbung-pflege.work/chatgpt-bridge/mcp` returns **404** |
-| **Application auth on local MCP** | **None** (localhost-only; safe because not public) |
-| **Credentials file** | `/opt/clinic-dispatcher/data/private/chatgpt_tunnel.env` — `CONTROL_PLANE_API_KEY` and `CONTROL_PLANE_TUNNEL_ID` are **empty** |
-| **Persistent Cursor session chat ID** | `ce4726fa-060f-4a24-a8bd-7d123894b29c` (unchanged) |
-
-### What is blocked right now
-
-The VPS-side tunnel layer is **fully prepared** but **cannot connect to OpenAI** until a human operator completes the OpenAI Platform steps below and fills the private env file on the VPS. **No secret should be pasted into ChatGPT.**
+| **Old public MCP Bearer URL** | **DISABLED** — `/chatgpt-bridge/` returns 404 |
+| **Persistent Cursor session** | `ce4726fa-060f-4a24-a8bd-7d123894b29c` |
+| **Read workspace** | `/opt/clinic-dispatcher` |
+| **Write worktree** | `/opt/clinic-dispatcher-bridge-poc` (branch `cursor/chatgpt-bridge-poc-90c5`) |
+| **Two-round REST continuity test** | **PASS** (2026-07-07T18:27Z) |
 
 ---
 
-## STOP — human action required in OpenAI Platform
-
-Complete these steps **before** the tunnel can become active. Do **not** paste any API key or tunnel secret into ChatGPT.
-
-### Step 1 — Create a tunnel
-
-1. Open: https://platform.openai.com/settings/organization/tunnels
-2. Click **Create tunnel** (or **New tunnel**).
-3. Give it a name such as `clinic-dispatcher-bridge-poc`.
-4. After creation, copy the **Tunnel ID** shown on the tunnel detail page. It looks like:
-   ```
-   tunnel_0123456789abcdef0123456789abcdef
-   ```
-5. Keep that page open — it will also show ChatGPT connector instructions after the tunnel client is running.
-
-### Step 2 — Create a Runtime API key (NOT the Admin key)
-
-1. Open: https://platform.openai.com/settings/organization/api-keys
-2. Click **Create new secret key** (Runtime API key section).
-3. Name it e.g. `clinic-bridge-tunnel-runtime`.
-4. Enable permissions:
-   - **Tunnels: Read**
-   - **Tunnels: Use**
-5. Create the key and copy it once (you will not see it again).
-
-### Step 3 — Put values on the VPS only (SSH)
-
-```bash
-sudo nano /opt/clinic-dispatcher/data/private/chatgpt_tunnel.env
-```
-
-Set (replace with your values):
-
-```bash
-CONTROL_PLANE_TUNNEL_ID=tunnel_YOUR_TUNNEL_ID_HERE
-CONTROL_PLANE_API_KEY=sk-YOUR_RUNTIME_KEY_HERE
-MCP_SERVER_URL=http://127.0.0.1:8805/mcp
-```
-
-Then:
-
-```bash
-sudo chmod 600 /opt/clinic-dispatcher/data/private/chatgpt_tunnel.env
-source /opt/clinic-dispatcher/data/private/chatgpt_tunnel.env
-tunnel-client doctor --control-plane.tunnel-id "$CONTROL_PLANE_TUNNEL_ID" --mcp.server-url "$MCP_SERVER_URL"
-sudo systemctl enable --now clinic-openai-mcp-tunnel
-curl -fsS http://127.0.0.1:8806/readyz
-```
-
-When `readyz` returns success, the Secure MCP Tunnel is **active**.
-
-After you complete Step 3, ask the VPS agent to re-run the tunnel connectivity test and update this report's LIVE STATUS section with your tunnel ID (non-secret) and active=yes.
-
----
-
-## Architecture (unchanged collaboration model)
+## Architecture
 
 ```
-ChatGPT conversation
-    → OpenAI-hosted Secure MCP Tunnel endpoint
-    → tunnel-client (clinic-openai-mcp-tunnel.service on VPS)
-    → local MCP bridge (127.0.0.1:8805/mcp, no app auth)
-    → persistent Cursor session (agent --resume <chat_id>)
+Custom GPT conversation inside ChatGPT (architect / primary reasoning)
+    → GPT Action (HTTPS REST + Bearer auth)
+    → https://jobs.bewerbung-pflege.work/chatgpt-action/...
+    → clinic-chatgpt-bridge.service (FastAPI adapter)
+    → SAME persistent Cursor session (agent --resume <chat_id>)
     → isolated write worktree (/opt/clinic-dispatcher-bridge-poc)
+    → structured JSON result returned to Custom GPT
+    → same Custom GPT conversation reasons and sends follow-up
+    → SAME Cursor session continues
 ```
 
-**NOT used anymore:**
-
-```
-ChatGPT → https://jobs.bewerbung-pflege.work/chatgpt-bridge/mcp + Bearer token   ❌ DISABLED
-```
+**NOT used:**
+- OpenAI Secure MCP Tunnel ❌
+- ChatGPT custom MCP app ❌
+- OpenAI model API calls from VPS ❌
+- Public unauthenticated write endpoints ❌
 
 **Preserved unchanged:**
 - Persistent Cursor chat ID on disk
-- `cursor_execute` / `cursor_followup` / `cursor_get_result`
-- All read-only MCP tools
-- Request serialization (one active Cursor job)
-- Safety restrictions
-- Structured Cursor JSON responses
+- `agent --resume` session continuity
+- Request serialization (one active Cursor write task)
+- Read-only safety restrictions
+- Structured implementation reports
+- Isolated write worktree
 
 ---
 
-## ChatGPT UI steps (after tunnel is active on VPS)
-
-Do this **after** Step 3 above succeeds (`readyz` OK).
-
-1. Open ChatGPT connector settings: https://chatgpt.com/#settings/Connectors
-2. Click **Create** / **Add connector** (wording may vary by account).
-3. Choose **MCP / custom connector** (not a manual Bearer URL).
-4. Open your tunnel in Platform: https://platform.openai.com/settings/organization/tunnels
-5. Open the tunnel you created (`clinic-dispatcher-bridge-poc` or your name).
-6. On the tunnel detail page, use the **Connect to ChatGPT** / **ChatGPT connector** instructions or link shown there (OpenAI generates the correct Secure MCP Tunnel connector binding for your tunnel ID).
-7. Complete the connector setup in ChatGPT — **no manual Bearer token header is required**.
-8. Start a **new ChatGPT conversation** with the connector enabled.
-9. First tool call: **`bridge_status`**
-   - Expect: `"connection_mode": "secure_mcp_tunnel"`
-   - Expect: `"public_mcp_enabled": false`
-   - Expect: `"secure_mcp_tunnel_configured": true` (after credentials are set)
-10. Proceed with read-only tools, then `cursor_execute`, then `cursor_followup`.
-
-**First ChatGPT prompt after connecting:**
+## A. Public OpenAPI schema URL
 
 ```
-Call bridge_status. Confirm:
-- connection_mode is secure_mcp_tunnel
-- public_mcp_enabled is false
-- secure_mcp_tunnel_configured is true
-Then repo_tree on apps/ with max_depth 2.
+https://jobs.bewerbung-pflege.work/chatgpt-action/openapi.yaml
 ```
 
----
-
-## Old public Bearer-token endpoint
-
-| URL | Status | Verified |
-|-----|--------|----------|
-| `https://jobs.bewerbung-pflege.work/chatgpt-bridge/mcp` | **DISABLED** | HTTP **404** |
-| `https://jobs.bewerbung-pflege.work/chatgpt-bridge/healthz` | **DISABLED** | HTTP **404** |
-| `http://127.0.0.1:8805/mcp` | **ACTIVE** (localhost only) | HTTP **200** initialize |
-
-Nginx location `/chatgpt-bridge/` is commented out in `/etc/nginx/sites-available/jobs-bewerbung-pflege`.
-
-Bridge env: `BRIDGE_REQUIRE_AUTH=false` — Bearer auth code exists but is **off**.
+Import this URL in the Custom GPT Action editor. The schema contains **no secrets**.
 
 ---
 
-## Tunnel connectivity test results (2026-07-07T18:01:00Z)
+## B. API base URL
 
-Tests run on VPS **before** human adds tunnel credentials:
+```
+https://jobs.bewerbung-pflege.work/chatgpt-action
+```
 
-| # | Test | Command / check | Result |
-|---|------|-----------------|--------|
-| 1 | Local bridge health | `curl http://127.0.0.1:8805/healthz` | **PASS** — `{"ok":true}` |
-| 2 | Local MCP without auth | POST `http://127.0.0.1:8805/mcp` initialize | **PASS** — HTTP 200, session ID returned |
-| 3 | `bridge_status` via local MCP | tools/call `bridge_status` | **PASS** — `connection_mode=secure_mcp_tunnel`, `public_mcp_enabled=false` |
-| 4 | Public Bearer route disabled | POST `https://jobs.bewerbung-pflege.work/chatgpt-bridge/mcp` | **PASS** — HTTP **404** (not exposed) |
-| 5 | Public health disabled | GET `https://jobs.bewerbung-pflege.work/chatgpt-bridge/healthz` | **PASS** — HTTP **404** |
-| 6 | Bridge bound to localhost | `ss -tlnp \| grep 8805` | **PASS** — `127.0.0.1:8805` only |
-| 7 | tunnel-client installed | `tunnel-client --version` | **PASS** — v0.0.10 |
-| 8 | Tunnel start without credentials | `run_openai_mcp_tunnel.sh` | **EXPECTED FAIL** — "CONTROL_PLANE_API_KEY and CONTROL_PLANE_TUNNEL_ID must be set" |
-| 9 | Tunnel service state | `systemctl is-active clinic-openai-mcp-tunnel` | **inactive** (disabled until credentials added) |
-| 10 | OpenAI tunnel → ChatGPT end-to-end | Platform + ChatGPT connector | **NOT RUN** — blocked on human Steps 1–3 |
-| 11 | Cursor two-round continuity | `tools/selftest_chatgpt_bridge.py` | **PASS** — same session `ce4726fa-060f-4a24-a8bd-7d123894b29c` |
+Example endpoints:
+- `GET  /chatgpt-action/status`
+- `POST /chatgpt-action/cursor/execute`
+- `POST /chatgpt-action/cursor/followup`
+- `POST /chatgpt-action/cursor/wait`
 
 ---
 
-## Services reference
+## C. Authentication (Custom GPT editor)
 
-| Service | Status | Purpose |
-|---------|--------|---------|
-| `clinic-chatgpt-bridge.service` | active | Local MCP bridge + Cursor session |
-| `clinic-openai-mcp-tunnel.service` | inactive/disabled | OpenAI Secure MCP Tunnel client |
-| `clinic-recruitment-funnel.service` | active — **do not touch** | Facebook funnel |
-| `clinic-sales-brain-manager.service` | active — **do not touch** | Email manager |
+| Setting | Value |
+|---------|--------|
+| **Type** | API Key |
+| **Auth Type** | Bearer |
+| **Header** | `Authorization: Bearer <your-api-key>` |
 
-Logs:
+The API key is stored on the VPS at:
+
+```
+/opt/clinic-dispatcher/data/private/chatgpt_bridge.env
+```
+
+Retrieve on VPS only (do **not** paste into ChatGPT chat):
 
 ```bash
-sudo journalctl -u clinic-chatgpt-bridge -f
-sudo journalctl -u clinic-openai-mcp-tunnel -f   # after enabled
+grep BRIDGE_AUTH_TOKEN /opt/clinic-dispatcher/data/private/chatgpt_bridge.env
+```
+
+Configure the value **only** in the Custom GPT Action authentication settings — not in the OpenAPI schema and not in this public report.
+
+---
+
+## D. operationIds (GPT Actions)
+
+| operationId | Method | Path | Purpose |
+|-------------|--------|------|---------|
+| `getBridgeStatus` | GET | `/chatgpt-action/status` | Bridge + Cursor session status |
+| `getRepoTree` | POST | `/chatgpt-action/repo/tree` | Bounded repo tree |
+| `searchRepository` | POST | `/chatgpt-action/repo/search` | Search code/files |
+| `readRepositoryFile` | POST | `/chatgpt-action/repo/read` | Read bounded file section |
+| `getGitStatus` | GET | `/chatgpt-action/git/status` | Write worktree git status |
+| `getGitDiff` | POST | `/chatgpt-action/git/diff` | Bounded git diff |
+| `startCursorTask` | POST | `/chatgpt-action/cursor/execute` | Start Cursor implementation |
+| `continueCursorTask` | POST | `/chatgpt-action/cursor/followup` | Follow-up same Cursor session |
+| `getCursorTaskResult` | GET | `/chatgpt-action/cursor/result/{request_id}` | Poll task result |
+| `waitForCursorTask` | POST | `/chatgpt-action/cursor/wait` | Bounded long poll |
+
+---
+
+## E. Persistent Cursor session — confirmed preserved
+
+| Item | Value |
+|------|--------|
+| Mechanism | `agent create-chat` once, then `agent -p --resume <chat_id>` |
+| Chat ID file | `/opt/clinic-dispatcher/var/chatgpt_bridge/cursor_chat_id.txt` |
+| Current session | `ce4726fa-060f-4a24-a8bd-7d123894b29c` |
+
+---
+
+## F. Two-round REST test results (actual, 2026-07-07)
+
+Test script: `tools/selftest_chatgpt_actions.py`
+
+### Round 1 — `startCursorTask`
+
+- Created `docs/gpt-action-<marker>.md` with `marker=...`
+- `waitForCursorTask` → `status=completed`
+- Session: `ce4726fa-060f-4a24-a8bd-7d123894b29c`
+
+### Round 2 — `continueCursorTask`
+
+- Referenced `parent_request_id` from round 1
+- Appended `followup=remembered` to same file
+- `waitForCursorTask` → `status=completed`
+- Session: **same** `ce4726fa-060f-4a24-a8bd-7d123894b29c`
+
+**Result: PASS**
+
+---
+
+## G. Round 2 same-session confirmation
+
+**YES.** Both rounds returned identical `cursor_session_id`: `ce4726fa-060f-4a24-a8bd-7d123894b29c`.
+
+---
+
+## H. Custom GPT Action setup steps
+
+1. Open ChatGPT → **Explore GPTs** → create or edit your Custom GPT.
+2. In the GPT editor, open **Configure** → **Actions** → **Create new action**.
+3. Set **Schema** import URL to:
+   ```
+   https://jobs.bewerbung-pflege.work/chatgpt-action/openapi.yaml
+   ```
+4. Under **Authentication**, choose:
+   - Auth type: **API Key**
+   - API Key: paste the value from `chatgpt_bridge.env` on the VPS (see section C)
+   - Auth Type: **Bearer**
+5. Save the GPT.
+6. Start a **new conversation** with that Custom GPT.
+7. First action call: **`getBridgeStatus`**
+   - Expect `connection_mode: gpt_actions`
+   - Expect same `cursor_session.chat_id` across tasks
+8. Normal loop:
+   - inspect with read actions
+   - `startCursorTask`
+   - `waitForCursorTask`
+   - `getGitDiff`
+   - reason in the GPT conversation
+   - `continueCursorTask` with `parent_request_id`
+   - `waitForCursorTask`
+   - repeat
+
+**Suggested first GPT instruction snippet:**
+
+```
+You are the architect. The VPS bridge executes implementation in a persistent Cursor session.
+Always call getBridgeStatus first. Use startCursorTask then waitForCursorTask.
+For corrections, use continueCursorTask with parent_request_id from the prior task.
+Never ask the user to paste API keys into chat.
 ```
 
 ---
 
-## MCP tools (unchanged)
+## I. Limitations
 
-**Read-only:** `bridge_status`, `repo_tree`, `search_repo`, `read_file`, `git_diff`, `git_status`
-
-**Cursor execution:** `cursor_execute`, `cursor_followup`, `cursor_get_result`
+1. **One active Cursor write task at a time** — concurrent execute/followup returns HTTP 409.
+2. **Long tasks** — use `waitForCursorTask` (max 240s) or poll `getCursorTaskResult`.
+3. **Read workspace git corrupted** — main repo at `/opt/clinic-dispatcher` has bad git HEAD; use read file/tree/search tools, not read-workspace git.
+4. **MCP endpoint** — optional localhost-only MCP code remains but is **disabled** (`BRIDGE_ENABLE_MCP=false`); Custom GPT must use REST Actions only.
+5. **Secure MCP Tunnel** — abandoned for this POC; `clinic-openai-mcp-tunnel.service` is disabled.
+6. **Domain sharing** — GPT Actions live on `jobs.bewerbung-pflege.work/chatgpt-action/` alongside the recruitment funnel; funnel routes were not modified except adding this proxy block.
+7. **No commit/push** — Cursor is instructed not to commit or push unless explicitly requested in a task.
 
 ---
 
-## Workspaces (unchanged)
+## Service reference
 
-| Role | Path |
-|------|------|
-| Read (ChatGPT inspection) | `/opt/clinic-dispatcher` |
-| Write (Cursor implementation) | `/opt/clinic-dispatcher-bridge-poc` |
+```bash
+sudo systemctl status clinic-chatgpt-bridge
+sudo journalctl -u clinic-chatgpt-bridge -f
+cd /opt/clinic-dispatcher-bridge-poc && /opt/clinic-dispatcher/.venv/bin/python tools/selftest_chatgpt_actions.py
+```
 
-Branch: `cursor/chatgpt-bridge-poc-90c5`  
 PR: https://github.com/ukrainebz1-arch/clinic-dispatcher/pull/138
 
----
-
-## Related docs
-
-- Full system audit map: https://raw.githubusercontent.com/ukrainebz1-arch/clinic-dispatcher-public-tasks/main/docs/EXTERNAL_SYSTEM_AUDIT_MAP.md
-- OpenAI Secure MCP Tunnel guide: https://developers.openai.com/api/docs/guides/secure-mcp-tunnels
-- Platform Tunnels: https://platform.openai.com/settings/organization/tunnels
+Related system map: https://raw.githubusercontent.com/ukrainebz1-arch/clinic-dispatcher-public-tasks/main/docs/EXTERNAL_SYSTEM_AUDIT_MAP.md
 
 ---
 
