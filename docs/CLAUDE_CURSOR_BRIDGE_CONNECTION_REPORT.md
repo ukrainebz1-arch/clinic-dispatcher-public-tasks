@@ -2,7 +2,7 @@
 
 > **Purpose:** Connect the **normal Claude application** (Claude.ai / Claude app) to the clinic-dispatcher collaboration bridge via **Remote MCP over HTTPS with OAuth** — NOT Anthropic API, NOT a Claude model on the VPS.
 >
-> **Report version:** 2026-07-07T18:56:00Z
+> **Report version:** 2026-07-07T19:51:00Z
 
 ---
 
@@ -80,7 +80,8 @@ Both `/claude-mcp` and `/claude-mcp/` reach the service; prefer the URL above.
 | Component | URL / detail |
 |-----------|----------------|
 | **Protected resource metadata** | `https://jobs.bewerbung-pflege.work/.well-known/oauth-protected-resource/claude-mcp` |
-| **Authorization server metadata** | `https://jobs.bewerbung-pflege.work/claude-mcp/.well-known/oauth-authorization-server` |
+| **Authorization server metadata (RFC 8414 path-aware)** | `https://jobs.bewerbung-pflege.work/.well-known/oauth-authorization-server/claude-mcp` |
+| **Authorization server metadata (issuer-local)** | `https://jobs.bewerbung-pflege.work/claude-mcp/.well-known/oauth-authorization-server` |
 | **Authorization endpoint** | `https://jobs.bewerbung-pflege.work/claude-mcp/authorize` |
 | **Token endpoint** | `https://jobs.bewerbung-pflege.work/claude-mcp/token` |
 | **Registered Claude callback** | `https://claude.ai/api/mcp/auth_callback` |
@@ -233,6 +234,64 @@ ChatGPT service remains: `clinic-chatgpt-bridge.service` on port `8805`.
 - Operator must approve each OAuth authorization via consent page.
 - Main read workspace git HEAD is corrupted; reads still work; writes go to isolated worktrees.
 - MCP URL must be reachable from Anthropic cloud (public HTTPS required).
+
+---
+
+## O. OAuth routing fix (2026-07-07)
+
+### Root cause
+
+Claude (and MCP OAuth clients per RFC 8414) discover authorization-server metadata at:
+
+```
+https://jobs.bewerbung-pflege.work/.well-known/oauth-authorization-server/claude-mcp
+```
+
+That URL returned **404**. Metadata discovery failed, so the client fell back to a legacy default:
+
+```
+https://jobs.bewerbung-pflege.work/authorize   ← wrong (404)
+```
+
+instead of the canonical:
+
+```
+https://jobs.bewerbung-pflege.work/claude-mcp/authorize
+```
+
+A secondary issue: the operator consent HTML form posted to `/consent` (domain root) instead of `/claude-mcp/consent`.
+
+### Fix applied
+
+1. **nginx** — added RFC 8414 path-aware metadata proxy:
+   - `/.well-known/oauth-authorization-server/claude-mcp` → backend `/.well-known/oauth-authorization-server`
+2. **Consent form** — POST action now uses `{issuer_url}/consent` (full `/claude-mcp/consent` path).
+
+No OAuth credentials were rotated. Existing Client ID, Client Secret, and Operator Secret remain valid.
+
+### Public OAuth URLs after fix
+
+| Endpoint | URL |
+|----------|-----|
+| Protected resource metadata | `https://jobs.bewerbung-pflege.work/.well-known/oauth-protected-resource/claude-mcp` |
+| AS metadata (RFC 8414) | `https://jobs.bewerbung-pflege.work/.well-known/oauth-authorization-server/claude-mcp` |
+| AS metadata (issuer-local) | `https://jobs.bewerbung-pflege.work/claude-mcp/.well-known/oauth-authorization-server` |
+| Authorization | `https://jobs.bewerbung-pflege.work/claude-mcp/authorize` |
+| Token | `https://jobs.bewerbung-pflege.work/claude-mcp/token` |
+| Consent | `https://jobs.bewerbung-pflege.work/claude-mcp/consent` |
+| MCP resource | `https://jobs.bewerbung-pflege.work/claude-mcp` |
+
+### Live OAuth test result (post-fix)
+
+**PASS** — `tools/selftest_claude_mcp.py` (2026-07-07T19:51Z):
+
+- RFC 8414 AS metadata returns `authorization_endpoint` = `/claude-mcp/authorize`
+- Claude-style authorize → consent → callback code → token exchange (PKCE S256)
+- Refresh token exchange
+- Authenticated MCP initialize + 10 tools listed
+- ChatGPT bridge regression unchanged
+
+**No connector recreation required** — use existing Client ID and Client Secret.
 
 ---
 
