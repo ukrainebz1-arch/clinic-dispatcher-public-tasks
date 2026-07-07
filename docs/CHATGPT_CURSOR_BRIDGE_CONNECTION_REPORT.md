@@ -221,4 +221,17 @@ Related system map: https://raw.githubusercontent.com/ukrainebz1-arch/clinic-dis
 
 ---
 
+## Branch identity correction (2026-07-07)
+
+The ChatGPT write worktree had temporarily been checked out on `cursor/claude-mcp-bridge-90c5` while Claude MCP bridge code was developed in the same repo checkout. Worktree path and Cursor session remained ChatGPT-dedicated throughout; only the branch **name** was misleading.
+
+**Live correction (no commit, no push, no session recreation):**
+
+- Renamed stale local branch `cursor/chatgpt-bridge-poc-90c5` → `cursor/chatgpt-bridge-poc-90c5-archive` (preserved at commit `8c2304c0`)
+- Renamed active ChatGPT worktree branch `cursor/claude-mcp-bridge-90c5` → `cursor/chatgpt-bridge-poc-90c5` (HEAD `a98559a4`, unchanged)
+
+Claude lane unchanged: worktree `/opt/clinic-dispatcher-claude-poc`, branch `cursor/claude-bridge-poc-90c5`.
+
+---
+
 ## END OF REPORT
