@@ -4,7 +4,7 @@
 >
 > **Public raw URL:** https://raw.githubusercontent.com/ukrainebz1-arch/clinic-dispatcher-public-tasks/main/docs/CHATGPT_BRIDGE_INFRASTRUCTURE_SUMMARY.md
 >
-> **Updated:** 2026-07-08T00:15:00Z | **Bridge version:** 1.2.0
+> **Updated:** 2026-07-08T00:20:00Z | **Bridge version:** 1.3.0
 
 ---
 
@@ -43,6 +43,10 @@
 | 4 | `getCursorTaskLogs` | `GET /chatgpt-action/cursor/logs/{id}` | Inspect logs |
 | 5 | `cancelCursorTask` | `POST /chatgpt-action/cursor/cancel/{id}` | Cancel one task |
 | 6 | `cancelActiveCursorTask` | `POST /chatgpt-action/cursor/cancel-active` | Cancel active task |
+
+| `readProjectDocument` | `POST /chatgpt-action/docs/read` | Read docs/runbooks/architecture |
+| `getCursorTask` | `GET /chatgpt-action/cursor/task/{id}` | Full task snapshot for review |
+| `getRepoTree` | `POST /chatgpt-action/repo/tree` | Repository tree |
 | 7 | `startCursorTask` | `POST /chatgpt-action/cursor/execute` | Start implementation |
 | 8 | `continueCursorTask` | `POST /chatgpt-action/cursor/followup` | Follow-up same session |
 | 9 | `getBridgeStatus` | `GET /chatgpt-action/status` | Legacy status (still works) |
@@ -56,7 +60,7 @@ Stable `/bridge/*` paths mirror task control when GPT Actions prefix is unavaila
 ```json
 {
   "status": "healthy",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "uptime": 21.6,
   "uptime_sec": 21.6,
   "cursor_connected": true,
@@ -73,7 +77,7 @@ Stable `/bridge/*` paths mirror task control when GPT Actions prefix is unavaila
 {
   "bridge": {
     "status": "healthy",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "write_worktree": "/opt/clinic-dispatcher-bridge-poc",
     "task_running": false
   },
@@ -177,7 +181,7 @@ cd /opt/clinic-dispatcher-bridge-poc
 | Bridge tests (`apps/chatgpt_bridge/tests/`) | 25 passed |
 | Screen Control transport tests | 13 passed |
 | E2E dry-run smoke (`tools/bridge_e2e_smoke.py`) | PASS |
-| Live `/bridge/health` on VPS | healthy v1.2.0 |
+| Live `/bridge/health` on VPS | healthy v1.3.0 |
 
 ---
 
