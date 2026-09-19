@@ -287,8 +287,33 @@ adb devices -l
 python3 /home/cursorworker1/agentos-phone/agentd/agentd_bridge.py '{"cmd":"info"}'
 python3 /home/cursorworker1/agentos-phone/agentd/agentd_bridge.py --serve 127.0.0.1:8799   # JSON/TCP
 # re-push dispatcher after edits:
-adb push /home/cursorworker1/agentos-phone/agentd/agentd.sh /data/local/tmp/agentos/agentd.sh
-adb shell chmod 755 /data/local/tmp/agentos/agentd.sh
+/home/cursorworker1/agentos-phone/scripts/push_agentd.sh
+```
+
+### Wi-Fi without USB cable (Huawei bench — needs USB once per reboot)
+The phone has **no network server by default**; the Mac mini bridge talks to it via **ADB**. To drop the cable while keeping the same JSON API:
+
+```bash
+# 1) Phone on Wi-Fi, USB plugged in once:
+/home/cursorworker1/agentos-phone/scripts/setup_wifi_adb.sh
+# 2) Unplug USB. Commands now go over Wi-Fi ADB:
+export ADB_WIFI=192.168.x.x:5555   # printed by setup script
+/home/cursorworker1/agentos-phone/scripts/agentd_cmd.sh ping
+/home/cursorworker1/agentos-phone/scripts/run_bridge.sh   # BRIDGE on Mac mini, phone via Wi-Fi ADB
+```
+
+Optional low-latency path (on-device listener + `adb forward`, still needs ADB reachable):
+```bash
+START_LISTEN=1 /home/cursorworker1/agentos-phone/scripts/push_agentd.sh
+AGENTD_TRANSPORT=forward /home/cursorworker1/agentos-phone/scripts/run_bridge.sh
+```
+
+**Limits on locked Huawei:** no boot-persistent daemon, no camera/mic, brain still on Mac mini. Pixel target runs `agentd` as a system service with its own Wi-Fi TLS listener (§11).
+
+### Pixel first boot (when hardware arrives)
+```bash
+/home/cursorworker1/agentos-phone/scripts/pixel_onboard.sh          # dry run
+GO=1 /home/cursorworker1/agentos-phone/scripts/pixel_onboard.sh     # reboot to fastboot
 ```
 
 ### Fix USB permission after re-enumeration (sudo-less, via LXD)
