@@ -1,0 +1,77 @@
+RUN_ID: farm_holes_20260918_w16
+TASK_ID: farm_holes_20260918_w16_c06
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Hannes Tschofen | Getzner Textil Aktiengesellschaft | Vorstand | CRM_ID=e2746 | missing=phone,email,linkedin | https://www.getzner.at
+2. Ing.Mag. Markus Schmidbauer | GrECo International AG | Vorstand Finanzen und Administration | CRM_ID=e2747 | missing=phone,email,linkedin | https://greco.services
+3. Dr. Oliver Rammerstorfer | Plasser & Theurer, Export von Bahnbaumaschinen, Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2749 | missing=phone,email,linkedin | https://www.plassertheurer.com
+4. Ing. Mag. Daniel Tomaschko, MSc, MBA | Plasser & Theurer, Export von Bahnbaumaschinen, Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2750 | missing=phone,email,linkedin | https://www.plassertheurer.com
+5. Ing. Wilhelm Eibner | HAINZL INDUSTRIESYSTEME GmbH | Geschäftsführer | CRM_ID=e2751 | missing=phone,email,linkedin | https://www.hainzl.at
+6. Mag. David Brenner | JAF-Group AG | Vorstand | CRM_ID=e2752 | missing=phone,email,linkedin | https://www.jaf-group.com
+7. Dieter MEYER | EQUANS Energie GmbH | Geschäftsführer | CRM_ID=e2754 | missing=phone,email,linkedin | https://www.equans.at
+8. Thomas Dobusch | Schneckenreither Internationale Spedition GmbH | Geschäftsführer | CRM_ID=e2755 | missing=phone,email,linkedin | https://www.schneckenreither.com
+9. Mag. DI Josef Siligan | LINZ AG für Energie, Telekommunikation, Verkehr und Kommunale Dienste | Vorstand (Energie) | CRM_ID=e2756 | missing=phone,email,linkedin | https://www.linzag.at
+10. John van den Nieuwelaar | Hammerer Aluminium Industries Extrusion GmbH | Geschäftsführer | CRM_ID=e2759 | missing=phone,email,linkedin | https://www.hai-aluminium.com
+11. DI Dr. Günter Gigacher, MBA | Hasslacher Holding GmbH | Geschäftsführer CTO | CRM_ID=e2761 | missing=phone,email,linkedin | https://www.hasslacher.com
+12. DI Gerd Wegeler | illwerke vkw AG | Vorstand | CRM_ID=e2763 | missing=phone,email,linkedin | https://www.illwerkevkw.at
+13. Dipl. Ing. Diethart Weiß | iSi GmbH | Geschäftsführer | CRM_ID=e2765 | missing=phone,email,linkedin | https://www.isi.com/kulinarik/
+14. Dr. Wilfrid Fabjani | J. u. A. Frischeis Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2767 | missing=phone,email,linkedin | https://www.frischeis.at/
+15. Mag.(FH) Manfred Schimon | VWR International GmbH | Geschäftsführer | CRM_ID=e2768 | missing=phone,email,linkedin | https://www.vwr.com/
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w16_c06
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w16_c06
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT

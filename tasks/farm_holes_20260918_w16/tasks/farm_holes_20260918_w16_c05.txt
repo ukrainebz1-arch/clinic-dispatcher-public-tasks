@@ -1,0 +1,77 @@
+RUN_ID: farm_holes_20260918_w16
+TASK_ID: farm_holes_20260918_w16_c05
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Daniel Dixon | Die HEROLD Business Data GmbH | Geschäftsführer | CRM_ID=e2724 | missing=phone,email,linkedin | https://www.herold.at/
+2. Kai Pataky | Billa Aktiengesellschaft | Vorstand | CRM_ID=e2729 | missing=phone,email,linkedin | https://www.billa.at
+3. MMag. Gerda Holzinger-Burgstaller | Erste Bank | Vorstandsvorsitzende / CEO | CRM_ID=e2730 | missing=phone,email,linkedin | https://www.erstebank.at/
+4. Florian Steinhart | Banner GmbH | Director Operations | CRM_ID=e2731 | missing=phone,email,linkedin | https://www.bannerbatterien.com
+5. Robert Loidolt | EQUANS.com | Geschäftsführer | CRM_ID=e2732 | missing=phone,email,linkedin | https://www.equans.at/
+6. DI Alexander Kirchner, MBA | Energie AG Oberösterreich | Vorstand / CTO | CRM_ID=e2733 | missing=phone,email,linkedin | https://www.energieag.at
+7. Dipl.-Ing.Dr. Gerhard Dimmler | ENGEL AUSTRIA GmbH | Geschäftsführer / CTO | CRM_ID=e2734 | missing=phone,email,linkedin | https://www.engelglobal.com
+8. Ing. Mag. Peter Stöttinger | Felbermayr Transport- und Hebetechnik GmbH & Co KG | Geschäftsführer | CRM_ID=e2735 | missing=phone,email,linkedin | https://www.felbermayr.cc/
+9. Jens Fiege | FIEGE Wien: Logistikzentrum in Österreich | Vorstand | CRM_ID=e2737 | missing=phone,email,linkedin | https://www.fiege.com
+10. Mag. Erika Hochrieser | Frauenthal Handel Gruppe GmbH | Geschäftsführerin | CRM_ID=e2738 | missing=phone,email,linkedin | https://www.frauenthal-handel.at/
+11. Thomas Krenn, MA | Frauenthal Handel Gruppe GmbH | Geschäftsführer | CRM_ID=e2739 | missing=phone,email,linkedin | https://www.frauenthal-handel.at/
+12. Dr. Alexander Hohl | Fresenius Kabi Austria GmbH | Geschäftsführer | CRM_ID=e2742 | missing=phone,email,linkedin | https://fresenius-kabi.at/
+13. Harald Langeder | FRONIUS INTERNATIONAL GmbH | Chief Technology Officer (CTO) | CRM_ID=e2743 | missing=phone,email,linkedin | https://www.fronius.com
+14. Volker Lenzeder | FRONIUS INTERNATIONAL GmbH | Chief Information Officer (CIO) | CRM_ID=e2744 | missing=phone,email,linkedin | https://www.fronius.com
+15. Moritz Eichhöfer | General Logistics Systems Austria GmbH | Geschäftsführer | CRM_ID=e2745 | missing=phone,email,linkedin | http://www.gls-group.eu
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w16_c05
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w16_c05
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
