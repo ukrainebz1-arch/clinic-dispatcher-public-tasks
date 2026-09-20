@@ -4,6 +4,9 @@ STAGE: B_contacts_bundle
 WRITE_LIVE_ICP: false
 PHONE: huawei_p30_lite_01
 
+MODE: Use Work / deep-research browsing. Do NOT answer from memory alone.
+Spend real search time per person. Shallow null answers are rejected.
+
 GLOBAL TASK:
 Each row is already a CRM contact. For THAT person find the missing fields
 in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
@@ -27,35 +30,40 @@ PEOPLE (15):
 14. Markus Emil Dulle | GEBOL GmbH | Geschäftsführer | CRM_ID=e1467 | missing=phone,email | https://gebol.eu/
 15. Daniel Mayr | Gemüse Mayr GmbH | Geschäftsführer | CRM_ID=e1473 | missing=phone,email | https://www.gemuese-mayr.at/
 
-HOW (per person):
-1. Official website of the company, then a web search for the name + firm.
-2. Take a NAMED email (vorname.nachname@), never office@ / info@ / ir@ / presse@.
-3. Phone: mobile +43 6xx next to the name, or a personal DW. Skip Zentrale …-0.
-4. LinkedIn: public https://www.linkedin.com/in/... URL for this person only.
-5. Keep evidence_url. If a field is not on a public page, return null for it.
+HOW (per person — minimum effort before any null):
+1. Company site: Impressum, Kontakt, Team, Vorstand, Über uns, Management.
+2. Web search: "<name>" "<company>" email OR telefon OR impressum OR linkedin.
+3. Also check: firmenabc.at, wko.at, northdata, Xing, LinkedIn public /in/.
+4. Take a NAMED email (vorname.nachname@), never office@ / info@ / ir@ / presse@.
+5. Phone: mobile +43 6xx next to the name, or a personal DW. Skip Zentrale …-0.
+6. LinkedIn: public https://www.linkedin.com/in/... URL for this person only.
+7. Keep evidence_url pointing at the page where you found the best field.
+8. Return null ONLY after at least 3 distinct searches/pages for that person.
+   In notes, list what you checked for anyone still null.
 
-CRITICAL:
+CRITICAL OUTPUT FORMAT (the answer is read by a camera OCR — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
 Start the final answer with exactly:
 RESULT_ID: farm_holes_20260918_w05_c04
+SUBSCRIPTION_OK: yes
 
-Then ONLY this JSON, no markdown fences:
-{
-  "task_id": "farm_holes_20260918_w05_c04",
-  "subscription_ok": true,
-  "people": [
-    {
-      "id": "e123",
-      "name": "...",
-      "company": "...",
-      "email": "name@firma.at or null",
-      "phone": {"kind": "mobile or direct", "e164": "+43..."},
-      "linkedin": "https://www.linkedin.com/in/... or null",
-      "evidence_url": "https://..."
-    }
-  ],
-  "notes": "short"
-}
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
 
-If you cannot browse (paywall/login/limit):
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
 RESULT_ID: farm_holes_20260918_w05_c04
-{"task_id":"farm_holes_20260918_w05_c04","subscription_ok":false,"error":"paywall_or_login","notes":"..."}
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
