@@ -1,0 +1,78 @@
+RUN_ID: farm_holes_20260918_w09
+TASK_ID: farm_holes_20260918_w09_c08
+STAGE: B_contacts_bundle
+PROMPT: v1_methods
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+You are a B2B researcher for Austria/DACH. A field is found when you SAW it on a page;
+never derive or guess an address. Shallow answers are rejected and re-run.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Mag. (FH) Dr. Gerhard Bertsch | FRIES Kunststofftechnik GmbH | Geschäftsführer | CRM_ID=e2074 | missing=email,linkedin | https://www.fries-kt.com
+2. Mag. Martin Fuchs | Mavie Med Holding GmbH | CEO | CRM_ID=e2087 | missing=phone | https://www.mavie-med.at
+3. Stefan Pototschnig, MA | Rudolfinerhaus Privatklinik GmbH | Geschäftsführer / kfm. Leiter | CRM_ID=e2109 | missing=phone | https://www.rudolfinerhaus.at
+4. Ralf Polito | Wolford Aktiengesellschaft | Vorstand COO | CRM_ID=e2112 | missing=email,linkedin | https://company.wolford.com
+5. Mag. Dr. Klaus Schuster, MBA | VITREA Health Management GmbH | CEO | CRM_ID=e2117 | missing=phone | https://www.vitrea-gesundheit.at
+6. Bruno Breuß | Vorarlberg Milch GmbH | Geschäftsführer | CRM_ID=e2119 | missing=email,linkedin | https://www.vmilch.at
+7. Sonja Exner | VITREA Health Management GmbH | CFO | CRM_ID=e2120 | missing=phone | https://www.vitrea-gesundheit.at
+8. Mag. Christian Breitfuß | VITREA Health Management GmbH | Geschäftsführer | CRM_ID=e2121 | missing=phone | https://www.vitrea-gesundheit.at
+9. Thomas Hirschi | Sika Österreich GmbH | Geschäftsführer | CRM_ID=e2124 | missing=phone | https://aut.sika.com
+10. Mag. Carmen Katharina Breitwieser | Klinikum Wels-Grieskirchen GmbH | Geschäftsführerin / Verwaltungsleitung | CRM_ID=e2132 | missing=phone | https://www.klinikum-wegr.at
+11. Mag.a Canan Aytekin | Pensionsversicherungsanstalt — Reha-Krankenanstalten | Generaldirektor-Stellvertreterin (Reha-Einrichtungen) | CRM_ID=e2170 | missing=phone | https://www.pv.at
+12. Dr.in Monika Mustak-Blagusz, MBA | Pensionsversicherungsanstalt — Reha-Krankenanstalten | Chefärztin PV / Reha | CRM_ID=e2172 | missing=phone | https://www.pv.at
+13. Mag. Werner Töpfl | Banner GmbH | Geschäftsführer | CRM_ID=e2180 | missing=email,linkedin | https://www.bannerbatterien.com
+14. Dr. Georg Kollnig | Gemeindeverband Bezirkskrankenhaus Lienz | Verwaltungsdirektor | CRM_ID=e2181 | missing=phone | https://www.kh-lienz.at
+15. Aldo Kamper | ams-OSRAM AG | Vorstandsvorsitzender CEO | CRM_ID=e2210 | missing=phone | https://ams-osram.com
+
+HOW — run this recipe for EVERY person, in this order, stop early only when all 3 fields are found:
+1. Company site first: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung
+   /ansprechpartner /standorte. Footers and Impressum often list Durchwahl (DW) numbers per person.
+2. Exact-phrase searches (use quotes): "<Vorname Nachname>" "<Firma>"  then
+   "<Vorname Nachname>" email  |  "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: search  site:linkedin.com/in "<Vorname Nachname>" <Firma or city>. Accept only a public /in/ URL
+   whose headline matches the company or role. If several people share the name, choose by company — else none.
+4. PDFs are gold: search  "<Vorname Nachname>" filetype:pdf  — Geschäftsberichte, Pressemitteilungen, Vortrags-
+   programme, Ausschreibungen, Vereinsunterlagen, Kammer-/Verbandsdokumente carry direct emails and phone lines.
+5. Registries and directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, compnet, Xing, kununu,
+   Gelbe Seiten, branchen-portals; press pages of the company (Pressekontakt is often a named manager).
+6. Events and media: conference speaker pages, Fachverbände, Podiumsdiskussionen, trade press (medianet, Die Presse,
+   Wirtschaftsblatt, Kurier, regional papers) — bios there include email/LinkedIn.
+7. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl next to the name. Never the Zentrale (…-0),
+   never generic hotlines. Email rule: named mailbox only (vorname.nachname@, v.nachname@, nachname@) — never
+   office@ info@ presse@ ir@ karriere@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+8. Only after steps 1–6 for a person may a field be none. Keep per person the SRC of the best page.
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w09_c08
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w09_c08
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT

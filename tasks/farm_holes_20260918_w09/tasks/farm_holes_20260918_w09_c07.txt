@@ -1,0 +1,78 @@
+RUN_ID: farm_holes_20260918_w09
+TASK_ID: farm_holes_20260918_w09_c07
+STAGE: B_contacts_bundle
+PROMPT: v1_methods
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+You are a B2B researcher for Austria/DACH. A field is found when you SAW it on a page;
+never derive or guess an address. Shallow answers are rejected and re-run.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Nikolaus Riegler | Brauerei Hirt GmbH | Geschäftsführer | CRM_ID=e2019 | missing=phone | https://www.hirterbier.at
+2. Astrid Matchett-Krenn | Brauerei Hirt GmbH | Geschäftsführerin | CRM_ID=e2021 | missing=phone | https://www.hirterbier.at
+3. Mag. Engelbert Künig | Vivea Holding GmbH | Geschäftsführer | CRM_ID=e2025 | missing=phone | https://www.vivea-hotels.com
+4. Till Schäfer | FMTG Services GmbH | Geschäftsführer | CRM_ID=e2029 | missing=phone | https://www.falkensteiner.com/
+5. Mag. Dr. Elisabeth Bräutigam, MBA | Niederösterreichische Landesgesundheitsagentur (NÖ LGA) | Vorstandssprecherin | CRM_ID=e2036 | missing=phone | https://www.landesgesundheitsagentur.at
+6. Markus Marth | Hotel Schani GmbH | Geschäftsführer | CRM_ID=e2038 | missing=phone | https://www.schanihotels.com/
+7. Mag. Dr. Bernhard Kadlec | Niederösterreichische Landesgesundheitsagentur (NÖ LGA) | Vorstand Finanzen | CRM_ID=e2043 | missing=phone | https://www.landesgesundheitsagentur.at
+8. Hubert Santner | Santner Immobilienberatung GmbH | Gesellschafter / Geschäftsführer Impressum | CRM_ID=e2062 | missing=phone | https://www.santner.at/
+9. Dr. Gerald Fleisch | Khbg | Geschäftsführer | CRM_ID=e2065 | missing=phone | https://www.khbg.at/
+10. Dr. Michael Heinisch | Vinzenz Gruppe Krankenhausbeteiligungs- und Management GmbH | Vorsitzender der Geschäftsführung | CRM_ID=e2067 | missing=phone | https://www.vinzenzgruppe.at
+11. Mag. Stephan Lampl | Vinzenz Gruppe Krankenhausbeteiligungs- und Management GmbH | Geschäftsführer Kliniken | CRM_ID=e2068 | missing=phone | https://www.vinzenzgruppe.at
+12. Mag. Peter Ausweger | Barmherzige Brüder Ordensprovinz Europa Mitte | Gesamtleiter CEO | CRM_ID=e2069 | missing=phone | https://www.barmherzige-brueder.at
+13. Kilian Dorner, MU | Dorner Electronic GmbH | Geschäftsführer | CRM_ID=e2070 | missing=phone | https://www.dorner.at
+14. Frater Rudolf Knopp OH | Barmherzige Brüder Ordensprovinz Europa Mitte | Provinzial | CRM_ID=e2071 | missing=phone | https://www.barmherzige-brueder.at
+15. DI Matthias Droop | Dorner Electronic GmbH | Geschäftsführer | CRM_ID=e2072 | missing=phone | https://www.dorner.at
+
+HOW — run this recipe for EVERY person, in this order, stop early only when all 3 fields are found:
+1. Company site first: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung
+   /ansprechpartner /standorte. Footers and Impressum often list Durchwahl (DW) numbers per person.
+2. Exact-phrase searches (use quotes): "<Vorname Nachname>" "<Firma>"  then
+   "<Vorname Nachname>" email  |  "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: search  site:linkedin.com/in "<Vorname Nachname>" <Firma or city>. Accept only a public /in/ URL
+   whose headline matches the company or role. If several people share the name, choose by company — else none.
+4. PDFs are gold: search  "<Vorname Nachname>" filetype:pdf  — Geschäftsberichte, Pressemitteilungen, Vortrags-
+   programme, Ausschreibungen, Vereinsunterlagen, Kammer-/Verbandsdokumente carry direct emails and phone lines.
+5. Registries and directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, compnet, Xing, kununu,
+   Gelbe Seiten, branchen-portals; press pages of the company (Pressekontakt is often a named manager).
+6. Events and media: conference speaker pages, Fachverbände, Podiumsdiskussionen, trade press (medianet, Die Presse,
+   Wirtschaftsblatt, Kurier, regional papers) — bios there include email/LinkedIn.
+7. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl next to the name. Never the Zentrale (…-0),
+   never generic hotlines. Email rule: named mailbox only (vorname.nachname@, v.nachname@, nachname@) — never
+   office@ info@ presse@ ir@ karriere@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+8. Only after steps 1–6 for a person may a field be none. Keep per person the SRC of the best page.
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w09_c07
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w09_c07
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT

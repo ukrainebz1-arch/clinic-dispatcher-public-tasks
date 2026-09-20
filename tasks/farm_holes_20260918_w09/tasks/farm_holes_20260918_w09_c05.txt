@@ -1,0 +1,78 @@
+RUN_ID: farm_holes_20260918_w09
+TASK_ID: farm_holes_20260918_w09_c05
+STAGE: B_contacts_bundle
+PROMPT: v1_methods
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+You are a B2B researcher for Austria/DACH. A field is found when you SAW it on a page;
+never derive or guess an address. Shallow answers are rejected and re-run.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. DI Sandra Bauernfeind FRICS | HÖS Heimat Österreich Service GesmbH | Prokuristin / ZN NÖ-Wien | CRM_ID=e1876 | missing=email,linkedin | https://heimat-oesterreich-service.at/
+2. DI Karsten Finke | KAPPACHER-SELINA Hausverwaltung GmbH | Prokurist | CRM_ID=e1882 | missing=email,linkedin | https://www.kappacher-selina.at/
+3. Elisabeth Kiesling | KIESLING & PARTNER KG | Kommanditistin Finanzen & Recht | CRM_ID=e1883 | missing=email,linkedin | https://kiesling-partner.at/
+4. DI Dominik Stadler | Palladio Immobilien GmbH | Verwaltung | CRM_ID=e1888 | missing=email,linkedin | https://www.palladio-immobilien.at/
+5. Mag. Andrea Graff | PMV Immobilien Management GmbH | Prokuristin | CRM_ID=e1902 | missing=email,linkedin | https://pmv.at/
+6. Andreas Wedenig | Realverwaltung GmbH | Geschäftsführer | CRM_ID=e1903 | missing=email,linkedin | https://www.rutter.at/
+7. Andrea Stiller-Haar, B.A. | J. u. E. Wild Immobilientreuhänder GmbH | Geschäftsführerin | CRM_ID=e1907 | missing=email,linkedin | http://www.ris.bka.gv.atInformationen
+8. Jürgen Clement | SES Center Management GmbH | Head of Property Administration | CRM_ID=e1911 | missing=phone | https://www.ses-european.com/
+9. Mag. (FH) Veronika Ecker | Österreichisches Siedlungswerk Gemeinnützige Wohnungsaktiengesellschaft | Abteilungsleiterin Immobilienverwaltung & Vertrieb | CRM_ID=e1924 | missing=phone | https://www.oesw.at/
+10. Christian Rädler | "Wohnungseigentümer" Gemeinnützige Wohnbaugesellschaft m.b.H. (WETgruppe) | Sprecher der Geschäftsführung / Vorstand | CRM_ID=e1928 | missing=phone | https://www.wet.at/
+11. KommR Mag. Michael Gehbauer | Wohnbauvereinigung für Privatangestellte Gemeinnützige GmbH | Geschäftsführer | CRM_ID=e1930 | missing=phone | https://www.wbv-gpa.at/
+12. Mag. Nadja Horvath, MAS | Wohnbauvereinigung für Privatangestellte Gemeinnützige GmbH | Geschäftsführerin | CRM_ID=e1931 | missing=phone | https://www.wbv-gpa.at/
+13. Rudolf Alexander Eck | SES Center Management GmbH | Geschäftsführer / CDO | CRM_ID=e1937 | missing=phone | https://www.ses-european.com/
+14. Mag.(FH) Dr. Nicole Hanser, MBA MPA | ZIMA Wohn Baugesellschaft mbH | HV-Leitung / GF ZIMA Objektmanagement | CRM_ID=e1941 | missing=phone | https://www.zima.at/
+15. Julia Rahner | Apleona Real Estate AT GmbH | Geschäftsführerin | CRM_ID=e1953 | missing=phone | https://realestate.apleona.com/unser-unternehmen/ueber-uns/
+
+HOW — run this recipe for EVERY person, in this order, stop early only when all 3 fields are found:
+1. Company site first: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung
+   /ansprechpartner /standorte. Footers and Impressum often list Durchwahl (DW) numbers per person.
+2. Exact-phrase searches (use quotes): "<Vorname Nachname>" "<Firma>"  then
+   "<Vorname Nachname>" email  |  "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: search  site:linkedin.com/in "<Vorname Nachname>" <Firma or city>. Accept only a public /in/ URL
+   whose headline matches the company or role. If several people share the name, choose by company — else none.
+4. PDFs are gold: search  "<Vorname Nachname>" filetype:pdf  — Geschäftsberichte, Pressemitteilungen, Vortrags-
+   programme, Ausschreibungen, Vereinsunterlagen, Kammer-/Verbandsdokumente carry direct emails and phone lines.
+5. Registries and directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, compnet, Xing, kununu,
+   Gelbe Seiten, branchen-portals; press pages of the company (Pressekontakt is often a named manager).
+6. Events and media: conference speaker pages, Fachverbände, Podiumsdiskussionen, trade press (medianet, Die Presse,
+   Wirtschaftsblatt, Kurier, regional papers) — bios there include email/LinkedIn.
+7. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl next to the name. Never the Zentrale (…-0),
+   never generic hotlines. Email rule: named mailbox only (vorname.nachname@, v.nachname@, nachname@) — never
+   office@ info@ presse@ ir@ karriere@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+8. Only after steps 1–6 for a person may a field be none. Keep per person the SRC of the best page.
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w09_c05
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w09_c05
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
