@@ -1,0 +1,77 @@
+RUN_ID: farm_holes_20260918_w10
+TASK_ID: farm_holes_20260918_w10_c08
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Tanja Tiefenthaler | RTG Kleinwalsertal Steuerberatung GmbH | Geschäftsführer | CRM_ID=e960 | missing=email,linkedin | http://www.rtg-fritz.at
+2. Tanja Tiefenthaler | RTG Zettinig Steuerberatung GmbH | Geschäftsführer | CRM_ID=e961 | missing=email,linkedin | http://www.rtg-zettinig.at
+3. Christoph Göttlicher | Göttlicher Immobilienmanagement GmbH. | Geschäftsführer | CRM_ID=e1079 | missing=email | https://www.goettlicherwohnen.at/
+4. Mag. Heinz Harb | LBG Österreich GmbH Wirtschaftsprüfung & Steuerberatung | Geschäftsführer | CRM_ID=e110 | missing=email | https://www.lbg.at/
+5. Daniel Schönegger | DS Realtreuhand GmbH | Geschäftsführer | CRM_ID=e1102 | missing=email | https://www.ds-realtreuhand.at/
+6. Dr. Christian Ludwig | Ludwig & Partner Wirtschaftsprüfungs- und Steuerberatungs GmbH | Geschäftsführer (WP und StB) | CRM_ID=e114 | missing=email | https://www.ludwig-partner.at
+7. Mag. Markus Lenotti | Lenotti Advisors GmbH | Geschäftsführer | CRM_ID=e1142 | missing=email | https://www.lenottiadvisors.com/
+8. Petra Seewald | Seewald Services GmbH | Geschäftsführer | CRM_ID=e1173 | missing=email | https://seewald.services/
+9. Mag. Helmut Kaisergruber | Astro-Pharma Vertrieb und Handel von pharmazeutischen Produkten GmbH | Geschäftsführer | CRM_ID=e1183 | missing=email | https://www.astropharma.atGeschäftsführer:
+10. Jürgen Bergner | Holzindustrie Schweighofer GmbH | Geschäftsführer | CRM_ID=e1207 | missing=email | https://www.schweighofer.at/
+11. Hannes Szalay Design | Led-Project GmbH | Geschäftsführer | CRM_ID=e1218 | missing=email | http://www.led-project.eu/
+12. Dr. Azra Dedic-Schwaiger | LabRaum Diagnostika GmbH | Geschäftsführer | CRM_ID=e1284 | missing=email | http://www.labraum.at/
+13. Ing. Stefan Siegl, BSc MA MEng | IMAVIDA GmbH | Geschäftsführer | CRM_ID=e1393 | missing=email | https://imavida.at/
+14. Ing. Maximilian Alois Kiesling | KIESLING & PARTNER KG | unbeschränkt haftender Gesellschafter | CRM_ID=e1398 | missing=email | https://kiesling-partner.at/
+15. Andreas Vock | KOLLER TRANSPORTE - KIES - ERDBAU GMBH | Geschäftsführer | CRM_ID=e1399 | missing=email | https://www.koller-gmbh.at
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w10_c08
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w10_c08
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
