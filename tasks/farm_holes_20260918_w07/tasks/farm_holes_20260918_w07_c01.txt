@@ -1,11 +1,13 @@
 RUN_ID: farm_holes_20260918_w07
 TASK_ID: farm_holes_20260918_w07_c01
 STAGE: B_contacts_bundle
+PROMPT: v1_methods
 WRITE_LIVE_ICP: false
 PHONE: huawei_p30_lite_01
 
-MODE: Use Work / deep-research browsing. Do NOT answer from memory alone.
-Spend real search time per person. Shallow null answers are rejected.
+MODE: Use web browsing on every person. Do NOT answer from memory.
+You are a B2B researcher for Austria/DACH. A field is found when you SAW it on a page;
+never derive or guess an address. Shallow answers are rejected and re-run.
 
 GLOBAL TASK:
 Each row is already a CRM contact. For THAT person find the missing fields
@@ -30,18 +32,25 @@ PEOPLE (15):
 14. Mag. Dr. Frank Philipp Albert | Supernova Invest GmbH | Geschäftsführer / Inhaber | CRM_ID=e1938 | missing=phone,linkedin | https://www.supernova.at/
 15. Dir. Bmstr. Ing. Siegfried Igler | "Neues Leben" gemeinnützige Bau- und Siedlungsgenossenschaft | Obmann | CRM_ID=e1978 | missing=phone,linkedin | https://www.wohnen.at/
 
-HOW (per person — minimum effort before any null):
-1. Company site: Impressum, Kontakt, Team, Vorstand, Über uns, Management.
-2. Web search: "<name>" "<company>" email OR telefon OR impressum OR linkedin.
-3. Also check: firmenabc.at, wko.at, northdata, Xing, LinkedIn public /in/.
-4. Take a NAMED email (vorname.nachname@), never office@ / info@ / ir@ / presse@.
-5. Phone: mobile +43 6xx next to the name, or a personal DW. Skip Zentrale …-0.
-6. LinkedIn: public https://www.linkedin.com/in/... URL for this person only.
-7. Keep evidence_url pointing at the page where you found the best field.
-8. Return null ONLY after at least 3 distinct searches/pages for that person.
-   In notes, list what you checked for anyone still null.
+HOW — run this recipe for EVERY person, in this order, stop early only when all 3 fields are found:
+1. Company site first: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung
+   /ansprechpartner /standorte. Footers and Impressum often list Durchwahl (DW) numbers per person.
+2. Exact-phrase searches (use quotes): "<Vorname Nachname>" "<Firma>"  then
+   "<Vorname Nachname>" email  |  "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: search  site:linkedin.com/in "<Vorname Nachname>" <Firma or city>. Accept only a public /in/ URL
+   whose headline matches the company or role. If several people share the name, choose by company — else none.
+4. PDFs are gold: search  "<Vorname Nachname>" filetype:pdf  — Geschäftsberichte, Pressemitteilungen, Vortrags-
+   programme, Ausschreibungen, Vereinsunterlagen, Kammer-/Verbandsdokumente carry direct emails and phone lines.
+5. Registries and directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, compnet, Xing, kununu,
+   Gelbe Seiten, branchen-portals; press pages of the company (Pressekontakt is often a named manager).
+6. Events and media: conference speaker pages, Fachverbände, Podiumsdiskussionen, trade press (medianet, Die Presse,
+   Wirtschaftsblatt, Kurier, regional papers) — bios there include email/LinkedIn.
+7. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl next to the name. Never the Zentrale (…-0),
+   never generic hotlines. Email rule: named mailbox only (vorname.nachname@, v.nachname@, nachname@) — never
+   office@ info@ presse@ ir@ karriere@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+8. Only after steps 1–6 for a person may a field be none. Keep per person the SRC of the best page.
 
-CRITICAL OUTPUT FORMAT (the answer is read by a camera OCR — plain lines only):
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
 No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
 Start the final answer with exactly:
 RESULT_ID: farm_holes_20260918_w07_c01
