@@ -1,0 +1,70 @@
+RUN_ID: farm_holes_20260918_w08
+TASK_ID: farm_holes_20260918_w08_c02
+STAGE: B_contacts_bundle
+PROMPT: v0_baseline
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing. Do NOT answer from memory alone.
+Spend real search time per person. Shallow null answers are rejected.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Prim. Prof. asoc. Dr. med. Astrid R. M. Krückhans | KOBV — Orthopädisches Klinikum SKA Zicksee | Ärztliche Leiterin | CRM_ID=e2650 | missing=phone,linkedin | https://www.skazicksee.at/index.php/menu-impressum
+2. DGKP Gabriele Andert | KOBV — Orthopädisches Klinikum SKA Zicksee | Pflegedienstleiterin | CRM_ID=e2652 | missing=phone,linkedin | https://www.skazicksee.at/index.php/menu-impressum
+3. Primaria Dr.in med. univ. Simone Bratl | Stiftung Maria Ebene | Ärztliche Leiterin | CRM_ID=e2654 | missing=phone,linkedin | https://www.mariaebene.at
+4. Marco Gattringer-Ebner | Lenze Austria GmbH | Geschäftsführer | CRM_ID=e2655 | missing=phone,linkedin | https://www.lenze.com
+5. Primarius DDr. Arkadiusz Komorowski | Grüner Kreis, Verein zur Rehabilitation und Integration suchtkranker Menschen | Ärztlicher Leiter | CRM_ID=e2656 | missing=phone,linkedin | https://gruenerkreis.at/en/who-we-are
+6. Michaela Holzbauer, DSA | Grüner Kreis, Verein zur Rehabilitation und Integration suchtkranker Menschen | Therapeutische Leiterin | CRM_ID=e2657 | missing=phone,linkedin | https://gruenerkreis.at/en/who-we-are
+7. Dr. med. Guntmar Gradl | Privatklinik Ritzensee GmbH | Ärztlicher Leiter | CRM_ID=e2660 | missing=phone,linkedin | https://www.privatklinik-ritzensee.at/klinik/
+8. Anna van Bergerem, DGKP | Privatklinik Ritzensee GmbH | Pflegedirektion | CRM_ID=e2661 | missing=phone,linkedin | https://www.privatklinik-ritzensee.at/klinik/
+9. Mag. Florian Rauch | VFI GmbH | Geschäftsführer | CRM_ID=e2662 | missing=phone,linkedin | https://vfi.co.at
+10. Prim. Dr. Paul Kaufmann | pro mente Reha GmbH | Ärztlicher Direktor | CRM_ID=e2665 | missing=phone,linkedin | https://www.promente-reha.at/ueber-uns
+11. Prim. Dr. Christoph Wassermann, MBA | mental health reha-klinik klagenfurt GmbH | Ärztliche Leitung | CRM_ID=e2667 | missing=phone,linkedin | https://www.mh-reha.at/ueber-uns/klinikleitung
+12. Ing. Rudolf Vogl | Koenig & Bauer (AT) GmbH | Geschäftsführer Technik | CRM_ID=e2673 | missing=phone,linkedin | https://at.koenig-bauer.com
+13. Dulijana Licinar | SAG New Technologies GmbH | Geschäftsführerin | CRM_ID=e2677 | missing=phone,linkedin | https://sag.at
+14. Martin Dallinger | Pfizer Manufacturing Austria GmbH | Geschäftsführer | CRM_ID=e2683 | missing=phone,linkedin | https://www.pfizer.at
+15. TKL Lebensmittel Logistik | KontaktTKL Lebensmittel Logistik GmbH | Geschäftsführer | CRM_ID=e2691 | missing=phone,linkedin | http://www.tkl.atMitgliedschaften:
+
+HOW (per person — minimum effort before any null):
+1. Company site: Impressum, Kontakt, Team, Vorstand, Über uns, Management.
+2. Web search: "<name>" "<company>" email OR telefon OR impressum OR linkedin.
+3. Also check: firmenabc.at, wko.at, northdata, Xing, LinkedIn public /in/.
+4. Take a NAMED email (vorname.nachname@), never office@ / info@ / ir@ / presse@.
+5. Phone: mobile +43 6xx next to the name, or a personal DW. Skip Zentrale …-0.
+6. LinkedIn: public https://www.linkedin.com/in/... URL for this person only.
+7. Keep evidence_url pointing at the page where you found the best field.
+8. Return null ONLY after at least 3 distinct searches/pages for that person.
+   In notes, list what you checked for anyone still null.
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w08_c02
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w08_c02
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT

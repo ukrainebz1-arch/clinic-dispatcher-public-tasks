@@ -1,0 +1,70 @@
+RUN_ID: farm_holes_20260918_w08
+TASK_ID: farm_holes_20260918_w08_c07
+STAGE: B_contacts_bundle
+PROMPT: v0_baseline
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing. Do NOT answer from memory alone.
+Spend real search time per person. Shallow null answers are rejected.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Jakub Skwarlo | Unibail-Rodamco Austria Verwaltungs GmbH | Geschäftsführer | CRM_ID=e857 | missing=phone,linkedin | https://www.urw.com/
+2. Paul Douay | Unibail-Rodamco Austria Verwaltungs GmbH | Geschäftsführer | CRM_ID=e858 | missing=phone,linkedin | 
+3. Peter Frigo | Frigo Immobilientreuhand GmbH | Geschäftsführer / Inhaber | CRM_ID=e86 | missing=phone,linkedin | https://frigo.at/
+4. Barbara Drahosch, MBA | Ulrich-Pur Immobilien Treuhand GesmbH | Geschäftsführerin | CRM_ID=e87 | missing=phone,linkedin | https://www.ulrich-pur.at/
+5. Stefan Rutter | Realverwaltung GmbH | Geschäftsführer | CRM_ID=e880 | missing=phone,linkedin | https://www.rutter.at/
+6. Christian Harisch | Realverwaltung GmbH | Geschäftsführer | CRM_ID=e881 | missing=phone,linkedin | https://www.rutter.at/
+7. Barbara Jaitler-Konya | Gutwerk Immobilien Treuhand GmbH | Geschäftsführer | CRM_ID=e895 | missing=phone,linkedin | https://www.gutwerk.at/team-2/
+8. Hubert Vögel | IG Immobilien Management GmbH | Geschäftsführer | CRM_ID=e904 | missing=phone,linkedin | https://www.ig-immobilien.com/
+9. Stefan Babsch | Dr.Gerlich + Co.Hausverwaltung & Facility Management GmbH | Geschäftsführer | CRM_ID=e924 | missing=phone,linkedin | https://www.fm-day.at/
+10. Miriam Seidner | ECA Schönherr Steuerberatung GmbH | Geschäftsführer | CRM_ID=e950 | missing=phone,linkedin | https://innsbruck.eca.at/karriere
+11. Carina Katter | LKP Steuerberatung OG | Geschäftsführer | CRM_ID=e956 | missing=phone,linkedin | https://www.lkp.at
+12. Steuerbüro Innsbruck | Wirtschaftstreuhand OG Kirchmair Kraisser Steuerberatungsgesellschaft | Geschäftsführer | CRM_ID=e967 | missing=phone,linkedin | https://www.kirchmair-kraisser.at/
+13. Marie-Christine Götsch | Gessler GmbH Wirtschaftsprüfungs- und Steuerberatungsgesellschaft | Geschäftsführer | CRM_ID=e982 | missing=phone,linkedin | https://www.gessler.at/news/management-info
+14. David Huter | Gratt Sappl Steuerberatung GmbH | Geschäftsführer | CRM_ID=e983 | missing=phone,linkedin | http://www.wt-gratt.at
+15. Gudrun Humel | Szabo & Partner Steuerberatung | Geschäftsführer | CRM_ID=e984 | missing=phone,linkedin | https://www.szabo.at/
+
+HOW (per person — minimum effort before any null):
+1. Company site: Impressum, Kontakt, Team, Vorstand, Über uns, Management.
+2. Web search: "<name>" "<company>" email OR telefon OR impressum OR linkedin.
+3. Also check: firmenabc.at, wko.at, northdata, Xing, LinkedIn public /in/.
+4. Take a NAMED email (vorname.nachname@), never office@ / info@ / ir@ / presse@.
+5. Phone: mobile +43 6xx next to the name, or a personal DW. Skip Zentrale …-0.
+6. LinkedIn: public https://www.linkedin.com/in/... URL for this person only.
+7. Keep evidence_url pointing at the page where you found the best field.
+8. Return null ONLY after at least 3 distinct searches/pages for that person.
+   In notes, list what you checked for anyone still null.
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w08_c07
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w08_c07
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
