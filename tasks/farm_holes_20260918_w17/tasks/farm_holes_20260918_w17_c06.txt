@@ -1,0 +1,75 @@
+RUN_ID: farm_holes_20260918_w17
+TASK_ID: farm_holes_20260918_w17_c06
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (13):
+1. Matthias Ritzberger | VOGTRANS Speditions- und Verpackungsgesellschaft m.b.H. | Geschäftsführer | CRM_ID=e690 | missing=phone,email,linkedin | 
+2. Achim Obkircher | Zugvogel Speditions GmbH | CEO | CRM_ID=e693 | missing=phone,email,linkedin | https://www.zugvogel.cc/unternehmen/
+3. Thomas Baumgartner | Lagermax Lagerhaus und Speditions Aktiengesellschaft | Geschäftsführer | CRM_ID=e696 | missing=phone,email,linkedin | http://www.lagermax.com/
+4. Christian Fürstaller | Augustin Quehenberger Group GmbH | Geschäftsführer | CRM_ID=e700 | missing=phone,email,linkedin | 
+5. Rodolphe Schoettel | Quehenberger Air + Ocean GmbH | Geschäftsführer | CRM_ID=e702 | missing=phone,email,linkedin | https://www.quehenberger.com/
+6. Jürgen Hillen | Deufol Austria GmbH | Geschäftsführer | CRM_ID=e704 | missing=phone,email,linkedin | 
+7. Søren Nymann | Hillebrand Gori Austria GmbH | Geschäftsführer | CRM_ID=e707 | missing=phone,email,linkedin | 
+8. Martin Anthony Bittner | TEK TRANSPORT s.r.o. | Geschäftsführer | CRM_ID=e710 | missing=phone,email,linkedin | https://fr.tek.com
+9. Andreas Winkelmayer | Gebrüder Weiss Paketdienst Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e713 | missing=phone,email,linkedin | https://developer.my.gw-world.com/homeFür
+10. Daniel Neumann | Gebrüder Weiss Paketdienst Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e714 | missing=phone,email,linkedin | 
+11. Alexander Eberharter | Gebrüder Weiss Transport Logistik GmbH | Geschäftsführer | CRM_ID=e716 | missing=phone,email,linkedin | http://gw-world.com/
+12. Michael Craiss | Craiss Generation Logistik Austria GmbH & Co KG | Relevant management / registered officer | CRM_ID=e743 | missing=phone,email,linkedin | https://www.craiss.com
+13. Rainer Schwarz | DPD Direct Parcel Distribution Austria GmbH | Relevant management / registered officer | CRM_ID=e745 | missing=phone,email,linkedin | https://www.dpd.com/at/
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w17_c06
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w17_c06
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
