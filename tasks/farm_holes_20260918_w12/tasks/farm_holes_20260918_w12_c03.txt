@@ -1,0 +1,79 @@
+RUN_ID: farm_holes_20260918_w12
+TASK_ID: farm_holes_20260918_w12_c03
+STAGE: B_contacts_bundle
+PROMPT: v3_persist_li
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Dr. Arnold Gabriel | Landeskrankenanstalten-Betriebsgesellschaft - KABEG | Vorstand | CRM_ID=e2057 | missing=linkedin | https://www.kabeg.at
+2. Univ.-Prof. Ing. Dr. Dr. h.c. Gerhard Stark | Steiermärkische Krankenanstaltengesellschaft mbH | Vorstandsvorsitzender | CRM_ID=e2058 | missing=linkedin | https://www.kages.at
+3. Univ.-Prof. DDr. Thomas Klestil, MSc | Tirol Kliniken Gesellschaft mbH | Medizinischer Geschäftsführer | CRM_ID=e2064 | missing=linkedin | https://www.tirol-kliniken.at
+4. Katharina Rhomberg-Shebl M.A.hsg Dipl.Wipäd | FRIES Kunststofftechnik GmbH | Geschäftsführerin | CRM_ID=e2073 | missing=linkedin | https://www.fries-kt.com
+5. Otto Wohlgenannt | Otto Wohlgenannt Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2083 | missing=linkedin | https://wohlgenannt.co.at
+6. Martin Wohlgenannt | Otto Wohlgenannt Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2084 | missing=linkedin | https://wohlgenannt.co.at
+7. OMR Prim. Prof. Dr. Günter Nebel | SANLAS Holding GmbH | CEO / Eigentümer | CRM_ID=e2106 | missing=linkedin | https://sanlas.at
+8. Eva Ankowitsch | Österreichische Gesundheitskasse — Hanusch-Krankenhaus | Verwaltungsdirektorin Hanusch-Krankenhaus | CRM_ID=e2127 | missing=linkedin | https://www.oegk.at
+9. DI (FH) Ulrich Morgner | Österreichische Gesundheitskasse — Hanusch-Krankenhaus | Stv. Verwaltungsdirektor Hanusch | CRM_ID=e2129 | missing=linkedin | https://www.oegk.at
+10. Mag. Dr. Eugen Adelsmayr, LL.M. | Kardinal Schwarzenberg Klinikum GmbH | Geschäftsführer / Ärztlicher Direktor | CRM_ID=e2139 | missing=linkedin | https://www.ks-klinikum.at
+11. Mag. Walter Pansi | Diakonie de La Tour gemeinnützige Betriebsgesellschaft m.b.H. | Vorstand / Wirtschaftsdirektor | CRM_ID=e2147 | missing=linkedin | https://www.diakonie-delatour.at
+12. DI (FH) Mag. Astrid Körner | Diakonie de La Tour gemeinnützige Betriebsgesellschaft m.b.H. | Geschäftsführerin / Rektorin | CRM_ID=e2148 | missing=linkedin | https://www.diakonie-delatour.at
+13. MMag. Dr. Christian Lagger, MBA | Krankenhaus der Elisabethinen GmbH | Geschäftsführer | CRM_ID=e2149 | missing=linkedin | https://www.elisabethinen.at
+14. Prim. Dr. Josef F. Macher | Klinik Diakonissen Linz GmbH | Geschäftsführer | CRM_ID=e2167 | missing=linkedin | https://www.linz.diakonissen.at
+15. MMag. Andreas Hoppichler | Bezirkskrankenhaus Schwaz Betriebsgesellschaft mbH | Geschäftsführer / Verwaltungsdirektor | CRM_ID=e2178 | missing=linkedin | https://www.kh-schwaz.at
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma>  and then  … "<Vorname Nachname>" <Stadt or Branche>.
+   Take the public /in/ URL when the profile's name matches AND at least one of: current/former company matches,
+   role matches, or the profile is in Austria in this industry. Only when several profiles remain ambiguous: none.
+   Also check the company page on LinkedIn (linkedin.com/company/<firma>/people) and Xing profiles for the URL.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w12_c03
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w12_c03
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT

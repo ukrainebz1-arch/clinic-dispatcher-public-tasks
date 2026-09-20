@@ -1,0 +1,79 @@
+RUN_ID: farm_holes_20260918_w12
+TASK_ID: farm_holes_20260918_w12_c04
+STAGE: B_contacts_bundle
+PROMPT: v3_persist_li
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Mag. (FH) Peter Neier | Krankenhaus der Stadt Dornbirn | Verwaltungsdirektor | CRM_ID=e2187 | missing=linkedin | https://krankenhaus.dornbirn.at
+2. Mag.a Gertraud Roithinger | Zentrum Spattstraße Gem. GmbH | Stv. GF / Prokura / Personal | CRM_ID=e2197 | missing=linkedin | https://www.diakonie-spattstrasse.at
+3. Sr. Maria Johanna Schlagbauer CCIM | Marienkrankenhaus Vorau Gemeinnützige GmbH | Geschäftsführerin | CRM_ID=e2248 | missing=linkedin | https://marienkrankenhaus.at
+4. Mag. Dr. Carina Kohlberger-Flöck | Privatklinik Ritzensee GmbH | Geschäftsführerin | CRM_ID=e2286 | missing=linkedin | https://www.privatklinik-ritzensee.at
+5. Dipl.-Ing. Dr. Markus Baldinger, MBA MSc | Pöttinger Landtechnik GmbH | Geschäftsführer | CRM_ID=e2304 | missing=linkedin | https://www.poettinger.at
+6. Peter Spindler | zieritz + partner ZT GmbH | Geschäftsführender Gesellschafter | CRM_ID=e243 | missing=linkedin | https://zp-zt.at/
+7. Anton Pech | Dr. PECH Ziviltechnikergesellschaft mbH | Geschäftsführer | CRM_ID=e244 | missing=linkedin | https://www.zt-pech.at/
+8. Alexander Walter-Frosch, MA | Gesundheitsresort Königsberg Gesellschaft m.b.H. | Prokurist | CRM_ID=e2644 | missing=linkedin | https://www.gesundheitsresort-koenigsberg.at/de/koenigs-team/duerfen-wir-vorstellen
+9. Mag. (FH) Sylvia Gruber | Medizinisches Zentrum Bad Vigaun GmbH & Co. KG | Assistentin der Geschäftsführung / Leitung Heiltherme | CRM_ID=e2663 | missing=linkedin | https://www.badvigaun.com/karriere/
+10. Hans-Wolfgang Geis | Gesamtleitung Sales TECVIA GmbH | Geschäftsführer | CRM_ID=e2699 | missing=linkedin | https://www.fahren-lernen.deFür
+11. Mag. Marianne Hamersky | IWTH Hamersky Blümmel Steuerberatung GmbH | Geschäftsführer | CRM_ID=e2702 | missing=linkedin | https://gut-ventures.com/UnternehmensgegenstandDienstleistungen
+12. Volker Auer | Keimelmayr GmbH | Geschäftsführer | CRM_ID=e2705 | missing=linkedin | https://www.keimelmayr.at/
+13. Murat Gedek | DenkCore Solutions e.U. | Geschäftsführer | CRM_ID=e2708 | missing=linkedin | https://www.denkcore.comGeschäftszweigUnternehmensberatung
+14. Dr. Stefan Tiefenthaler | BINDER GRÖSSWANG Rechtsanwälte GmbH | Geschäftsführender Gesellschafter / Managing Partner | CRM_ID=e302 | missing=linkedin | https://www.bindergroesswang.at
+15. Mag. Francine Brogyányi | DORDA Rechtsanwälte GmbH | Geschäftsführerin / Managing Partner | CRM_ID=e303 | missing=linkedin | https://www.dorda.at/
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma>  and then  … "<Vorname Nachname>" <Stadt or Branche>.
+   Take the public /in/ URL when the profile's name matches AND at least one of: current/former company matches,
+   role matches, or the profile is in Austria in this industry. Only when several profiles remain ambiguous: none.
+   Also check the company page on LinkedIn (linkedin.com/company/<firma>/people) and Xing profiles for the URL.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w12_c04
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w12_c04
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT

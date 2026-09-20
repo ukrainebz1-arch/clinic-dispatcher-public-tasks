@@ -1,0 +1,79 @@
+RUN_ID: farm_holes_20260918_w12
+TASK_ID: farm_holes_20260918_w12_c02
+STAGE: B_contacts_bundle
+PROMPT: v3_persist_li
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Prok. Peter Bischof | "Neues Leben" gemeinnützige Bau- und Siedlungsgenossenschaft | Leitung Hausverwaltung | CRM_ID=e1982 | missing=linkedin | https://www.wohnen.at/
+2. Mag. Hannah Spanos-Prugger | OÖ Wohnbau Gesellschaft für den Wohnungsbau gemeinnützige GmbH | Stellvertretung Abteilungsleitung Hausverwaltung | CRM_ID=e1989 | missing=linkedin | https://ooewohnbau.at/
+3. KommR Dir. Mag. Peter Sommer | FRIEDEN Gemeinnützige Bau- und Siedlungsgenossenschaft | Obmann | CRM_ID=e1995 | missing=linkedin | https://frieden.at/
+4. Dir. Dr. Dietmar Härting | FRIEDEN Gemeinnützige Bau- und Siedlungsgenossenschaft | Obmann-Stellvertreter | CRM_ID=e1997 | missing=linkedin | https://frieden.at/
+5. Dir. Bmstr. Ing. Christoph Scharinger, BA MA | FRIEDEN Gemeinnützige Bau- und Siedlungsgenossenschaft | Vorstand; Hausverwaltung Wien/NÖ | CRM_ID=e1998 | missing=linkedin | https://frieden.at/
+6. Regine Kail | FRIEDEN Gemeinnützige Bau- und Siedlungsgenossenschaft | Leiterin Hausverwaltung | CRM_ID=e1999 | missing=linkedin | https://frieden.at/
+7. Ing. Wolfram Sacherer | Gemeinnützige Wohn- und Siedlungsgenossenschaft Ennstal reg. Gen.m.b.H. | Vorstandsobmann | CRM_ID=e2000 | missing=linkedin | https://www.wohnbaugruppe.at/
+8. Mag. Alexander Reiter | Gemeinnützige Wohn- und Siedlungsgenossenschaft Ennstal reg. Gen.m.b.H. | Vorstandsobmann-Stellvertreter | CRM_ID=e2001 | missing=linkedin | https://www.wohnbaugruppe.at/
+9. Mag. Alexander Daum | Gemeinnützige Wohn- und Siedlungsgenossenschaft Ennstal reg. Gen.m.b.H. | Vorstandsmitglied | CRM_ID=e2002 | missing=linkedin | https://www.wohnbaugruppe.at/
+10. Mag. Andrea Frieser | Familienwohnbau gemeinnützige Bau- und Siedlungsgesellschaft m.b.H. | Abteilungsleitung Hausverwaltung | CRM_ID=e2011 | missing=linkedin | https://familienwohnbau.at/
+11. Dr. Michael Binder | Wiener Gesundheitsverbund | Medizinischer Direktor | CRM_ID=e2032 | missing=linkedin | https://gesundheitsverbund.at
+12. Mag. Sabrina Schütz-Oberländer | JUFA Hotels Österreich GmbH | Geschäftsführerin | CRM_ID=e2034 | missing=linkedin | https://www.jufahotels.com/
+13. Dr. Harald Schöffl | Oberösterreichische Gesundheitsholding GmbH | Geschäftsführer | CRM_ID=e2050 | missing=linkedin | https://www.ooeg.at
+14. Thomas Kohler | 1zu1scale GmbH | Geschäftsführer | CRM_ID=e2051 | missing=linkedin | https://1zu1.eu
+15. Dr. Thomas Gamsjäger, MSc | Gemeinnützige Salzburger Landeskliniken Betriebsgesellschaft mbH | Geschäftsführer | CRM_ID=e2054 | missing=linkedin | https://salk.at
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma>  and then  … "<Vorname Nachname>" <Stadt or Branche>.
+   Take the public /in/ URL when the profile's name matches AND at least one of: current/former company matches,
+   role matches, or the profile is in Austria in this industry. Only when several profiles remain ambiguous: none.
+   Also check the company page on LinkedIn (linkedin.com/company/<firma>/people) and Xing profiles for the URL.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w12_c02
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w12_c02
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
