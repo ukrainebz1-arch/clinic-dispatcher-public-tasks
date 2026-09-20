@@ -1,0 +1,70 @@
+RUN_ID: farm_holes_20260918_w11
+TASK_ID: farm_holes_20260918_w11_c07
+STAGE: B_contacts_bundle
+PROMPT: v0_baseline
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing. Do NOT answer from memory alone.
+Spend real search time per person. Shallow null answers are rejected.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Herbert Handlos | Säge Handlos Summerau GmbH | Geschäftsführer | CRM_ID=e1548 | missing=linkedin | https://www.handlos.at/en/herbert-handlos-geschaeftsfuehrung.html
+2. Ing. Karl Hasenöhrl | HASENÖHRL GmbH | Geschäftsführer | CRM_ID=e1599 | missing=linkedin | http://www.hasenoehrl.at
+3. Johannes Rieder | Deufol Austria Pack Center Solutions GmbH | Geschäftsführer | CRM_ID=e1613 | missing=linkedin | https://gut-ventures.com/UnternehmensgegenstandDienstleistungen
+4. Mag.Dr. Gert Roman Heigl | Holding Graz - Kommunale Dienstleistungen GmbH | Geschäftsführer | CRM_ID=e1617 | missing=linkedin | https://www.holding-graz.at
+5. Alberto Zanatta | Blizzard Sport GmbH | Geschäftsführer | CRM_ID=e1628 | missing=linkedin | https://www.blizzard.at/
+6. Ing. Reinhard Palaver | Ing. Reinhard Palaver | Inhaber | CRM_ID=e1635 | missing=linkedin | https://www.reinhardpalaver.com
+7. Mag. Hannes Ziegler | Dienstleister für Agrar, Forst, Personal und mehr! | Geschäftsführer | CRM_ID=e1674 | missing=linkedin | https://ec.europa.eu/consumers/odr/
+8. Igor Lubajnšek | CAR PARTS HandelsGmbH | Geschäftsführer | CRM_ID=e17 | missing=linkedin | https://carparts.wien/
+9. DI Dr. Peter Walter Polndorfer | GEMDAT OÖ GmbH & Co KG | Geschäftsführer | CRM_ID=e1716 | missing=linkedin | https://gut-ventures.com/UnternehmensgegenstandDienstleistungen
+10. Tizian Stottan | Grubits & Co. Bau- und Verkehrstechnik GmbH | Geschäftsführer | CRM_ID=e1719 | missing=linkedin | https://www.grubits.at/
+11. Norbert Adler | CBN Consultinggroup | Inhaber | CRM_ID=e1726 | missing=linkedin | https://www.cbn-consultinggroup.com/
+12. StB Mag. Christine Weinzierl | Unternehmensberatung PwC Transaction Services Wirtschaftsprüfung GmbH | Geschäftsführer | CRM_ID=e1748 | missing=linkedin | https://www.pwc.com/
+13. Wiedner Gürtel | Mag. Günther Neugschwandtner TPA Mödling Steuerberatung GmbH & Co KG | Geschäftsführer | CRM_ID=e1750 | missing=linkedin | https://www.tpa-group.at/
+14. Ing. Peter Wieland | WISA-Bau GmbH | Geschäftsführer | CRM_ID=e1752 | missing=linkedin | https://www.wisa-bau.at/
+15. Mag. Gaier Philipp | WKO Wien PRATO Steuerberatung GmbH | Geschäftsführerin | CRM_ID=e1753 | missing=linkedin | https://prato-steuerberatung.at
+
+HOW (per person — minimum effort before any null):
+1. Company site: Impressum, Kontakt, Team, Vorstand, Über uns, Management.
+2. Web search: "<name>" "<company>" email OR telefon OR impressum OR linkedin.
+3. Also check: firmenabc.at, wko.at, northdata, Xing, LinkedIn public /in/.
+4. Take a NAMED email (vorname.nachname@), never office@ / info@ / ir@ / presse@.
+5. Phone: mobile +43 6xx next to the name, or a personal DW. Skip Zentrale …-0.
+6. LinkedIn: public https://www.linkedin.com/in/... URL for this person only.
+7. Keep evidence_url pointing at the page where you found the best field.
+8. Return null ONLY after at least 3 distinct searches/pages for that person.
+   In notes, list what you checked for anyone still null.
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w11_c07
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w11_c07
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT

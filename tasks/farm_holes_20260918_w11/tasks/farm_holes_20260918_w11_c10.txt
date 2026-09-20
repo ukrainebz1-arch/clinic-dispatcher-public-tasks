@@ -1,0 +1,70 @@
+RUN_ID: farm_holes_20260918_w11
+TASK_ID: farm_holes_20260918_w11_c10
+STAGE: B_contacts_bundle
+PROMPT: v0_baseline
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing. Do NOT answer from memory alone.
+Spend real search time per person. Shallow null answers are rejected.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Monika Hofbauer | WESIAK Gesellschaft m.b.H. | Prokuristin · Abteilungsleiterin Hausverwaltung Wien | CRM_ID=e1873 | missing=linkedin | https://www.wesiak.com/
+2. Gerald Heintz | HÖS Heimat Österreich Service GesmbH | Prokurist / ZN-Leiter NÖ-Wien | CRM_ID=e1877 | missing=linkedin | https://heimat-oesterreich-service.at/
+3. Stefanie Opetnik | Immobilien Verwaltung Klagenfurt GmbH | Leitung Hausverwaltung | CRM_ID=e1879 | missing=linkedin | https://www.klagenfurt-wohnen.at/
+4. Baumeister Ing. Klaus Bayer | Ing. Werner Wilhelm Bayer | Geschäftsführer | CRM_ID=e1880 | missing=linkedin | https://www.svbayer.at/
+5. Nicola Neubauer, BA | Westpark Immomanagement GmbH | Prokuristin / Facility Management | CRM_ID=e1892 | missing=linkedin | https://www.westpark.at/
+6. Irma Midzic | Westpark Immomanagement GmbH | Objektverwaltung Wohnen | CRM_ID=e1893 | missing=linkedin | https://www.westpark.at/
+7. Dr. Bernadett Pauer | FLE GmbH | Head of Asset Management / gewerberechtliche GF | CRM_ID=e1895 | missing=linkedin | https://www.fle.co.at/
+8. Stefan Steinbichl | Wohnbau 2000 Gesellschaft mbH | Leitung Objektmanagement | CRM_ID=e1896 | missing=linkedin | https://wohnbau2000.com/
+9. Romana Bamberger | Haus & Grund Immobilien Management GmbH | Prokuristin | CRM_ID=e1897 | missing=linkedin | https://hausundgrund.at/
+10. Kerstin Hübsch | Waldviertel Immobilien-Vermittlung GmbH | Sekretariat & Hausverwaltung | CRM_ID=e1898 | missing=linkedin | https://www.w-i-v.at/
+11. Mag. Nicole Vegricht | WEVIG Wohnungseigentumsverwaltungs- und Immobilientreuhand-Gesellschaft m.b.H. | Abteilungsleiterin Immobilienverwaltung / Prokuristin | CRM_ID=e1899 | missing=linkedin | https://www.wevig.at/
+12. DI (FH) Michael P. Reinberg | Reinberg & Partner Immobilienberatung GmbH | Geschäftsführer / Gründer | CRM_ID=e1904 | missing=linkedin | https://www.reinberg-partner.com/
+13. Martina Krajinovic | SERIA Immobilien & Treuhand GmbH | Abteilungsleitung Verwaltung | CRM_ID=e1909 | missing=linkedin | https://seria.at/
+14. Mag. Gerald Rubik | "Heimbau" Gemeinnützige Bau-, Wohnungs- u. Siedlungsgenossenschaft | Obmann / GF Eisenhof | CRM_ID=e1932 | missing=linkedin | https://www.heimbau.at/
+15. Bmst. Ing. Hermann Koller | "Heimbau" Gemeinnützige Bau-, Wohnungs- u. Siedlungsgenossenschaft | Obmann-Stellvertreter | CRM_ID=e1933 | missing=linkedin | https://www.heimbau.at/
+
+HOW (per person — minimum effort before any null):
+1. Company site: Impressum, Kontakt, Team, Vorstand, Über uns, Management.
+2. Web search: "<name>" "<company>" email OR telefon OR impressum OR linkedin.
+3. Also check: firmenabc.at, wko.at, northdata, Xing, LinkedIn public /in/.
+4. Take a NAMED email (vorname.nachname@), never office@ / info@ / ir@ / presse@.
+5. Phone: mobile +43 6xx next to the name, or a personal DW. Skip Zentrale …-0.
+6. LinkedIn: public https://www.linkedin.com/in/... URL for this person only.
+7. Keep evidence_url pointing at the page where you found the best field.
+8. Return null ONLY after at least 3 distinct searches/pages for that person.
+   In notes, list what you checked for anyone still null.
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w11_c10
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w11_c10
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT

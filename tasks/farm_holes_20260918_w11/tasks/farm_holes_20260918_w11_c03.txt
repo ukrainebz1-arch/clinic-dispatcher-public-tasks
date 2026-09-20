@@ -1,0 +1,70 @@
+RUN_ID: farm_holes_20260918_w11
+TASK_ID: farm_holes_20260918_w11_c03
+STAGE: B_contacts_bundle
+PROMPT: v0_baseline
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing. Do NOT answer from memory alone.
+Spend real search time per person. Shallow null answers are rejected.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Alexander Starkl | Atlas Versicherungsmakler GmbH | Geschäftsführer | CRM_ID=e1019 | missing=linkedin | https://www.atlas.co.at/
+2. Peter Bischof | Bischof Versicherungsoffice GmbH | Geschäftsführer | CRM_ID=e1020 | missing=linkedin | https://www.versicherungsoffice.at/
+3. Bernhard Rieder | CONZEPTA’S RieVers Austria GmbH | Geschäftsführer | CRM_ID=e1021 | missing=linkedin | https://www.conzeptas.eu/
+4. Lukas Wüst | Conzeptio Finanzierungs- und Versicherungsmakler GMBH | Geschäftsführer | CRM_ID=e1022 | missing=linkedin | https://www.conzeptio.at/
+5. Thomas Krumschnabel | Ebert Alfred Versicherungsmaklerbüro GmbH | Geschäftsführer | CRM_ID=e1024 | missing=linkedin | https://www.ebert.at/
+6. Ing. Richard Cvörnjek | Josef Poscharnegg GmbH | Geschäftsführer | CRM_ID=e1025 | missing=linkedin | http://www.poscharnegg.at/
+7. Mag. Bernhard Winter | Steuer & Service Steuerberatungs GmbH | Geschäftsführer | CRM_ID=e103 | missing=linkedin | https://www.steuer-service.at/
+8. Anton Höfler | HS-Art Service Austria GmbH | Geschäftsführer | CRM_ID=e1032 | missing=linkedin | http://www.hsartserviceaustria.com/
+9. Hermann Futter | Compass-Verlag GmbH | Geschäftsführer | CRM_ID=e1037 | missing=linkedin | https://compass.at
+10. Uhr Thomas Wanka | Firma IREDA Internationale Spedition GmbH | Geschäftsführer | CRM_ID=e1039 | missing=linkedin | https://www.ireda.com
+11. Stephan Bergler | STAMAG Stadlauer Malzfabrik Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e1043 | missing=linkedin | https://www.stamag.at/Deutsch.htm
+12. Eckhard Weber Externe | ÖMG Handelsgesellschaft mbH | Geschäftsführer | CRM_ID=e1047 | missing=linkedin | https://www.oemg.at/
+13. Sabine Wild | MarSab GmbH | Geschäftsführer | CRM_ID=e1061 | missing=linkedin | http://www.marsab.at/
+14. Prenner Wolfgang | SP-Aircargosolutions GmbH | Geschäftsführer | CRM_ID=e1064 | missing=linkedin | https://sp-aircargosolutions.com/
+15. Dr. Wolfgang Ebner | Eigentum Immobilienverwaltungs Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e1078 | missing=linkedin | http://www.eiv.at/
+
+HOW (per person — minimum effort before any null):
+1. Company site: Impressum, Kontakt, Team, Vorstand, Über uns, Management.
+2. Web search: "<name>" "<company>" email OR telefon OR impressum OR linkedin.
+3. Also check: firmenabc.at, wko.at, northdata, Xing, LinkedIn public /in/.
+4. Take a NAMED email (vorname.nachname@), never office@ / info@ / ir@ / presse@.
+5. Phone: mobile +43 6xx next to the name, or a personal DW. Skip Zentrale …-0.
+6. LinkedIn: public https://www.linkedin.com/in/... URL for this person only.
+7. Keep evidence_url pointing at the page where you found the best field.
+8. Return null ONLY after at least 3 distinct searches/pages for that person.
+   In notes, list what you checked for anyone still null.
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w11_c03
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w11_c03
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT

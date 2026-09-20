@@ -1,0 +1,70 @@
+RUN_ID: farm_holes_20260918_w11
+TASK_ID: farm_holes_20260918_w11_c05
+STAGE: B_contacts_bundle
+PROMPT: v0_baseline
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing. Do NOT answer from memory alone.
+Spend real search time per person. Shallow null answers are rejected.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Ralph Theuer | Antigen Schnelltests, Masken, Desinfektionsmittel | Geschäftsführer | CRM_ID=e1200 | missing=linkedin | https://www.hygienemittel.at/
+2. Verkaufstraining Mag. Hannes Wuchterl | Gaiser & Friends Marketing und Werbe GmbH | Geschäftsführer | CRM_ID=e1203 | missing=linkedin | http://www.gaiser.at/
+3. Gerald Langmann | GRB Günther Langmann Gebäudereinigungsbedarf-Handelsgesellschaft m.b.H. | Geschäftsführer | CRM_ID=e1206 | missing=linkedin | https://www.langmann.co.at/
+4. Patrick Heher | Hyundai Import Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e1208 | missing=linkedin | https://www.hyundai.at/
+5. Klaus Muik | INSTANTINA Nahrungsmittel Entwicklungs- und Produktions Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e1210 | missing=linkedin | http://www.instantina.at/
+6. Walter Bostelmann | RECA.CO.AT | Geschäftsführer | CRM_ID=e1214 | missing=linkedin | https://www.reca.co.at/
+7. Georg Oelschlägel | Naegele | Geschäftsführer | CRM_ID=e1237 | missing=linkedin | https://www.naegele.co.at/
+8. Dr. Walter Ebm | Wiener Privatklinik Betriebs-GmbH & Co KG | Geschäftsführer | CRM_ID=e1249 | missing=linkedin | https://wiener-privatklinik.com/datenschutzerklaerung/
+9. Thomas Schmiedbauer | Wiesbauer österreichische Wurstspezialitäten GmbH | Geschäftsführer | CRM_ID=e1250 | missing=linkedin | https://www.wiesbauer.at/
+10. Hans-Christian Nemetz | Nemetz Fleisch Handelsgesellschaft m.b.H. | Geschäftsführer | CRM_ID=e1287 | missing=linkedin | http://www.nemetz-fleisch.at/
+11. Dominik Schreiber Geschäftszweig | Obstbaumschule Schreiber GmbH | Geschäftsführer | CRM_ID=e1289 | missing=linkedin | https://schreiber-baum.at/
+12. Johannes Gutmann | SONNENTOR Kräuterhandelsgesellschaft m.b.H. | Geschäftsführer | CRM_ID=e1294 | missing=linkedin | https://www.sonnentor.at/
+13. Dr. Jürgen Zöller | TEGA Austria GmbH | Geschäftsführer | CRM_ID=e1296 | missing=linkedin | https://www.tega-austria.at/
+14. Martin Jakubec Blade | RIEDELL, JACKSON, GRAF, RISPORT, EDEA, SAGESTER | Geschäftsführer | CRM_ID=e1297 | missing=linkedin | https://www.eissport.at/
+15. Mag. Oliver Wagner | Spedition & Logistik: Kontakt | Geschäftsführer | CRM_ID=e1370 | missing=linkedin | https://www.spediteure-logistik.at/
+
+HOW (per person — minimum effort before any null):
+1. Company site: Impressum, Kontakt, Team, Vorstand, Über uns, Management.
+2. Web search: "<name>" "<company>" email OR telefon OR impressum OR linkedin.
+3. Also check: firmenabc.at, wko.at, northdata, Xing, LinkedIn public /in/.
+4. Take a NAMED email (vorname.nachname@), never office@ / info@ / ir@ / presse@.
+5. Phone: mobile +43 6xx next to the name, or a personal DW. Skip Zentrale …-0.
+6. LinkedIn: public https://www.linkedin.com/in/... URL for this person only.
+7. Keep evidence_url pointing at the page where you found the best field.
+8. Return null ONLY after at least 3 distinct searches/pages for that person.
+   In notes, list what you checked for anyone still null.
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w11_c05
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w11_c05
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
