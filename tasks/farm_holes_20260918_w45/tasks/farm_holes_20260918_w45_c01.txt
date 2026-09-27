@@ -1,0 +1,77 @@
+RUN_ID: farm_holes_20260918_w45
+TASK_ID: farm_holes_20260918_w45_c01
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Ing. Mag. Wolfgang Wahlmüller | Österreichisches Siedlungswerk Gemeinnützige Wohnungsaktiengesellschaft | Generaldirektor / Vorstandsvorsitzender | CRM_ID=e1922 | missing=phone,linkedin | https://www.oesw.at/
+2. Mag. Andreas Weikhart | Gemeinnützige Bau- u. Wohnungsgenossenschaft "Wien-Süd" | Obmann / Vorstand | CRM_ID=e1925 | missing=phone,linkedin | https://www.wiensued.at/
+3. Mag. Michael Kloibmüller | "Wohnungseigentümer" Gemeinnützige Wohnbaugesellschaft m.b.H. (WETgruppe) | Geschäftsführer / Vorstandsmitglied | CRM_ID=e1929 | missing=phone,linkedin | https://www.wet.at/
+4. Mag. Dr. Frank Philipp Albert | Supernova Invest GmbH | Geschäftsführer / Inhaber | CRM_ID=e1938 | missing=phone,linkedin | https://www.supernova.at/
+5. Ing. Herwig Bertsch | ZIMA Wohn Baugesellschaft mbH | Geschäftsführer | CRM_ID=e1939 | missing=phone,linkedin | https://www.zima.at/
+6. Dir. Bmstr. Ing. Siegfried Igler | "Neues Leben" gemeinnützige Bau- und Siedlungsgenossenschaft | Obmann | CRM_ID=e1978 | missing=phone,linkedin | https://www.wohnen.at/
+7. Mag. Dr. Mathias Moser | BWS Gemeinnützige allgemeine Bau-, Wohn- und Siedlungsgenossenschaft | Vorstand | CRM_ID=e1984 | missing=phone,linkedin | https://www.bwsg.at/
+8. Mag. Markus Berthold | Gemeinnützige Salzburger Wohnbaugesellschaft m.b.H. | Prokurist | CRM_ID=e1996 | missing=phone,linkedin | https://www.gswb.at/
+9. Marc Paul Ostersetzer | Ostersetzer & Co. Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e20 | missing=phone,email | https://ostersetzer.at
+10. MMag. Roland Böhm, LL.M. | GESIBA Gemeinnützige Siedlungs- und Baugesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2008 | missing=phone,linkedin | https://www.gesiba.at/
+11. Mag. Bernhard Raffelsberger | Familienwohnbau gemeinnützige Bau- und Siedlungsgesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2010 | missing=phone,linkedin | https://familienwohnbau.at/
+12. Mag. Dipl.-Ing. Markus Wiesner | Wiesner-Hager Möbel GmbH | Geschäftsführer | CRM_ID=e2012 | missing=phone,linkedin | https://www.wiesner-hager.com
+13. Andreas Glatz | Gmundner Keramik Manufaktur GmbH & Co KG | Geschäftsführer | CRM_ID=e2014 | missing=phone,email | https://gmundner.com
+14. Mag. Friedrich Faigle | faigle Kunststoffe GmbH | Geschäftsführer | CRM_ID=e2037 | missing=phone,email | https://www.faigle.com
+15. Mag. Gerhard Dafert | Niederösterreichische Landesgesundheitsagentur (NÖ LGA) | Vorstand Personal | CRM_ID=e2040 | missing=phone,linkedin | https://www.landesgesundheitsagentur.at
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w45_c01
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w45_c01
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
