@@ -1,0 +1,77 @@
+RUN_ID: farm_holes_20260918_w42
+TASK_ID: farm_holes_20260918_w42_c08
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. DSA Gabriele Gottwald-Nathaniel, MAS | API Betriebs gemeinnützige GmbH (Anton-Proksch-Institut) | Geschäftsführerin | CRM_ID=e2233 | missing=phone | https://www.api.or.at
+2. Dipl. Phys. ETH Urs Breitmaier, MBA | Glock Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2242 | missing=phone | https://eu.glock.com
+3. Dr. Thomas Leissing | Egger Holzwerkstoffe GmbH | Geschäftsführer Finanzen | CRM_ID=e2245 | missing=phone | https://www.egger.com
+4. Andreas Fill | Fill Gesellschaft m.b.H. | Geschäftsführender Gesellschafter | CRM_ID=e2249 | missing=phone | https://www.fill.co.at
+5. Ing. Mario Gebetshuber | BRP-Rotax GmbH & Co KG | Geschäftsführer Komplementär | CRM_ID=e2257 | missing=phone | https://www.rotax.com
+6. Mag. Thomas Mayrandl, MBA | Kurhotel Bad Pirawarth Ges.m.b.H. & Co.KG | Geschäftsführer / Kaufmännische Direktion | CRM_ID=e2269 | missing=phone | https://www.klinik-pirawarth.at
+7. Mag. Hannes Brandstätter MBA | Kurzentrum Thermal-Heilbad Warmbad-Villach GmbH & Co KG | Geschäftsführer | CRM_ID=e2270 | missing=phone | https://www.warmbad.com
+8. DDr. Konstantinos Konstantinidis, MBA, LL.M. | Medizinisches Zentrum Bad Vigaun GmbH & Co. KG | Ärztlicher Direktor | CRM_ID=e2271 | missing=phone | https://www.badvigaun.com
+9. Mag. Peter Christian Jaros | Hansa Privatklinikum Graz GmbH | Geschäftsführer | CRM_ID=e2276 | missing=phone | https://privatklinikum.at
+10. Mag. Ruth Fischer | Hansa Privatklinikum Graz GmbH | Geschäftsführerin | CRM_ID=e2277 | missing=phone | https://privatklinikum.at
+11. Mag. Stefan Tschol | Hirschmann Automotive GmbH | Geschäftsführer | CRM_ID=e2296 | missing=phone | https://www.hirschmann-automotive.com
+12. Mag. Gregor Dietachmayr | Pöttinger Landtechnik GmbH | Geschäftsführer | CRM_ID=e2303 | missing=phone | https://www.poettinger.at
+13. Mag. Werner Weber | Eglo Leuchten GmbH | Geschäftsführer CTO | CRM_ID=e2317 | missing=phone | https://www.eglo.com
+14. Ralph Helmut Schmid | STIHL Tirol GmbH | Geschäftsführer | CRM_ID=e2330 | missing=phone | https://corporate.stihl.at
+15. Tassilo Posch | ONTIME Logistics Speditions GmbH | Geschäftsführer | CRM_ID=e235 | missing=phone | https://www.ontimelogistics.com/
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w42_c08
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w42_c08
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
