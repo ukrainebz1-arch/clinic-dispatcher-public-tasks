@@ -1,0 +1,77 @@
+RUN_ID: farm_holes_20260918_w81
+TASK_ID: farm_holes_20260918_w81_c06
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Christian Rädler | "Wohnungseigentümer" Gemeinnützige Wohnbaugesellschaft m.b.H. (WETgruppe) | Sprecher der Geschäftsführung / Vorstand | CRM_ID=e1928 | missing=phone | https://www.wet.at/
+2. KommR Mag. Michael Gehbauer | Wohnbauvereinigung für Privatangestellte Gemeinnützige GmbH | Geschäftsführer | CRM_ID=e1930 | missing=phone | https://www.wbv-gpa.at/
+3. Mag. Nadja Horvath, MAS | Wohnbauvereinigung für Privatangestellte Gemeinnützige GmbH | Geschäftsführerin | CRM_ID=e1931 | missing=phone | https://www.wbv-gpa.at/
+4. Rudolf Alexander Eck | SES Center Management GmbH | Geschäftsführer / CDO | CRM_ID=e1937 | missing=phone | https://www.ses-european.com/
+5. Dir.in Mag.a Maria Vertesich | "Neues Leben" gemeinnützige Bau- und Siedlungsgenossenschaft | Obmann-Stellvertreterin | CRM_ID=e1980 | missing=phone | https://www.wohnen.at/
+6. Mag. Robert Eckmair | OÖ Wohnbau Gesellschaft für den Wohnungsbau gemeinnützige GmbH | Geschäftsführer | CRM_ID=e1983 | missing=phone | https://ooewohnbau.at/
+7. Arch. DI Kerstin Robausch-Löffelmann | BWS Gemeinnützige allgemeine Bau-, Wohn- und Siedlungsgenossenschaft | Vorständin | CRM_ID=e1986 | missing=phone | https://www.bwsg.at/
+8. Prok. Mag. Daniel Putschögl | OÖ Wohnbau Gesellschaft für den Wohnungsbau gemeinnützige GmbH | Abteilungsleitung Hausverwaltung | CRM_ID=e1987 | missing=phone | https://ooewohnbau.at/
+9. Carmen Mitterberger, MSc | BWS Gemeinnützige allgemeine Bau-, Wohn- und Siedlungsgenossenschaft | Immobilienmanagement | CRM_ID=e1988 | missing=phone | https://www.bwsg.at/
+10. Mag. Andreas Pötsch | Österreichische Wohnbaugenossenschaft gemeinnützige reg. Gen.m.b.H. (ÖWG Wohnbau) | Vorstand | CRM_ID=e2005 | missing=phone | https://oewg.at/
+11. Mag. Harald Keller | Familienwohnbau gemeinnützige Bau- und Siedlungsgesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2009 | missing=phone | https://familienwohnbau.at/
+12. Markus Marth | Hotel Schani GmbH | Geschäftsführer | CRM_ID=e2038 | missing=phone | https://www.schanihotels.com/
+13. Andrea Bastel | HH Hotel Süd GmbH | Geschäftsführerin / CEO Holding | CRM_ID=e2039 | missing=phone | https://harrys-home.com/
+14. Hubert Santner | Santner Immobilienberatung GmbH | Gesellschafter / Geschäftsführer Impressum | CRM_ID=e2062 | missing=phone | https://www.santner.at/
+15. Daniela Huber | SOZIALBAU AG | Abteilungsleiterin Hausverwaltung (HVE / Dritte) | CRM_ID=e2100 | missing=phone | https://www.sozialbau.at/
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w81_c06
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w81_c06
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
