@@ -1,0 +1,77 @@
+RUN_ID: farm_holes_20260918_w98
+TASK_ID: farm_holes_20260918_w98_c03
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Christian Stoll | Lagermax Logistics Austria GmbH | Geschäftsführer | CRM_ID=e508 | missing=phone,email | http://www.lagermax.com/
+2. Thomas Baumgartner | Lagermax Lagerhaus und Speditions Aktiengesellschaft | Geschäftsführer | CRM_ID=e696 | missing=phone,email,linkedin | http://www.lagermax.com/
+3. Alexander Friesz | Lagermax Lagerhaus und Speditions Aktiengesellschaft | Geschäftsführer | CRM_ID=e697 | missing=email | https://www.lagermax.com/de-at/karriere/duale-akademie
+4. Stefan Haas | TÜV AUSTRIA | Vorstandsvorsitzender TÜV AUSTRIA HOLDING AG | CRM_ID=e2961 | missing=phone,email | https://www.tuv.at
+5. Dipl.Ing. Dr. Stefan Engleder | ENGEL AUSTRIA GmbH | Geschäftsführer CEO | CRM_ID=e2221 | missing=phone | https://www.engelglobal.com
+6. Mag. Simon Zeilberger | ENGEL AUSTRIA GmbH | Geschäftsführer CFO | CRM_ID=e2222 | missing=phone,email | https://www.engelglobal.com
+7. Dipl.-Ing.Dr. Gerhard Dimmler | ENGEL AUSTRIA GmbH | Geschäftsführer / CTO | CRM_ID=e2734 | missing=phone,linkedin | http://www.engelglobal.com
+8. Johannes Philipp Josef Max-Theurer | Plasser & Theurer, Export von Bahnbaumaschinen, Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2301 | missing=phone,email,linkedin | https://www.plassertheurer.com
+9. Ing.Mag. Thomas Schöpf | Plasser & Theurer, Export von Bahnbaumaschinen, Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2302 | missing=phone,email,linkedin | https://www.plassertheurer.com
+10. Dr. Oliver Rammerstorfer | Plasser & Theurer, Export von Bahnbaumaschinen, Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2749 | missing=phone,email | https://www.plassertheurer.com
+11. Ing. Mag. Daniel Tomaschko, MSc, MBA | Plasser & Theurer, Export von Bahnbaumaschinen, Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2750 | missing=phone,email | https://www.plassertheurer.com
+12. Rolf Mertins | DP World Logistics Austria GmbH | Geschäftsführer | CRM_ID=e503 | missing=phone,email | https://www.dpworld.com/en/about-us/our-locations/austria
+13. Chris Povey | DP World Logistics Austria GmbH | Geschäftsführer | CRM_ID=e504 | missing=phone,email | https://www.dpworld.com/en/about-us/our-locations/austria
+14. Wolfgang Schellerer | Felbermayr Transport- und Hebetechnik GmbH & Co KG | Geschäftsführer | CRM_ID=e751 | missing=linkedin | https://www.felbermayr.cc/
+15. Emilio Manca | UniCredit Bank Austria AG | Mitglied des Vorstandes Chief Operating Officer | CRM_ID=e2884 | missing=phone,email | https://bankaustria.at/ueber-uns-pressefotos-management.jsp
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w98_c03
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w98_c03
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
