@@ -1,0 +1,77 @@
+RUN_ID: farm_holes_20260918_w101
+TASK_ID: farm_holes_20260918_w101_c09
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Mag. Stefan Bubestinger | Eglo Leuchten GmbH | Geschäftsführer CFO | CRM_ID=e2318 | missing=phone,email | https://www.eglo.com
+2. Florian Klein | REWE Großhandel GmbH | Geschäftsführer | CRM_ID=e2914 | missing=phone,email | https://adeg.at
+3. Christian Hochleitner | Pittel+Brausewetter Gesellschaft m.b.H | Geschäftsführer | CRM_ID=e3102 | missing=phone,email | https://www.pittel.at
+4. Simone Oberndorfer | Franz Oberndorfer GmbH & Co KG | CEO | CRM_ID=e3283 | missing=phone,email | http://www.oberndorfer.at
+5. David Demetz | Markas GmbH | Managing Director | CRM_ID=e3005 | missing=phone,email | https://www.markas.com/de/unternehmen/gruppe-991.html
+6. Cornelius Grupp | Neuman Aluminium | Geschäftsführung | CRM_ID=e3218 | missing=phone,email | https://www.neuman.at/
+7. Markus Wagner | AGRANA Fruit | CEO AGRANA Fruit | CRM_ID=e3340 | missing=phone,email | https://www.achtzehngrad.atDatenschutzDetaillierte
+8. Ing. Helmut Thöni | Thöni Holding GmbH | Geschäftsführer | CRM_ID=e2489 | missing=phone,linkedin | https://www.thoeni.com
+9. DI Anton Mederle | Thöni Holding GmbH | Geschäftsführer | CRM_ID=e2490 | missing=phone,linkedin | https://www.thoeni.com
+10. Robert F. Hartlauer | Hartlauer HandelsgesmbH | Geschäftsführer | CRM_ID=e2987 | missing=email,linkedin | https://www.ris.bka.gv.at]FREIWILLIGER
+11. Harald Gottsche | BMW Motoren GmbH | Geschäftsführer | CRM_ID=e2439 | missing=phone,email | https://www.bmwgroup.com
+12. Alexandra Madeleine Danielle Schneider | BMW Motoren GmbH | Geschäftsführerin | CRM_ID=e2440 | missing=phone | https://www.bmwgroup.com
+13. Wiedner Gürtel | TPA Unternehmensberatung GmbH | Geschäftsführer | CRM_ID=e1158 | missing=linkedin | https://www.tpa-group.at/
+14. Wiedner Gürtel | Mag. Günther Neugschwandtner TPA Mödling Steuerberatung GmbH & Co KG | Geschäftsführer | CRM_ID=e1750 | missing=linkedin | https://www.tpa-group.at/
+15. Hans Franciscus Böhm | BRAU UNION Österreich Aktiengesellschaft | Vorstand | CRM_ID=e2435 | missing=phone,email | https://www.brauunion.at
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w101_c09
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w101_c09
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
