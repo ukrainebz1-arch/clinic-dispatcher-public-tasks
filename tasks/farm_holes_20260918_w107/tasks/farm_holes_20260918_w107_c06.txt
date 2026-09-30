@@ -1,0 +1,77 @@
+RUN_ID: farm_holes_20260918_w107
+TASK_ID: farm_holes_20260918_w107_c06
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+
+PEOPLE (15):
+1. Mag. Wolfgang Moser | Pöttinger Landtechnik GmbH | Geschäftsführer | CRM_ID=e2790 | missing=phone,email | https://www.poettinger.at
+2. Alfred Koblmüller | DACHSER-Austria Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e538 | missing=phone,linkedin | https://www.dachser.at
+3. Michael Rauhofer | DACHSER-Austria Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e539 | missing=phone,email | 
+4. Leopold Pasquali | PREFA Aluminiumprodukte Gesellschaft m.b.H | Geschäftsführer | CRM_ID=e3129 | missing=email | https://www.prefa.de
+5. Nima Motazed | Kommunalkredit Austria AG | CTO/COO, Mitglied des Vorstandes | CRM_ID=e2946 | missing=phone,email | https://www.kommunalkredit.at/wer-wir-sind/governance
+6. Martin Auer | MARTIN AUER GmbH | Geschäftsführer | CRM_ID=e3135 | missing=email,linkedin | http://www.martinauer.at
+7. Peter Edelmayer | Dussmann Austria GmbH | Geschäftsführer | CRM_ID=e3075 | missing=phone,email,linkedin | https://www.dussmann.com
+8. Alexander Novak | VKB - Ihre Bank. Ihr Erfolg | Vorstandsdirektor, IT & Digitale Innovation | CRM_ID=e2867 | missing=phone,email,linkedin | https://www.vkb-bank.at/datenschutzbestimmungen
+9. Dipl.-Ing. Gottfried Brunbauer | LISEC Austria GmbH | Geschäftsführer CEO | CRM_ID=e2379 | missing=phone | https://www.lisec.com
+10. Mag. Oliver Christian Pichler | LISEC Austria GmbH | Geschäftsführer CFO | CRM_ID=e2380 | missing=phone | https://www.lisec.com
+11. Christian Bachler | SILHOUETTE International Schmied AG | Vorstandsvorsitzender CEO | CRM_ID=e2466 | missing=phone,email | https://www.silhouette-group.com
+12. MMag. Michael Schmied | SILHOUETTE International Schmied AG | Vorstand | CRM_ID=e2467 | missing=phone,email | https://www.silhouette-group.com
+13. DI Franz Viehböck | Berndorf Aktiengesellschaft | Vorstandsvorsitzender CEO | CRM_ID=e2625 | missing=phone,linkedin | https://www.berndorf.co.at/
+14. Mag. Thomas Karazmann | Berndorf Aktiengesellschaft | Vorstand CFO | CRM_ID=e2626 | missing=phone,email | 
+15. Mag. Norbert Petermaier | Primetals Technologies Austria GmbH | Geschäftsführer CEO | CRM_ID=e2354 | missing=phone,email | https://www.primetals.com
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w107_c06
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w107_c06
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
