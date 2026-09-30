@@ -1,0 +1,79 @@
+RUN_ID: farm_holes_20260918_w121
+TASK_ID: farm_holes_20260918_w121_c05
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+A number after NOT was dialled and reached somebody else (a namesake, a relative, a dead
+line) — never return it; find a different number for THIS person at THIS company.
+
+PEOPLE (15):
+1. Andrea Berghofer | Adler-Werk Lackfabrik Johann Berghofer GmbH & Co KG | Geschäftsführerin | CRM_ID=e2159 | missing=email,linkedin | https://www.adler-lacke.com
+2. Janine Schwabe-Häder | Schindler Aufzüge und Fahrtreppen GmbH | Vorsitzende der Geschäftsleitung | CRM_ID=e3381 | missing=phone,linkedin | https://www.schindler.at
+3. Mag. Marcel Javor | FRANKSTAHL Rohr- und Stahlhandelsgesellschaft m.b.H. | Geschäftsführer | CRM_ID=e384 | missing=email,linkedin | https://www.frankstahl.comEMail
+4. Dipl.Ing. Günter Idinger | Eaton Industries (Austria) GmbH | Geschäftsführer | CRM_ID=e2411 | missing=phone,linkedin | https://www.eaton.com
+5. Michaela Sadleder | Eaton Industries (Austria) GmbH | Geschäftsführerin | CRM_ID=e2412 | missing=phone | https://www.eaton.com
+6. Alexander Helmut Korosec | BESTSELLER Region East | Regional Director East | CRM_ID=e3203 | missing=phone,email | https://regioneast.bestseller.com
+7. Gernot Gimpl | Salzburg Wohnbau GmbH | Prokurist / Bereichsleitung Objektmanagement | CRM_ID=e1948 | missing=linkedin | https://www.salzburg-wohnbau.at/
+8. Thomas Skoric | MLS Personaldienstleistung GmbH | Geschäftsführender Gesellschafter | CRM_ID=e1510 | missing=phone | https://www.mls.at
+9. Christian Skoric | MLS Personaldienstleistung GmbH | Geschäftsführender Gesellschafter | CRM_ID=e1511 | missing=phone | https://www.mls.at
+10. Harald Deller | backaldrin International The Kornspitz Company GmbH | Geschäftsführer | CRM_ID=e2470 | missing=email | https://www.backaldrin.com
+11. Gerhard Kaiser | CURA COSMETICS GROUP | Geschäftsführer | CRM_ID=e3334 | missing=phone,email | http://www.curacosmeticsgroup.com
+12. Dipl.-Ing. Manfred Hackl | EREMA Engineering Recycling Maschinen und Anlagen Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e1557 | missing=phone,linkedin | https://www.advantageaustria.org
+13. Marcel Gora | Aptiv Mobility Services Austria MAT. GmbH | Geschäftsführer | CRM_ID=e3127 | missing=phone,email | https://www.advantageaustria.org
+14. Franz Josef Schachermayer | Rechberger Gesellschaft m.b.H | Geschäftsführer | CRM_ID=e3263 | missing=phone,email,linkedin | http://www.rechberger.at
+15. Mag. Andreas Pötsch | Österreichische Wohnbaugenossenschaft gemeinnützige reg. Gen.m.b.H. (ÖWG Wohnbau) | Vorstand | CRM_ID=e2005 | missing=phone | https://oewg.at/
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w121_c05
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w121_c05
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
