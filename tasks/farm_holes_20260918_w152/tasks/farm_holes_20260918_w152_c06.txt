@@ -1,0 +1,79 @@
+RUN_ID: farm_holes_20260918_w152
+TASK_ID: farm_holes_20260918_w152_c06
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+A number after NOT was dialled and reached somebody else (a namesake, a relative, a dead
+line) — never return it; find a different number for THIS person at THIS company.
+
+PEOPLE (15):
+1. Dr. Werner Wittmann | Wittmann Battenfeld GmbH | Geschäftsführer | CRM_ID=e2462 | missing=phone,email,linkedin | https://www.wittmann-group.com
+2. Ing. Mag. (FH) Mario Neuwirth | Mayer & Co Beschläge GmbH | Geschäftsführer | CRM_ID=e2505 | missing=phone | https://www.maco.eu
+3. Mag. Rainer Schwarz | DPD Direct Parcel Distribution Austria GmbH | Geschäftsführer | CRM_ID=e2728 | missing=linkedin | https://www.pt-business.at/impressum.php
+4. Rainer Schwarz | DPD Direct Parcel Distribution Austria GmbH | Relevant management / registered officer | CRM_ID=e745 | missing=linkedin | https://www.dpd.com/at/
+5. Stefan Heiglauer | DPD Direct Parcel Distribution Austria GmbH | Relevant management / registered officer | CRM_ID=e746 | missing=phone,email,linkedin | https://www.dpd.com/at/
+6. Sebastian Slanda | Santander Consumer Bank | Geschäftsführer Marktfolge Chief Risk Officer Operations Technology and Projects | CRM_ID=e2890 | missing=phone,email,linkedin | 
+7. Rudolf Brenner | philoro | Geschäftsführender Gesellschafter philoro EDELMETALLE GmbH | CRM_ID=e3242 | missing=phone,email,linkedin | http://www.philoro.at
+8. Mag. Wolfgang Plasser | Pankl Racing Systems AG | Vorstand | CRM_ID=e2472 | missing=email | https://www.pankl.com
+9. DI Stefan Seidel | Pankl Racing Systems AG | Vorstand | CRM_ID=e2473 | missing=phone,email | https://www.pankl.com
+10. Dr. Alexander Hohl | Fresenius Kabi Austria GmbH | Geschäftsführer | CRM_ID=e2742 | missing=phone,email | https://fresenius-kabi.at/
+11. Ing. Andreas Pospisil | ELIN GmbH | Geschäftsführer | CRM_ID=e1382 | missing=linkedin | https://www.elin.com/
+12. Peter Györgyfalvay | Kuchen-Peter Backwaren GmbH | Geschäftsführer | CRM_ID=e3167 | missing=phone,email,linkedin | https://www.kuchenpeter.at/karriere/
+13. Helmut Bernkopf | OeKB Gruppe | Mitglied des Vorstands | CRM_ID=e2952 | missing=phone,email | https://www.oekb.at/oekb-gruppe/die-oekb-ag/management.html
+14. Mirela Toljan Jakomin | Coca-Cola HBC Austria GmbH | Geschäftsführerin / General Manager | CRM_ID=e1689 | missing=phone,email | https://www.coca-colahellenic.at/
+15. Lukas Schinko | Neuroth | CEO | CRM_ID=e3048 | missing=phone,email | https://www.neuroth.com
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w152_c06
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w152_c06
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
