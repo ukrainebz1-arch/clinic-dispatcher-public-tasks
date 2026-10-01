@@ -1,0 +1,79 @@
+RUN_ID: farm_holes_20260918_w150
+TASK_ID: farm_holes_20260918_w150_c01
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+A number after NOT was dialled and reached somebody else (a namesake, a relative, a dead
+line) — never return it; find a different number for THIS person at THIS company.
+
+PEOPLE (15):
+1. Josef Frühwirth | EPS Electric Power Systems GmbH | Geschäftsführer · LinkedIn www.linkedin.com/in/josef-fr%C3%BChwirth-1600bb11 | CRM_ID=e1484 | missing=mobile | https://www.eps-dc.com/
+2. Daniel Rohner | Schmid Mawera Hard GmbH | Geschäftsführer · LinkedIn www.linkedin.com/in/daniel-rohner-79b84ba9 | CRM_ID=e2099 | missing=phone,email | https://www.schmid-mawera.com
+3. Michael Wöckinger | Hödlmayr High & Heavy GmbH | Managing Director Business Development & Sales · LinkedIn www.linkedin.com/in/michaelwoeckinger | CRM_ID=e708 | missing=phone | https://www.hoedlmayr.com/en/company/locations
+4. Johann Nösslböck | Träumeland GmbH | Geschäftsführer · LinkedIn www.linkedin.com/in/hannes-n%C3%B6sslb%C3%B6ck-90b742b2 | CRM_ID=e1749 | missing=phone,email | https://polstern.at/
+5. Dipl.-Ing. (FH) Christian Marintschnig | Vasko + Partner Ingenieure ZT GesmbH | Geschäftsführer · LinkedIn www.linkedin.com/in/christian-marintschnig-8bab22209 | CRM_ID=e263 | missing=mobile | https://vasko-partner.at/
+6. Franz Watzlawick | Red Bull GmbH | Geschäftsführer | CRM_ID=e2141 | missing=phone,email | https://www.redbull.com
+7. Alexander Kirchmayr | Red Bull GmbH | Geschäftsführer | CRM_ID=e2143 | missing=phone,email,linkedin | https://www.redbull.com
+8. Oliver Mintzlaff | Red Bull GmbH | Geschäftsführer | CRM_ID=e2145 | missing=phone,email,linkedin | https://www.redbull.com
+9. Karl Kirchberger | SWIETELSKY Baugesellschaft m.b.H. | Geschäftsführer | CRM_ID=e614 | missing=linkedin | https://www.swietelsky.at/
+10. Günther Gruber | XXXLutz KG | Vertretungsberechtigter Geschäftsführer | CRM_ID=e2876 | missing=email,linkedin | http://karriere.xxxlutz.at
+11. Ralf Göttel | BENTELER Gruppe | CEO | CRM_ID=e3338 | missing=phone,email | 
+12. Peter Schafleitner | Gebrüder Weiss Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e511 | missing=phone,email | https://www.gw-world.com/at/unternehmen/ueber-uns/geschaeft
+13. Jürgen Bauer | Gebrüder Weiss Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e512 | missing=phone,email,linkedin | 
+14. Alessandro Cacciola | Gebrüder Weiss Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e513 | missing=phone,email | https://www.gw-world.com/de/
+15. Andreas Winkelmayer | Gebrüder Weiss Paketdienst Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e713 | missing=phone,email,linkedin | https://developer.my.gw-world.com/homeFür
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w150_c01
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w150_c01
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
