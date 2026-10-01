@@ -1,0 +1,79 @@
+RUN_ID: farm_holes_20260918_w156
+TASK_ID: farm_holes_20260918_w156_c05
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+A number after NOT was dialled and reached somebody else (a namesake, a relative, a dead
+line) — never return it; find a different number for THIS person at THIS company.
+
+PEOPLE (15):
+1. Mag. Norbert Petermaier | Primetals Technologies Austria GmbH | Geschäftsführer CEO | CRM_ID=e2354 | missing=phone,email | https://www.primetals.com
+2. Mag. Michael Kienberger | Primetals Technologies Austria GmbH | Geschäftsführer CFO | CRM_ID=e2355 | missing=phone,email | https://www.primetals.com
+3. Mag. Christian Peneder | Peneder Bau-Elemente GmbH | Geschäftsführer Vorsitzender | CRM_ID=e2549 | missing=phone,email,linkedin | https://www.peneder.com
+4. Ing. Alois Ritt, MBA | Peneder Bau-Elemente GmbH | Geschäftsführer | CRM_ID=e2550 | missing=phone,email | https://www.peneder.com
+5. Christian Peneder | Peneder Unternehmensgruppe | Geschäftsführer | CRM_ID=e3326 | missing=phone,email,linkedin | https://peneder.com
+6. Christof Kastner | KASTNER GroßhandelsgesmbH | Geschäftsführer | CRM_ID=e3348 | missing=phone,email | https://kastner.at/presse/zahlen-fakten/kastner-grosshandelsgesmbh
+7. Michael Münzer | Münzer Bioindustrie GmbH | Geschäftsführer | CRM_ID=e2599 | missing=phone,email,linkedin | https://muenzer.com
+8. Bernhard Nachbaur | AOP Health | Co-Chief Executive Officer | CRM_ID=e3316 | missing=linkedin | https://www.aop-health.com
+9. Dr. Gerd Philipp Klaus Schoeller | MAM Babyartikel Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2595 | missing=phone,email,linkedin | https://www.mambaby.com
+10. Ing Peter Röhrig | MAM Babyartikel Gesellschaft m.b.H. | Geschäftsführer | CRM_ID=e2596 | missing=phone,email,linkedin | https://www.mambaby.com
+11. Sarah Huber | Nestle Österreich GmbH | Geschäftsführerin | CRM_ID=e3301 | missing=phone,email | https://www.nestle.at
+12. Dipl.Ing. Peter Michael Wittmann | Wittmann Battenfeld GmbH | Geschäftsführer | CRM_ID=e2461 | missing=phone,email,linkedin | https://www.wittmann-group.com
+13. Dr. Werner Wittmann | Wittmann Battenfeld GmbH | Geschäftsführer | CRM_ID=e2462 | missing=phone,email,linkedin | https://www.wittmann-group.com
+14. Ing. Mag. (FH) Mario Neuwirth | Mayer & Co Beschläge GmbH | Geschäftsführer | CRM_ID=e2505 | missing=phone | https://www.maco.eu
+15. Mag. Rainer Schwarz | DPD Direct Parcel Distribution Austria GmbH | Geschäftsführer | CRM_ID=e2728 | missing=linkedin | https://www.pt-business.at/impressum.php
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w156_c05
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w156_c05
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
