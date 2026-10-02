@@ -1,0 +1,79 @@
+RUN_ID: farm_holes_20260918_w182
+TASK_ID: farm_holes_20260918_w182_c10
+STAGE: B_contacts_bundle
+PROMPT: v2_methods_persist
+WRITE_LIVE_ICP: false
+PHONE: huawei_p30_lite_01
+
+MODE: Use web browsing on every person. Do NOT answer from memory.
+Work like a persistent recruiter: budget at least 5 distinct searches per person before any none.
+Fields count only if you saw them on a page. Never guess an address.
+
+GLOBAL TASK:
+Each row is already a CRM contact. For THAT person find the missing fields
+in ONE hunt: named email + phone + LinkedIn profile URL. They often sit on
+the same Impressum / Team / contact page — do not split into three searches.
+Public pages only. Do not log in. Do not invent. Do not send a LinkedIn connect.
+A number after NOT was dialled and reached somebody else (a namesake, a relative, a dead
+line) — never return it; find a different number for THIS person at THIS company.
+
+PEOPLE (15):
+1. Dr. Robert Löw | Liechtensteinische Landesbank (Österreich) AG | Vorsitzender des Vorstandes / CEO | CRM_ID=e3004 | missing=phone,email | https://llb.at/de/die-llb/ueber-uns/unsere-struktur/team/vorstand
+2. Wolfgang Kitzler | Constantia Teich GmbH | Geschäftsführer | CRM_ID=e2687 | missing=phone,email | https://www.cflex.com/locations/constantia-teich-austria/
+3. André Manuel Ammon | Constantia Teich GmbH | Geschäftsführer | CRM_ID=e2688 | missing=phone,email | 
+4. Ioannis Vargiamis | TEDi Warenhandels GmbH | Geschäftsführer | CRM_ID=e3028 | missing=phone,email,linkedin | https://jobs.tedi.com
+5. Fabian Hainzl, MSc | HAINZL INDUSTRIESYSTEME GmbH | Geschäftsführer | CRM_ID=e2315 | missing=phone | https://www.hainzl.at
+6. DI Dr. Björn Fellner | HAINZL INDUSTRIESYSTEME GmbH | Geschäftsführer | CRM_ID=e2316 | missing=phone,email | https://www.hainzl.at
+7. Ing. Wilhelm Eibner | HAINZL INDUSTRIESYSTEME GmbH | Geschäftsführer | CRM_ID=e2751 | missing=phone,email,linkedin | https://www.hainzl.at
+8. Jörg Branschädel | Knorr-Bremse Gesellschaft mit beschränkter Haftung | Geschäftsführer Sprecher | CRM_ID=e2381 | missing=phone,email | https://www.knorr-bremse.com
+9. Dipl. Ing. Josef Bauer | TCG UNITECH GmbH | Geschäftsführer | CRM_ID=e2476 | missing=phone,email | https://www.tcgunitech.com
+10. Mag. Günther Reis, MBA | Collini Holding AG | Vorstand CEO | CRM_ID=e2372 | missing=linkedin | https://www.collini.eu
+11. Adriana Collini, MSc | Collini Holding AG | Vorstand CFO | CRM_ID=e2373 | missing=phone,email | https://www.collini.eu
+12. Andreas Fill | Fill Gesellschaft m.b.H. | Geschäftsführender Gesellschafter | CRM_ID=e2249 | missing=phone | https://www.fill.co.at
+13. Martin Rode | Standout GmbH | Geschäftsführer | CRM_ID=e2959 | missing=phone,email | 
+14. DI Christoph Feyerer, BSc. | Komptech GmbH | Geschäftsführer | Geschäftsführer | CRM_ID=e1553 | missing=phone | https://www.komptech.com/ | NOT +436641403221
+15. Michael Kröger | Verkehrsbüro Hotellerie GmbH | Geschäftsführer | CRM_ID=e2020 | missing=phone | https://www.verkehrsbuero.com/ | NOT +43158800830
+
+HOW — run this recipe for EVERY person, in this order:
+1. Company site: /impressum /kontakt /team /ueber-uns /management /vorstand /geschaeftsfuehrung /standorte.
+   Footers and Impressum often list Durchwahl (DW) per person.
+2. Exact-phrase searches: "<Vorname Nachname>" "<Firma>"  |  "<Vorname Nachname>" email  |
+   "<Vorname Nachname>" "@<firmen-domain>"  |  "<Nachname>" site:<firmen-domain>
+3. LinkedIn: site:linkedin.com/in "<Vorname Nachname>" <Firma or city>; accept only a public /in/ URL whose
+   headline matches the company or role.
+4. PDFs: "<Vorname Nachname>" filetype:pdf — Geschäftsberichte, Pressemitteilungen, Vortragsprogramme,
+   Ausschreibungen, Verbandsdokumente carry direct emails and phone lines.
+5. Directories: firmen.wko.at, firmenabc.at, herold.at, northdata.de, Xing, kununu, Gelbe Seiten; company press page.
+6. Events and media: speaker pages, Fachverbände, trade press (medianet, Die Presse, Kurier, regional papers).
+7. SECOND PASS (mandatory): before writing the answer, list every person that still has a none, and for each
+   run two more searches you have not tried yet (different wording, different source type). Only then finish.
+8. Phone rule: personal mobile (+43 6xx…) or a personal Durchwahl; never Zentrale (…-0). Email rule: named
+   mailbox only; never office@ info@ presse@ ir@. LinkedIn rule: linkedin.com/in/<slug> of this person only.
+   In NOTES write, per person still none, which sources you checked (short).
+
+CRITICAL OUTPUT FORMAT (the answer is read by a machine — plain lines only):
+No JSON. No markdown. No code fences. No quotes. No bullet points. No tables.
+Start the final answer with exactly:
+RESULT_ID: farm_holes_20260918_w182_c10
+SUBSCRIPTION_OK: yes
+
+Then exactly ONE line per person, in this order of fields, separated by " | ":
+CRM e123 | EMAIL name@firma.at | PHONE +436641234567 | LINKEDIN linkedin.com/in/slug | SRC firma.at/team
+
+Rules for the lines:
+- Use the CRM_ID from the row (e123). Every row gets exactly one CRM line.
+- Write the word none when a field was not found (EMAIL none / PHONE none / LINKEDIN none).
+- PHONE: international digits only, no spaces, no brackets (+4366412345678).
+- LINKEDIN: linkedin.com/in/<slug> only, no https://, no query string.
+- SRC: host/path of the page where you found the best field, no https://.
+- No names or companies on the CRM lines (they are already in the CRM).
+
+Finish with one line:
+NOTES <short: what you checked for anyone still none>
+END_RESULT
+
+If you cannot browse (paywall/login/limit) answer only:
+RESULT_ID: farm_holes_20260918_w182_c10
+SUBSCRIPTION_OK: no
+NOTES paywall_or_login
+END_RESULT
